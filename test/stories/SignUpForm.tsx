@@ -22,20 +22,8 @@ export function SignUpForm({
 
 	return (
 		<SimpleForm
-			onSubmit={async (data) => {
-				const result = v.safeParse(newMemberSchema, {
-					email: data.get("email") as string,
-					password: data.get("password") as string,
-					agreement: data.has("agreement"),
-					privacy: data.has("privacy"),
-				});
-
-				if (result.success) {
-					signUpMember(result.output);
-					return result;
-				}
-				return result;
-			}}
+			schema={newMemberSchema}
+			onSubmit={signUpMember}
 		>
 			<SimpleTextInput
 				name="email"
@@ -68,20 +56,15 @@ export function SignUpForm({
 
 const ErrorContext = createContext<Record<string, string | undefined>>({});
 
-function SimpleForm({ children, onSubmit }: {
+function parseFormDatatoJsObject(formData: FormData): unknown {
+	return Object.fromEntries([...formData.entries()]
+		.map(([key, value]) => [key, value === 'on' ? true : value === 'off' ? false : value]));
+}
+
+function SimpleForm<T extends object>({ schema, children, onSubmit }: {
+	schema: v.BaseSchema<T, T, v.BaseIssue<unknown>>,
 	children: React.ReactNode,
-	onSubmit: (data: FormData) => Promise<{
-		success: true,
-		output: any,
-	} | {
-		success: false,
-		issues: {
-			path?: ({
-				key: string | number | undefined | unknown,
-			} | undefined)[],
-			message: string,
-		}[],
-	}>
+	onSubmit: (data: T) => Promise<void>
 }) {
 	const [error, setError] = useState({} as Record<string, string | undefined>);
 	return (
@@ -89,9 +72,9 @@ function SimpleForm({ children, onSubmit }: {
 			<form onSubmit={async (event) => {
 				event.preventDefault();
 
-				const data = new FormData(event.currentTarget);
+				const formData = new FormData(event.currentTarget);
 
-				const result = await onSubmit(data)
+				const result = v.safeParse(schema, parseFormDatatoJsObject(formData));
 
 				if (result.success === false) {
 					setError(
@@ -99,7 +82,10 @@ function SimpleForm({ children, onSubmit }: {
 							result.issues.map((issue) => [issue.path?.map(item => item?.key).join("."), issue.message]),
 						),
 					);
+					return;
 				}
+
+				return onSubmit(result.output);
 			}}>
 				{children}
 			</form>
