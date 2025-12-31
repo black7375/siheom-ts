@@ -34,6 +34,15 @@ describe("SignUpForm", () => {
 				"비밀번호를 10자 이상 입력해주세요",
 			),
 
+			assertions.errormessage(
+				query.checkbox("약관 동의"),
+				"약관 동의에 동의해야 합니다",
+			),
+			assertions.errormessage(
+				query.checkbox("개인정보 수집 동의"),
+				"개인정보 수집 동의에 동의해야 합니다",
+			),
+
 			actions.fill(query.textbox("이메일"), MEMBER.email),
 			actions.fill(query.textbox("비밀번호"), MEMBER.password),
 

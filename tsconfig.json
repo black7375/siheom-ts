@@ -1,25 +1,26 @@
 {
-  "compilerOptions": {
-    "jsx": "preserve",
-    /* Base Options: */
-    "esModuleInterop": true,
-    "skipLibCheck": true,
-    "target": "es2022",
-    "allowJs": true,
-    "resolveJsonModule": true,
-    "moduleDetection": "force",
-    "isolatedModules": true,
-    "verbatimModuleSyntax": true,
+    "compilerOptions": {
+        "paths": { "@/*": ["./src/*"], "@test/*": ["./test/*"] },
+        "jsx": "preserve",
+        /* Base Options: */
+        "esModuleInterop": true,
+        "skipLibCheck": true,
+        "target": "es2022",
+        "allowJs": true,
+        "resolveJsonModule": true,
+        "moduleDetection": "force",
+        "isolatedModules": true,
+        "verbatimModuleSyntax": true,
 
-    /* Strictness */
-    "strict": true,
-    "noUncheckedIndexedAccess": true,
-    "noImplicitOverride": true,
-    "allowImportingTsExtensions": true,
+        /* Strictness */
+        "strict": true,
+        "noUncheckedIndexedAccess": true,
+        "noImplicitOverride": true,
+        "allowImportingTsExtensions": true,
 
-    /* If transpiling with TypeScript: */
-    "module": "Preserve",
-    "noEmit": true,
-		"types": ["@vitest/browser/providers/playwright"]
-  }
+        /* If transpiling with TypeScript: */
+        "module": "Preserve",
+        "noEmit": true,
+        "types": ["@vitest/browser/providers/playwright"]
+    }
 }

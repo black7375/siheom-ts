@@ -1,3 +1,6 @@
+import { Button } from "@test/components/base/buttons/button";
+import { Input } from "@test/components/base/input/input";
+import { getFieldErrorProps } from "@test/utils/getFieldErrorMessage";
 import { createContext, useContext, useId, useState } from "react";
 import * as v from "valibot";
 
@@ -10,8 +13,8 @@ const newMemberSchema = v.object({
 		v.string(),
 		v.minLength(10, "비밀번호를 10자 이상 입력해주세요"),
 	),
-	agreement: v.boolean("약관 동의에 동의해야 합니다"),
-	privacy: v.boolean("개인정보 수집 동의에 동의해야 합니다"),
+	agreement: v.literal(true, "약관 동의에 동의해야 합니다"),
+	privacy: v.literal(true, "개인정보 수집 동의에 동의해야 합니다"),
 });
 
 type NewMember = v.InferOutput<typeof newMemberSchema>;
@@ -47,9 +50,9 @@ export function SignUpForm({
 				label="개인정보 수집 동의"
 			/>
 
-			<button type="submit">
+			<Button type="submit" color="primary">
 				가입하기
-			</button>
+			</Button>
 		</SimpleForm>
 	);
 }
@@ -74,7 +77,8 @@ function SimpleForm<T extends object>({ schema, children, onSubmit }: {
 
 				const formData = new FormData(event.currentTarget);
 
-				const result = v.safeParse(schema, parseFormDatatoJsObject(formData));
+				const rawData = parseFormDatatoJsObject(formData);
+				const result = v.safeParse(schema, rawData);
 
 				if (result.success === false) {
 					setError(
@@ -85,6 +89,7 @@ function SimpleForm<T extends object>({ schema, children, onSubmit }: {
 					return;
 				}
 
+				setError({});
 				return onSubmit(result.output);
 			}}>
 				{children}
@@ -98,21 +103,15 @@ function SimpleTextInput({ name, type, label }: {
 	type: "text" | "email" | "password",
 	label: string,
 }) {
-	const inputId = useId();
-	const errorId = useId();
 	const error = useContext(ErrorContext);
 	return (
-		<>
-			<label htmlFor={inputId}>{label}</label>
-			<input
-				id={inputId}
-				role="textbox"
-				type={type}
-				name={name}
-				{...getInputErrorProps(error, name, errorId)}
-			/>
-			<SimpleErrorMessage error={error} name={name} errorId={errorId} />
-		</>
+		<Input
+			label={label}
+			type={type}
+			name={name}
+			isInvalid={error[name] ? true : undefined}
+			hint={error[name]}
+		/>
 	)
 }
 
@@ -130,7 +129,7 @@ function SimpleCheckbox({ name, label }: {
 				id={inputId}
 				type="checkbox"
 				name={name}
-				{...getInputErrorProps(error, name, errorId)}
+				{...getFieldErrorProps(error, name, errorId)}
 			/>
 			<SimpleErrorMessage error={error} name={name} errorId={errorId} />
 		</>
@@ -152,16 +151,4 @@ function SimpleErrorMessage({ error, name, errorId }: {
 			{error[name]}
 		</div>
 	);
-}
-
-function getInputErrorProps(error: Record<string, string | undefined>, name: string, errorId: string): {
-	"aria-invalid": "true" | undefined,
-	"aria-describedby": string,
-	"aria-errormessage": string,
-} {
-	return {
-		"aria-invalid": error[name] ? "true" : undefined,
-		"aria-describedby": error[name] ? errorId : "",
-		"aria-errormessage": error[name] ? errorId : "",
-	};
 }
