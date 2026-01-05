@@ -25,6 +25,10 @@ export function computeAriaExpanded(el: Element): boolean | undefined {
 	return checkBooleanAttribute(el, "aria-expanded");
 }
 
+export function computeAriaInvalid(el: Element): boolean | undefined {
+	return checkBooleanAttribute(el, "aria-invalid");
+}
+
 export function computeAriaSelected(el: Element): boolean | undefined {
 	// Native option element
 	if (el.tagName === "OPTION") {
@@ -98,6 +102,9 @@ export function computeAllStates(el: Element, role: string): A11yNodeStates {
 		const checked = computeAriaChecked(el);
 		if (checked !== undefined) states.checked = checked;
 	}
+
+	const invalid = computeAriaInvalid(el);
+	if (invalid !== undefined) states.invalid = invalid;
 
 	const expanded = computeAriaExpanded(el);
 	if (expanded !== undefined) states.expanded = expanded;

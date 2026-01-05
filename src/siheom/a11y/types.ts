@@ -1,5 +1,6 @@
 export interface A11yNodeStates {
 	checked?: boolean;
+	invalid?: boolean;
 	expanded?: boolean;
 	selected?: boolean;
 	disabled?: boolean;
