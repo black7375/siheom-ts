@@ -36,9 +36,6 @@ export function serializeA11yTree(node: A11yNode, depth = 0): string {
 	if (node.states.disabled) {
 		stateStrings.push("[disabled]");
 	}
-	if (node.states.invalid !== undefined) {
-		stateStrings.push(`[invalid=${node.states.invalid}]`);
-	}
 	if (node.states.checked !== undefined) {
 		stateStrings.push(`[checked=${node.states.checked}]`);
 	}
