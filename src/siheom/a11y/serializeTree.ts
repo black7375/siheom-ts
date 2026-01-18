@@ -4,13 +4,11 @@ export function serializeA11yTree(node: A11yNode, depth = 0): string {
 	const indent = "  ".repeat(depth);
 	const lines: string[] = [];
 
-	// Handle text nodes (no role, just name)
 	if (node.role === "" && node.name && node.children.length === 0) {
 		lines.push(`${indent}"${node.name}"\n`);
 		return lines.join("");
 	}
 
-	// Skip empty wrapper nodes - just process children
 	if (node.role === "") {
 		for (const child of node.children) {
 			lines.push(serializeA11yTree(child, depth));
@@ -18,15 +16,12 @@ export function serializeA11yTree(node: A11yNode, depth = 0): string {
 		return lines.join("");
 	}
 
-	// Build the line
 	let line = indent + node.role;
 
-	// Add name
 	if (node.name) {
 		line += `: "${node.name}"`;
 	}
 
-	// Add states/attributes
 	const stateStrings: string[] = [];
 
 	if (node.level !== undefined) {
@@ -51,8 +46,26 @@ export function serializeA11yTree(node: A11yNode, depth = 0): string {
 	if (node.states.current !== undefined) {
 		stateStrings.push(`[current=${node.states.current}]`);
 	}
+	if (node.states.busy !== undefined) {
+		stateStrings.push(`[busy=${node.states.busy}]`);
+	}
+	if (node.states.invalid !== undefined) {
+		stateStrings.push(`[invalid=${node.states.invalid}]`);
+	}
+	if (node.states.required !== undefined) {
+		stateStrings.push(`[required=${node.states.required}]`);
+	}
+	if (node.states.readonly !== undefined) {
+		stateStrings.push(`[readonly=${node.states.readonly}]`);
+	}
 	if (node.states.valueNow !== undefined) {
 		stateStrings.push(`[valuenow=${node.states.valueNow}]`);
+	}
+	if (node.posinset !== undefined) {
+		stateStrings.push(`[posinset=${node.posinset}]`);
+	}
+	if (node.setsize !== undefined) {
+		stateStrings.push(`[setsize=${node.setsize}]`);
 	}
 	if (node.value !== undefined) {
 		stateStrings.push(`[value="${node.value}"]`);
@@ -67,7 +80,6 @@ export function serializeA11yTree(node: A11yNode, depth = 0): string {
 
 	lines.push(`${line.trimEnd()}\n`);
 
-	// Process children
 	for (const child of node.children) {
 		lines.push(serializeA11yTree(child, depth + 1));
 	}

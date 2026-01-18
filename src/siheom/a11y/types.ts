@@ -1,10 +1,14 @@
 export interface A11yNodeStates {
-	checked?: boolean;
+	checked?: boolean | "mixed";
 	expanded?: boolean;
 	selected?: boolean;
 	disabled?: boolean;
-	pressed?: boolean;
+	pressed?: boolean | "mixed";
 	current?: string | boolean;
+	busy?: boolean;
+	invalid?: boolean | "grammar" | "spelling";
+	required?: boolean;
+	readonly?: boolean;
 	valueNow?: number;
 	valueMin?: number;
 	valueMax?: number;
@@ -18,5 +22,7 @@ export interface A11yNode {
 	states: A11yNodeStates;
 	description?: string;
 	value?: string;
+	posinset?: number;
+	setsize?: number;
 	children: A11yNode[];
 }
