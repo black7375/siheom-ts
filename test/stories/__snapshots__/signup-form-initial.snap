@@ -5,8 +5,8 @@ region: "signup-form"
   "비밀번호"
   "*"
   textbox: "비밀번호 *" [value=""]
-  checkbox: "약관 동의" [checked=false] [value="on"]
+  checkbox: "약관 동의" [value="on"] [checked=false]
   "약관 동의"
-  checkbox: "개인정보 수집 동의" [checked=false] [value="on"]
+  checkbox: "개인정보 수집 동의" [value="on"] [checked=false]
   "개인정보 수집 동의"
   button: "가입하기"

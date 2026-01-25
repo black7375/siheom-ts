@@ -12,6 +12,7 @@ import {
 	computeAriaSetsize,
 } from "./computeStates.ts";
 import { isNameFromContentRole } from "./ariaRoles.ts";
+import { computeRelations } from "./computeRelations.ts";
 
 const SKIP_ROLES = new Set(["generic", "presentation", "none"]);
 const SET_ITEM_ROLES = new Set([
@@ -79,6 +80,11 @@ export function buildA11yTree(el: HTMLElement): A11yNode | null {
 		const setsize = computeAriaSetsize(el);
 		if (posinset !== undefined) node.posinset = posinset;
 		if (setsize !== undefined) node.setsize = setsize;
+	}
+
+	const relations = computeRelations(el);
+	if (relations) {
+		node.relations = relations;
 	}
 
 	return node;

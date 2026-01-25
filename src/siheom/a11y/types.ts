@@ -15,6 +15,21 @@ export interface A11yNodeStates {
 	valueText?: string;
 }
 
+export interface A11yRelation {
+	id: string;
+	name: string;
+}
+
+export interface A11yRelations {
+	labelledBy?: A11yRelation[];
+	describedBy?: A11yRelation[];
+	errorMessage?: A11yRelation;
+	controls?: A11yRelation[];
+	owns?: A11yRelation[];
+	flowTo?: A11yRelation[];
+	details?: A11yRelation;
+}
+
 export interface A11yNode {
 	role: string;
 	name: string;
@@ -24,5 +39,6 @@ export interface A11yNode {
 	value?: string;
 	posinset?: number;
 	setsize?: number;
+	relations?: A11yRelations;
 	children: A11yNode[];
 }
