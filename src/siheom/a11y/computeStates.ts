@@ -1,4 +1,4 @@
-import type { A11yNodeStates } from "./types.ts";
+import type { A11yStates } from "./types.ts";
 import { isCheckableRole } from "./ariaRoles.ts";
 
 function checkBooleanAttribute(el: Element, attr: string): boolean | undefined {
@@ -19,6 +19,31 @@ function checkTriStateAttribute(
 	return undefined;
 }
 
+export function computeAriaHidden(el: Element): boolean | undefined {
+	return checkBooleanAttribute(el, "aria-hidden");
+}
+
+export function computeAriaDisabled(el: Element): boolean | undefined {
+	if ((el as HTMLButtonElement).disabled) {
+		return true;
+	}
+	const val = el.getAttribute("aria-disabled");
+	if (val === "true") return true;
+	return undefined;
+}
+
+export function computeAriaModal(el: Element): boolean | undefined {
+	return checkBooleanAttribute(el, "aria-modal");
+}
+
+export function computeAriaExpanded(el: Element): boolean | undefined {
+	return checkBooleanAttribute(el, "aria-expanded");
+}
+
+export function computeAriaPressed(el: Element): boolean | "mixed" | undefined {
+	return checkTriStateAttribute(el, "aria-pressed");
+}
+
 export function computeAriaChecked(el: Element): boolean | "mixed" | undefined {
 	if ("indeterminate" in el && (el as HTMLInputElement).indeterminate) {
 		return "mixed";
@@ -29,26 +54,11 @@ export function computeAriaChecked(el: Element): boolean | "mixed" | undefined {
 	return checkTriStateAttribute(el, "aria-checked");
 }
 
-export function computeAriaExpanded(el: Element): boolean | undefined {
-	return checkBooleanAttribute(el, "aria-expanded");
-}
-
 export function computeAriaSelected(el: Element): boolean | undefined {
 	if (el.tagName === "OPTION") {
 		return (el as HTMLOptionElement).selected;
 	}
 	return checkBooleanAttribute(el, "aria-selected");
-}
-
-export function computeAriaPressed(el: Element): boolean | "mixed" | undefined {
-	return checkTriStateAttribute(el, "aria-pressed");
-}
-
-export function computeAriaDisabled(el: Element): boolean {
-	if ((el as HTMLButtonElement).disabled) {
-		return true;
-	}
-	return el.getAttribute("aria-disabled") === "true";
 }
 
 export function computeAriaCurrent(el: Element): string | boolean | undefined {
@@ -57,10 +67,6 @@ export function computeAriaCurrent(el: Element): string | boolean | undefined {
 	if (value === "false") return false;
 	if (value) return value;
 	return undefined;
-}
-
-export function computeAriaBusy(el: Element): boolean | undefined {
-	return checkBooleanAttribute(el, "aria-busy");
 }
 
 export function computeAriaInvalid(
@@ -88,99 +94,90 @@ export function computeAriaReadonly(el: Element): boolean | undefined {
 	return checkBooleanAttribute(el, "aria-readonly");
 }
 
-export function computeHeadingLevel(el: Element): number | undefined {
-	const implicit: Record<string, number> = {
-		H1: 1,
-		H2: 2,
-		H3: 3,
-		H4: 4,
-		H5: 5,
-		H6: 6,
-	};
+export function computeAriaBusy(el: Element): boolean | undefined {
+	return checkBooleanAttribute(el, "aria-busy");
+}
 
-	const ariaLevel = el.getAttribute("aria-level");
-	if (ariaLevel) {
-		return Number(ariaLevel);
+export function computeStates(
+	el: Element,
+	role: string,
+): A11yStates | undefined {
+	const states: A11yStates = {};
+	let hasAny = false;
+
+	const hidden = computeAriaHidden(el);
+	if (hidden !== undefined) {
+		states.hidden = hidden;
+		hasAny = true;
 	}
 
-	return implicit[el.tagName];
-}
+	const disabled = computeAriaDisabled(el);
+	if (disabled !== undefined) {
+		states.disabled = disabled;
+		hasAny = true;
+	}
 
-export function computeAriaValueNow(el: Element): number | undefined {
-	const val = el.getAttribute("aria-valuenow");
-	return val ? Number(val) : undefined;
-}
-
-export function computeAriaValueMin(el: Element): number | undefined {
-	const val = el.getAttribute("aria-valuemin");
-	return val ? Number(val) : undefined;
-}
-
-export function computeAriaValueMax(el: Element): number | undefined {
-	const val = el.getAttribute("aria-valuemax");
-	return val ? Number(val) : undefined;
-}
-
-export function computeAriaValueText(el: Element): string | undefined {
-	return el.getAttribute("aria-valuetext") ?? undefined;
-}
-
-export function computeAriaPosinset(el: Element): number | undefined {
-	const val = el.getAttribute("aria-posinset");
-	return val ? Number(val) : undefined;
-}
-
-export function computeAriaSetsize(el: Element): number | undefined {
-	const val = el.getAttribute("aria-setsize");
-	return val ? Number(val) : undefined;
-}
-
-export function computeAllStates(el: Element, role: string): A11yNodeStates {
-	const states: A11yNodeStates = {};
-
-	if (isCheckableRole(role)) {
-		const checked = computeAriaChecked(el);
-		if (checked !== undefined) states.checked = checked;
+	const modal = computeAriaModal(el);
+	if (modal !== undefined) {
+		states.modal = modal;
+		hasAny = true;
 	}
 
 	const expanded = computeAriaExpanded(el);
-	if (expanded !== undefined) states.expanded = expanded;
-
-	const selected = computeAriaSelected(el);
-	if (selected !== undefined) states.selected = selected;
-
-	const disabled = computeAriaDisabled(el);
-	if (disabled) states.disabled = disabled;
+	if (expanded !== undefined) {
+		states.expanded = expanded;
+		hasAny = true;
+	}
 
 	const pressed = computeAriaPressed(el);
-	if (pressed !== undefined) states.pressed = pressed;
+	if (pressed !== undefined) {
+		states.pressed = pressed;
+		hasAny = true;
+	}
+
+	if (isCheckableRole(role)) {
+		const checked = computeAriaChecked(el);
+		if (checked !== undefined) {
+			states.checked = checked;
+			hasAny = true;
+		}
+	}
+
+	const selected = computeAriaSelected(el);
+	if (selected !== undefined) {
+		states.selected = selected;
+		hasAny = true;
+	}
 
 	const current = computeAriaCurrent(el);
-	if (current !== undefined) states.current = current;
-
-	const busy = computeAriaBusy(el);
-	if (busy !== undefined) states.busy = busy;
+	if (current !== undefined) {
+		states.current = current;
+		hasAny = true;
+	}
 
 	const invalid = computeAriaInvalid(el);
-	if (invalid !== undefined) states.invalid = invalid;
+	if (invalid !== undefined) {
+		states.invalid = invalid;
+		hasAny = true;
+	}
 
 	const required = computeAriaRequired(el);
-	if (required !== undefined) states.required = required;
+	if (required !== undefined) {
+		states.required = required;
+		hasAny = true;
+	}
 
 	const readonly = computeAriaReadonly(el);
-	if (readonly !== undefined) states.readonly = readonly;
+	if (readonly !== undefined) {
+		states.readonly = readonly;
+		hasAny = true;
+	}
 
-	const valueNow = computeAriaValueNow(el);
-	if (valueNow !== undefined) states.valueNow = valueNow;
+	const busy = computeAriaBusy(el);
+	if (busy !== undefined) {
+		states.busy = busy;
+		hasAny = true;
+	}
 
-	const valueMin = computeAriaValueMin(el);
-	if (valueMin !== undefined) states.valueMin = valueMin;
-
-	const valueMax = computeAriaValueMax(el);
-	if (valueMax !== undefined) states.valueMax = valueMax;
-
-	const valueText = computeAriaValueText(el);
-	if (valueText !== undefined) states.valueText = valueText;
-
-	return states;
+	return hasAny ? states : undefined;
 }

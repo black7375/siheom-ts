@@ -2,22 +2,27 @@ import { computeAccessibleName } from "dom-accessibility-api";
 import type { A11yRelation, A11yRelations } from "./types.ts";
 
 const RELATION_ATTRIBUTES = {
-	labelledBy: "aria-labelledby",
-	describedBy: "aria-describedby",
-	errorMessage: "aria-errormessage",
+	activedescendant: "aria-activedescendant",
 	controls: "aria-controls",
-	owns: "aria-owns",
-	flowTo: "aria-flowto",
+	describedby: "aria-describedby",
 	details: "aria-details",
+	errormessage: "aria-errormessage",
+	flowto: "aria-flowto",
+	labelledby: "aria-labelledby",
+	owns: "aria-owns",
 } as const;
 
-const SINGLE_RELATIONS = new Set(["errorMessage", "details"]);
+const SINGLE_RELATIONS = new Set([
+	"activedescendant",
+	"errormessage",
+	"details",
+]);
 const MULTI_RELATIONS = new Set([
-	"labelledBy",
-	"describedBy",
+	"labelledby",
+	"describedby",
 	"controls",
 	"owns",
-	"flowTo",
+	"flowto",
 ]);
 
 function resolveRelation(id: string, root: Element): A11yRelation | null {

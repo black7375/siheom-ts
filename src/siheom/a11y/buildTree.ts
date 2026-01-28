@@ -5,26 +5,14 @@ import {
 import type { A11yNode } from "./types.ts";
 import { getRole } from "./roleHelpers.ts";
 import { isInaccessible } from "./isAccessible.ts";
-import {
-	computeAllStates,
-	computeHeadingLevel,
-	computeAriaPosinset,
-	computeAriaSetsize,
-} from "./computeStates.ts";
-import { isNameFromContentRole } from "./ariaRoles.ts";
+import { computeStates } from "./computeStates.ts";
+import { computeProperties } from "./computeProperties.ts";
 import { computeRelations } from "./computeRelations.ts";
+import { computeLiveRegion } from "./computeLiveRegion.ts";
+import { computeDragDrop } from "./computeDragDrop.ts";
+import { isNameFromContentRole } from "./ariaRoles.ts";
 
 const SKIP_ROLES = new Set(["generic", "presentation", "none"]);
-const SET_ITEM_ROLES = new Set([
-	"listitem",
-	"menuitem",
-	"menuitemcheckbox",
-	"menuitemradio",
-	"option",
-	"tab",
-	"treeitem",
-	"row",
-]);
 
 export function buildA11yTree(el: HTMLElement): A11yNode | null {
 	if (isInaccessible(el)) {
@@ -38,16 +26,42 @@ export function buildA11yTree(el: HTMLElement): A11yNode | null {
 	const role = getRole(el);
 
 	if (SKIP_ROLES.has(role) || role === "") {
+		const states = computeStates(el, role);
+		const relations = computeRelations(el);
+		const liveRegion = computeLiveRegion(el);
+		const dragDrop = computeDragDrop(el);
+
+		const hasMeaningfulAttributes =
+			states || relations || liveRegion || dragDrop;
+
+		if (hasMeaningfulAttributes) {
+			const name = computeAccessibleName(el);
+			const description = computeAccessibleDescription(el);
+
+			const node: A11yNode = {
+				role: "generic",
+				name,
+				children: processChildren(el),
+			};
+
+			if (description) node.description = description;
+			if (states) node.states = states;
+			if (relations) node.relations = relations;
+			if (liveRegion) node.liveRegion = liveRegion;
+			if (dragDrop) node.dragDrop = dragDrop;
+
+			return node;
+		}
+
 		const children = processChildren(el);
 		if (children.length > 0) {
-			return { role: "", name: "", states: {}, children };
+			return { role: "", name: "", children };
 		}
 		return null;
 	}
 
 	const name = computeAccessibleName(el);
 	const description = computeAccessibleDescription(el);
-	const states = computeAllStates(el, role);
 
 	const shouldSkipChildren =
 		isNameFromContentRole(role) && hasOnlyTextMatchingName(el, name);
@@ -55,7 +69,6 @@ export function buildA11yTree(el: HTMLElement): A11yNode | null {
 	const node: A11yNode = {
 		role,
 		name,
-		states,
 		children: shouldSkipChildren ? [] : processChildren(el),
 	};
 
@@ -63,28 +76,34 @@ export function buildA11yTree(el: HTMLElement): A11yNode | null {
 		node.description = description;
 	}
 
-	if (role === "heading") {
-		const level = computeHeadingLevel(el);
-		if (level) {
-			node.level = level;
-		}
-	}
-
 	if (isFormControl(el)) {
 		const value = (el as HTMLInputElement).value;
 		node.value = value;
 	}
 
-	if (SET_ITEM_ROLES.has(role)) {
-		const posinset = computeAriaPosinset(el);
-		const setsize = computeAriaSetsize(el);
-		if (posinset !== undefined) node.posinset = posinset;
-		if (setsize !== undefined) node.setsize = setsize;
+	const states = computeStates(el, role);
+	if (states) {
+		node.states = states;
+	}
+
+	const properties = computeProperties(el, role);
+	if (properties) {
+		node.properties = properties;
 	}
 
 	const relations = computeRelations(el);
 	if (relations) {
 		node.relations = relations;
+	}
+
+	const liveRegion = computeLiveRegion(el);
+	if (liveRegion) {
+		node.liveRegion = liveRegion;
+	}
+
+	const dragDrop = computeDragDrop(el);
+	if (dragDrop) {
+		node.dragDrop = dragDrop;
 	}
 
 	return node;
@@ -107,7 +126,6 @@ function processChildren(el: HTMLElement): A11yNode[] {
 		if (child instanceof HTMLElement) {
 			const node = buildA11yTree(child);
 			if (node) {
-				// Flatten empty wrapper nodes (no role)
 				if (node.role === "" && node.children.length > 0) {
 					children.push(...node.children);
 				} else if (node.role !== "") {
@@ -117,11 +135,9 @@ function processChildren(el: HTMLElement): A11yNode[] {
 		} else if (child instanceof Text) {
 			const text = child.textContent?.trim();
 			if (text) {
-				// Raw text without explicit role (per user preference)
 				children.push({
 					role: "",
 					name: text,
-					states: {},
 					children: [],
 				});
 			}

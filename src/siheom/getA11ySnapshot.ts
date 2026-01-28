@@ -1,7 +1,7 @@
 import { buildA11yTree } from "./a11y/buildTree.ts";
 import { serializeA11yTree } from "./a11y/serializeTree.ts";
 
-export type { A11yNode, A11yNodeStates } from "./a11y/types.ts";
+export type { A11yNode, A11yStates } from "./a11y/types.ts";
 
 /**
  * Serializes an HTML element to an accessibility tree string.
