@@ -6,6 +6,7 @@ import type {
 	A11yRelations,
 	A11yLiveRegion,
 	A11yDragDrop,
+	SerializeOptions,
 } from "./types.ts";
 
 function escapeString(str: string): string {
@@ -77,7 +78,12 @@ function serializeProperties(props: A11yProperties): string {
 	return parts.join(" ");
 }
 
-function formatRelation(rel: A11yRelation): string {
+function formatRelation(
+	rel: A11yRelation | { id: string; name: string | null },
+): string {
+	if (rel.name === null) {
+		return `null (#${rel.id})`;
+	}
 	return `"${escapeString(rel.name)}" (#${rel.id})`;
 }
 
@@ -108,30 +114,86 @@ function serializeRelationsBlock(
 
 function serializeLiveRegion(liveRegion: A11yLiveRegion): string {
 	const parts: string[] = [];
-	if (liveRegion.live !== undefined) parts.push(`[live=${liveRegion.live}]`);
-	if (liveRegion.atomic !== undefined)
-		parts.push(`[atomic=${liveRegion.atomic}]`);
-	if (liveRegion.relevant !== undefined)
-		parts.push(`[relevant="${escapeString(liveRegion.relevant)}"]`);
+	if (liveRegion.live !== undefined) {
+		if (liveRegion.live === null) {
+			parts.push("[live=null]");
+		} else {
+			parts.push(`[live=${liveRegion.live}]`);
+		}
+	}
+	if (liveRegion.atomic !== undefined) {
+		if (liveRegion.atomic === null) {
+			parts.push("[atomic=null]");
+		} else {
+			parts.push(`[atomic=${liveRegion.atomic}]`);
+		}
+	}
+	if (liveRegion.relevant !== undefined) {
+		if (liveRegion.relevant === null) {
+			parts.push("[relevant=null]");
+		} else {
+			parts.push(`[relevant="${escapeString(liveRegion.relevant)}"]`);
+		}
+	}
 	return parts.join(" ");
 }
 
 function serializeDragDrop(dragDrop: A11yDragDrop): string {
 	const parts: string[] = [];
 	if (dragDrop.grabbed !== undefined) {
-		parts.push(`[grabbed=${dragDrop.grabbed}] (deprecated)`);
+		if (dragDrop.grabbed === null) {
+			parts.push("[grabbed=null] (deprecated)");
+		} else {
+			parts.push(`[grabbed=${dragDrop.grabbed}] (deprecated)`);
+		}
 	}
 	if (dragDrop.dropeffect !== undefined) {
-		parts.push(
-			`[dropeffect="${escapeString(dragDrop.dropeffect)}"] (deprecated)`,
-		);
+		if (dragDrop.dropeffect === null) {
+			parts.push("[dropeffect=null] (deprecated)");
+		} else {
+			parts.push(
+				`[dropeffect="${escapeString(dragDrop.dropeffect)}"] (deprecated)`,
+			);
+		}
 	}
 	return parts.join(" ");
 }
 
-export function serializeA11yTree(node: A11yNode, depth = 0): string {
+function serializeOther(other: Record<string, unknown>): string {
+	const keys = Object.keys(other).sort();
+	const parts: string[] = [];
+
+	for (const key of keys) {
+		const val = other[key];
+		if (val === undefined) continue;
+
+		if (val === null) {
+			parts.push(`[${key}=null]`);
+		} else if (typeof val === "string") {
+			parts.push(`[${key}="${escapeString(val)}"]`);
+		} else {
+			parts.push(`[${key}=${val}]`);
+		}
+	}
+
+	return parts.join(" ");
+}
+
+export function serializeA11yTree(
+	node: A11yNode,
+	options: SerializeOptions = {},
+): string {
+	return serializeNode(node, 0, options);
+}
+
+function serializeNode(
+	node: A11yNode,
+	depth: number,
+	options: SerializeOptions,
+): string {
 	const indent = "  ".repeat(depth);
 	const lines: string[] = [];
+	const isVerbose = options.mode === "verbose";
 
 	if (node.role === "" && node.name && node.children.length === 0) {
 		lines.push(`${indent}"${escapeString(node.name)}"\n`);
@@ -140,22 +202,30 @@ export function serializeA11yTree(node: A11yNode, depth = 0): string {
 
 	if (node.role === "") {
 		for (const child of node.children) {
-			lines.push(serializeA11yTree(child, depth));
+			lines.push(serializeNode(child, depth, options));
 		}
 		return lines.join("");
 	}
 
 	let header = `${indent}${node.role}:`;
-	if (node.name) {
+	if (node.name || isVerbose) {
 		header += ` "${escapeString(node.name)}"`;
 	}
 
 	const headerExtras: string[] = [];
 	if (node.value !== undefined) {
-		headerExtras.push(`[value="${escapeString(node.value)}"]`);
+		if (node.value === null) {
+			headerExtras.push("[value=null]");
+		} else {
+			headerExtras.push(`[value="${escapeString(node.value)}"]`);
+		}
 	}
 	if (node.description) {
-		headerExtras.push(`[description="${escapeString(node.description)}"]`);
+		if (node.description === null) {
+			headerExtras.push("[description=null]");
+		} else {
+			headerExtras.push(`[description="${escapeString(node.description)}"]`);
+		}
 	}
 	if (headerExtras.length > 0) {
 		header += ` ${headerExtras.join(" ")}`;
@@ -197,8 +267,15 @@ export function serializeA11yTree(node: A11yNode, depth = 0): string {
 		}
 	}
 
+	if (node.other) {
+		const otherStr = serializeOther(node.other);
+		if (otherStr) {
+			lines.push(`${childIndent}- other: ${otherStr}\n`);
+		}
+	}
+
 	for (const child of node.children) {
-		lines.push(serializeA11yTree(child, depth + 1));
+		lines.push(serializeNode(child, depth + 1, options));
 	}
 
 	return lines.join("");
