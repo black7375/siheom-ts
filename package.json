@@ -62,7 +62,7 @@
     "vitest": "^3.0.0"
   },
   "scripts": {
-    "ci": "bun run check-format && bun run build && bun run check-exports && bun run typecheck && bun test",
+    "ci": "bun run check-format && bun run build && bun run check-exports && bun run typecheck && bun run vitest run",
     "local-check": "bun run format && bun run build && bun run check-exports && bun run typecheck && bun run vitest --browser.enabled true",
     "vitest": "vitest",
     "typecheck": "tsgo",
