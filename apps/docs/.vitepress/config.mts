@@ -38,6 +38,7 @@ const EXAMPLES = {
 		{ text: "개요", link: "/examples" },
 		{ text: "Counter", link: "/examples/counter" },
 		{ text: "SignUpForm", link: "/examples/signup-form" },
+		{ text: "라우팅 / 링크", link: "/examples/routing" },
 	],
 };
 
@@ -89,6 +90,7 @@ const EXAMPLES_EN = {
 		{ text: "Overview", link: "/en/examples" },
 		{ text: "Counter", link: "/en/examples/counter" },
 		{ text: "SignUpForm", link: "/en/examples/signup-form" },
+		{ text: "Routing / links", link: "/en/examples/routing" },
 	],
 };
 
