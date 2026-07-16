@@ -35,46 +35,15 @@ export function buildA11yTree(
 
     const hasMeaningfulAttributes = states || relations || liveRegion || dragDrop || other;
 
-    // Verbose mode: always output as generic: "" with full tree preserved
-    if (isVerbose) {
-      const name = computeAccessibleName(el);
-      const description = computeAccessibleDescription(el);
-
-      const node: A11yNode = {
-        role: "generic",
-        name,
-        children: processChildren(el, options),
-      };
-
-      if (description) node.description = description;
-      if (states) node.states = states;
-      if (relations) node.relations = relations;
-      if (liveRegion) node.liveRegion = liveRegion;
-      if (dragDrop) node.dragDrop = dragDrop;
-      if (other && Object.keys(other).length > 0) node.other = other;
-
-      return node;
-    }
-
-    // Compact mode: only output if has meaningful attributes
-    if (hasMeaningfulAttributes) {
-      const name = computeAccessibleName(el);
-      const description = computeAccessibleDescription(el);
-
-      const node: A11yNode = {
-        role: "generic",
-        name,
-        children: processChildren(el, options),
-      };
-
-      if (description) node.description = description;
-      if (states) node.states = states;
-      if (relations) node.relations = relations;
-      if (liveRegion) node.liveRegion = liveRegion;
-      if (dragDrop) node.dragDrop = dragDrop;
-      if (other && Object.keys(other).length > 0) node.other = other;
-
-      return node;
+    // Verbose mode always outputs generic nodes; compact mode only when attributes exist.
+    if (isVerbose || hasMeaningfulAttributes) {
+      return buildGenericRoleNode(el, options, {
+        states,
+        relations,
+        liveRegion,
+        dragDrop,
+        other,
+      });
     }
 
     const children = processChildren(el, options);
@@ -133,6 +102,38 @@ export function buildA11yTree(
   if (other && Object.keys(other).length > 0) {
     node.other = other;
   }
+
+  return node;
+}
+
+type GenericRoleNodeAttributes = {
+  states?: A11yNode["states"];
+  relations?: A11yNode["relations"];
+  liveRegion?: A11yNode["liveRegion"];
+  dragDrop?: A11yNode["dragDrop"];
+  other?: A11yNode["other"];
+};
+
+function buildGenericRoleNode(
+  el: HTMLElement,
+  options: BuildA11yTreeOptions,
+  { states, relations, liveRegion, dragDrop, other }: GenericRoleNodeAttributes,
+): A11yNode {
+  const name = computeAccessibleName(el);
+  const description = computeAccessibleDescription(el);
+
+  const node: A11yNode = {
+    role: "generic",
+    name,
+    children: processChildren(el, options),
+  };
+
+  if (description) node.description = description;
+  if (states) node.states = states;
+  if (relations) node.relations = relations;
+  if (liveRegion) node.liveRegion = liveRegion;
+  if (dragDrop) node.dragDrop = dragDrop;
+  if (other && Object.keys(other).length > 0) node.other = other;
 
   return node;
 }

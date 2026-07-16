@@ -1,0 +1,18 @@
+{
+  "threshold": 100,
+  "minLines": 5,
+  "minTokens": 50,
+  "mode": "strict",
+  "format": ["typescript", "javascript", "tsx", "jsx"],
+  "ignore": [
+    "**/node_modules/**",
+    "**/dist/**",
+    "**/storybook-static/**",
+    "**/.astro/**",
+    "**/coverage/**",
+    "**/__screenshots__/**"
+  ],
+  "reporters": ["console"],
+  "absolute": true,
+  "pattern": "**/*.{ts,tsx,js,jsx}"
+}

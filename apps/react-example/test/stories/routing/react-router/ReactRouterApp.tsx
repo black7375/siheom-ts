@@ -13,44 +13,20 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { AppShell, PageIntro } from "../components/AppShell";
 import { ArticleDetailView } from "../components/ArticleDetailView";
-import { ArticleListView } from "../components/ArticleListView";
+import { ArticleListShell } from "../components/ArticleListShell";
+import {
+  createArticleListLinkRenderer,
+  renderStaticArticleListLink,
+} from "../components/indexListViews";
 import { ARTICLES, getArticle } from "../shared/articles";
-import { articleCardLinkClassName, linkClassName } from "../shared/linkStyles";
+import { linkClassName } from "../shared/linkStyles";
 
 export function ArticleList() {
-  return (
-    <AppShell activeNav="articles">
-      <ArticleListView
-        renderLink={({ article, headingId, children }) => (
-          <a
-            href={`/articles/${article.id}`}
-            aria-labelledby={headingId}
-            className={articleCardLinkClassName}
-          >
-            {children}
-          </a>
-        )}
-      />
-    </AppShell>
-  );
+  return <ArticleListShell renderLink={renderStaticArticleListLink} />;
 }
 
 function ArticleListPage() {
-  return (
-    <AppShell activeNav="articles">
-      <ArticleListView
-        renderLink={({ article, headingId, children }) => (
-          <Link
-            to={`/articles/${article.id}`}
-            aria-labelledby={headingId}
-            className={articleCardLinkClassName}
-          >
-            {children}
-          </Link>
-        )}
-      />
-    </AppShell>
-  );
+  return <ArticleListShell renderLink={createArticleListLinkRenderer(Link)} />;
 }
 
 function ArticleDetailPage() {

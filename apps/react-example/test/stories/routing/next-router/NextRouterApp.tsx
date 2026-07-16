@@ -1,6 +1,6 @@
 import { NoticeAccordion } from "../components/NoticeAccordion";
 import { AppShell, PageIntro } from "../components/AppShell";
-import { NoticeIndexView } from "../components/NoticeIndexView";
+import { NoticeIndexView } from "../components/indexListViews";
 import {
   FakeNextRouterProvider,
   Link,

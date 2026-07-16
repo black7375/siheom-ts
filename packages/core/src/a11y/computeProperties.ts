@@ -7,6 +7,18 @@ function getNumberAttribute(el: Element, attr: string): number | undefined {
   return Number.isNaN(num) ? undefined : num;
 }
 
+function getEnumeratedAttribute<T extends string>(
+  el: Element,
+  attr: string,
+  allowed: readonly T[],
+): T | undefined {
+  const val = el.getAttribute(attr);
+  if (val !== null && (allowed as readonly string[]).includes(val)) {
+    return val as T;
+  }
+  return undefined;
+}
+
 export function computeLevel(el: Element, role: string): number | undefined {
   if (role !== "heading") return undefined;
 
@@ -45,11 +57,7 @@ export function computeMultiselectable(el: Element): boolean | undefined {
 }
 
 export function computeAutocomplete(el: Element): string | undefined {
-  const val = el.getAttribute("aria-autocomplete");
-  if (val === "none" || val === "inline" || val === "list" || val === "both") {
-    return val;
-  }
-  return undefined;
+  return getEnumeratedAttribute(el, "aria-autocomplete", ["none", "inline", "list", "both"] as const);
 }
 
 export function computeValuemin(el: Element): number | undefined {
@@ -103,11 +111,12 @@ export function computeRowspan(el: Element): number | undefined {
 export function computeSort(
   el: Element,
 ): "ascending" | "descending" | "none" | "other" | undefined {
-  const val = el.getAttribute("aria-sort");
-  if (val === "ascending" || val === "descending" || val === "none" || val === "other") {
-    return val;
-  }
-  return undefined;
+  return getEnumeratedAttribute(el, "aria-sort", [
+    "ascending",
+    "descending",
+    "none",
+    "other",
+  ] as const);
 }
 
 const SET_ITEM_ROLES = new Set([

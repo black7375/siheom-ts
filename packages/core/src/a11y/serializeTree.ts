@@ -13,6 +13,16 @@ function escapeString(str: string): string {
   return str.replace(/\\/g, "\\\\").replace(/"/g, '\\"').replace(/\n/g, "\\n");
 }
 
+function formatBracketedAttribute(key: string, val: unknown): string {
+  if (val === null) {
+    return `[${key}=null]`;
+  }
+  if (typeof val === "string") {
+    return `[${key}="${escapeString(val)}"]`;
+  }
+  return `[${key}=${val}]`;
+}
+
 function serializeStates(states: A11yStates): string {
   const parts: string[] = [];
 
@@ -62,11 +72,7 @@ function serializeProperties(props: A11yProperties): string {
     const val = props[key];
     if (val === undefined) continue;
 
-    if (typeof val === "string") {
-      parts.push(`[${key}="${escapeString(val)}"]`);
-    } else {
-      parts.push(`[${key}=${val}]`);
-    }
+    parts.push(formatBracketedAttribute(key, val));
   }
 
   return parts.join(" ");
@@ -154,13 +160,7 @@ function serializeOther(other: Record<string, unknown>): string {
     const val = other[key];
     if (val === undefined) continue;
 
-    if (val === null) {
-      parts.push(`[${key}=null]`);
-    } else if (typeof val === "string") {
-      parts.push(`[${key}="${escapeString(val)}"]`);
-    } else {
-      parts.push(`[${key}=${val}]`);
-    }
+    parts.push(formatBracketedAttribute(key, val));
   }
 
   return parts.join(" ");

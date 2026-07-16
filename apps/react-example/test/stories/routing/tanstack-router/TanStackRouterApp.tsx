@@ -10,7 +10,7 @@ import {
 } from "@tanstack/react-router";
 import { AppShell } from "../components/AppShell";
 import { ArticleDetailView } from "../components/ArticleDetailView";
-import { ArticleListView } from "../components/ArticleListView";
+import { ArticleListView } from "../components/indexListViews";
 import { ARTICLES, getArticle } from "../shared/articles";
 import { articleCardLinkClassName, linkClassName } from "../shared/linkStyles";
 

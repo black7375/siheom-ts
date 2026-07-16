@@ -25,12 +25,17 @@
     "local-check": "bun run format && bun run lint:fix && bun run build && bun run check-exports && bun run typecheck && bun run --filter '@siheom/react-example' test",
     "release": "./scripts/release.sh",
     "local-release": "changeset version && changeset publish",
-    "storybook": "bun run --filter '@siheom/react-example' storybook"
+    "storybook": "bun run --filter '@siheom/react-example' storybook",
+    "install:nose": "bash scripts/install-nose.sh",
+    "dup:jscpd": "jscpd packages/core/src packages/react/src apps/react-example/test",
+    "dup:nose": "nose query -r packages/core/src -r packages/react/src -r apps/react-example/test top=20",
+    "dup": "bun run dup:jscpd && bun run dup:nose"
   },
   "devDependencies": {
     "@arethetypeswrong/cli": "^0.18.5",
     "@changesets/cli": "^2.31.1",
     "@typescript/native-preview": "^7.0.0-dev.20260707.2",
+    "jscpd": "^5.0.12",
     "oxfmt": "^0.59.0",
     "oxlint": "^1.74.0",
     "typescript": "^7.0.2"

@@ -4,44 +4,42 @@ import type { ActionStepDefinitionDict, Locator } from "./types";
 import { getElement, locatorLog } from "./query";
 import { expect } from "vitest";
 
+async function withPresentElement(
+  target: Locator,
+  run: (element: HTMLElement) => Promise<void>,
+) {
+  await waitFor(async () => {
+    const element = getElement(target, true);
+
+    expect(element).toBeInTheDocument();
+    await run(element);
+  });
+}
+
 export const defaultActions = {
   click: async (target: Locator) =>
-    waitFor(async () => {
-      const element = getElement(target, true);
-
-      expect(element).toBeInTheDocument();
-
+    withPresentElement(target, async (element) => {
       await userEvent.click(element);
     }),
   dblclick: async (target: Locator) =>
-    waitFor(async () => {
-      const element = getElement(target, true);
-
-      expect(element).toBeInTheDocument();
-
+    withPresentElement(target, async (element) => {
       await userEvent.dblClick(element);
     }),
-  fill: async (target: Locator, text: string) => {
-    await waitFor(async () => {
-      const element = getElement(target, true);
-
-      expect(element).toBeInTheDocument();
-
+  hover: async (target: Locator) =>
+    withPresentElement(target, async (element) => {
+      await userEvent.hover(element);
+    }),
+  fill: async (target: Locator, text: string) =>
+    withPresentElement(target, async (element) => {
       await userEvent.click(element);
       await userEvent.clear(element);
       await userEvent.type(element, text);
-    });
-  },
-  type: async (target: Locator, text: string) => {
-    await waitFor(async () => {
-      const element = getElement(target, true);
-
-      expect(element).toBeInTheDocument();
-
+    }),
+  type: async (target: Locator, text: string) =>
+    withPresentElement(target, async (element) => {
       await userEvent.click(element);
       await userEvent.type(element, text);
-    });
-  },
+    }),
   tab: async (target: Locator) => {
     await waitFor(async () => {
       const element = getElement(target, true);
@@ -53,15 +51,10 @@ export const defaultActions = {
       await new Promise((resolve) => setTimeout(resolve, 300));
     });
   },
-  upload: async (target: Locator, file: File) => {
-    await waitFor(async () => {
-      const element = getElement(target, true);
-
-      expect(element).toBeInTheDocument();
-
+  upload: async (target: Locator, file: File) =>
+    withPresentElement(target, async (element) => {
       await userEvent.upload(element, file);
-    });
-  },
+    }),
 } satisfies ActionStepDefinitionDict;
 
 export const actions = {
@@ -76,6 +69,12 @@ export const actions = {
       action: "dblclick",
       target,
       log: `dblclick!   : ${locatorLog(target)}`,
+    }) as const,
+  hover: (target: Locator) =>
+    ({
+      action: "hover",
+      target,
+      log: `hover!      : ${locatorLog(target)}`,
     }) as const,
   fill: (target: Locator, text: string) =>
     ({

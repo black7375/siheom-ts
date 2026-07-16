@@ -6,6 +6,41 @@ import { expect } from "vitest";
 import { getA11ySnapshot } from "./getA11ySnapshot";
 import { tableToMarkdown } from "./tableToMarkdown";
 
+async function withPresentElement(
+  target: Locator,
+  assertMatch: (element: HTMLElement) => void,
+) {
+  await waitFor(async () => {
+    const element = getElement(target, true);
+
+    expect(element).toBeInTheDocument();
+    assertMatch(element);
+  });
+}
+
+async function withPresentElementFlag(
+  target: Locator,
+  flag: boolean,
+  assertMatch: (element: HTMLElement, flag: boolean) => void,
+) {
+  await withPresentElement(target, (element) => assertMatch(element, flag));
+}
+
+function assertAttributeWhen(
+  target: Locator,
+  flag: boolean,
+  positive: (element: HTMLElement) => void,
+  negative: (element: HTMLElement) => void,
+) {
+  return withPresentElementFlag(target, flag, (element, flag) => {
+    if (flag) {
+      positive(element);
+      return;
+    }
+    negative(element);
+  });
+}
+
 export const defaultAssertions = {
   visible: async (target: Locator, expected: boolean) => {
     await waitFor(async () => {
@@ -25,88 +60,59 @@ export const defaultAssertions = {
       expect(element).not.toHaveAttribute("aria-hidden", "false");
     });
   },
-  checked: async (target: Locator, expected: boolean) => {
-    await waitFor(async () => {
-      const element = getElement(target, true);
-
-      expect(element).toBeInTheDocument();
-
+  checked: async (target: Locator, expected: boolean) =>
+    withPresentElement(target, (element) => {
       if (element instanceof HTMLInputElement && element.type === "checkbox") {
         if (expected) {
           expect(element).toHaveAttribute("checked", "true");
         } else {
           expect(element).not.toHaveAttribute("checked", "true");
         }
-      } else {
-        if (expected) {
-          expect(element).toHaveAttribute("aria-checked", "true");
-        } else {
-          expect(element).not.toHaveAttribute("aria-checked", "true");
-        }
+        return;
       }
-    });
-  },
-  expanded: async (target: Locator, expected: boolean) => {
-    await waitFor(async () => {
-      const element = getElement(target, true);
 
-      expect(element).toBeInTheDocument();
-
+      if (expected) {
+        expect(element).toHaveAttribute("aria-checked", "true");
+      } else {
+        expect(element).not.toHaveAttribute("aria-checked", "true");
+      }
+    }),
+  expanded: async (target: Locator, expected: boolean) =>
+    withPresentElement(target, (element) => {
       expect(element).toHaveAttribute("aria-expanded", expected ? "true" : "false");
-    });
-  },
-  selected: async (target: Locator, expected: boolean) => {
-    await waitFor(async () => {
-      const element = getElement(target, true);
-
-      expect(element).toBeInTheDocument();
-
+    }),
+  selected: async (target: Locator, expected: boolean) =>
+    withPresentElement(target, (element) => {
       expect(element).toHaveAttribute("aria-selected", expected ? "true" : "false");
-    });
-  },
-  disabled: async (target: Locator, expected: boolean) => {
-    await waitFor(async () => {
-      const element = getElement(target, true);
-
-      expect(element).toBeInTheDocument();
-
+    }),
+  disabled: async (target: Locator, expected: boolean) =>
+    withPresentElement(target, (element) => {
       if (element.hasAttribute("disabled")) {
         expect(element).toHaveAttribute("disabled", expected ? "disabled" : null);
-      } else {
-        expect(element).toHaveAttribute("aria-disabled", expected ? "true" : "false");
+        return;
       }
-    });
-  },
-  focused: async (target: Locator, expected: boolean) => {
-    await waitFor(async () => {
-      const element = getElement(target, true);
 
-      expect(element).toBeInTheDocument();
-
+      expect(element).toHaveAttribute("aria-disabled", expected ? "true" : "false");
+    }),
+  focused: async (target: Locator, expected: boolean) =>
+    withPresentElement(target, (element) => {
       if (expected) {
         expect(element).toHaveFocus();
       } else {
         expect(element).not.toHaveFocus();
       }
-    });
-  },
+    }),
   current: async (
     target: Locator,
     expected: "true" | "false" | "page" | "step" | "location" | "date" | "time",
     flag = true,
-  ) => {
-    await waitFor(async () => {
-      const element = getElement(target, true);
-
-      expect(element).toBeInTheDocument();
-
-      if (flag) {
-        expect(element).toHaveAttribute("aria-current", expected);
-      } else {
-        expect(element).not.toHaveAttribute("aria-current", expected);
-      }
-    });
-  },
+  ) =>
+    assertAttributeWhen(
+      target,
+      flag,
+      (element) => expect(element).toHaveAttribute("aria-current", expected),
+      (element) => expect(element).not.toHaveAttribute("aria-current", expected),
+    ),
   count: async (target: Locator, expected: number, flag = true) => {
     await waitFor(async () => {
       const elements = getElements(target, true);
@@ -118,82 +124,47 @@ export const defaultAssertions = {
       }
     });
   },
-  value: async (target: Locator, expected: string, flag = true) => {
-    await waitFor(async () => {
-      const element = getElement(target, true);
-
-      expect(element).toBeInTheDocument();
-
-      if (flag) {
-        expect(element).toHaveValue(expected);
-      } else {
-        expect(element).not.toHaveValue(expected);
-      }
-    });
-  },
-  href: async (target: Locator, expected: string, flag = true) => {
-    await waitFor(async () => {
-      const element = getElement(target, true);
-
-      expect(element).toBeInTheDocument();
-
-      if (flag) {
-        expect(element).toHaveAttribute("href", expected);
-      } else {
-        expect(element).not.toHaveAttribute("href", expected);
-      }
-    });
-  },
-  errormessage: async (target: Locator, expected: string, flag = true) => {
-    await waitFor(async () => {
-      const element = getElement(target, true);
-
-      expect(element).toBeInTheDocument();
-
-      if (flag) {
-        expect(element).toHaveAccessibleErrorMessage(expected);
-      } else {
-        expect(element).not.toHaveAccessibleErrorMessage(expected);
-      }
-    });
-  },
-  description: async (target: Locator, expected: string) => {
-    await waitFor(async () => {
-      const element = getElement(target, true);
-
-      expect(element).toBeInTheDocument();
+  value: async (target: Locator, expected: string, flag = true) =>
+    assertAttributeWhen(
+      target,
+      flag,
+      (element) => expect(element).toHaveValue(expected),
+      (element) => expect(element).not.toHaveValue(expected),
+    ),
+  href: async (target: Locator, expected: string, flag = true) =>
+    assertAttributeWhen(
+      target,
+      flag,
+      (element) => expect(element).toHaveAttribute("href", expected),
+      (element) => expect(element).not.toHaveAttribute("href", expected),
+    ),
+  errormessage: async (target: Locator, expected: string, flag = true) =>
+    assertAttributeWhen(
+      target,
+      flag,
+      (element) => expect(element).toHaveAccessibleErrorMessage(expected),
+      (element) => expect(element).not.toHaveAccessibleErrorMessage(expected),
+    ),
+  description: async (target: Locator, expected: string) =>
+    withPresentElement(target, (element) => {
       expect(element).toHaveAccessibleDescription(expected);
-    });
-  },
-  textContent: async (target: Locator, expected: string, flag = true) => {
-    await waitFor(async () => {
-      const element = getElement(target, true);
-
-      expect(element).toBeInTheDocument();
-
-      if (flag) {
-        expect(element).toHaveTextContent(expected);
-      } else {
-        expect(element).not.toHaveTextContent(expected);
-      }
-    });
-  },
+    }),
+  textContent: async (target: Locator, expected: string, flag = true) =>
+    assertAttributeWhen(
+      target,
+      flag,
+      (element) => expect(element).toHaveTextContent(expected),
+      (element) => expect(element).not.toHaveTextContent(expected),
+    ),
   a11ySnapshot: async (target: Locator, path: string) => {
-    await waitFor(async () => {
-      const element = getElement(target, true);
-
-      expect(element).toBeInTheDocument();
-    });
+    await withPresentElement(target, () => {});
 
     await expect(getA11ySnapshot(getElement(target, true))).toMatchFileSnapshot(
       `__snapshots__/${path}`,
     );
   },
   tableSnapshot: async (target: Locator, path: string) => {
-    await waitFor(async () => {
-      const element = getElement(target, true);
-
-      expect(element).toBeInTheDocument();
+    await withPresentElement(target, (element) => {
       expect(element).toBeInstanceOf(HTMLTableElement);
     });
 

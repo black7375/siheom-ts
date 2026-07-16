@@ -16,36 +16,28 @@ export type SiheomFactoryRegistries<
   TGivens extends GivenStepDefinitionDict = GivenStepDefinitionDict,
 > = SiheomRegistries<TActions, TAssertions, TGivens>;
 
-type ActionBindings<TActions extends ActionStepDefinitionDict> = {
-  [K in keyof TActions]: TActions[K] extends (target: Locator, ...args: infer Args) => Promise<void>
+type LocatorTargetStep = (target: Locator, ...args: never[]) => Promise<void>;
+
+type TargetStepBindings<
+  TSteps extends Record<string, LocatorTargetStep>,
+  TField extends "action" | "assert",
+> = {
+  [K in keyof TSteps]: TSteps[K] extends (target: Locator, ...args: infer Args) => Promise<void>
     ? (
         target: Locator,
         ...args: Args
-      ) => {
-        action: K & string;
-        target: Locator;
-        args?: Args;
-        log: string;
-      }
+      ) => Record<TField, K & string> & { target: Locator; args?: Args; log: string }
     : never;
 };
 
-type AssertionBindings<TAssertions extends AssertionStepDefinitionDict> = {
-  [K in keyof TAssertions]: TAssertions[K] extends (
-    target: Locator,
-    ...args: infer Args
-  ) => Promise<void>
-    ? (
-        target: Locator,
-        ...args: Args
-      ) => {
-        assert: K & string;
-        target: Locator;
-        args?: Args;
-        log: string;
-      }
-    : never;
-};
+type ActionBindings<TActions extends ActionStepDefinitionDict> = TargetStepBindings<
+  TActions,
+  "action"
+>;
+type AssertionBindings<TAssertions extends AssertionStepDefinitionDict> = TargetStepBindings<
+  TAssertions,
+  "assert"
+>;
 
 type GivenBindings<TGivens extends GivenStepDefinitionDict> = {
   [K in keyof TGivens]: TGivens[K] extends (...args: infer Args) => Promise<void>
@@ -87,32 +79,33 @@ function assertExistingKeysOnly(kind: string, baseKeys: string[], overrideKeys: 
   }
 }
 
-function buildActionBindings<TActions extends ActionStepDefinitionDict>(
-  actions: TActions,
-): ActionBindings<TActions> {
-  const bindings = {} as ActionBindings<TActions>;
-  for (const name of Object.keys(actions) as (keyof TActions & string)[]) {
-    bindings[name] = ((target: Locator, ...args: unknown[]) => ({
-      action: name,
-      target,
-      ...(args.length > 0 ? { args } : {}),
-      log: `${name}: ${locatorLog(target)}`,
-    })) as ActionBindings<TActions>[typeof name];
+function mergeRegistryDict<T extends Record<string, unknown>>(
+  kind: string,
+  base: T,
+  patch: Record<string, unknown>,
+  mode: "extend" | "override",
+): T {
+  const patchKeys = Object.keys(patch);
+  if (mode === "extend") {
+    assertNewKeysOnly(kind, Object.keys(base), patchKeys);
+  } else {
+    assertExistingKeysOnly(kind, Object.keys(base), patchKeys);
   }
-  return bindings;
+  return { ...base, ...patch } as T;
 }
 
-function buildAssertionBindings<TAssertions extends AssertionStepDefinitionDict>(
-  assertions: TAssertions,
-): AssertionBindings<TAssertions> {
-  const bindings = {} as AssertionBindings<TAssertions>;
-  for (const name of Object.keys(assertions) as (keyof TAssertions & string)[]) {
+function buildTargetStepBindings<
+  TSteps extends Record<string, LocatorTargetStep>,
+  TField extends "action" | "assert",
+>(steps: TSteps, field: TField): TargetStepBindings<TSteps, TField> {
+  const bindings = {} as TargetStepBindings<TSteps, TField>;
+  for (const name of Object.keys(steps) as (keyof TSteps & string)[]) {
     bindings[name] = ((target: Locator, ...args: unknown[]) => ({
-      assert: name,
+      [field]: name,
       target,
       ...(args.length > 0 ? { args } : {}),
       log: `${name}: ${locatorLog(target)}`,
-    })) as AssertionBindings<TAssertions>[typeof name];
+    })) as TargetStepBindings<TSteps, TField>[typeof name];
   }
   return bindings;
 }
@@ -140,11 +133,35 @@ function toBindings<
 ): SiheomBindings<TActions, TAssertions, TGivens> {
   return {
     runSiheom: createRunSiheom(registries),
-    actions: buildActionBindings(registries.actions),
-    assertions: buildAssertionBindings(registries.assertions),
+    actions: buildTargetStepBindings(registries.actions, "action"),
+    assertions: buildTargetStepBindings(registries.assertions, "assert"),
     given: buildGivenBindings(registries.givens),
     query,
   };
+}
+
+type RegistryPatch = {
+  actions?: Record<string, unknown>;
+  assertions?: Record<string, unknown>;
+  givens?: Record<string, unknown>;
+  messages?: MessageMap;
+};
+
+function applySiheomPatch<
+  TActions extends ActionStepDefinitionDict,
+  TAssertions extends AssertionStepDefinitionDict,
+  TGivens extends GivenStepDefinitionDict,
+>(
+  base: SiheomFactoryRegistries<TActions, TAssertions, TGivens>,
+  patch: RegistryPatch,
+  mode: "extend" | "override",
+) {
+  return toBindings({
+    actions: mergeRegistryDict("action", base.actions, patch.actions ?? {}, mode),
+    assertions: mergeRegistryDict("assertion", base.assertions, patch.assertions ?? {}, mode),
+    givens: mergeRegistryDict("given", base.givens, patch.givens ?? {}, mode),
+    messages: { ...base.messages, ...patch.messages },
+  });
 }
 
 export function extendSiheom<
@@ -163,20 +180,11 @@ export function extendSiheom<
     messages?: MessageMap;
   },
 ): SiheomBindings<TActions & TNewActions, TAssertions & TNewAssertions, TGivens & TNewGivens> {
-  const newActions = extension.actions ?? ({} as TNewActions);
-  const newAssertions = extension.assertions ?? ({} as TNewAssertions);
-  const newGivens = extension.givens ?? ({} as TNewGivens);
-
-  assertNewKeysOnly("action", Object.keys(base.actions), Object.keys(newActions));
-  assertNewKeysOnly("assertion", Object.keys(base.assertions), Object.keys(newAssertions));
-  assertNewKeysOnly("given", Object.keys(base.givens), Object.keys(newGivens));
-
-  return toBindings({
-    actions: { ...base.actions, ...newActions },
-    assertions: { ...base.assertions, ...newAssertions },
-    givens: { ...base.givens, ...newGivens },
-    messages: { ...base.messages, ...extension.messages },
-  });
+  return applySiheomPatch(base, extension, "extend") as SiheomBindings<
+    TActions & TNewActions,
+    TAssertions & TNewAssertions,
+    TGivens & TNewGivens
+  >;
 }
 
 export function overrideSiheom<
@@ -192,22 +200,9 @@ export function overrideSiheom<
     messages?: MessageMap;
   },
 ): SiheomBindings<TActions, TAssertions, TGivens> {
-  const actionOverrides = overrides.actions ?? {};
-  const assertionOverrides = overrides.assertions ?? {};
-  const givenOverrides = overrides.givens ?? {};
-
-  assertExistingKeysOnly("action", Object.keys(base.actions), Object.keys(actionOverrides));
-  assertExistingKeysOnly(
-    "assertion",
-    Object.keys(base.assertions),
-    Object.keys(assertionOverrides),
-  );
-  assertExistingKeysOnly("given", Object.keys(base.givens), Object.keys(givenOverrides));
-
-  return toBindings({
-    actions: { ...base.actions, ...actionOverrides },
-    assertions: { ...base.assertions, ...assertionOverrides },
-    givens: { ...base.givens, ...givenOverrides },
-    messages: { ...base.messages, ...overrides.messages },
-  });
+  return applySiheomPatch(base, overrides, "override") as SiheomBindings<
+    TActions,
+    TAssertions,
+    TGivens
+  >;
 }
