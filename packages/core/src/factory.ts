@@ -1,5 +1,6 @@
 import { createRunSiheom, type SiheomRegistries } from "./siheom.ts";
 import { query, locatorLog } from "./query.ts";
+import type { MessageMap } from "./messages.ts";
 import type {
 	ActionStepDefinitionDict,
 	AssertionStepDefinitionDict,
@@ -7,19 +8,13 @@ import type {
 	Locator,
 } from "./types.ts";
 
-export type MessageMap = {
-	logs?: string;
-	originalErrorMessage?: string;
-	a11ySnapshot?: string;
-};
+export type { MessageMap } from "./messages.ts";
 
 export type SiheomFactoryRegistries<
 	TActions extends ActionStepDefinitionDict = ActionStepDefinitionDict,
 	TAssertions extends AssertionStepDefinitionDict = AssertionStepDefinitionDict,
 	TGivens extends GivenStepDefinitionDict = GivenStepDefinitionDict,
-> = SiheomRegistries<TActions, TAssertions, TGivens> & {
-	messages?: MessageMap;
-};
+> = SiheomRegistries<TActions, TAssertions, TGivens>;
 
 type ActionBindings<TActions extends ActionStepDefinitionDict> = {
 	[K in keyof TActions]: TActions[K] extends (
@@ -158,11 +153,7 @@ function toBindings<
 	registries: SiheomFactoryRegistries<TActions, TAssertions, TGivens>,
 ): SiheomBindings<TActions, TAssertions, TGivens> {
 	return {
-		runSiheom: createRunSiheom({
-			actions: registries.actions,
-			assertions: registries.assertions,
-			givens: registries.givens,
-		}),
+		runSiheom: createRunSiheom(registries),
 		actions: buildActionBindings(registries.actions),
 		assertions: buildAssertionBindings(registries.assertions),
 		given: buildGivenBindings(registries.givens),

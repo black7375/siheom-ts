@@ -6,6 +6,7 @@ import type {
 	Step,
 } from "./types";
 import { getA11ySnapshot } from "./getA11ySnapshot";
+import { formatFailureReport, type MessageMap } from "./messages.ts";
 
 export type SiheomRegistries<
 	TActions extends ActionStepDefinitionDict = ActionStepDefinitionDict,
@@ -15,6 +16,7 @@ export type SiheomRegistries<
 	actions: TActions;
 	assertions: TAssertions;
 	givens: TGivens;
+	messages?: MessageMap;
 };
 
 export function createRunSiheom<
@@ -31,9 +33,14 @@ export function createRunSiheom<
 		const logs: string[] = [];
 
 		const handleError = (error: Error) => {
-			const index = error.message.indexOf("Ignored node");
-			const message = `[Logs]\n\n${logs.join("\n")}\n\n[Original Error Message]\n\n${error.message.slice(0, index === -1 ? undefined : index)}\n\n[A11y Snapshot]\n\n${getA11ySnapshot(document.body)}`;
-			throw new Error(message);
+			throw new Error(
+				formatFailureReport(
+					logs,
+					error,
+					getA11ySnapshot(document.body),
+					registries.messages,
+				),
+			);
 		};
 
 		for (const step of steps.flat()) {

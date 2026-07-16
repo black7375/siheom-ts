@@ -1,11 +1,13 @@
 export { createRunSiheom } from "./siheom.ts";
 export type { SiheomRegistries } from "./siheom.ts";
+export {
+	defaultMessageMap,
+	formatFailureReport,
+	resolveMessageMap,
+} from "./messages.ts";
+export type { MessageMap } from "./messages.ts";
 export { extendSiheom, overrideSiheom } from "./factory.ts";
-export type {
-	MessageMap,
-	SiheomBindings,
-	SiheomFactoryRegistries,
-} from "./factory.ts";
+export type { SiheomBindings, SiheomFactoryRegistries } from "./factory.ts";
 export { query } from "./query.ts";
 export { assertions, defaultAssertions } from "./assert.ts";
 export { actions, defaultActions } from "./action.ts";

@@ -41,6 +41,7 @@
     "@testing-library/jest-dom": "^6.6.3",
     "@testing-library/user-event": "^14.6.1",
     "@typescript/native-preview": "^7.0.0-dev.20250602.1",
+    "jsdom": "^29.1.1",
     "tsdown": "^0.12.6",
     "typescript": "^5.8.3",
     "vitest": "^3.2.0"

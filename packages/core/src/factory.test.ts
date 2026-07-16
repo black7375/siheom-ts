@@ -120,3 +120,50 @@ describe("overrideSiheom", () => {
 		).toThrow(/cannot replace unknown action keys: selectAccount/);
 	});
 });
+
+describe("message map", () => {
+	it("uses custom failure-report headers from extendSiheom messages", async () => {
+	
+		const { runSiheom, actions } = extendSiheom(
+			{
+				...base,
+				actions: {
+					boom: async () => {
+						throw new Error("boom");
+					},
+				},
+			},
+			{
+				messages: {
+					logs: "로그",
+					originalErrorMessage: "원본 에러 메시지",
+					a11ySnapshot: "접근성 스냅샷",
+				},
+			},
+		);
+
+		await expect(runSiheom(actions.boom(target))).rejects.toThrow(
+			"[로그]\n\nboom: button \"Go\"\n\n[원본 에러 메시지]\n\nboom\n\n[접근성 스냅샷]\n\n",
+		);
+	});
+
+	it("uses custom failure-report headers from overrideSiheom messages", async () => {
+		const { runSiheom, actions } = overrideSiheom(
+			{
+				...base,
+				actions: {
+					click: async () => {
+						throw new Error("boom");
+					},
+				},
+			},
+			{
+				messages: {
+					logs: "로그",
+				},
+			},
+		);
+
+		await expect(runSiheom(actions.click(target))).rejects.toThrow("[로그]\n\n");
+	});
+});
