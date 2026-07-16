@@ -25,7 +25,10 @@ export function createRunSiheom<
 	TGivens extends GivenStepDefinitionDict,
 >(registries: SiheomRegistries<TActions, TAssertions, TGivens>) {
 	return async function runSiheom(
-		...steps: Step<TActions, TAssertions, TGivens>[]
+		...steps: (
+			| Step<TActions, TAssertions, TGivens>
+			| Step<TActions, TAssertions, TGivens>[]
+		)[]
 	) {
 		const logs: string[] = [];
 
@@ -35,7 +38,7 @@ export function createRunSiheom<
 			throw new Error(message);
 		};
 
-		for (const step of steps) {
+		for (const step of steps.flat()) {
 			if ("action" in step) {
 				const run = registries.actions[
 					step.action
