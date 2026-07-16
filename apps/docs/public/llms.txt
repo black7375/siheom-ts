@@ -1,0 +1,48 @@
+# siheom
+
+> Data-first frontend test interpreter. Tests are data (given / action / assert steps); an interpreter runs them in a real browser.
+
+## Docs
+
+- Korean (default): /intro
+- English: /en/intro
+- Glossary: CONTEXT.md in repo root
+
+## Primary API (@siheom/react)
+
+```ts
+import { actions, assertions, given, query, runSiheom } from "@siheom/react";
+```
+
+Do not use `await` in the test body — `return runSiheom(...)`.
+
+## Runtime
+
+- Recommended: vitest browser mode (Playwright provider), real Chromium
+- Not recommended: jsdom, happy-dom
+
+## Factory (@siheom/core)
+
+- `extendSiheom` — add new registry keys (actions, assertions, givens, messages)
+- `overrideSiheom` — replace existing registry keys
+- Runtime contract: framework supplies `given.render`, not a separate Runtime type
+
+## Locators
+
+- `query.*` uses ARIA role + accessible name (same information as screen readers)
+- No CSS selectors, test ids, or xpath
+
+## Failure reports
+
+- Structured logs + original error + accessibility snapshot
+- Section headers customizable via message map (`logs`, `originalErrorMessage`, `a11ySnapshot`)
+
+## E2E
+
+- Multi-page E2E is not supported yet; Playwright-based E2E may come later
+- Component/integration tests in real browser are the current focus
+
+## Optional
+
+- Full docs site: `bun run --filter '@siheom/docs' dev`
+- AI skill (when published): `npx skills add twinstae/siheom-ts`

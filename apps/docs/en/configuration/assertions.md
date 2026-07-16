@@ -1,0 +1,56 @@
+# assertions API
+
+Assertions return step objects `(target: Locator, ...args)`. `assertions.not.*` negates the same assertion.
+
+## State assertions
+
+| API | Role |
+| --- | --- |
+| `assertions.visible(target)` | Visible |
+| `assertions.checked(target)` | Checked |
+| `assertions.expanded(target)` | `aria-expanded=true` |
+| `assertions.selected(target)` | `aria-selected=true` |
+| `assertions.disabled(target)` | Disabled |
+| `assertions.current(target, value)` | `aria-current` |
+| `assertions.count(target, n)` | Match count |
+| `assertions.value(target, string)` | Form value |
+| `assertions.href(target, string)` | Link `href` |
+| `assertions.description(target, string)` | Accessible description |
+| `assertions.errormessage(target, string)` | Accessible error message |
+
+Negated: `assertions.not.visible`, `not.checked`, `not.expanded`, `not.selected`, `not.disabled`, `not.current`, `not.count`, `not.value`, `not.href`, `not.errormessage`.
+
+## Snapshot assertions
+
+| API | Role |
+| --- | --- |
+| `assertions.a11ySnapshot(target, path)` | A11y tree → `__snapshots__/${path}` |
+| `assertions.tableSnapshot(target, path)` | `<table>` → markdown → `__snapshots__/${path}` |
+
+`tableSnapshot` requires `HTMLTableElement` as the target.
+
+## Examples
+
+```tsx
+assertions.visible(query.button("2"))
+assertions.href(query.link("First post"), "/articles/1")
+assertions.errormessage(query.textbox(/email/i), "Invalid email format")
+assertions.a11ySnapshot(query.region("signup-form"), "signup-form-initial.snap")
+assertions.not.visible(query.button("Delete"))
+```
+
+## Custom assertions
+
+```ts
+extendSiheom(base, {
+  assertions: {
+    hasToast: async (target, message: string) => { /* ... */ },
+  },
+});
+```
+
+## Next steps
+
+- [assertions concept](/en/concepts/assertions)
+- [Accessibility snapshot](/en/concepts/a11y-snapshot)
+- [Message map](/en/configuration/messages)

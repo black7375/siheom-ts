@@ -4,3 +4,8 @@ dist
 test/stories/__screenshots__
 *storybook.log
 storybook-static
+
+packages/*/dist
+apps/*/dist
+apps/*/storybook-static
+**/__screenshots__/*

@@ -1,0 +1,70 @@
+{
+  "name": "@siheom/react",
+  "version": "0.1.1",
+  "description": "React runtime for siheom (data-first frontend test interpreter)",
+  "type": "module",
+  "license": "MIT",
+  "files": ["dist"],
+  "main": "./dist/index.mjs",
+  "exports": {
+    "./package.json": "./package.json",
+    ".": {
+      "import": {
+        "types": "./dist/index.d.mts",
+        "default": "./dist/index.mjs"
+      },
+      "require": {
+        "types": "./dist/index.d.cts",
+        "default": "./dist/index.cjs"
+      }
+    }
+  },
+  "scripts": {
+    "build": "tsdown",
+    "check-exports": "attw --pack .",
+    "typecheck": "tsgo --noEmit -p tsconfig.json"
+  },
+  "dependencies": {
+    "@siheom/core": "workspace:*"
+  },
+  "peerDependencies": {
+    "@testing-library/dom": "^10.0.0",
+    "@testing-library/jest-dom": "^6.0.0",
+    "@testing-library/react": "^16.0.0",
+    "@testing-library/user-event": "^14.0.0",
+    "react": "^18.0.0 || ^19.0.0",
+    "react-dom": "^18.0.0 || ^19.0.0",
+    "vitest": "^3.0.0"
+  },
+  "devDependencies": {
+    "@arethetypeswrong/cli": "^0.18.5",
+    "@testing-library/dom": "^10.4.1",
+    "@testing-library/jest-dom": "^6.9.1",
+    "@testing-library/react": "^16.3.2",
+    "@testing-library/user-event": "^14.6.1",
+    "@types/react": "^19.2.17",
+    "@types/react-dom": "^19.2.3",
+    "@typescript/native-preview": "^7.0.0-dev.20260707.2",
+    "react": "^19.2.7",
+    "react-dom": "^19.2.7",
+    "tsdown": "^0.22.8",
+    "typescript": "^7.0.2",
+    "vitest": "^4.1.10"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/twinstae/siheom-ts.git",
+    "directory": "packages/react"
+  },
+  "homepage": "https://github.com/twinstae/siheom-ts",
+  "bugs": {
+    "url": "https://github.com/twinstae/siheom-ts/issues"
+  },
+  "author": "Taehee Kim <rabolution@gmail.com> (https://x.com/stelo_kim)",
+  "keywords": [
+    "test",
+    "testing-library",
+    "react",
+    "typescript"
+  ]
+}
