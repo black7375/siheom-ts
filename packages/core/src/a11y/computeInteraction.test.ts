@@ -174,9 +174,7 @@ describe("computeInteraction", () => {
   });
 
   it("trims non-empty shortcut declarations and omits empty declarations", () => {
-    const declared = render(
-      '<div aria-keyshortcuts="  Control+S  " accesskey="  s  "></div>',
-    );
+    const declared = render('<div aria-keyshortcuts="  Control+S  " accesskey="  s  "></div>');
     expect(computeInteraction(declared)).toEqual({
       focusable: false,
       tabbable: false,

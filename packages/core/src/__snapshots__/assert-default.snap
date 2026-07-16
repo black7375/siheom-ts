@@ -1,0 +1,3 @@
+region: "Panel"
+  button: "Visible action"
+    - interaction: [focusable=true] [tabbable=true]

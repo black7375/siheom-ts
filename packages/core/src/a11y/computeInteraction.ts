@@ -30,11 +30,7 @@ function isFocusable(el: HTMLElement): boolean {
         (el.parentElement ? isEffectivelyHidden(el.parentElement) : false)
       : isEffectivelyHidden(el);
 
-  return (
-    el.matches(FOCUSABLE_SELECTOR) &&
-    !hidden &&
-    !isDisabledByHTMLSemantics(el)
-  );
+  return el.matches(FOCUSABLE_SELECTOR) && !hidden && !isDisabledByHTMLSemantics(el);
 }
 
 function getEffectiveTabIndex(el: HTMLElement): number {
@@ -54,7 +50,9 @@ function hasCheckedRadioCandidate(el: HTMLElement): boolean {
     return false;
   }
 
-  return Array.from(el.ownerDocument.querySelectorAll<HTMLInputElement>('input[type="radio"]')).some(
+  return Array.from(
+    el.ownerDocument.querySelectorAll<HTMLInputElement>('input[type="radio"]'),
+  ).some(
     (candidate) =>
       candidate.name === el.name &&
       candidate.form === el.form &&

@@ -1,0 +1,10 @@
+region: "Panel" [childCount=2]
+  - interaction: [focusable=false] [tabbable=false] [focused=false]
+  - attributes: [aria-label="Panel"] [role="region"]
+  button: "Visible action" [childCount=0]
+    - interaction: [focusable=true] [tabbable=true] [focused=false]
+  button: "" [childCount=1]
+    - states: [hidden=true]
+    - interaction: [focusable=false] [tabbable=false] [focused=false]
+    - attributes: [aria-label="Hidden action"] [hidden=""]
+    "Hidden action"

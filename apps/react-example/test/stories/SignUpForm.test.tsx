@@ -24,6 +24,10 @@ describe("SignUpForm", () => {
         />,
       ),
       assertions.a11ySnapshot(query.form("회원가입"), "signup-form-initial.snap"),
+      assertions.a11ySnapshot(query.form("회원가입"), "signup-form-initial-verbose.snap", {
+        mode: "verbose",
+        includeHidden: true,
+      }),
 
       actions.fill(query.textbox(/이메일/), MEMBER.email),
       actions.fill(query.label(/비밀번호/), MEMBER.password),

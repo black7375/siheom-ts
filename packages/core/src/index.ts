@@ -6,6 +6,7 @@ export { extendSiheom, overrideSiheom } from "./factory.ts";
 export type { SiheomBindings, SiheomFactoryRegistries } from "./factory.ts";
 export { query } from "./query.ts";
 export { assertions, defaultAssertions } from "./assert.ts";
+export type { A11ySnapshotOptions } from "./getA11ySnapshot.ts";
 export { actions, defaultActions } from "./action.ts";
 export type {
   ActionStep,

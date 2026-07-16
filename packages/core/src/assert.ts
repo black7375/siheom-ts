@@ -1,6 +1,7 @@
 import "@testing-library/jest-dom";
 import { waitFor } from "@testing-library/dom";
 import type { AssertionStepDefinitionDict, Locator } from "./types";
+import type { A11ySnapshotOptions } from "./getA11ySnapshot.ts";
 import { getElement, getElements, locatorLog } from "./query";
 import { expect } from "vitest";
 import { getA11ySnapshot } from "./getA11ySnapshot";
@@ -152,14 +153,14 @@ export const defaultAssertions = {
       expect(element).toHaveAccessibleDescription(expected);
     });
   },
-  a11ySnapshot: async (target: Locator, path: string) => {
+  a11ySnapshot: async (target: Locator, path: string, options?: A11ySnapshotOptions) => {
     await waitFor(async () => {
       const element = getElement(target, true);
 
       expect(element).toBeInTheDocument();
     });
 
-    await expect(getA11ySnapshot(getElement(target, true))).toMatchFileSnapshot(
+    await expect(getA11ySnapshot(getElement(target, true), options)).toMatchFileSnapshot(
       `__snapshots__/${path}`,
     );
   },
@@ -325,11 +326,11 @@ export const assertions = {
         args: [expected, false],
       }) as const,
   },
-  a11ySnapshot: (target: Locator, path: string) =>
+  a11ySnapshot: (target: Locator, path: string, options?: A11ySnapshotOptions) =>
     ({
       assert: "a11ySnapshot",
       target,
-      args: [path],
+      args: options === undefined ? [path] : [path, options],
       log: `a11ySnapshot!: ${locatorLog(target)}`,
     }) as const,
   tableSnapshot: (target: Locator, path: string) =>
