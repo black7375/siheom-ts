@@ -11,17 +11,12 @@ describe("DeleteDialog", () => {
 
       // when 밥 먹기 항목을 삭제 버튼을 클릭하면
       actions.click(query.button("밥 먹기 삭제")),
-      
+
       // then 다이얼로그가 열린다
-      assertions.a11ySnapshot(
-        query.alertdialog("삭제 확인"),
-        "delete-dialog-open.snap",
-      ),
+      assertions.a11ySnapshot(query.alertdialog("삭제 확인"), "delete-dialog-open.snap"),
 
       // when 삭제 버튼을 클릭하면
-      actions.click(
-        query.within(query.alertdialog("삭제 확인"), query.button("삭제")),
-      ),
+      actions.click(query.within(query.alertdialog("삭제 확인"), query.button("삭제"))),
 
       // then 밥 먹기 항목이 삭제된다
       assertions.not.visible(query.listitem("밥 먹기")),
@@ -38,9 +33,7 @@ describe("DeleteDialog", () => {
       actions.click(query.button("밥 먹기 삭제")),
 
       // when 취소 버튼을 클릭하면
-      actions.click(
-        query.within(query.alertdialog("삭제 확인"), query.button("취소")),
-      ),
+      actions.click(query.within(query.alertdialog("삭제 확인"), query.button("취소"))),
 
       // then 다이얼로그가 닫히고 밥 먹기 항목이 유지된다
       assertions.not.visible(query.alertdialog("삭제 확인")),
