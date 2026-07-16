@@ -77,6 +77,19 @@ export const defaultAssertions = {
       }
     });
   },
+  focused: async (target: Locator, expected: boolean) => {
+    await waitFor(async () => {
+      const element = getElement(target, true);
+
+      expect(element).toBeInTheDocument();
+
+      if (expected) {
+        expect(element).toHaveFocus();
+      } else {
+        expect(element).not.toHaveFocus();
+      }
+    });
+  },
   current: async (
     target: Locator,
     expected: "true" | "false" | "page" | "step" | "location" | "date" | "time",
@@ -220,6 +233,13 @@ export const assertions = {
       args: [true],
       log: `disabled    : ${locatorLog(target)}`,
     }) as const,
+  focused: (target: Locator) =>
+    ({
+      assert: "focused",
+      target,
+      args: [true],
+      log: `focused     : ${locatorLog(target)}`,
+    }) as const,
   current: (
     target: Locator,
     expected: "true" | "false" | "page" | "step" | "location" | "date" | "time",
@@ -290,6 +310,13 @@ export const assertions = {
         target,
         args: [false],
         log: `not disabled: ${locatorLog(target)}`,
+      }) as const,
+    focused: (target: Locator) =>
+      ({
+        assert: "focused",
+        target,
+        args: [false],
+        log: `not focused : ${locatorLog(target)}`,
       }) as const,
     current: (
       target: Locator,
