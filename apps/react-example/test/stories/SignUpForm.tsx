@@ -1,6 +1,5 @@
 import { Button } from "@/components/ui/button";
 import { SimpleForm, SimpleTextInput, SimpleCheckbox } from "@/components/simple-form/SimpleForm";
-import type React from "react";
 import * as v from "valibot";
 import { FieldGroup } from "@/components/ui/field";
 
