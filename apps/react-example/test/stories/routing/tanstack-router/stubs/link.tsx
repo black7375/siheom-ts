@@ -7,7 +7,12 @@ type TanStackLinkStubProps = {
   "aria-labelledby"?: string;
 };
 
-export function Link({ to, children, className, "aria-labelledby": ariaLabelledBy }: TanStackLinkStubProps) {
+export function Link({
+  to,
+  children,
+  className,
+  "aria-labelledby": ariaLabelledBy,
+}: TanStackLinkStubProps) {
   return (
     <a href={to} className={className} aria-labelledby={ariaLabelledBy}>
       {children}

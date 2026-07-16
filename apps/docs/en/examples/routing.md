@@ -10,7 +10,7 @@ In Storybook (`bun run storybook`), open the **Routing/** group to inspect Memor
 | --- | --- | --- | --- |
 | SSR list, static HTML, link intent only | **None** | `query.link` + `assertions.href` | React Router `ArticleList`, TanStack `TanStackArticleList` |
 | In-page `#sign` section | MemoryRouter | hash click → `region` visibility | React Router `/terms` |
-| `/notice?id=123` deep link | Fake Next router | `initialPath` + Accordion `region` | Next Router `NextRouterApp` |
+| `/notice?id=123` deep link | Fake Next router | `initialPath` + `assertions.expanded` | Next Router `NextRouterApp` |
 | Navigation after API | MemoryRouter | loading UI → destination `region` | React Router `/login` → `/dashboard` |
 | Isolate TanStack `Link` | memory history + **Link stub alias** | stub: href only; app: click navigation | TanStack Router |
 
@@ -46,7 +46,7 @@ Wrap providers inside **`given.render`**, not a separate siheom Wrapper API.
 
 ## 3. Next Router — fake implementation
 
-`FakeNextRouterProvider` replaces `next-router-mock`: `push`, `useSearchParams`, and query-string parsing. Tests pass `initialPath="/notice?id=123"` and assert the matching Accordion `region` is visible.
+`FakeNextRouterProvider` replaces `next-router-mock`: `push`, `useSearchParams`, and query-string parsing. Tests pass `initialPath="/notice?id=123"` and assert the matching accordion trigger with `assertions.expanded(query.button("공지 123"))`. Notice content uses shadcn Accordion from `@/components/ui/accordion`.
 
 ## 4. TanStack Router — Link stub alias
 

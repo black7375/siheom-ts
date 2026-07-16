@@ -36,10 +36,7 @@ export function NoticeIndexView({
                   headingId: cardHeadingId,
                   children: (
                     <>
-                      <p
-                        aria-hidden="true"
-                        className="mb-2 text-xs text-muted-foreground"
-                      >
+                      <p aria-hidden="true" className="mb-2 text-xs text-muted-foreground">
                         {notice.publishedAt}
                       </p>
                       <h2 id={cardHeadingId} className="text-lg font-semibold">

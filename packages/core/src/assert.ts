@@ -197,24 +197,28 @@ export const assertions = {
       assert: "checked",
       target,
       args: [true],
+      log: `checked     : ${locatorLog(target)}`,
     }) as const,
   expanded: (target: Locator) =>
     ({
       assert: "expanded",
       target,
       args: [true],
+      log: `expanded    : ${locatorLog(target)}`,
     }) as const,
   selected: (target: Locator) =>
     ({
       assert: "selected",
       target,
       args: [true],
+      log: `selected    : ${locatorLog(target)}`,
     }) as const,
   disabled: (target: Locator) =>
     ({
       assert: "disabled",
       target,
       args: [true],
+      log: `disabled    : ${locatorLog(target)}`,
     }) as const,
   current: (
     target: Locator,
@@ -264,24 +268,28 @@ export const assertions = {
         assert: "checked",
         target,
         args: [false],
+        log: `not checked : ${locatorLog(target)}`,
       }) as const,
     expanded: (target: Locator) =>
       ({
         assert: "expanded",
         target,
         args: [false],
+        log: `not expanded: ${locatorLog(target)}`,
       }) as const,
     selected: (target: Locator) =>
       ({
         assert: "selected",
         target,
         args: [false],
+        log: `not selected: ${locatorLog(target)}`,
       }) as const,
     disabled: (target: Locator) =>
       ({
         assert: "disabled",
         target,
         args: [false],
+        log: `not disabled: ${locatorLog(target)}`,
       }) as const,
     current: (
       target: Locator,

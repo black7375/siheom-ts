@@ -10,7 +10,7 @@ Storybook(`bun run storybook`) → **Routing/** 그룹에서 MemoryRouter / Fake
 | --- | --- | --- | --- |
 | SSR 목록, 정적 HTML, 링크 의도만 확인 | **없음** | `query.link` + `assertions.href` | React Router `ArticleList`, TanStack `TanStackArticleList` |
 | 같은 페이지 `#sign` 섹션 전환 | MemoryRouter | hash 클릭 후 `region` 가시성 | React Router `/terms` |
-| `/notice?id=123` deep link | 가짜 Next Router | `initialPath` + Accordion `region` | Next Router `NextRouterApp` |
+| `/notice?id=123` deep link | 가짜 Next Router | `initialPath` + `assertions.expanded` | Next Router `NextRouterApp` |
 | API 후 programmatic navigation | MemoryRouter | 로딩 UI → 도착 `region` | React Router `/login` → `/dashboard` |
 | TanStack Link 구현 분리 | memory history + **Link stub alias** | stub은 href만, 앱은 클릭 navigation | TanStack Router |
 
@@ -83,7 +83,8 @@ Provider는 별도 siheom API가 아니라 **`given.render`로 감싼 컴포넌�
 await runSiheom(
   given.render(<NextRouterApp initialPath="/notice?id=123" />),
   assertions.visible(query.region("공지사항")),
-  assertions.visible(query.region("공지 123")),
+  assertions.expanded(query.button("공지 123")),
+  assertions.not.expanded(query.button("공지 456")),
 );
 ```
 
@@ -93,9 +94,11 @@ await runSiheom(
 await runSiheom(
   given.render(<NextRouterApp initialPath="/" />),
   actions.click(query.link("공지 456")),
-  assertions.visible(query.region("공지 456")),
+  assertions.expanded(query.button("공지 456")),
 );
 ```
+
+공지 본문은 shadcn Accordion(`@/components/ui/accordion`)으로 렌더합니다. 열림 상태는 trigger의 `aria-expanded`를 `assertions.expanded`로 검증합니다.
 
 ## 4. TanStack Router — Link stub alias
 

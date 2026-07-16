@@ -1,8 +1,9 @@
-import type { AccordionItemData } from "../components/Accordion";
-
-export type Notice = AccordionItemData & {
+export type Notice = {
+  id: string;
+  title: string;
   summary: string;
   publishedAt: string;
+  content: string;
 };
 
 export const NOTICES: Notice[] = [

@@ -1,4 +1,4 @@
-import { Accordion } from "../components/Accordion";
+import { NoticeAccordion } from "../components/NoticeAccordion";
 import { AppShell, PageIntro } from "../components/AppShell";
 import { NoticeIndexView } from "../components/NoticeIndexView";
 import {
@@ -23,7 +23,7 @@ function NoticePage() {
           title="공지사항"
           description="외부 링크나 목록에서 query string id 로 진입하면 해당 Accordion이 열린 상태로 표시됩니다."
         />
-        <Accordion items={NOTICES} openId={openId} />
+        <NoticeAccordion items={NOTICES} openId={openId} />
       </section>
     </AppShell>
   );

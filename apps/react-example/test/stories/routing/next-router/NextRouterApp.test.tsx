@@ -9,7 +9,8 @@ describe("NextRouterApp", () => {
     await runSiheom(
       given.render(<NextRouterApp initialPath="/notice?id=123" />),
       assertions.visible(query.region("공지사항")),
-      assertions.visible(query.region(NOTICES[0]!.title)),
+      assertions.expanded(query.button("공지 123")),
+      assertions.not.expanded(query.button("공지 456")),
     );
   });
 
@@ -20,8 +21,8 @@ describe("NextRouterApp", () => {
       given.render(<NextRouterApp initialPath="/" />),
       actions.click(query.link(target.title)),
       assertions.visible(query.region("공지사항")),
-      assertions.visible(query.region(target.title)),
-      assertions.not.visible(query.region(NOTICES[0]!.title)),
+      assertions.expanded(query.button(target.title)),
+      assertions.not.expanded(query.button(NOTICES[0]!.title)),
     );
   });
 });
