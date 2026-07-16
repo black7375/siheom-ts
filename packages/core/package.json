@@ -22,7 +22,8 @@
   "scripts": {
     "build": "tsdown",
     "check-exports": "attw --pack .",
-    "typecheck": "tsgo --noEmit -p tsconfig.json"
+    "typecheck": "tsgo --noEmit -p tsconfig.json",
+    "test": "vitest run"
   },
   "dependencies": {
     "aria-query": "^5.3.2",

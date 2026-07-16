@@ -11,7 +11,7 @@
     "build": "bun run --filter '@siheom/core' build && bun run --filter '@siheom/react' build",
     "check-exports": "bun run --filter '@siheom/core' check-exports && bun run --filter '@siheom/react' check-exports",
     "typecheck": "bun run --filter '@siheom/core' typecheck && bun run --filter '@siheom/react' typecheck && bun run --filter '@siheom/react-example' typecheck",
-    "test": "bun run --filter '@siheom/react-example' test",
+    "test": "bun run --filter '@siheom/core' test && bun run --filter '@siheom/react-example' test",
     "check-format": "biome format packages/*/src",
     "format": "biome format --write packages/*/src",
     "local-check": "bun run format && bun run build && bun run check-exports && bun run typecheck && bun run --filter '@siheom/react-example' vitest -- --browser.enabled true",

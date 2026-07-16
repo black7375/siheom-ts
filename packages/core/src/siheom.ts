@@ -5,9 +5,7 @@ import type {
 	Locator,
 	Step,
 } from "./types";
-import { defaultActions } from "./action";
 import { getA11ySnapshot } from "./getA11ySnapshot";
-import { defaultAssertions } from "./assert";
 
 export type SiheomRegistries<
 	TActions extends ActionStepDefinitionDict = ActionStepDefinitionDict,
@@ -64,10 +62,3 @@ export function createRunSiheom<
 		}
 	};
 }
-
-/** Core runner without framework givens (actions + assertions only). */
-export const runSiheom = createRunSiheom({
-	actions: defaultActions,
-	assertions: defaultAssertions,
-	givens: {} as GivenStepDefinitionDict,
-});
