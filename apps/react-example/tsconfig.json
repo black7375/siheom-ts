@@ -22,5 +22,5 @@
     "types": ["@vitest/browser/providers/playwright"],
     "lib": ["ES2022", "DOM", "DOM.Iterable"]
   },
-  "include": ["test", "vitest.config.ts", "happydom.ts", ".storybook"]
+  "include": ["test", "vitest.config.ts", ".storybook"]
 }

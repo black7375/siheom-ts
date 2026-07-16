@@ -4,6 +4,7 @@
   "private": true,
   "type": "module",
   "scripts": {
+    "postinstall": "playwright install chromium",
     "test": "vitest run",
     "vitest": "vitest",
     "typecheck": "tsgo --noEmit -p tsconfig.json",
@@ -14,7 +15,6 @@
     "@siheom/react": "workspace:*"
   },
   "devDependencies": {
-    "@happy-dom/global-registrator": "^17.5.6",
     "@react-stately/utils": "^3.10.8",
     "@storybook/react-vite": "^10.1.11",
     "@tailwindcss/vite": "^4.1.18",
@@ -28,7 +28,6 @@
     "@untitledui/icons": "^0.0.19",
     "@vitejs/plugin-react": "^4.5.0",
     "@vitest/browser": "^3.2.0",
-    "happy-dom": "^17.5.6",
     "playwright": "^1.52.0",
     "react": "^19.1.0",
     "react-aria-components": "^1.13.0",

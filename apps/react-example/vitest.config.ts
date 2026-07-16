@@ -12,14 +12,9 @@ export default defineConfig({
 		include: ["test/**/*.test.tsx"],
 		css: true,
 		globals: true,
-		pool: "vmThreads",
-		poolOptions: {
-			useAtomics: true,
-		},
-		environment: "happy-dom",
 		browser: {
-			enabled: false,
-			headless: false,
+			enabled: true,
+			headless: true,
 			provider: "playwright",
 			instances: [
 				{

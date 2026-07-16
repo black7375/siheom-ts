@@ -12,9 +12,11 @@
     "check-exports": "bun run --filter '@siheom/core' check-exports && bun run --filter '@siheom/react' check-exports",
     "typecheck": "bun run --filter '@siheom/core' typecheck && bun run --filter '@siheom/react' typecheck && bun run --filter '@siheom/react-example' typecheck",
     "test": "bun run --filter '@siheom/core' test && bun run --filter '@siheom/react-example' test",
+    "docs": "bun run --filter '@siheom/docs' dev",
+    "docs:build": "bun run --filter '@siheom/docs' build",
     "check-format": "biome format packages/*/src",
     "format": "biome format --write packages/*/src",
-    "local-check": "bun run format && bun run build && bun run check-exports && bun run typecheck && bun run --filter '@siheom/react-example' vitest -- --browser.enabled true",
+    "local-check": "bun run format && bun run build && bun run check-exports && bun run typecheck && bun run --filter '@siheom/react-example' test",
     "local-release": "changeset version && changeset publish",
     "storybook": "bun run --filter '@siheom/react-example' storybook"
   },

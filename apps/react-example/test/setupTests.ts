@@ -1,1 +1,2 @@
-import "./index.css"
+import "@testing-library/jest-dom/vitest";
+import "./index.css";
