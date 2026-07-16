@@ -52,16 +52,6 @@ export default defineConfig({
 import "@testing-library/jest-dom/vitest";
 ```
 
-Add browser provider types in `tsconfig.json`:
-
-```json
-{
-  "compilerOptions": {
-    "types": ["@vitest/browser/providers/playwright"]
-  }
-}
-```
-
 Run:
 
 ```bash

@@ -26,8 +26,8 @@
     "storybook": "bun run --filter '@siheom/react-example' storybook"
   },
   "devDependencies": {
-    "@arethetypeswrong/cli": "^0.18.1",
-    "@changesets/cli": "^2.29.4",
+    "@arethetypeswrong/cli": "^0.18.5",
+    "@changesets/cli": "^2.31.1",
     "@typescript/native-preview": "^7.0.0-dev.20260707.2",
     "oxfmt": "^0.59.0",
     "oxlint": "^1.74.0",

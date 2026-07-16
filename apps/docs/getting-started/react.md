@@ -52,16 +52,6 @@ export default defineConfig({
 import "@testing-library/jest-dom/vitest";
 ```
 
-`tsconfig.json`에 browser provider 타입을 추가합니다.
-
-```json
-{
-  "compilerOptions": {
-    "types": ["@vitest/browser/providers/playwright"]
-  }
-}
-```
-
 실행:
 
 ```bash

@@ -31,7 +31,7 @@ export function FakeNextRouterProvider({
   const [pathname, setPathname] = useState(initial.pathname);
   const [search, setSearch] = useState(initial.search);
   const [hash, setHash] = useState(initial.hash);
-  const [history, setHistory] = useState<string[]>([initialPath]);
+  const [_history, setHistory] = useState<string[]>([initialPath]);
 
   const navigate = useCallback((href: string, mode: "push" | "replace") => {
     const next = parseHref(href);

@@ -36,15 +36,16 @@
     "vitest": "^3.0.0"
   },
   "devDependencies": {
-    "@arethetypeswrong/cli": "^0.18.1",
-    "@testing-library/dom": "^10.4.0",
-    "@testing-library/jest-dom": "^6.6.3",
+    "@arethetypeswrong/cli": "^0.18.5",
+    "@testing-library/dom": "^10.4.1",
+    "@testing-library/jest-dom": "^6.9.1",
     "@testing-library/user-event": "^14.6.1",
+    "@types/aria-query": "^5.0.4",
     "@typescript/native-preview": "^7.0.0-dev.20260707.2",
-    "jsdom": "^25.0.1",
+    "jsdom": "^29.1.1",
     "tsdown": "^0.22.8",
     "typescript": "^7.0.2",
-    "vitest": "^3.2.0"
+    "vitest": "^4.1.10"
   },
   "repository": {
     "type": "git",
