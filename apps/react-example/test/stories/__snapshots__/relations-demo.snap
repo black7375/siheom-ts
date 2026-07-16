@@ -1,0 +1,16 @@
+form: "relations-demo"
+  "Email"
+  "Enter your email address"
+  alert
+    "Email is required"
+  textbox: "Email" [invalid=true] [value=""] [description="Enter your email address"]
+  heading: "Settings Panel" [level=2]
+  button: "Toggle Panel" [expanded=true]
+  region: "Feature details"
+    "More information about this feature"
+  button: "Help"
+  navigation: "Main navigation"
+    menu
+      menuitem: "Home"
+      menuitem: "About"
+    button: "Menu"
