@@ -22,20 +22,25 @@ export function SignUpForm({
   signUpMember: (newMember: NewMember) => Promise<void>;
 }) {
   return (
-    <SimpleForm
-      className="mx-auto flex max-w-md flex-col gap-4 rounded-xl border bg-card p-4 shadow-sm"
-      schema={newMemberSchema}
-      onSubmit={signUpMember}
-    >
-      <FieldGroup>
-        <SimpleTextInput name="email" type="email" label="이메일" />
-        <SimpleTextInput name="password" type="password" label="비밀번호" />
-        <SimpleCheckbox name="agreement" label="약관 동의" />
-        <SimpleCheckbox name="privacy" label="개인정보 수집 동의" />
-      </FieldGroup>
+    <section>
+      <h2 id="signup-form-title">회원가입</h2>
+      <SimpleForm
+        id="signup-form"
+        aria-labelledby="signup-form-title"
+        className="mx-auto flex max-w-md flex-col gap-4 rounded-xl border bg-card p-4 shadow-sm"
+        schema={newMemberSchema}
+        onSubmit={signUpMember}
+      >
+        <FieldGroup>
+          <SimpleTextInput name="email" type="email" label="이메일" />
+          <SimpleTextInput name="password" type="password" label="비밀번호" />
+          <SimpleCheckbox name="agreement" label="약관 동의" />
+          <SimpleCheckbox name="privacy" label="개인정보 수집 동의" />
+        </FieldGroup>
 
-      <Button type="submit">가입하기</Button>
-    </SimpleForm>
+        <Button type="submit">가입하기</Button>
+      </SimpleForm>
+    </section>
   );
 }
 

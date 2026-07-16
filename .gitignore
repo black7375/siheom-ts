@@ -8,3 +8,4 @@ storybook-static
 packages/*/dist
 apps/*/dist
 apps/*/storybook-static
+**/__screenshots__/*

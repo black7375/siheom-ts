@@ -14,10 +14,11 @@ assertion은 `(target: Locator, ...args)` 형태의 스텝 객체를 반환합�
 | `assertions.current(target, value)` | `aria-current` |
 | `assertions.count(target, n)` | 매칭 개수 |
 | `assertions.value(target, string)` | 폼 value |
+| `assertions.href(target, string)` | 링크 `href` |
 | `assertions.description(target, string)` | accessible description |
 | `assertions.errormessage(target, string)` | accessible error message |
 
-부정: `assertions.not.visible`, `not.checked`, `not.expanded`, `not.selected`, `not.disabled`, `not.current`, `not.count`, `not.value`, `not.errormessage`.
+부정: `assertions.not.visible`, `not.checked`, `not.expanded`, `not.selected`, `not.disabled`, `not.current`, `not.count`, `not.value`, `not.href`, `not.errormessage`.
 
 ## 스냅샷 assertion
 
@@ -32,6 +33,7 @@ assertion은 `(target: Locator, ...args)` 형태의 스텝 객체를 반환합�
 
 ```tsx
 assertions.visible(query.button("2"))
+assertions.href(query.link("첫 번째 글"), "/articles/1")
 assertions.errormessage(query.textbox(/이메일/), "올바른 이메일 형식이 아닙니다")
 assertions.a11ySnapshot(query.region("signup-form"), "signup-form-initial.snap")
 assertions.not.visible(query.button("삭제"))

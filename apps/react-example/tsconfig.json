@@ -2,7 +2,8 @@
   "compilerOptions": {
     "paths": {
       "@/*": ["./test/*"],
-      "@test/*": ["./test/*"]
+      "@test/*": ["./test/*"],
+      "@showcase/tanstack-link": ["./test/stories/routing/tanstack-router/stubs/link.tsx"]
     },
     "jsx": "preserve",
     "esModuleInterop": true,

@@ -118,6 +118,19 @@ export const defaultAssertions = {
       }
     });
   },
+  href: async (target: Locator, expected: string, flag = true) => {
+    await waitFor(async () => {
+      const element = getElement(target, true);
+
+      expect(element).toBeInTheDocument();
+
+      if (flag) {
+        expect(element).toHaveAttribute("href", expected);
+      } else {
+        expect(element).not.toHaveAttribute("href", expected);
+      }
+    });
+  },
   errormessage: async (target: Locator, expected: string, flag = true) => {
     await waitFor(async () => {
       const element = getElement(target, true);
@@ -224,6 +237,13 @@ export const assertions = {
       target,
       args: [expected, true],
     }) as const,
+  href: (target: Locator, expected: string) =>
+    ({
+      assert: "href",
+      target,
+      args: [expected, true],
+      log: `href        : ${locatorLog(target)} is "${expected}"`,
+    }) as const,
   errormessage: (target: Locator, expected: string) =>
     ({
       assert: "errormessage",
@@ -281,6 +301,12 @@ export const assertions = {
     value: (target: Locator, expected: string) =>
       ({
         assert: "value",
+        target,
+        args: [expected, false],
+      }) as const,
+    href: (target: Locator, expected: string) =>
+      ({
+        assert: "href",
         target,
         args: [expected, false],
       }) as const,

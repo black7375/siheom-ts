@@ -1,4 +1,4 @@
-region: "signup-form"
+form: "회원가입"
   group
     "이메일"
     textbox: "이메일" [invalid=true] [value=""]

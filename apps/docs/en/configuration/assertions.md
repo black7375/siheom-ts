@@ -14,10 +14,11 @@ Assertions return step objects `(target: Locator, ...args)`. `assertions.not.*` 
 | `assertions.current(target, value)` | `aria-current` |
 | `assertions.count(target, n)` | Match count |
 | `assertions.value(target, string)` | Form value |
+| `assertions.href(target, string)` | Link `href` |
 | `assertions.description(target, string)` | Accessible description |
 | `assertions.errormessage(target, string)` | Accessible error message |
 
-Negated: `assertions.not.visible`, `not.checked`, `not.expanded`, `not.selected`, `not.disabled`, `not.current`, `not.count`, `not.value`, `not.errormessage`.
+Negated: `assertions.not.visible`, `not.checked`, `not.expanded`, `not.selected`, `not.disabled`, `not.current`, `not.count`, `not.value`, `not.href`, `not.errormessage`.
 
 ## Snapshot assertions
 
@@ -32,6 +33,7 @@ Negated: `assertions.not.visible`, `not.checked`, `not.expanded`, `not.selected`
 
 ```tsx
 assertions.visible(query.button("2"))
+assertions.href(query.link("First post"), "/articles/1")
 assertions.errormessage(query.textbox(/email/i), "Invalid email format")
 assertions.a11ySnapshot(query.region("signup-form"), "signup-form-initial.snap")
 assertions.not.visible(query.button("Delete"))
