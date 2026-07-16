@@ -28,6 +28,7 @@ export type GivenStep<
 export type Locator = {
 	role: string;
 	name: string | RegExp;
+	within?: Locator;
 };
 
 export type ActionStep<ActionsDict extends ActionStepDefinitionDict> = {

@@ -1,0 +1,6 @@
+dialog: "삭제 확인"
+  heading: "삭제 확인" [level=2]
+  paragraph
+    "정말 삭제하시겠습니까?"
+  button: "취소"
+  button: "삭제"

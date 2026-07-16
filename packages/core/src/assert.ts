@@ -14,10 +14,15 @@ export const defaultAssertions = {
 			if (expected) {
 				expect(element).toBeInTheDocument();
 				expect(element).not.toHaveAttribute("aria-hidden", "true");
-			} else {
-				expect(element).not.toBeInTheDocument();
-				expect(element).not.toHaveAttribute("aria-hidden", "false");
+				return;
 			}
+
+			if (element === null) {
+				expect(element).not.toBeInTheDocument();
+				return;
+			}
+
+			expect(element).not.toHaveAttribute("aria-hidden", "false");
 		});
 	},
 	checked: async (target: Locator, expected: boolean) => {
