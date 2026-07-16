@@ -7,7 +7,7 @@
     "dev": "vitepress dev",
     "build": "vitepress build",
     "preview": "vitepress preview",
-    "sync-showcase": "node ./scripts/sync-showcase-artifacts.mjs"
+    "sync-showcase": "bun ./scripts/sync-showcase-artifacts.mjs"
   },
   "devDependencies": {
     "vitepress": "^1.6.3"

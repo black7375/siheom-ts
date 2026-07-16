@@ -4,6 +4,7 @@
   "private": true,
   "description": "siheom monorepo — data-first frontend test interpreter",
   "type": "module",
+  "packageManager": "bun@1.4.0",
   "license": "MIT",
   "workspaces": [
     "packages/*",
@@ -14,7 +15,7 @@
     "build": "bun run --filter '@siheom/core' build && bun run --filter '@siheom/react' build",
     "check-exports": "bun run --filter '@siheom/core' check-exports && bun run --filter '@siheom/react' check-exports",
     "typecheck": "bun run --filter '@siheom/core' typecheck && bun run --filter '@siheom/react' typecheck && bun run --filter '@siheom/react-example' typecheck",
-    "test": "bun run --filter '@siheom/core' test && bun run --filter '@siheom/react-example' test",
+    "test": "mise exec -- sh -c \"bun run --filter '@siheom/core' test && bun run --filter '@siheom/react-example' test\"",
     "docs": "bun run --filter '@siheom/docs' dev",
     "docs:build": "bun run --filter '@siheom/docs' build",
     "check-format": "oxfmt --check packages/*/src apps/react-example/test",
