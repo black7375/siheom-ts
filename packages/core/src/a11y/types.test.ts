@@ -1,16 +1,11 @@
 import { describe, it, expectTypeOf } from "vitest";
-import type {
-  A11yAttributes,
-  A11yInteraction,
-  A11yNode,
-  BuildA11yTreeOptions,
-} from "./types.ts";
+import type { A11yAttributes, A11yInteraction, A11yNode, BuildA11yTreeOptions } from "./types.ts";
 import type { A11ySnapshotOptions } from "../getA11ySnapshot.ts";
 
 describe("A11yInteraction type", () => {
   it("accepts valid interaction object", () => {
     const interaction: A11yInteraction = { focusable: true, tabbable: true, focused: false };
-    expectTypeOf(interaction).toMatchTypeOf<A11yInteraction>();
+    expectTypeOf(interaction).toExtend<A11yInteraction>();
   });
 
   it("accepts optional keyshortcuts and accesskey", () => {
@@ -21,20 +16,30 @@ describe("A11yInteraction type", () => {
       keyshortcuts: "Alt+S",
       accesskey: "s",
     };
-    expectTypeOf(interaction).toMatchTypeOf<A11yInteraction>();
+    expectTypeOf(interaction).toExtend<A11yInteraction>();
   });
 
-  // @ts-expect-error: keyshortcuts must be string, not number
-  const badShortcut: A11yInteraction = { focusable: true, tabbable: true, focused: false, keyshortcuts: 123 };
+  it("rejects non-string keyshortcuts", () => {
+    expectTypeOf<{
+      readonly focusable: true;
+      readonly tabbable: true;
+      readonly focused: false;
+      readonly keyshortcuts: number;
+    }>().not.toExtend<A11yInteraction>();
+  });
 
-  // @ts-expect-error: focusable is required
-  const missingFocusable: A11yInteraction = { tabbable: true, focused: false };
+  it("requires focusable", () => {
+    expectTypeOf<{
+      readonly tabbable: true;
+      readonly focused: false;
+    }>().not.toExtend<A11yInteraction>();
+  });
 });
 
 describe("A11yAttributes type", () => {
   it("accepts string-to-string record", () => {
     const attrs: A11yAttributes = { "aria-label": "Save", role: "button", disabled: "" };
-    expectTypeOf(attrs).toMatchTypeOf<A11yAttributes>();
+    expectTypeOf(attrs).toExtend<A11yAttributes>();
   });
 });
 
@@ -47,18 +52,19 @@ describe("A11yNode with interaction and attributes", () => {
       attributes: { "aria-label": "Save" },
       children: [],
     };
-    expectTypeOf(node).toMatchTypeOf<A11yNode>();
+    expectTypeOf(node).toExtend<A11yNode>();
   });
 });
 
 describe("BuildA11yTreeOptions with includeHidden", () => {
   it("accepts includeHidden boolean", () => {
     const opts: BuildA11yTreeOptions = { mode: "verbose", includeHidden: true };
-    expectTypeOf(opts).toMatchTypeOf<BuildA11yTreeOptions>();
+    expectTypeOf(opts).toExtend<BuildA11yTreeOptions>();
   });
 
-  // @ts-expect-error: includeHidden must be boolean, not string
-  const badHidden: BuildA11yTreeOptions = { includeHidden: "true" };
+  it("rejects non-boolean includeHidden", () => {
+    expectTypeOf<{ readonly includeHidden: string }>().not.toExtend<BuildA11yTreeOptions>();
+  });
 });
 
 describe("A11ySnapshotOptions", () => {
@@ -68,6 +74,6 @@ describe("A11ySnapshotOptions", () => {
       includeHidden: true,
       serialize: { mode: "verbose" },
     };
-    expectTypeOf(opts).toMatchTypeOf<A11ySnapshotOptions>();
+    expectTypeOf(opts).toExtend<A11ySnapshotOptions>();
   });
 });

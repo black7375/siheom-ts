@@ -9,6 +9,7 @@ export { actions, defaultActions, createDefaultActions } from "./action.ts";
 export type { DefaultActions } from "./action.ts";
 export { assertions, defaultAssertions, createDefaultAssertions } from "./assert.ts";
 export type { DefaultAssertions } from "./assert.ts";
+export type { A11ySnapshotOptions } from "./getA11ySnapshot.ts";
 export { effect, defaultEffects } from "./effect.ts";
 export { withFakeTimers } from "./withFakeTimers.ts";
 export {
