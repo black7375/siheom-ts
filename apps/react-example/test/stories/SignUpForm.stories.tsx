@@ -1,6 +1,6 @@
-import type { Meta, StoryObj } from '@storybook/react-vite';
+import type { Meta, StoryObj } from "@storybook/react-vite";
 
-import { SignUpForm } from './SignUpForm';
+import { SignUpForm } from "./SignUpForm";
 
 const meta = {
   component: SignUpForm,
@@ -16,4 +16,3 @@ export const Primary: Story = {
     },
   },
 };
-
