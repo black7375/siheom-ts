@@ -165,6 +165,19 @@ export const defaultAssertions = {
       expect(element).toHaveAccessibleDescription(expected);
     });
   },
+  textContent: async (target: Locator, expected: string, flag = true) => {
+    await waitFor(async () => {
+      const element = getElement(target, true);
+
+      expect(element).toBeInTheDocument();
+
+      if (flag) {
+        expect(element).toHaveTextContent(expected);
+      } else {
+        expect(element).not.toHaveTextContent(expected);
+      }
+    });
+  },
   a11ySnapshot: async (target: Locator, path: string) => {
     await waitFor(async () => {
       const element = getElement(target, true);
@@ -248,18 +261,21 @@ export const assertions = {
       assert: "current",
       target,
       args: [expected, true],
+      log: `current     : ${locatorLog(target)} is "${expected}"`,
     }) as const,
   count: (target: Locator, expected: number) =>
     ({
       assert: "count",
       target,
       args: [expected, true],
+      log: `count       : ${locatorLog(target)} is ${expected}`,
     }) as const,
   value: (target: Locator, expected: string) =>
     ({
       assert: "value",
       target,
       args: [expected, true],
+      log: `value       : ${locatorLog(target)} is "${expected}"`,
     }) as const,
   href: (target: Locator, expected: string) =>
     ({
@@ -274,6 +290,13 @@ export const assertions = {
       target,
       args: [expected, true],
       log: `${target.role} ${target.name}의 에러 메시지는 "${expected}" 이다.`,
+    }) as const,
+  textContent: (target: Locator, expected: string) =>
+    ({
+      assert: "textContent",
+      target,
+      args: [expected, true],
+      log: `textContent : ${locatorLog(target)} is "${expected}"`,
     }) as const,
   not: {
     visible: (target: Locator) =>
@@ -326,30 +349,42 @@ export const assertions = {
         assert: "current",
         target,
         args: [expected, false],
+        log: `not current : ${locatorLog(target)} is not "${expected}"`,
       }) as const,
     count: (target: Locator, expected: number) =>
       ({
         assert: "count",
         target,
         args: [expected, false],
+        log: `not count   : ${locatorLog(target)} is not ${expected}`,
       }) as const,
     value: (target: Locator, expected: string) =>
       ({
         assert: "value",
         target,
         args: [expected, false],
+        log: `not value   : ${locatorLog(target)} is not "${expected}"`,
       }) as const,
     href: (target: Locator, expected: string) =>
       ({
         assert: "href",
         target,
         args: [expected, false],
+        log: `not href    : ${locatorLog(target)} is not "${expected}"`,
       }) as const,
     errormessage: (target: Locator, expected: string) =>
       ({
         assert: "errormessage",
         target,
         args: [expected, false],
+        log: `not errormessage: ${locatorLog(target)} is not "${expected}"`,
+      }) as const,
+    textContent: (target: Locator, expected: string) =>
+      ({
+        assert: "textContent",
+        target,
+        args: [expected, false],
+        log: `not textContent: ${locatorLog(target)} is not "${expected}"`,
       }) as const,
   },
   a11ySnapshot: (target: Locator, path: string) =>

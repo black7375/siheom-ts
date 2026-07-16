@@ -11,14 +11,16 @@ Assertions return step objects `(target: Locator, ...args)`. `assertions.not.*` 
 | `assertions.expanded(target)` | `aria-expanded=true` |
 | `assertions.selected(target)` | `aria-selected=true` |
 | `assertions.disabled(target)` | Disabled |
+| `assertions.focused(target)` | Focused |
 | `assertions.current(target, value)` | `aria-current` |
 | `assertions.count(target, n)` | Match count |
 | `assertions.value(target, string)` | Form value |
+| `assertions.textContent(target, string)` | Element text content |
 | `assertions.href(target, string)` | Link `href` |
 | `assertions.description(target, string)` | Accessible description |
 | `assertions.errormessage(target, string)` | Accessible error message |
 
-Negated: `assertions.not.visible`, `not.checked`, `not.expanded`, `not.selected`, `not.disabled`, `not.current`, `not.count`, `not.value`, `not.href`, `not.errormessage`.
+Negated: `assertions.not.visible`, `not.checked`, `not.expanded`, `not.selected`, `not.disabled`, `not.focused`, `not.current`, `not.count`, `not.value`, `not.textContent`, `not.href`, `not.errormessage`.
 
 ## Snapshot assertions
 

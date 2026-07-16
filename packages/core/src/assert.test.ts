@@ -17,3 +17,17 @@ describe("assertions.focused", () => {
     await defaultAssertions.focused(query.button("Go"), false);
   });
 });
+
+describe("assertions.textContent", () => {
+  it("passes when the target element has the expected text", async () => {
+    document.body.innerHTML = `<p role="status" aria-label="남은 할 일">2 items left</p>`;
+
+    await defaultAssertions.textContent(query.status("남은 할 일"), "2 items left", true);
+  });
+
+  it("passes when the target element does not have the expected text", async () => {
+    document.body.innerHTML = `<p role="status" aria-label="남은 할 일">1 item left</p>`;
+
+    await defaultAssertions.textContent(query.status("남은 할 일"), "2 items left", false);
+  });
+});

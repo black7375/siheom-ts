@@ -11,14 +11,16 @@ assertion은 `(target: Locator, ...args)` 형태의 스텝 객체를 반환합�
 | `assertions.expanded(target)` | `aria-expanded=true` |
 | `assertions.selected(target)` | `aria-selected=true` |
 | `assertions.disabled(target)` | 비활성 |
+| `assertions.focused(target)` | 포커스됨 |
 | `assertions.current(target, value)` | `aria-current` |
 | `assertions.count(target, n)` | 매칭 개수 |
 | `assertions.value(target, string)` | 폼 value |
+| `assertions.textContent(target, string)` | 요소 text content |
 | `assertions.href(target, string)` | 링크 `href` |
 | `assertions.description(target, string)` | accessible description |
 | `assertions.errormessage(target, string)` | accessible error message |
 
-부정: `assertions.not.visible`, `not.checked`, `not.expanded`, `not.selected`, `not.disabled`, `not.current`, `not.count`, `not.value`, `not.href`, `not.errormessage`.
+부정: `assertions.not.visible`, `not.checked`, `not.expanded`, `not.selected`, `not.disabled`, `not.focused`, `not.current`, `not.count`, `not.value`, `not.textContent`, `not.href`, `not.errormessage`.
 
 ## 스냅샷 assertion
 
