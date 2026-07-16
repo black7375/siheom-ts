@@ -1,16 +1,27 @@
 form: "relations-demo"
   "Email"
   "Enter your email address"
-  alert
+  alert:
     "Email is required"
-  textbox: "Email" [invalid=true] [value=""] [description="Enter your email address"]
-  heading: "Settings Panel" [level=2]
-  button: "Toggle Panel" [expanded=true]
+  textbox: "Email" [value=""] [description="Enter your email address"]
+    - states: [invalid=true]
+  generic: "Settings Panel"
+    - relations:
+      labelledby: "Settings Panel" (#panel-title)
+    heading: "Settings Panel"
+      - properties: [level=2]
+    button: "Toggle Panel"
+      - states: [expanded=true]
+      - relations:
+        controls: "Settings Panel" (#panel)
   region: "Feature details"
     "More information about this feature"
   button: "Help"
+    - relations:
+      details: "Feature details" (#detail-info)
   navigation: "Main navigation"
-    menu
+    menu:
       menuitem: "Home"
       menuitem: "About"
     button: "Menu"
+      - properties: [haspopup="menu"]

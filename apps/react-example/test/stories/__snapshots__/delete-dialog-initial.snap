@@ -1,8 +1,12 @@
 region: "todo-list"
-  list
+  list:
     listitem: "밥 먹기"
       "밥 먹기"
-      button: "밥 먹기 삭제" [expanded=false]
+      button: "밥 먹기 삭제"
+        - states: [expanded=false]
+        - properties: [haspopup="dialog"]
     listitem: "운동하기"
       "운동하기"
-      button: "운동하기 삭제" [expanded=false]
+      button: "운동하기 삭제"
+        - states: [expanded=false]
+        - properties: [haspopup="dialog"]

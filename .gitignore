@@ -9,3 +9,4 @@ packages/*/dist
 apps/*/dist
 apps/*/storybook-static
 **/__screenshots__/*
+apps/react-example/.vitest-attachments
