@@ -27,7 +27,7 @@ describe("SignUpForm", () => {
       actions.click(query.button("가입하기")),
 
       assertions.errormessage(query.textbox(/이메일/), "올바른 이메일 형식이 아닙니다"),
-      assertions.errormessage(query.textbox(/비밀번호/), "비밀번호를 10자 이상 입력해주세요"),
+      assertions.errormessage(query.label(/비밀번호/), "비밀번호를 10자 이상 입력해주세요"),
 
       assertions.errormessage(query.checkbox("약관 동의"), "약관 동의에 동의해야 합니다"),
       assertions.errormessage(
@@ -36,7 +36,7 @@ describe("SignUpForm", () => {
       ),
 
       actions.fill(query.textbox(/이메일/), MEMBER.email),
-      actions.fill(query.textbox(/비밀번호/), MEMBER.password),
+      actions.fill(query.label(/비밀번호/), MEMBER.password),
 
       // 약관 동의 체크박스를 클릭한다
       actions.click(query.checkbox("약관 동의")),
@@ -79,7 +79,7 @@ describe("SignUpForm", () => {
         </section>,
       ),
       actions.fill(query.textbox(/이메일/), MEMBER.email),
-      actions.fill(query.textbox(/비밀번호/), MEMBER.password),
+      actions.fill(query.label(/비밀번호/), MEMBER.password),
       actions.click(query.checkbox("약관 동의")),
       actions.click(query.checkbox("개인정보 수집 동의")),
       assertions.a11ySnapshot(query.region("signup-form"), "signup-form-filled.snap"),

@@ -5,7 +5,10 @@
   "description": "siheom monorepo — data-first frontend test interpreter",
   "type": "module",
   "license": "MIT",
-  "workspaces": ["packages/*", "apps/*"],
+  "workspaces": [
+    "packages/*",
+    "apps/*"
+  ],
   "scripts": {
     "ci": "bun run check-format && bun run lint && bun run build && bun run check-exports && bun run typecheck && bun run test",
     "build": "bun run --filter '@siheom/core' build && bun run --filter '@siheom/react' build",
