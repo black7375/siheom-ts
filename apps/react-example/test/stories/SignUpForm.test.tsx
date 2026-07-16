@@ -40,7 +40,7 @@ describe("SignUpForm", () => {
     expect(result).toEqual(MEMBER);
   });
 
-  it("에러 상태의 폼 접근성 스냅샷을 확인한다", async () => {
+  it("값을 입력하지 않으면, 에러 메시지를 보여준다", async () => {
     await runSiheom(
       given.render(<SignUpForm signUpMember={noop} />),
       actions.click(query.button("가입하기")),
