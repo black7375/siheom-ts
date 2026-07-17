@@ -1,6 +1,6 @@
 ---
-"@siheom/core": minor
-"@siheom/react": minor
+"@siheom/core": patch
+"@siheom/react": patch
 ---
 
-배포할 때 모노레포의 디펜던시를 고칩니다.
+Fix workspace dependency rewriting on publish so consumers can install outside the monorepo.
