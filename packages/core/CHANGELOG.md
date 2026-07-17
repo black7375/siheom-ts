@@ -1,5 +1,11 @@
 # @siheom/core
 
+## 0.2.0
+
+### Minor Changes
+
+- 164aa51: 모노레포 의존성 이슈 해결
+
 ## 0.1.3
 
 ### Patch Changes
