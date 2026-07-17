@@ -7,6 +7,22 @@ cd "$ROOT"
 STATUS_JSON="$(mktemp)"
 trap 'rm -f "$STATUS_JSON"' EXIT
 
+YES=false
+
+confirm() {
+  local prompt="$1"
+  local default="${2:-yes}"
+  if [[ "$YES" == true ]]; then
+    if [[ "$default" == "yes" ]]; then
+      gum log --level info "$prompt → yes"
+      return 0
+    fi
+    gum log --level info "$prompt → no"
+    return 1
+  fi
+  gum confirm "$prompt"
+}
+
 die() {
   gum log --level error "$1"
   exit 1
@@ -70,7 +86,7 @@ ensure_changesets() {
   fi
 
   gum log --level warn "No pending changesets."
-  if ! gum confirm "Create a changeset now?"; then
+  if ! confirm "Create a changeset now?"; then
     die "Add a changeset with 'bunx changeset' before releasing."
   fi
 
@@ -99,7 +115,7 @@ version_and_commit() {
   header "Version bump"
   show_version_plan || die "Nothing to release."
 
-  if ! gum confirm "Bump versions with changeset and create release commit?"; then
+  if ! confirm "Bump versions with changeset and create release commit?"; then
     die "Release cancelled."
   fi
 
@@ -140,11 +156,11 @@ publish_packages() {
   } | gum table --separator "," --widths 22,10,12,16 --print
 
   local otp=""
-  if gum confirm "Does npm require a one-time password (2FA)?"; then
+  if confirm "Does npm require a one-time password (2FA)?" no; then
     otp="$(gum input --placeholder "Enter npm OTP")"
   fi
 
-  if ! gum confirm "Publish packages to npm?"; then
+  if ! confirm "Publish packages to npm?"; then
     gum log --level warn "Publish skipped. Version commit is local only."
     return 0
   fi
@@ -164,7 +180,7 @@ publish_packages() {
 
 maybe_push() {
   if git status -sb | grep -q '^\#\# .*ahead'; then
-    if gum confirm "Push release commit(s) to origin?"; then
+    if confirm "Push release commit(s) to origin?"; then
       step "Pushing to origin"
       gum spin --spinner dot --title "git push..." -- git push
       gum log --level info "Pushed to origin"
@@ -173,6 +189,25 @@ maybe_push() {
 }
 
 main() {
+  # parse flags before require_cmd (die uses gum)
+  local args=()
+  while [[ $# -gt 0 ]]; do
+    case "$1" in
+      -y | --yes)
+        YES=true
+        shift
+        ;;
+      *)
+        args+=("$1")
+        shift
+        ;;
+    esac
+  done
+  if [[ ${#args[@]} -gt 0 ]]; then
+    echo "error: unknown arguments: ${args[*]}" >&2
+    exit 1
+  fi
+
   require_cmd gum
   require_cmd bun
   require_cmd git
@@ -190,15 +225,19 @@ main() {
 
   if [[ -n "$(git status --porcelain)" ]]; then
     gum log --level warn "Working tree is not clean."
-    git status --short | gum pager
-    gum confirm "Continue anyway?" || die "Commit or stash changes first."
+    if [[ "$YES" == true ]]; then
+      git status --short
+    else
+      git status --short | gum pager
+    fi
+    confirm "Continue anyway?" || die "Commit or stash changes first."
   fi
 
   header "1. Version check"
   ensure_changesets
   show_version_plan || die "Nothing to release."
 
-  if gum confirm "Run full CI checks before versioning?"; then
+  if confirm "Run full CI checks before versioning?" no; then
     preflight_checks
   fi
 
