@@ -22,6 +22,7 @@
     "lint": "oxlint packages/*/src apps/react-example/test",
     "lint:fix": "oxlint --fix packages/*/src apps/react-example/test",
     "local-check": "bun run format && bun run lint:fix && bun run build && bun run check-exports && bun run typecheck && bun run --filter '@siheom/react-example' test",
+    "release": "./scripts/release.sh",
     "local-release": "changeset version && changeset publish",
     "storybook": "bun run --filter '@siheom/react-example' storybook"
   },
