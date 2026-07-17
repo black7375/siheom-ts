@@ -1,0 +1,9 @@
+# @siheom/react
+
+## 0.1.2
+
+### Patch Changes
+
+- 873d10e: Fix workspace dependency rewriting on publish so consumers can install outside the monorepo.
+- Updated dependencies [873d10e]
+  - @siheom/core@0.1.2

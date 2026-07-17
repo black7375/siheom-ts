@@ -1,10 +1,12 @@
 {
   "name": "@siheom/react",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "React runtime for siheom (data-first frontend test interpreter)",
   "type": "module",
   "license": "MIT",
-  "files": ["dist"],
+  "files": [
+    "dist"
+  ],
   "main": "./dist/index.mjs",
   "exports": {
     "./package.json": "./package.json",

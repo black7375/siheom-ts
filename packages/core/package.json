@@ -1,10 +1,12 @@
 {
   "name": "@siheom/core",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "Data-first frontend test interpreter (framework-agnostic core)",
   "type": "module",
   "license": "MIT",
-  "files": ["dist"],
+  "files": [
+    "dist"
+  ],
   "main": "./dist/index.mjs",
   "exports": {
     "./package.json": "./package.json",
