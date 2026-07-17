@@ -8,6 +8,7 @@ STATUS_JSON="$(mktemp)"
 trap 'rm -f "$STATUS_JSON"' EXIT
 
 YES=false
+PUBLISH_ONLY=false
 
 confirm() {
   local prompt="$1"
@@ -155,9 +156,11 @@ publish_packages() {
     printf "%s" "$publish_rows"
   } | gum table --separator "," --widths 22,10,12,16 --print
 
-  local otp=""
-  if confirm "Does npm require a one-time password (2FA)?" no; then
+  local otp="${NPM_OTP:-}"
+  if [[ -z "$otp" ]] && confirm "Does npm require a one-time password (2FA)?" no; then
     otp="$(gum input --placeholder "Enter npm OTP")"
+  elif [[ -n "$otp" ]]; then
+    gum log --level info "Using NPM_OTP for publish"
   fi
 
   if ! confirm "Publish packages to npm?"; then
@@ -197,6 +200,10 @@ main() {
         YES=true
         shift
         ;;
+      --publish-only)
+        PUBLISH_ONLY=true
+        shift
+        ;;
       *)
         args+=("$1")
         shift
@@ -234,15 +241,19 @@ main() {
   fi
 
   header "1. Version check"
-  ensure_changesets
-  show_version_plan || die "Nothing to release."
+  if [[ "$PUBLISH_ONLY" == true ]]; then
+    gum log --level info "Skipping version bump (--publish-only)"
+  else
+    ensure_changesets
+    show_version_plan || die "Nothing to release."
 
-  if confirm "Run full CI checks before versioning?" no; then
-    preflight_checks
+    if confirm "Run full CI checks before versioning?" no; then
+      preflight_checks
+    fi
+
+    header "2. Commit release"
+    version_and_commit
   fi
-
-  header "2. Commit release"
-  version_and_commit
 
   header "3. Publish"
   publish_packages
