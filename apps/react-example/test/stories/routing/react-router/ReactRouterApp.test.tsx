@@ -1,6 +1,14 @@
 import "../../../index.css";
 import { describe, it } from "vitest";
-import { actions, assertions, given, query, runSiheom } from "@siheom/react";
+import {
+  actions,
+  assertions,
+  effect,
+  given,
+  query,
+  runSiheom,
+  withFakeTimers,
+} from "@siheom/react";
 import { ArticleList, ReactRouterApp } from "./ReactRouterApp";
 import { ARTICLES } from "../shared/articles";
 
@@ -28,13 +36,16 @@ describe("ReactRouterApp", () => {
   });
 
   it("API 로딩 후 대시보드로 이동한다", async () => {
-    const login = () => new Promise<void>((resolve) => setTimeout(resolve, 50));
+    const login = () => new Promise<void>((resolve) => setTimeout(resolve, 100));
 
     await runSiheom(
-      given.render(<ReactRouterApp initialEntries={["/login"]} login={login} />),
-      actions.click(query.button("로그인")),
-      assertions.visible(query.button("로그인 중...")),
-      assertions.visible(query.region("대시보드")),
+      withFakeTimers(
+        given.render(<ReactRouterApp initialEntries={["/login"]} login={login} />),
+        actions.click(query.button("로그인")),
+        assertions.visible(query.button("로그인 중...")),
+        effect.elapsed(50),
+        assertions.visible(query.region("대시보드")),
+      ),
     );
   });
 });

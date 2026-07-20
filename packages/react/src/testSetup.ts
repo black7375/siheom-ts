@@ -1,3 +1,4 @@
+import "./configureTestingLibrary.ts";
 import "@testing-library/jest-dom/vitest";
 
 declare global {

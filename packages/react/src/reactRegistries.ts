@@ -1,5 +1,6 @@
 import {
   createDefaultActions,
+  createDefaultAssertions,
   createFakeTimerScopedRegistries,
   type ActionStepDefinitionDict,
   type AssertionStepDefinitionDict,
@@ -21,6 +22,9 @@ function wrapInActAsync<T extends Record<string, (...args: never[]) => Promise<v
 }
 
 export const reactActions = wrapInActAsync(createDefaultActions()) as ActionStepDefinitionDict;
+export const reactAssertions = wrapInActAsync(
+  createDefaultAssertions(),
+) as AssertionStepDefinitionDict;
 
 export function createReactFakeTimerScopedRegistries<
   TActions extends ActionStepDefinitionDict,
