@@ -1,10 +1,12 @@
-import { render } from "@testing-library/react";
+import { act, render } from "@testing-library/react";
 import type { GivenStep } from "@siheom/core";
 import type { ReactElement } from "react";
 
 export const defaultGivens = {
   render: async (element: ReactElement) => {
-    render(element);
+    act(() => {
+      render(element);
+    });
   },
 };
 
