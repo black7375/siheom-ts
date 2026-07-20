@@ -1,15 +1,20 @@
-import { MemoryRouter, Route, Routes } from "react-router-dom";
-import { useState } from "react";
+import { MemoryRouter, Route, Routes, Link, useLocation } from "react-router-dom";
+import { useEffect, useState } from "react";
 import {
   addTodo,
   allCompleted,
+  clearCompleted,
+  countActive,
+  filterTodos,
+  hasCompleted,
+  parseFilter,
   removeTodo,
   toggleAll,
   toggleTodo,
   updateTodoTitle,
   type Todo,
 } from "./todoLogic";
-import { readTodos } from "./todoStorage";
+import { readTodos, writeTodos } from "./todoStorage";
 
 export function TodoMVCApp({
   initialEntries = ["/"],
@@ -26,9 +31,16 @@ export function TodoMVCApp({
 }
 
 function TodoMVCContent() {
+  const { pathname } = useLocation();
+  const filter = parseFilter(pathname);
   const [todos, setTodos] = useState<Todo[]>(() => readTodos());
   const [editingId, setEditingId] = useState<string | null>(null);
   const hasTodos = todos.length > 0;
+  const visibleTodos = filterTodos(todos, filter);
+
+  useEffect(() => {
+    writeTodos(todos);
+  }, [todos]);
 
   return (
     <section className="todoapp" aria-label="todos">
@@ -61,7 +73,7 @@ function TodoMVCContent() {
           />
           <label htmlFor="toggle-all">Mark all as complete</label>
           <ul className="todo-list">
-            {todos.map((todo) => (
+            {visibleTodos.map((todo) => (
               <TodoItem
                 key={todo.id}
                 todo={todo}
@@ -81,9 +93,50 @@ function TodoMVCContent() {
       ) : null}
 
       {hasTodos ? (
-        <section className="footer" aria-label="todo footer" />
+        <section className="footer" aria-label="todo footer">
+          <span className="todo-count" role="status" aria-label="items left">
+            <strong>{countActive(todos)}</strong>{" "}
+            {countActive(todos) === 1 ? "item" : "items"} left
+          </span>
+          <ul className="filters">
+            <li>
+              <FilterLink to="/" label="All" active={filter === "all"} />
+            </li>
+            <li>
+              <FilterLink to="/active" label="Active" active={filter === "active"} />
+            </li>
+            <li>
+              <FilterLink to="/completed" label="Completed" active={filter === "completed"} />
+            </li>
+          </ul>
+          {hasCompleted(todos) ? (
+            <button
+              type="button"
+              className="clear-completed"
+              onClick={() => setTodos((current) => clearCompleted(current))}
+            >
+              Clear completed
+            </button>
+          ) : null}
+        </section>
       ) : null}
     </section>
+  );
+}
+
+function FilterLink({
+  to,
+  label,
+  active,
+}: {
+  to: string;
+  label: string;
+  active: boolean;
+}) {
+  return (
+    <Link to={to} aria-current={active ? "page" : undefined}>
+      {label}
+    </Link>
   );
 }
 

@@ -37,3 +37,34 @@ export function updateTodoTitle(todos: Todo[], id: string, title: string): Todo[
 export function removeTodo(todos: Todo[], id: string): Todo[] {
   return todos.filter((todo) => todo.id !== id);
 }
+
+export function countActive(todos: Todo[]): number {
+  return todos.filter((todo) => !todo.completed).length;
+}
+
+export function clearCompleted(todos: Todo[]): Todo[] {
+  return todos.filter((todo) => !todo.completed);
+}
+
+export function hasCompleted(todos: Todo[]): boolean {
+  return todos.some((todo) => todo.completed);
+}
+
+export type TodoFilter = "all" | "active" | "completed";
+
+export function filterTodos(todos: Todo[], filter: TodoFilter): Todo[] {
+  switch (filter) {
+    case "active":
+      return todos.filter((todo) => !todo.completed);
+    case "completed":
+      return todos.filter((todo) => todo.completed);
+    default:
+      return todos;
+  }
+}
+
+export function parseFilter(pathname: string): TodoFilter {
+  if (pathname.endsWith("/active")) return "active";
+  if (pathname.endsWith("/completed")) return "completed";
+  return "all";
+}

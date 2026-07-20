@@ -14,11 +14,11 @@ Spec: [TodoMVC app-spec](https://raw.githubusercontent.com/tastejs/todomvc/refs/
 - [x] editing — empty title removes the todo
 - [x] editing — Escape discards changes
 - [x] item — delete button removes the todo
-- [ ] counter — shows active count with correct pluralization
-- [ ] clear completed — removes completed todos and hides when none remain
-- [ ] persistence — todos are stored in localStorage
-- [ ] routing — Active filter shows only active todos
-- [ ] routing — Completed filter shows only completed todos
-- [ ] routing — active filter link has aria-current page
-- [ ] routing — active filter persists after reload
-- [ ] routing — completing a todo hides it on Active filter
+- [x] counter — shows active count with correct pluralization
+- [x] clear completed — removes completed todos and hides when none remain
+- [x] persistence — todos are stored in localStorage
+- [x] routing — Active filter shows only active todos
+- [x] routing — Completed filter shows only completed todos
+- [x] routing — active filter link has aria-current page
+- [x] routing — active filter persists after reload
+- [x] routing — completing a todo hides it on Active filter
