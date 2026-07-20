@@ -92,4 +92,24 @@ describe("TodoMVCApp", () => {
       assertions.not.visible(query.listitem("Buy milk")),
     );
   });
+
+  it("빈 제목으로 수정하면 할 일이 삭제된다", async () => {
+    await runSiheom(
+      setup([TODO_BUY_MILK]),
+      actions.dblclick(query.label(`${TODO_BUY_MILK.title} title`)),
+      actions.fill(query.textbox(`Edit ${TODO_BUY_MILK.title}`), "   {Enter}"),
+      assertions.not.visible(query.listitem("Buy milk")),
+      assertions.not.visible(query.region("todo list")),
+    );
+  });
+
+  it("Escape로 수정을 취소한다", async () => {
+    await runSiheom(
+      setup([TODO_BUY_MILK]),
+      actions.dblclick(query.label(`${TODO_BUY_MILK.title} title`)),
+      actions.fill(query.textbox(`Edit ${TODO_BUY_MILK.title}`), "Changed{Escape}"),
+      assertions.visible(query.listitem("Buy milk")),
+      assertions.not.visible(query.textbox("Edit Buy milk")),
+    );
+  });
 });
