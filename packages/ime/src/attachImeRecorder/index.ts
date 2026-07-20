@@ -1,0 +1,1 @@
+export { attachImeRecorder } from "./attachImeRecorder";

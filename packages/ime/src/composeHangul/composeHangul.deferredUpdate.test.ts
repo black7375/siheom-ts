@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 
 import { composeHangul } from "./composeHangul";
-import { markImeControlledWriteback } from "./imeWritebackSignal";
+import { markImeControlledWriteback } from "../markImeControlledWriteback";
 
 /**
  * Mimic DelayedControlledField broken mode: one deferred writeback per tick with

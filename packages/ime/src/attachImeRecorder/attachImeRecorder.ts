@@ -1,4 +1,4 @@
-import type { ComposedEventRecord } from "./composeHangul";
+import type { ComposedEventRecord } from "../_internal";
 
 const IME_EVENT_TYPES = [
   "keydown",

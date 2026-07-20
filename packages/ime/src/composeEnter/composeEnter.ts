@@ -1,11 +1,6 @@
-import type { ComposedEventRecord } from "./composeHangulTypes";
-import {
-  confirmAndEndComposition,
-  pushKeydown,
-  pushKeyup,
-} from "./composeHangulInternals";
-import { getImeSession } from "./imeSession";
-import type { ImeProfile } from "./profiles";
+import type { ComposedEventRecord } from "../_internal";
+import { confirmAndEndComposition, getImeSession, pushKeydown, pushKeyup } from "../_internal";
+import type { ImeProfile } from "../profiles";
 
 /**
  * Enter while composing — order depends on profile facet (webkit vs chromium).

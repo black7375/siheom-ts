@@ -1,11 +1,11 @@
-import type { ComposedEventRecord } from "./composeHangulTypes";
+import type { ComposedEventRecord } from "../_internal";
 import {
   confirmAndEndComposition,
+  getImeSession,
   pushKeydown,
   pushKeyup,
   setInputValue,
-} from "./composeHangulInternals";
-import { getImeSession } from "./imeSession";
+} from "../_internal";
 
 /**
  * ArrowLeft: if composing, confirm+end composition first (ibus-hangul style), then move caret.

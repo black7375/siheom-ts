@@ -1,9 +1,10 @@
 import { describe, expect, it } from "vitest";
 
-import { attachImeRecorder } from "./attachImeRecorder";
+import { attachImeRecorder } from "../attachImeRecorder";
 import { composeEnter } from "./composeEnter";
-import { composeHangul, toCriticalEvents, type ComposedEventRecord } from "./composeHangul";
-import { resolveProfile } from "./profiles";
+import { composeHangul, type ComposedEventRecord } from "../composeHangul";
+import { toCriticalEvents } from "../toCriticalEvents";
+import { resolveProfile } from "../profiles";
 
 async function withRecordedInput(
   run: (input: HTMLInputElement, recorder: ReturnType<typeof attachImeRecorder>) => Promise<void>,

@@ -3,12 +3,12 @@ import { userEvent, type UserEvent } from "@testing-library/user-event";
 import { getElement, type ActionStepDefinitionDict, type Locator } from "@siheom/core";
 import { expect } from "vitest";
 
-import { composeArrowLeft } from "./composeArrowLeft";
-import { composeBackspace } from "./composeBackspace";
-import { composeEnter } from "./composeEnter";
-import { composeHangul, type ComposeHangulOptions } from "./composeHangul";
-import { resolveProfile, type ImeProfile } from "./profiles";
-import { segmentTypeText } from "./segmentTypeText";
+import { composeArrowLeft } from "../composeArrowLeft";
+import { composeBackspace } from "../composeBackspace";
+import { composeEnter } from "../composeEnter";
+import { composeHangul, type ComposeHangulOptions } from "../composeHangul";
+import { resolveProfile, type ImeProfile } from "../profiles";
+import { segmentTypeText } from "../segmentTypeText";
 
 export type CreateImeActionsOptions = {
   user?: UserEvent;

@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 
-import { hangulValueProgression } from "./hangulProgression";
+import { hangulValueProgression } from "./hangulValueProgression";
 
 describe("hangulValueProgression", () => {
   it("matches assemble prefixes for 김태희", () => {

@@ -1,7 +1,8 @@
-export { hangulValueProgression, hangulJamos } from "./hangulProgression";
-export { planHangulKeystrokes } from "./hangulPlan";
-export type { HangulKeyStroke } from "./hangulPlan";
-export { composeHangul, toCriticalEvents } from "./composeHangul";
+export { hangulValueProgression } from "./hangulValueProgression";
+export { hangulJamos } from "./hangulJamos";
+export { planHangulKeystrokes } from "./planHangulKeystrokes";
+export type { HangulKeyStroke } from "./planHangulKeystrokes";
+export { composeHangul } from "./composeHangul";
 export type { ComposedEventRecord, ComposeHangulOptions } from "./composeHangul";
 export { composeBackspace } from "./composeBackspace";
 export { composeArrowLeft } from "./composeArrowLeft";
@@ -18,5 +19,9 @@ export {
 } from "./profiles";
 export type { EnterDuringCompositionFacet, ImeProfile } from "./profiles";
 export { attachImeRecorder } from "./attachImeRecorder";
-export { goldenCritical, fromFirstCompositionStart } from "./goldenCompare";
-export { markImeControlledWriteback, consumeImeControlledWriteback } from "./imeWritebackSignal";
+export { goldenCritical, fromFirstCompositionStart } from "./goldenCritical";
+export { toCriticalEvents } from "./toCriticalEvents";
+export {
+  markImeControlledWriteback,
+  consumeImeControlledWriteback,
+} from "./markImeControlledWriteback";

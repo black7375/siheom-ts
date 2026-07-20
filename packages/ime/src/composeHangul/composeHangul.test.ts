@@ -1,9 +1,10 @@
 import { describe, expect, it } from "vitest";
 
-import { composeHangul, toCriticalEvents } from "./composeHangul";
-import golden from "../fixtures/linux-chrome-ibus-hangul/continuous-hangul.json";
-import { goldenCritical } from "./goldenCompare";
-import { planHangulKeystrokes } from "./hangulPlan";
+import { composeHangul } from "./composeHangul";
+import golden from "../../fixtures/linux-chrome-ibus-hangul/continuous-hangul.json";
+import { goldenCritical } from "../goldenCritical";
+import { toCriticalEvents } from "../toCriticalEvents";
+import { planHangulKeystrokes } from "../planHangulKeystrokes";
 
 describe("planHangulKeystrokes", () => {
   it("plans 김 with one composition session ending after ㅁ", () => {

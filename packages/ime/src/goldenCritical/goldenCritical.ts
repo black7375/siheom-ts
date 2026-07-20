@@ -1,16 +1,7 @@
-import type { ComposedEventRecord } from "./composeHangul";
-import { toCriticalEvents } from "./composeHangul";
+import type { ComposedEventRecord } from "../_internal";
+import { toCriticalEvents } from "../toCriticalEvents";
 
-export type GoldenEventRecord = {
-  type: string;
-  key: string | null;
-  code: string | null;
-  keyCode: number | null;
-  isComposing: boolean | null;
-  inputType: string | null;
-  data: string | null;
-  value: string;
-};
+export type GoldenEventRecord = ComposedEventRecord;
 
 export function goldenToRecords(events: GoldenEventRecord[]): ComposedEventRecord[] {
   return events.map((event) => ({ ...event }));

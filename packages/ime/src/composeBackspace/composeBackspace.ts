@@ -1,16 +1,18 @@
 import { assemble } from "es-hangul";
 
-import { hangulJamos } from "./hangulProgression";
-import type { ComposedEventRecord } from "./composeHangulTypes";
+import { hangulJamos } from "../hangulJamos";
+import type { ComposedEventRecord } from "../_internal";
 import {
   applyPreedit,
+  clearImeSession,
   dispatch,
+  getImeSession,
   pushKeydown,
   pushKeyup,
+  setImeSession,
   setInputValue,
   snapshot,
-} from "./composeHangulInternals";
-import { clearImeSession, getImeSession, setImeSession } from "./imeSession";
+} from "../_internal";
 
 function shrinkPreedit(preedit: string): string {
   const jamos = hangulJamos(preedit);

@@ -1,7 +1,7 @@
 import { assemble, canBeChoseong, canBeJongseong, canBeJungseong, combineVowels } from "es-hangul";
 
-import { hangulJamos } from "./hangulProgression";
-import { keyForJamo } from "./jamoKeyMap";
+import { hangulJamos } from "../hangulJamos";
+import { keyForJamo } from "../_internal/jamoKeyMap";
 
 export type HangulKeyStroke = {
   jamo: string;

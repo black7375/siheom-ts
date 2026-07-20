@@ -1,21 +1,21 @@
-import { planHangulKeystrokes, type HangulKeyStroke } from "./hangulPlan";
-import { keyForJamo } from "./jamoKeyMap";
-import type { ComposedEventRecord } from "./composeHangulTypes";
+import { planHangulKeystrokes, type HangulKeyStroke } from "../planHangulKeystrokes";
 import {
   applyPreedit,
+  clearImeSession,
   commitBetweenPreeditSteps,
   dispatch,
+  keyForJamo,
   pushCompositionStart,
   pushKeydown,
   pushKeyup,
+  setImeSession,
   snapshot,
   updateImeSessionForPreedit,
-} from "./composeHangulInternals";
-import { clearImeSession, setImeSession } from "./imeSession";
-import { consumeImeControlledWriteback } from "./imeWritebackSignal";
+  type ComposedEventRecord,
+} from "../_internal";
+import { consumeImeControlledWriteback } from "../markImeControlledWriteback";
 
-export type { ComposedEventRecord } from "./composeHangulTypes";
-export { applyPreedit, dispatch, setInputValue, snapshot } from "./composeHangulInternals";
+export type { ComposedEventRecord } from "../_internal";
 
 export type ComposeHangulOptions = {
   /** When true (default), fire compositionend for the final syllable */
@@ -70,6 +70,19 @@ function endComposition(
 }
 
 type StrokeAbort = "aborted-blur" | "aborted-deferred" | "ok";
+
+async function playRemainingIsolated(
+  element: HTMLInputElement | HTMLTextAreaElement,
+  remaining: string[],
+  suffix: string,
+  records: ComposedEventRecord[],
+  settle: "microtask" | "macrotask",
+  commit: boolean,
+) {
+  for (const jamo of remaining) {
+    await playIsolatedJamo(element, jamo, suffix, records, settle, { commit });
+  }
+}
 
 /** One jamo as its own composition session (after focus-steal / deferred abort). */
 async function playIsolatedJamo(
@@ -230,19 +243,16 @@ export async function composeHangul(
         deferredUpdateRace,
       );
 
-      if (result === "aborted-blur") {
+      if (result === "aborted-blur" || result === "aborted-deferred") {
         const remaining = strokes.slice(index + 1).map((s) => s.jamo);
-        for (const jamo of remaining) {
-          await playIsolatedJamo(element, jamo, suffix, records, settle, { commit: true });
-        }
-        return records;
-      }
-
-      if (result === "aborted-deferred") {
-        const remaining = strokes.slice(index + 1).map((s) => s.jamo);
-        for (const jamo of remaining) {
-          await playIsolatedJamo(element, jamo, suffix, records, settle, { commit: false });
-        }
+        await playRemainingIsolated(
+          element,
+          remaining,
+          suffix,
+          records,
+          settle,
+          result === "aborted-blur",
+        );
         return records;
       }
     }
@@ -273,20 +283,4 @@ export async function composeHangul(
   } finally {
     element.removeEventListener("blur", onBlur);
   }
-}
-
-/** Critical fields for golden-trace comparison (keyup order is flaky across captures). */
-export function toCriticalEvents(events: ComposedEventRecord[]) {
-  return events
-    .filter((event) => event.type !== "keyup")
-    .map((event) => ({
-      type: event.type,
-      key: event.key,
-      code: event.code,
-      keyCode: event.keyCode,
-      isComposing: event.isComposing,
-      inputType: event.inputType,
-      data: event.data,
-      value: event.value,
-    }));
 }

@@ -7,14 +7,14 @@ import {
   query,
 } from "@siheom/core";
 
-import { attachImeRecorder } from "./attachImeRecorder";
-import { toCriticalEvents } from "./composeHangul";
+import { attachImeRecorder } from "../attachImeRecorder";
+import { toCriticalEvents } from "../toCriticalEvents";
 import { createImeActions } from "./createImeActions";
-import { goldenCritical, fromFirstCompositionStart } from "./goldenCompare";
-import continuousGolden from "../fixtures/linux-chrome-ibus-hangul/continuous-hangul.json";
-import mixedGolden from "../fixtures/linux-chrome-ibus-hangul/mixed-en-ko.json";
-import backspaceGolden from "../fixtures/linux-chrome-ibus-hangul/backspace-mid.json";
-import arrowGolden from "../fixtures/linux-chrome-ibus-hangul/arrow-edit-mid.json";
+import { goldenCritical, fromFirstCompositionStart } from "../goldenCritical";
+import continuousGolden from "../../fixtures/linux-chrome-ibus-hangul/continuous-hangul.json";
+import mixedGolden from "../../fixtures/linux-chrome-ibus-hangul/mixed-en-ko.json";
+import backspaceGolden from "../../fixtures/linux-chrome-ibus-hangul/backspace-mid.json";
+import arrowGolden from "../../fixtures/linux-chrome-ibus-hangul/arrow-edit-mid.json";
 
 type ImeRecorder = ReturnType<typeof attachImeRecorder>;
 
