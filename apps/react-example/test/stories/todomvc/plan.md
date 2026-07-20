@@ -3,7 +3,7 @@
 Spec: [TodoMVC app-spec](https://raw.githubusercontent.com/tastejs/todomvc/refs/heads/master/app-spec.md)
 
 - [x] no todos — todo list region and footer region are hidden
-- [ ] new todo — input is focused on load
+- [x] new todo — input is focused on load
 - [ ] new todo — Enter creates a todo and clears the input
 - [ ] new todo — trimmed empty input does not create a todo
 - [ ] item — checkbox marks todo complete

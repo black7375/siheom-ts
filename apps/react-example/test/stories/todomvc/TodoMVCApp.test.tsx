@@ -21,4 +21,11 @@ describe("TodoMVCApp", () => {
       assertions.not.visible(query.region("todo footer")),
     );
   });
+
+  it("페이지 로드 시 새 할 일 입력에 포커스가 있다", async () => {
+    await runSiheom(
+      setup([]),
+      assertions.focused(query.textbox("What needs to be done?")),
+    );
+  });
 });

@@ -28,6 +28,7 @@ function TodoMVCContent() {
         <input
           className="new-todo"
           aria-label="What needs to be done?"
+          autoFocus
           placeholder="What needs to be done?"
         />
       </header>
