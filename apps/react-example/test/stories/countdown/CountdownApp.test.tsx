@@ -20,4 +20,29 @@ describe("CountdownApp", () => {
       ),
     );
   });
+
+  it("일시정지하면 시간이 지나도 남은 시간이 줄어들지 않는다", async () => {
+    await runSiheom(
+      withFakeTimers(
+        given.render(<CountdownApp durationMinutes={25} />),
+        actions.click(query.button("시작")),
+        effect.elapsed(1_000),
+        actions.click(query.button("일시정지")),
+        effect.elapsed(5_000),
+        assertions.textContent(query.timer("남은 시간"), "24:59"),
+      ),
+    );
+  });
+
+  it("리셋하면 다시 25:00이 표시된다", async () => {
+    await runSiheom(
+      withFakeTimers(
+        given.render(<CountdownApp durationMinutes={25} />),
+        actions.click(query.button("시작")),
+        effect.elapsed(1_000),
+        actions.click(query.button("리셋")),
+        assertions.textContent(query.timer("남은 시간"), "25:00"),
+      ),
+    );
+  });
 });
