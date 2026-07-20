@@ -7,8 +7,8 @@ Spec: [TodoMVC app-spec](https://raw.githubusercontent.com/tastejs/todomvc/refs/
 - [x] new todo — Enter creates a todo and clears the input
 - [x] new todo — trimmed empty input does not create a todo
 - [x] item — checkbox marks todo complete
-- [ ] mark all — toggles every todo to the checkbox state
-- [ ] mark all — checkbox reflects when all items are checked individually
+- [x] mark all — toggles every todo to the checkbox state
+- [x] mark all — checkbox reflects when all items are checked individually
 - [ ] editing — double-click title enters edit mode with focus
 - [ ] editing — Enter and blur save the title
 - [ ] editing — empty title removes the todo

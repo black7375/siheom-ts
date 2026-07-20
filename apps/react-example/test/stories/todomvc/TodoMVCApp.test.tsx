@@ -2,7 +2,7 @@ import { beforeEach, describe, it } from "vitest";
 import { actions, assertions, given, query, runSiheom } from "@siheom/react";
 import { TodoMVCApp } from "./TodoMVCApp";
 import type { Todo } from "./todoLogic";
-import { TODO_BUY_MILK } from "./todos.fixture";
+import { TODO_BUY_MILK, TODO_READ_BOOK } from "./todos.fixture";
 import { writeTodos } from "./todoStorage";
 
 function setup(todos: Todo[] = [], initialEntry = "/") {
@@ -55,6 +55,23 @@ describe("TodoMVCApp", () => {
       setup([TODO_BUY_MILK]),
       actions.click(query.checkbox(`Mark ${TODO_BUY_MILK.title} as complete`)),
       assertions.a11ySnapshot(query.region("todo list"), "buy-milk-completed.snap"),
+    );
+  });
+
+  it("Mark all as complete는 모든 할 일을 완료 상태로 만든다", async () => {
+    await runSiheom(
+      setup([TODO_BUY_MILK, TODO_READ_BOOK]),
+      actions.click(query.checkbox("Mark all as complete")),
+      assertions.a11ySnapshot(query.region("todo list"), "all-completed.snap"),
+    );
+  });
+
+  it("모든 할 일을 개별 체크하면 Mark all as complete도 체크된다", async () => {
+    await runSiheom(
+      setup([TODO_BUY_MILK, TODO_READ_BOOK]),
+      actions.click(query.checkbox(`Mark ${TODO_BUY_MILK.title} as complete`)),
+      actions.click(query.checkbox(`Mark ${TODO_READ_BOOK.title} as complete`)),
+      assertions.a11ySnapshot(query.region("todo list"), "all-completed.snap"),
     );
   });
 });

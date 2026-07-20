@@ -1,6 +1,6 @@
 import { MemoryRouter, Route, Routes } from "react-router-dom";
 import { useState } from "react";
-import { addTodo, toggleTodo, type Todo } from "./todoLogic";
+import { addTodo, allCompleted, toggleAll, toggleTodo, type Todo } from "./todoLogic";
 import { readTodos } from "./todoStorage";
 
 export function TodoMVCApp({
@@ -40,6 +40,17 @@ function TodoMVCContent() {
 
       {hasTodos ? (
         <section className="main" aria-label="todo list">
+          <input
+            id="toggle-all"
+            className="toggle-all"
+            type="checkbox"
+            aria-label="Mark all as complete"
+            checked={allCompleted(todos)}
+            onChange={(event) => {
+              setTodos((current) => toggleAll(current, event.currentTarget.checked));
+            }}
+          />
+          <label htmlFor="toggle-all">Mark all as complete</label>
           <ul className="todo-list">
             {todos.map((todo) => (
               <li

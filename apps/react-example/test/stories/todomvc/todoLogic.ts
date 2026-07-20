@@ -19,3 +19,11 @@ export function toggleTodo(todos: Todo[], id: string): Todo[] {
     todo.id === id ? { ...todo, completed: !todo.completed } : todo,
   );
 }
+
+export function toggleAll(todos: Todo[], completed: boolean): Todo[] {
+  return todos.map((todo) => ({ ...todo, completed }));
+}
+
+export function allCompleted(todos: Todo[]): boolean {
+  return todos.length > 0 && todos.every((todo) => todo.completed);
+}
