@@ -1,0 +1,10 @@
+{
+  "profileId": "macos-safari-apple",
+  "os": "macos",
+  "browser": "safari",
+  "ime": "apple",
+  "capturedAt": "1970-01-01T00:00:00.000Z",
+  "scenarioId": "enter-submit-broken",
+  "source": "os-ime",
+  "events": []
+}
