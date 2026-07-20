@@ -18,9 +18,9 @@ import { SearchField, type SearchFieldProps } from "./SearchField";
  */
 export function SearchFieldLogger() {
   const [mode, setMode] = useState<NonNullable<SearchFieldProps["mode"]>>("broken");
-  const [os, setOs] = useState("macos");
-  const [browser, setBrowser] = useState("safari");
-  const [ime, setIme] = useState("apple");
+  const [os, setOs] = useState("linux");
+  const [browser, setBrowser] = useState("chrome");
+  const [ime, setIme] = useState("ibus-hangul");
   const [events, setEvents] = useState<ImeEventRecord[]>([]);
   const [fieldValue, setFieldValue] = useState("");
   const [status, setStatus] = useState("");
@@ -78,10 +78,13 @@ export function SearchFieldLogger() {
 
       <section className="rounded-lg border border-border bg-muted/30 p-3 text-sm" aria-label="캡처 지시">
         <ol className="list-decimal space-y-1 pl-5 text-muted-foreground">
-          <li>가능하면 Safari + 한글 IME로 엽니다 (Chrome은 확정 키가 229라 broken도 안 터질 수 있음).</li>
-          <li>검색란에 「김」을 조합한 뒤, 음절을 확정하려고 Enter를 한 번 누릅니다.</li>
-          <li>broken이면 submit 횟수가 1이 되고, fixed면 0이어야 합니다.</li>
-          <li>JSON을 저장해 fixtures/macos-safari-apple/ 등에 둡니다.</li>
+          <li>
+            Linux Chrome+ibus도 Safari처럼 compositionend 뒤 Enter(isComposing:false)가 옵니다
+            (fixtures/linux-chrome-ibus-hangul 참고).
+          </li>
+          <li>검색란에 「김」을 조합한 뒤, 음절 확정용 Enter를 한 번 누릅니다.</li>
+          <li>broken이면 submit 1, fixed(다음 Enter 무시)면 0이어야 합니다.</li>
+          <li>진짜 검색은 fixed에서 Enter를 한 번 더 누릅니다.</li>
         </ol>
       </section>
 

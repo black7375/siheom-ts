@@ -37,13 +37,13 @@ describe("composeEnter during composition", () => {
     input.remove();
   });
 
-  it("chromium (linux-chrome-ibus-hangul): 229 keydown before compositionend", async () => {
+  it("chromium-enter-229: 229 keydown before compositionend", async () => {
     const input = document.createElement("input");
     document.body.append(input);
     const recorder = attachImeRecorder(input);
 
     await composeHangul(input, "김", { commitFinal: false });
-    await composeEnter(input, resolveProfile("linux-chrome-ibus-hangul"));
+    await composeEnter(input, resolveProfile("chromium-enter-229"));
 
     const types = toCriticalEvents(recorder.events).map((event) => ({
       type: event.type,
@@ -62,6 +62,37 @@ describe("composeEnter during composition", () => {
     expect(types.some((event) => event.type === "keydown" && event.key === "Enter")).toBe(
       false,
     );
+
+    recorder.detach();
+    input.remove();
+  });
+
+  it("linux-chrome-ibus-hangul: compositionend then Enter like Safari (OS capture)", async () => {
+    const input = document.createElement("input");
+    document.body.append(input);
+    const recorder = attachImeRecorder(input);
+
+    await composeHangul(input, "김", { commitFinal: false });
+    await composeEnter(input, resolveProfile("linux-chrome-ibus-hangul"));
+
+    const types = toCriticalEvents(recorder.events).map((event) => ({
+      type: event.type,
+      key: event.key,
+      keyCode: event.keyCode,
+      isComposing: event.isComposing,
+    }));
+
+    const endIndex = types.findIndex((event) => event.type === "compositionend");
+    const enterIndex = types.findIndex(
+      (event) => event.type === "keydown" && event.key === "Enter",
+    );
+    expect(endIndex).toBeGreaterThan(-1);
+    expect(enterIndex).toBeGreaterThan(endIndex);
+    expect(types[enterIndex]).toMatchObject({
+      key: "Enter",
+      keyCode: 13,
+      isComposing: false,
+    });
 
     recorder.detach();
     input.remove();

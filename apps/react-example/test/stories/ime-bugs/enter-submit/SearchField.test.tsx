@@ -24,7 +24,7 @@ describe("SearchField", () => {
     );
   });
 
-  it("fixed 모드: compositionend 직후 Enter는 submit하지 않는다", async () => {
+  it("fixed 모드: compositionend 이후 늦게 온 Enter도 submit하지 않는다", async () => {
     await runSiheom(given.render(<SearchField mode="fixed" />));
 
     const input = document.getElementById("ime-enter-submit-search") as HTMLInputElement;
@@ -34,6 +34,11 @@ describe("SearchField", () => {
       input.value = "김";
       input.dispatchEvent(new Event("input", { bubbles: true }));
       input.dispatchEvent(new CompositionEvent("compositionend", { bubbles: true, data: "김" }));
+    });
+
+    // Linux ibus: Enter often arrives after compositionend in a later task (not same microtask)
+    await act(async () => {
+      await new Promise((resolve) => setTimeout(resolve, 0));
       input.dispatchEvent(
         new KeyboardEvent("keydown", {
           bubbles: true,

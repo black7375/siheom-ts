@@ -44,9 +44,11 @@ export function getRegisteredProfileIds(): string[] {
 }
 
 function registerBuiltins() {
+  // Linux Chrome + ibus-hangul Enter-confirm is compositionend → Enter(isComposing:false),
+  // same order as Safari (OS capture in enter-submit/fixtures/linux-chrome-ibus-hangul/).
   registerProfile({
     id: "linux-chrome-ibus-hangul",
-    enterDuringComposition: "chromium",
+    enterDuringComposition: "webkit",
   });
   registerProfile({
     id: "macos-safari",
@@ -55,6 +57,11 @@ function registerBuiltins() {
   registerProfile({
     id: "windows-chrome-ms",
     enterDuringComposition: "chromium-duplicate",
+  });
+  // Classic Chromium-order Enter confirm (229 first) — keep for matrix / other IMEs
+  registerProfile({
+    id: "chromium-enter-229",
+    enterDuringComposition: "chromium",
   });
 }
 

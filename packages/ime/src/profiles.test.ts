@@ -10,9 +10,8 @@ import {
 describe("IME profiles", () => {
   it("resolves linux-chrome-ibus-hangul as the default built-in", () => {
     expect(resolveProfile().id).toBe(DEFAULT_IME_PROFILE_ID);
-    expect(resolveProfile("linux-chrome-ibus-hangul").enterDuringComposition).toBe(
-      "chromium",
-    );
+    // OS capture: Enter confirm is compositionend → Enter(isComposing:false), same as Safari
+    expect(resolveProfile("linux-chrome-ibus-hangul").enterDuringComposition).toBe("webkit");
   });
 
   it("resolves macos-safari with webkit Enter-during-composition order", () => {

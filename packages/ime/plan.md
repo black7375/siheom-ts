@@ -28,5 +28,5 @@ IME-faithful `fill` / `type` that plug into siheom via `overrideSiheom`, startin
 
 - [x] OS capture of focus-steal aborted composition (Storybook `IME/Focus Steal Combobox`) compared to emulator
 - [x] Emulator reproduces broken 풀어쓰기 (`ㄱㅣㅁㅌㅐㅎㅡㅣ`) and fixed `김태희` via createImeActions
-- [x] Enter-submit-during-composition fixture (SearchField) under macos-safari vs chromium profiles
+- [x] Enter-submit-during-composition fixture (SearchField); Linux ibus OS capture shows webkit-order Enter
 - [ ] Optional: maxlength during composition fixture

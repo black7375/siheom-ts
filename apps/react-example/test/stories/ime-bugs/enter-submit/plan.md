@@ -3,15 +3,13 @@
 ## Goal
 
 검색창처럼 Enter로 submit하는 UI에서, **조합 확정 Enter**가 submit으로 오인되는 버그를 재현한다.
-Safari/WebKit은 `compositionend` 뒤 `keydown Enter` (`isComposing: false`)를 보내므로
-`!e.isComposing`만 보면 확정 키가 전송/검색된다.
-(참고: [Ariakit #6579](https://github.com/ariakit/ariakit/issues/6579), [React Aria #10249](https://github.com/adobe/react-spectrum/issues/10249), Square IME blog)
+Safari뿐 아니라 **Linux Chrome + ibus-hangul**도 `compositionend` 뒤 `Enter(isComposing: false)`를 보낸다
+(fixtures/linux-chrome-ibus-hangul). `!e.isComposing`만 보면 확정 키가 검색된다.
 
 ## Behaviors
 
-- [x] `mode="broken"`: Enter when `!isComposing` submits (no 229 / post-compositionend guard)
-- [x] `mode="fixed"`: ignores Enter while composing, keyCode 229, or immediately after `compositionend`
-- [x] Under `macos-safari` profile, typing `김{Enter}` mid-composition: broken submits once, fixed does not
-- [x] Under `linux-chrome-ibus-hangul` (chromium facet), broken does not false-submit on confirm (229 / isComposing)
-- [x] Storybook logger story for optional OS capture + fixture folders
-- [x] After confirm, a second `{Enter}` still submits under fixed + macos-safari
+- [x] `mode="broken"`: Enter when `!isComposing` submits
+- [x] `mode="fixed"`: swallows the **next** Enter after `compositionend` (not just same-microtask)
+- [x] `linux-chrome-ibus-hangul` / `macos-safari` profiles: `김{Enter}` → broken submits, fixed does not
+- [x] `chromium-enter-229`: broken does not false-submit (229 confirm)
+- [x] OS Linux captures committed under `fixtures/linux-chrome-ibus-hangul/`

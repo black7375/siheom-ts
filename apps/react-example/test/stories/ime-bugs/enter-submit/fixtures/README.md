@@ -1,14 +1,16 @@
 # Enter-submit capture fixtures
 
-| Directory             | Meaning                                      |
-| --------------------- | -------------------------------------------- |
-| `user-event/`         | Synthetic user-event traces (optional)       |
-| `macos-safari-apple/` | Prefer real Safari + Apple Hangul captures   |
-| `emulator/`           | Optional dumps from createImeActions profiles |
+| Directory                   | Meaning                                                                 |
+| --------------------------- | ----------------------------------------------------------------------- |
+| `linux-chrome-ibus-hangul/` | **OS evidence**: Enter confirm = `compositionend` → `Enter(ic:false)`   |
+| `macos-safari-apple/`       | Draft slots for Safari (same event order as Linux ibus in practice)     |
 
-Emulator reproduction does **not** require Safari: tests use `createImeActions({ profile: "macos-safari" })`.
+Linux Chrome + ibus-hangul matches the Safari bug class (not 229-first). Emulator profile
+`linux-chrome-ibus-hangul` uses the `webkit` Enter facet for that reason.
 
-| File                    | Notes                                      |
-| ----------------------- | ------------------------------------------ |
-| `broken-김-enter.json`  | Mid-composition Enter under broken SearchField |
-| `fixed-김-enter.json`   | Same under fixed (no false submit)         |
+| File                 | Notes                                      |
+| -------------------- | ------------------------------------------ |
+| `broken-김-enter.json` | Confirm Enter false-submits (submit 1)   |
+| `fixed-김-enter.json`  | Same events; UI must swallow first Enter |
+
+229-first Chromium order remains available as profile id `chromium-enter-229`.

@@ -5,8 +5,9 @@ import { Label } from "@/components/ui/label";
 
 export type SearchFieldProps = {
   /**
-   * `broken` — submit on Enter when `!event.isComposing` (Safari confirm-Enter bug).
-   * `fixed` — also ignore keyCode 229 and Enter right after compositionend.
+   * `broken` — submit on Enter when `!event.isComposing` (Safari / Linux-ibus confirm-Enter bug).
+   * `fixed` — ignore composing / 229, and swallow the first Enter after compositionend
+   * (confirm key may arrive in a later task than queueMicrotask).
    */
   mode?: "broken" | "fixed";
   label?: string;
@@ -35,7 +36,8 @@ export function SearchField({
   const [submitCount, setSubmitCount] = useState(0);
   const [lastSubmitted, setLastSubmitted] = useState<string | null>(null);
   const localInputRef = useRef<HTMLInputElement>(null);
-  const justEndedCompositionRef = useRef(false);
+  /** Swallow the next Enter after compositionend (IME confirm), even across tasks. */
+  const ignoreNextEnterRef = useRef(false);
   const inputId = "ime-enter-submit-search";
 
   useEffect(() => {
@@ -55,17 +57,9 @@ export function SearchField({
     };
 
     const onKeyDown = (event: KeyboardEvent) => {
-      if (event.key !== "Enter" && event.keyCode !== 13 && event.keyCode !== 229) {
-        return;
-      }
-
-      const isEnterLike =
-        event.key === "Enter" || event.keyCode === 13 || event.keyCode === 229;
-
-      if (!isEnterLike) return;
-
       if (mode === "broken") {
-        // Classic bug: treat any non-composing Enter as submit (Safari confirm looks like this)
+        // Classic bug: treat any non-composing Enter as submit
+        // (Safari and Linux Chrome+ibus confirm look like this per OS captures)
         if (event.key === "Enter" && !event.isComposing) {
           event.preventDefault();
           submit();
@@ -73,11 +67,16 @@ export function SearchField({
         return;
       }
 
-      // fixed: MDN-style guard + Safari post-compositionend Enter
-      if (event.isComposing || event.keyCode === 229 || justEndedCompositionRef.current) {
+      // fixed
+      if (event.isComposing || event.keyCode === 229) {
         return;
       }
       if (event.key === "Enter") {
+        if (ignoreNextEnterRef.current) {
+          ignoreNextEnterRef.current = false;
+          event.preventDefault();
+          return;
+        }
         event.preventDefault();
         submit();
       }
@@ -85,11 +84,7 @@ export function SearchField({
 
     const onCompositionEnd = () => {
       syncValue();
-      justEndedCompositionRef.current = true;
-      // Safari fires confirm Enter after compositionend in the same turn / soon after
-      queueMicrotask(() => {
-        justEndedCompositionRef.current = false;
-      });
+      ignoreNextEnterRef.current = true;
     };
 
     node.addEventListener("input", syncValue);
