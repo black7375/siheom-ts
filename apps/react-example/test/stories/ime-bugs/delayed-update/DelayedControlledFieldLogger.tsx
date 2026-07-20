@@ -10,6 +10,7 @@ import {
   serializeImeEvent,
   type ImeEventRecord,
 } from "../../ime-logger/serializeImeEvent";
+import { useImeLoggerMeta } from "../../ime-logger/useImeLoggerMeta";
 import { DelayedControlledField, type DelayedControlledFieldProps } from "./DelayedControlledField";
 
 /**
@@ -18,9 +19,7 @@ import { DelayedControlledField, type DelayedControlledFieldProps } from "./Dela
  */
 export function DelayedControlledFieldLogger() {
   const [mode, setMode] = useState<NonNullable<DelayedControlledFieldProps["mode"]>>("broken");
-  const [os, setOs] = useState("linux");
-  const [browser, setBrowser] = useState("chrome");
-  const [ime, setIme] = useState("ibus-hangul");
+  const { os, browser, ime, setOs, setBrowser, setIme } = useImeLoggerMeta();
   const [events, setEvents] = useState<ImeEventRecord[]>([]);
   const [fieldValue, setFieldValue] = useState("");
   const [status, setStatus] = useState("");

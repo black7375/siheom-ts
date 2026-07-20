@@ -13,13 +13,12 @@ import {
   serializeImeEvent,
   type ImeEventRecord,
 } from "./serializeImeEvent";
+import { useImeLoggerMeta } from "./useImeLoggerMeta";
 
 const DEFAULT_SCENARIO = CAPTURE_SCENARIOS[0] as CaptureScenario;
 
 export function ImeEventLogger() {
-  const [os, setOs] = useState("linux");
-  const [browser, setBrowser] = useState("chrome");
-  const [ime, setIme] = useState("ibus-hangul");
+  const { os, browser, ime, setOs, setBrowser, setIme } = useImeLoggerMeta();
   const [scenarioId, setScenarioId] = useState(DEFAULT_SCENARIO.id);
   const [events, setEvents] = useState<ImeEventRecord[]>([]);
   const [fieldValue, setFieldValue] = useState("");

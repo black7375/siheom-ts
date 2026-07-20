@@ -10,6 +10,7 @@ import {
   serializeImeEvent,
   type ImeEventRecord,
 } from "../../ime-logger/serializeImeEvent";
+import { useImeLoggerMeta } from "../../ime-logger/useImeLoggerMeta";
 import { SearchField, type SearchFieldProps } from "./SearchField";
 
 /**
@@ -18,9 +19,7 @@ import { SearchField, type SearchFieldProps } from "./SearchField";
  */
 export function SearchFieldLogger() {
   const [mode, setMode] = useState<NonNullable<SearchFieldProps["mode"]>>("broken");
-  const [os, setOs] = useState("linux");
-  const [browser, setBrowser] = useState("chrome");
-  const [ime, setIme] = useState("ibus-hangul");
+  const { os, browser, ime, setOs, setBrowser, setIme } = useImeLoggerMeta();
   const [events, setEvents] = useState<ImeEventRecord[]>([]);
   const [fieldValue, setFieldValue] = useState("");
   const [status, setStatus] = useState("");

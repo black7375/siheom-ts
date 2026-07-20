@@ -10,6 +10,7 @@ import {
   serializeImeEvent,
   type ImeEventRecord,
 } from "../../ime-logger/serializeImeEvent";
+import { useImeLoggerMeta } from "../../ime-logger/useImeLoggerMeta";
 import { FocusStealCombobox, type FocusStealComboboxProps } from "./FocusStealCombobox";
 
 const SCENARIO_ID_BY_MODE = {
@@ -23,9 +24,7 @@ const SCENARIO_ID_BY_MODE = {
  */
 export function FocusStealComboboxLogger() {
   const [mode, setMode] = useState<NonNullable<FocusStealComboboxProps["mode"]>>("broken");
-  const [os, setOs] = useState("linux");
-  const [browser, setBrowser] = useState("chrome");
-  const [ime, setIme] = useState("ibus-hangul");
+  const { os, browser, ime, setOs, setBrowser, setIme } = useImeLoggerMeta();
   const [events, setEvents] = useState<ImeEventRecord[]>([]);
   const [fieldValue, setFieldValue] = useState("");
   const [status, setStatus] = useState("");
