@@ -1,0 +1,72 @@
+{
+  "name": "@siheom/vue",
+  "version": "0.2.0",
+  "description": "Vue runtime for siheom (data-first frontend test interpreter)",
+  "type": "module",
+  "license": "MIT",
+  "files": [
+    "dist"
+  ],
+  "main": "./dist/index.mjs",
+  "exports": {
+    "./package.json": "./package.json",
+    ".": {
+      "import": {
+        "types": "./dist/index.d.mts",
+        "default": "./dist/index.mjs"
+      },
+      "require": {
+        "types": "./dist/index.d.cts",
+        "default": "./dist/index.cjs"
+      }
+    }
+  },
+  "scripts": {
+    "build": "tsdown",
+    "check-exports": "attw --pack .",
+    "typecheck": "tsgo --noEmit -p tsconfig.json",
+    "test": "vitest run"
+  },
+  "dependencies": {
+    "@siheom/core": "workspace:*"
+  },
+  "peerDependencies": {
+    "@testing-library/dom": "^10.0.0",
+    "@testing-library/jest-dom": "^6.0.0",
+    "@testing-library/user-event": "^14.0.0",
+    "@testing-library/vue": "^8.0.0",
+    "vitest": "^4.1.10",
+    "vue": "^3.5.0"
+  },
+  "devDependencies": {
+    "@arethetypeswrong/cli": "^0.18.5",
+    "@testing-library/dom": "^10.4.1",
+    "@testing-library/jest-dom": "^6.9.1",
+    "@testing-library/user-event": "^14.6.1",
+    "@testing-library/vue": "^8.1.0",
+    "@types/node": "^26.1.1",
+    "@typescript/native-preview": "^7.0.0-dev.20260707.2",
+    "@vitejs/plugin-vue": "^6.0.3",
+    "jsdom": "^29.1.1",
+    "tsdown": "^0.22.8",
+    "typescript": "^7.0.2",
+    "vitest": "^4.1.10",
+    "vue": "^3.5.40"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/twinstae/siheom-ts.git",
+    "directory": "packages/vue"
+  },
+  "homepage": "https://github.com/twinstae/siheom-ts",
+  "bugs": {
+    "url": "https://github.com/twinstae/siheom-ts/issues"
+  },
+  "author": "Taehee Kim <rabolution@gmail.com> (https://x.com/stelo_kim)",
+  "keywords": [
+    "test",
+    "testing-library",
+    "vue",
+    "typescript"
+  ]
+}
