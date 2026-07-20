@@ -1,5 +1,11 @@
-import { MemoryRouter, Route, Routes, Link, useLocation } from "react-router-dom";
+import { Button, buttonVariants } from "@/components/ui/button";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { cn } from "@/lib/utils";
+import { Trash2 } from "lucide-react";
 import { useEffect, useState } from "react";
+import { Link, MemoryRouter, Route, Routes, useLocation } from "react-router-dom";
 import {
   addTodo,
   allCompleted,
@@ -43,11 +49,11 @@ function TodoMVCContent() {
   }, [todos]);
 
   return (
-    <section className="todoapp" aria-label="todos">
-      <header className="header">
-        <h1>todos</h1>
-        <input
-          className="new-todo"
+    <section aria-label="todos" className="mx-auto w-full max-w-xl space-y-4 p-4">
+      <header className="space-y-4 text-center">
+        <h1 className="text-5xl font-light tracking-tight text-primary">todos</h1>
+        <Input
+          className="h-12 rounded-none border-0 border-b border-input bg-background px-0 text-lg shadow-none focus-visible:ring-0"
           aria-label="What needs to be done?"
           autoFocus
           placeholder="What needs to be done?"
@@ -60,19 +66,20 @@ function TodoMVCContent() {
       </header>
 
       {hasTodos ? (
-        <section className="main" aria-label="todo list">
-          <input
-            id="toggle-all"
-            className="toggle-all"
-            type="checkbox"
-            aria-label="Mark all as complete"
-            checked={allCompleted(todos)}
-            onChange={(event) => {
-              setTodos((current) => toggleAll(current, event.currentTarget.checked));
-            }}
-          />
-          <label htmlFor="toggle-all">Mark all as complete</label>
-          <ul className="todo-list">
+        <section aria-label="todo list" className="overflow-hidden rounded-xl border bg-card shadow-sm">
+          <div className="flex items-center gap-2 border-b px-3 py-2">
+            <Checkbox
+              id="toggle-all"
+              checked={allCompleted(todos)}
+              onCheckedChange={(checked) => {
+                setTodos((current) => toggleAll(current, checked === true));
+              }}
+            />
+            <Label htmlFor="toggle-all" className="font-normal text-muted-foreground">
+              Mark all as complete
+            </Label>
+          </div>
+          <ul className="divide-y">
             {visibleTodos.map((todo) => (
               <TodoItem
                 key={todo.id}
@@ -93,12 +100,15 @@ function TodoMVCContent() {
       ) : null}
 
       {hasTodos ? (
-        <section className="footer" aria-label="todo footer">
-          <span className="todo-count" role="status" aria-label="items left">
-            <strong>{countActive(todos)}</strong>{" "}
+        <section
+          aria-label="todo footer"
+          className="flex flex-wrap items-center justify-between gap-3 text-sm text-muted-foreground"
+        >
+          <span role="status" aria-label="items left">
+            <strong className="text-foreground">{countActive(todos)}</strong>{" "}
             {countActive(todos) === 1 ? "item" : "items"} left
           </span>
-          <ul className="filters">
+          <ul className="flex items-center gap-1">
             <li>
               <FilterLink to="/" label="All" active={filter === "all"} />
             </li>
@@ -110,13 +120,15 @@ function TodoMVCContent() {
             </li>
           </ul>
           {hasCompleted(todos) ? (
-            <button
+            <Button
               type="button"
-              className="clear-completed"
+              variant="ghost"
+              size="sm"
+              className="text-muted-foreground"
               onClick={() => setTodos((current) => clearCompleted(current))}
             >
               Clear completed
-            </button>
+            </Button>
           ) : null}
         </section>
       ) : null}
@@ -134,7 +146,14 @@ function FilterLink({
   active: boolean;
 }) {
   return (
-    <Link to={to} aria-current={active ? "page" : undefined}>
+    <Link
+      to={to}
+      aria-current={active ? "page" : undefined}
+      className={cn(
+        buttonVariants({ variant: active ? "secondary" : "ghost", size: "sm" }),
+        "no-underline",
+      )}
+    >
       {label}
     </Link>
   );
@@ -160,20 +179,20 @@ function TodoItem({
   return (
     <li
       aria-label={todo.title}
-      className={[todo.completed ? "completed" : "", editing ? "editing" : ""]
-        .filter(Boolean)
-        .join(" ") || undefined}
+      className={cn(
+        "group flex items-center gap-3 px-3 py-2",
+        todo.completed && "text-muted-foreground",
+        editing && "bg-muted/40",
+      )}
     >
-      <input
-        className="toggle"
-        type="checkbox"
+      <Checkbox
         aria-label={`Mark ${todo.title} as complete`}
         checked={todo.completed}
-        onChange={onToggle}
+        onCheckedChange={onToggle}
       />
       {editing ? (
-        <input
-          className="edit"
+        <Input
+          className="h-8 flex-1 border-0 bg-transparent px-0 shadow-none focus-visible:ring-0"
           aria-label={`Edit ${todo.title}`}
           defaultValue={todo.title}
           autoFocus
@@ -188,16 +207,27 @@ function TodoItem({
           }}
         />
       ) : (
-        <label aria-label={`${todo.title} title`} onDoubleClick={onStartEdit}>
+        <Label
+          aria-label={`${todo.title} title`}
+          onDoubleClick={onStartEdit}
+          className={cn(
+            "min-w-0 flex-1 cursor-default font-normal",
+            todo.completed && "line-through",
+          )}
+        >
           {todo.title}
-        </label>
+        </Label>
       )}
-      <button
+      <Button
         type="button"
-        className="destroy"
+        variant="ghost"
+        size="icon-sm"
+        className="shrink-0 text-muted-foreground hover:text-destructive"
         aria-label={`Delete ${todo.title}`}
         onClick={onDelete}
-      />
+      >
+        <Trash2 />
+      </Button>
     </li>
   );
 }

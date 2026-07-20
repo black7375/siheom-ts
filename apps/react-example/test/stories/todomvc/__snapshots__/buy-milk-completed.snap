@@ -1,10 +1,10 @@
 region: "todo list"
-  checkbox: "Mark all as complete" [value="on"]
+  checkbox: "Mark all as complete"
     - states: [checked=true]
   "Mark all as complete"
   list:
     listitem: "Buy milk"
-      checkbox: "Mark Buy milk as complete" [value="on"]
+      checkbox: "Mark Buy milk as complete"
         - states: [checked=true]
       "Buy milk"
       button: "Delete Buy milk"
