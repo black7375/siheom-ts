@@ -7,6 +7,7 @@ import {
   Pagination,
   PaginationContent,
   PaginationItem,
+  PaginationLink,
   PaginationNext,
   PaginationPrevious,
 } from "@/components/ui/pagination";
@@ -68,6 +69,25 @@ export function TaskTable() {
               }}
             />
           </PaginationItem>
+          {Array.from({ length: totalPages }, (_, index) => {
+            const pageNumber = index + 1;
+
+            return (
+              <PaginationItem key={pageNumber}>
+                <PaginationLink
+                  isActive={pageNumber === page}
+                  href="#"
+                  className={pageNumber === page ? "font-semibold" : undefined}
+                  onClick={(event) => {
+                    event.preventDefault();
+                    setPage(pageNumber);
+                  }}
+                >
+                  {pageNumber}
+                </PaginationLink>
+              </PaginationItem>
+            );
+          })}
           <PaginationItem>
             <PaginationNext
               aria-label="다음 페이지"

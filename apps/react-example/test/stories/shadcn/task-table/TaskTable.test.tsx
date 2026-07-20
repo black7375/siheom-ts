@@ -31,4 +31,17 @@ describe("TaskTable", () => {
       assertions.textContent(query.status("디자인 리뷰 상태"), "완료"),
     );
   });
+
+  it("현재 페이지 번호가 표시되고 선택된 페이지가 강조된다", async () => {
+    await runSiheom(
+      given.render(<TaskTable />),
+      assertions.visible(query.button("1")),
+      assertions.visible(query.button("2")),
+      assertions.visible(query.button("3")),
+      assertions.current(query.button("1"), "page"),
+      actions.click(query.button("다음 페이지")),
+      assertions.current(query.button("2"), "page"),
+      assertions.not.current(query.button("1"), "page"),
+    );
+  });
 });
