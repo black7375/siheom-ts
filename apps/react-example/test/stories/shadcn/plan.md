@@ -38,7 +38,10 @@ Realistic scenarios for Siheom + shadcn/ui. One user story per folder; TDD via t
 
 ## Phase 3 — Data
 
-- [ ] task-table — Data Table + Pagination + Badge
+- [x] task-table — Data Table + Pagination + Badge
+  - [x] initial — first page tasks visible
+  - [x] pagination — next page
+  - [x] badge — task status labels
 - [ ] order-tracking — Timeline (Card composition)
 
 ## Phase 4 — Date
