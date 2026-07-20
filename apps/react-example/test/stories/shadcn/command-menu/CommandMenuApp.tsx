@@ -39,8 +39,8 @@ export function CommandMenuApp() {
         title="빠른 실행"
         description="실행할 명령을 검색합니다"
       >
-        <Command>
-          <CommandInput aria-label="명령 검색" placeholder="명령 검색..." />
+        <Command label="명령 검색">
+          <CommandInput placeholder="명령 검색..." />
           <CommandList>
             <CommandEmpty>일치하는 명령이 없습니다</CommandEmpty>
             <CommandGroup heading="동작">
