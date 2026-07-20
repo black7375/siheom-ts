@@ -49,7 +49,10 @@ Realistic scenarios for Siheom + shadcn/ui. One user story per folder; TDD via t
 
 ## Phase 4 — Date
 
-- [ ] meeting-booking — Calendar + Date Picker
+- [x] meeting-booking — Calendar + Date Picker
+  - [x] open — calendar from date picker trigger
+  - [x] select — chosen date reflected in trigger
+  - [x] confirm — booking confirmation status
 
 ## Phase 5 — Feedback & mobile
 
