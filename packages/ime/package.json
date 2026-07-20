@@ -1,7 +1,6 @@
 {
   "name": "@siheom/ime",
-  "version": "0.0.0",
-  "private": true,
+  "version": "0.0.1",
   "description": "IME composition emulation for siheom (Hangul-first)",
   "type": "module",
   "license": "MIT",
@@ -24,6 +23,7 @@
   },
   "scripts": {
     "build": "tsdown",
+    "check-exports": "bash ../../scripts/check-exports.sh .",
     "typecheck": "tsgo --noEmit -p tsconfig.json",
     "test": "vitest run"
   },
@@ -53,5 +53,17 @@
     "type": "git",
     "url": "git+https://github.com/twinstae/siheom-ts.git",
     "directory": "packages/ime"
-  }
+  },
+  "homepage": "https://github.com/twinstae/siheom-ts",
+  "bugs": {
+    "url": "https://github.com/twinstae/siheom-ts/issues"
+  },
+  "author": "Taehee Kim <rabolution@gmail.com> (https://x.com/stelo_kim)",
+  "keywords": [
+    "test",
+    "testing-library",
+    "ime",
+    "hangul",
+    "typescript"
+  ]
 }

@@ -1,6 +1,6 @@
 {
   "name": "@siheom/core",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "Data-first frontend test interpreter (framework-agnostic core)",
   "type": "module",
   "license": "MIT",
@@ -63,10 +63,18 @@
   },
   "typesVersions": {
     "*": {
-      "siheom": ["./dist/siheom.d.mts"],
-      "effect": ["./dist/effect.d.mts"],
-      "with-fake-timers": ["./dist/withFakeTimers.d.mts"],
-      "aria-roles": ["./dist/a11y/ariaRoles.d.mts"]
+      "siheom": [
+        "./dist/siheom.d.mts"
+      ],
+      "effect": [
+        "./dist/effect.d.mts"
+      ],
+      "with-fake-timers": [
+        "./dist/withFakeTimers.d.mts"
+      ],
+      "aria-roles": [
+        "./dist/a11y/ariaRoles.d.mts"
+      ]
     }
   },
   "scripts": {

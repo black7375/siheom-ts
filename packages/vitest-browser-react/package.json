@@ -1,10 +1,9 @@
 {
   "name": "@siheom/vitest-browser-react",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "description": "Experimental React runtime for siheom using vitest-browser-react",
   "type": "module",
   "license": "MIT",
-  "private": true,
   "files": [
     "dist"
   ],
@@ -53,5 +52,22 @@
     "typescript": "^7.0.2",
     "vitest": "^4.1.10",
     "vitest-browser-react": "^2.2.0"
-  }
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/twinstae/siheom-ts.git",
+    "directory": "packages/vitest-browser-react"
+  },
+  "homepage": "https://github.com/twinstae/siheom-ts",
+  "bugs": {
+    "url": "https://github.com/twinstae/siheom-ts/issues"
+  },
+  "author": "Taehee Kim <rabolution@gmail.com> (https://x.com/stelo_kim)",
+  "keywords": [
+    "test",
+    "testing-library",
+    "react",
+    "vitest-browser-react",
+    "typescript"
+  ]
 }
