@@ -1,16 +1,63 @@
 ---
 name: siheom-frontend-test
 description: >-
-  Siheom frontend integration tests with @siheom/react. Use when the user asks
-  for Siheom tests, runSiheom specs, accessible UI tests, or React component
-  tests through the accessibility tree.
+  Siheom frontend integration tests with @siheom/react. Use when building or
+  testing React UI (features, TodoMVC, forms, routing), when the user asks for
+  Siheom/runSiheom specs, accessible UI tests, or TDD with plan.md. Always
+  pairs with AGENTS.md Red → Green → Refactor — one plan item per cycle.
 ---
 
 # Siheom Frontend Test
 
-Write tests users care about — through the **accessible name** tree, not CSS, placeholders, or Siheom internals. This skill is self-contained: follow it without reading `packages/core` or other repo files.
+Write tests users care about — through the **accessible name** tree, not CSS, placeholders, or Siheom internals.
 
-## Workflow
+**Mandatory:** read `AGENTS.md` (TDD + Tidy First). This skill is the *how* inside that cycle. Agreement is not optional — if you cannot write a failing test first, stop and ask; do not scaffold the feature.
+
+## TDD cycle (one plan item at a time)
+
+Use `plan.md` beside the feature (create it from the spec if missing). Each `- [ ]` line is **one cycle**, not a batch.
+
+```
+1. Open plan.md → next unchecked item only
+2. RED    → add one `it` that states the user-visible outcome; run tests; confirm THIS test fails
+3. GREEN  → minimum component/logic change until THIS test passes; run full package tests
+4. REFACTOR (optional) → tidy only while green; run tests again
+5. Mark plan.md `[x]` → commit (structural vs behavioral label in message)
+6. Repeat — never start the next `it` in the same turn as unfinished Green
+```
+
+| Phase | Allowed | Forbidden |
+| ----- | ------- | --------- |
+| RED | one new `it`, imports, fixture types | production code for later plan items |
+| GREEN | code required for the failing test only | "while we're here" features, full spec scaffold |
+| REFACTOR | rename/extract/style; shadcn swap | new behavior, new `it` |
+
+**Tidy First:** structural commits (extract component, shadcn swap, prune duplicate tests) separate from behavioral commits (new `it` + code).
+
+**Recovery:** if production code exists without a failing test, *trim* to what passing tests cover, commit structural, then resume plan.md — do not keep growing untested code.
+
+## Agent anti-patterns (real failures)
+
+| Symptom | Why it breaks TDD | Fix |
+| ------- | ----------------- | --- |
+| Whole feature implemented, then tests | Skips Red; types/API drift; false green | Trim to test coverage; one plan item per cycle |
+| `typeof FIXTURE as const` as param type | Types driven by data, not tests | `Todo[]`, explicit types from domain |
+| Subset `it` ("enter edit mode" + "save on Enter") | Duplicates setup; second test restates middle step | One `it` per outcome; chain setup inside if needed |
+| `assertions.checked` on React `<Checkbox>` | Asserts HTML attribute; React sets property | `a11ySnapshot` or assert visible outcome (counter, list text) |
+| `<footer aria-label>` for `query.region` | Implicit `contentinfo`, not `region` | `<section aria-label="…">` |
+| CSS hides control (e.g. TodoMVC `.destroy`) | `query.button` never resolves | Keep control in a11y tree in tests, or `hover` + verify snapshot |
+| Multiple plan items / commits in one burst | No verifiable Red→Green per step | One item, one commit, then stop |
+
+## Gate before commit
+
+Do not commit unless all are true:
+
+1. `bun run test` (package or repo) — all pass
+2. `bun run typecheck` — clean
+3. Exactly one plan item (or one structural refactor) in the diff
+4. Commit message says `structural` or `behavioral` / `feat` / `test` / `refactor` clearly
+
+## Workflow (Siheom, inside Green/Red)
 
 1. **Name the behavior** — one `it` per user-visible outcome. The name states *what* happens, not *how*.
 2. **Check accessible names** — every `query.*("…")` string must match a real accessible name on the component. If missing, fix the component (`<Label htmlFor>`, `aria-label`, `aria-labelledby`, landmark `aria-label`) before writing the test. Never query by placeholder, `data-testid`, or class.
@@ -19,7 +66,18 @@ Write tests users care about — through the **accessible name** tree, not CSS, 
 5. **Run** — `bun run test <Filter>` in the app package (e.g. `apps/react-example`).
 6. **Prune** — drop tests that only restate another test's middle step, constant re-exports, or implementation details.
 
-**Done when:** the filtered test file passes and every `query` target resolves to a documented accessible name.
+**Done when:** the filtered test file passes, every `query` target resolves to a documented accessible name, and plan.md matches reality.
+
+**setup typing:**
+
+```tsx
+function setup(todos: Todo[] = [], initialEntry = "/") {
+  writeTodos(todos);
+  return given.render(<App initialEntries={[initialEntry]} />);
+}
+```
+
+Use `Todo[]`, not `typeof SEEDED_TODOS` when the fixture is a tuple/`as const`.
 
 ## runSiheom shape
 
@@ -170,7 +228,7 @@ await runSiheom(
 
 - **Accessible-name seam** — assert through roles the user/agent encounters (`textbox`, `button`, `checkbox`, `link`, `listitem`, `region`, `status`).
 - **No horizontal setup** — repeated `fill` chains → fixture + `setup([…])`.
-- **No subset tests** — if "Enter로 저장" already dblclicks and fills, don't add "수정 모드 진입" alone.
+- **No subset tests** — if "Enter로 저장" already dblclicks and fills, don't add "수정 모드 진입" alone. Merge: dblclick → `assertions.focused` → fill → assert outcome in **one** `it`.
 - **No tautology** — don't assert storage keys, prop names, or other constants the UI never exposes.
 - **Independent expected values** — literals and fixtures from the spec, not recomputed from implementation.
 - **Scenario sanity** — trace fixture + actions to the end state before writing assertions; a destructive action on subset A must not assume rows outside A still exist unless the spec says so.
@@ -199,5 +257,6 @@ Before or while writing tests, the UI should expose:
 
 ## Reference
 
-- Full action/assertion/query catalog: [API.md](API.md)
-
+- Repo TDD rules: `AGENTS.md`
+- Action/assertion/query catalog: [API.md](API.md)
+- Example trace: `apps/react-example/test/stories/todomvc/plan.md` + git history
