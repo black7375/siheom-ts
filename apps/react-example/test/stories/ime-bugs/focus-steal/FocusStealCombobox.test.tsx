@@ -5,6 +5,13 @@ import { actions, assertions, given, query } from "@siheom/react";
 import { FocusStealCombobox } from "./FocusStealCombobox";
 import { runSiheom } from "../../runSiheom";
 
+async function flushFocusBounce() {
+  await act(async () => {
+    await Promise.resolve();
+    await Promise.resolve();
+  });
+}
+
 async function dispatchComposingInput(input: HTMLInputElement, value: string) {
   await act(async () => {
     input.value = value;
@@ -18,41 +25,58 @@ async function dispatchComposingInput(input: HTMLInputElement, value: string) {
       }),
     );
     await Promise.resolve();
+    await Promise.resolve();
   });
 }
 
 describe("FocusStealCombobox", () => {
-  it("broken 모드는 입력 직후 첫 제안 옵션으로 포커스를 옮긴다", async () => {
+  it("broken 모드: 영문 입력 후에는 포커스가 다시 검색 입력으로 돌아온다", async () => {
     await runSiheom(
       given.render(<FocusStealCombobox mode="broken" />),
-      actions.type(query.textbox("검색"), "김"),
-      assertions.visible(query.option("김태희")),
+      actions.type(query.textbox("검색"), "a"),
+      assertions.visible(query.option("apple")),
     );
+    await flushFocusBounce();
 
-    expect(document.activeElement).toHaveAccessibleName("김태희");
-  });
-
-  it("fixed 모드는 조합 중(isComposing)에는 옵션으로 포커스를 옮기지 않는다", async () => {
-    await runSiheom(given.render(<FocusStealCombobox mode="fixed" />));
-
-    const input = document.getElementById(
-      "focus-steal-combobox-input",
-    ) as HTMLInputElement;
-    input.focus();
-    await dispatchComposingInput(input, "ㄱ");
-
+    const input = document.getElementById("focus-steal-combobox-input");
     expect(document.activeElement).toBe(input);
   });
 
-  it("broken 모드는 조합 중에도 옵션으로 포커스를 옮긴다", async () => {
+  it("broken 모드: 조합 중에도 option으로 갔다가 input으로 돌아오며 blur가 한 번 난다", async () => {
     await runSiheom(given.render(<FocusStealCombobox mode="broken" />));
 
     const input = document.getElementById(
       "focus-steal-combobox-input",
     ) as HTMLInputElement;
     input.focus();
+
+    let blurred = false;
+    input.addEventListener("blur", () => {
+      blurred = true;
+    });
+
     await dispatchComposingInput(input, "ㄱ");
 
-    expect(document.activeElement).toHaveAccessibleName("김태희");
+    expect(blurred).toBe(true);
+    expect(document.activeElement).toBe(input);
+  });
+
+  it("fixed 모드: 조합 중에는 focus bounce(blur)가 없다", async () => {
+    await runSiheom(given.render(<FocusStealCombobox mode="fixed" />));
+
+    const input = document.getElementById(
+      "focus-steal-combobox-input",
+    ) as HTMLInputElement;
+    input.focus();
+
+    let blurred = false;
+    input.addEventListener("blur", () => {
+      blurred = true;
+    });
+
+    await dispatchComposingInput(input, "ㄱ");
+
+    expect(blurred).toBe(false);
+    expect(document.activeElement).toBe(input);
   });
 });

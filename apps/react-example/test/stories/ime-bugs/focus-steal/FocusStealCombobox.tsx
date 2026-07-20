@@ -8,8 +8,9 @@ const DEFAULT_SUGGESTIONS = ["김태희", "김철수", "이영희", "박민수",
 
 export type FocusStealComboboxProps = {
   /**
-   * `broken` — focus first option after every `input` (aborts Hangul composition).
-   * `fixed` — only steal focus when not composing.
+   * `broken` — after every `input`, briefly focus the first option then return to the input
+   * (aborts Hangul composition on blur; Latin is unaffected).
+   * `fixed` — only bounce focus when not composing.
    */
   mode?: "broken" | "fixed";
   suggestions?: string[];
@@ -57,8 +58,14 @@ export function FocusStealCombobox({
     const node = localInputRef.current;
     if (!node) return;
 
-    const stealFocusToFirstOption = () => {
-      firstOptionRef.current?.focus();
+    const bounceFocusThroughFirstOption = () => {
+      const option = firstOptionRef.current;
+      const input = localInputRef.current;
+      if (!option || !input) return;
+      // Real autoSelect bugs: briefly move focus to the option, then restore input.
+      // Latin is fine; Hangul composition aborts on the blur.
+      option.focus();
+      input.focus();
     };
 
     const onInput = (event: Event) => {
@@ -70,18 +77,18 @@ export function FocusStealCombobox({
       const composing = (event as InputEvent).isComposing === true;
 
       if (modeRef.current === "broken") {
-        queueMicrotask(stealFocusToFirstOption);
+        queueMicrotask(bounceFocusThroughFirstOption);
         return;
       }
 
       if (!composing) {
-        queueMicrotask(stealFocusToFirstOption);
+        queueMicrotask(bounceFocusThroughFirstOption);
       }
     };
 
     const onCompositionEnd = () => {
       if (modeRef.current === "fixed" && localInputRef.current?.value.trim()) {
-        queueMicrotask(stealFocusToFirstOption);
+        queueMicrotask(bounceFocusThroughFirstOption);
       }
     };
 
