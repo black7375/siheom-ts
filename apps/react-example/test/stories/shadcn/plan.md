@@ -34,7 +34,7 @@ Realistic scenarios for Siheom + shadcn/ui. One user story per folder; TDD via t
   - [x] combobox search — filter and pick team member
   - [x] submit — invite confirmation status
 - [x] notice-search — Search + Empty
-- [ ] view-switcher — Toggle Group
+- [x] view-switcher — Toggle Group
 
 ## Phase 3 — Data
 
