@@ -67,7 +67,7 @@ Realistic scenarios for Siheom + shadcn/ui. One user story per folder; TDD via t
 
 ## Phase 7 — Composite
 
-- [ ] app-shell — Sidebar + Breadcrumb
+- [x] app-shell — Sidebar + Breadcrumb
 
 ## Deferred
 
