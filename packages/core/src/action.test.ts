@@ -72,4 +72,28 @@ describe("defaultActions", () => {
     expect(input.files).toHaveLength(1);
     expect(input.files?.[0]?.name).toBe("note.txt");
   });
+
+  it("drags a list item onto another list item", async () => {
+    document.body.innerHTML = `
+      <ul aria-label="할 일">
+        <li aria-label="디자인" draggable="true" id="design">디자인</li>
+        <li aria-label="완료" id="done">완료</li>
+      </ul>
+    `;
+    const done = document.getElementById("done")!;
+    done.addEventListener("drop", (event) => {
+      event.preventDefault();
+      done.textContent = "디자인";
+    });
+    document.querySelector('[aria-label="디자인"]')!.addEventListener("dragstart", (event) => {
+      event.dataTransfer?.setData("text/plain", "design");
+    });
+    document.getElementById("done")!.addEventListener("dragover", (event) => {
+      event.preventDefault();
+    });
+
+    await actions.dragAndDrop(query.listitem("디자인"), query.listitem("완료"));
+
+    expect(done).toHaveTextContent("디자인");
+  });
 });

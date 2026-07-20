@@ -1,4 +1,5 @@
 import { page, userEvent, type Locator as BrowserLocator } from "vitest/browser";
+import { dispatchDragAndDrop } from "@siheom/core";
 import type { ActionStepDefinitionDict, Locator } from "@siheom/core";
 import { locatorLog } from "../../core/src/query.ts";
 import { expect } from "vitest";
@@ -176,6 +177,12 @@ export function createBrowserActions(
       withPresentLocator(target, async (locator) => {
         await locator.upload(file);
       }),
+    dragAndDrop: async (source: Locator, target: Locator) =>
+      withPresentLocator(source, async () => {
+        const sourceElement = getElementFromLocator(source, resolveElement === "sync");
+        const targetElement = getElementFromLocator(target, resolveElement === "sync");
+        dispatchDragAndDrop(sourceElement, targetElement);
+      }),
   };
 }
 
@@ -226,5 +233,12 @@ export const actions = {
       target,
       args: [file],
       log: `upload!     : ${locatorLog(target)} with "${file.name}"`,
+    }) as const,
+  dragAndDrop: (source: Locator, target: Locator) =>
+    ({
+      action: "dragAndDrop",
+      target: source,
+      args: [target],
+      log: `dragAndDrop! : ${locatorLog(source)} → ${locatorLog(target)}`,
     }) as const,
 };

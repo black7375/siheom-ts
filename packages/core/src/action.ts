@@ -1,6 +1,7 @@
 import { waitFor } from "@testing-library/dom";
 import { userEvent, type UserEvent } from "@testing-library/user-event";
 import type { ActionStepDefinitionDict, Locator } from "./types";
+import { dispatchDragAndDrop } from "./dispatchDragAndDrop.ts";
 import { getElement, locatorLog } from "./query";
 import { expect } from "vitest";
 
@@ -77,6 +78,12 @@ export function createDefaultActions(options: DefaultActionsOptions = {}) {
       withPresentElement(target, async (element) => {
         await user.upload(element, file);
       }),
+    dragAndDrop: async (source: Locator, target: Locator) =>
+      withPresentElement(source, async (sourceElement) => {
+        const targetElement = getElement(target, true);
+        expect(targetElement).toBeInTheDocument();
+        dispatchDragAndDrop(sourceElement, targetElement);
+      }),
   } satisfies ActionStepDefinitionDict;
 }
 
@@ -129,5 +136,12 @@ export const actions = {
       target,
       args: [file],
       log: `upload!     : ${locatorLog(target)} with "${file.name}"`,
+    }) as const,
+  dragAndDrop: (source: Locator, target: Locator) =>
+    ({
+      action: "dragAndDrop",
+      target: source,
+      args: [target],
+      log: `dragAndDrop! : ${locatorLog(source)} → ${locatorLog(target)}`,
     }) as const,
 };

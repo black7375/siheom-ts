@@ -21,6 +21,7 @@ export type {
   AfterActionHook,
   SiheomRegistryBundle,
 } from "./fakeTimerScope.ts";
+export { dispatchDragAndDrop } from "./dispatchDragAndDrop.ts";
 export type {
   ActionStep,
   ActionStepDefinitionDict,
