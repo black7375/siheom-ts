@@ -23,7 +23,8 @@ Run everything from the repo root unless a package-specific path is noted.
 
 ## Tooling
 
-- Runtime / package manager: [Bun](https://bun.sh) (pinned in `packageManager` field)
+- Runtime / package manager: [Bun](https://bun.sh) **1.3.12** (pinned in root `package.json` → `packageManager`)
+- Install the pinned version: `curl -fsSL https://bun.sh/install | bash -s bun-v1.3.12`
 - Vitest runs via `bun run test` — do not invoke `vitest` or `node` directly
 
 ## TDD cycle.
