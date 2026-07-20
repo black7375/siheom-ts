@@ -7,12 +7,12 @@
 
 ## Behaviors
 
-- [x] `mode="broken"`: `maxLength=3`에 「가나다라」조합 시 4글자까지 허용 (에뮬레이터)
-- [x] `mode="fixed"`: 같은 입력에서 3글자「가나다」로 clamp
+- [x] `mode="broken"`: 조합 중 preedit가 `maxLength`를 넘고, IME가 확정 시 초과 음절을 거부해 최종값은 제한 이내
+- [x] `mode="fixed"`: input마다 clamp — Chrome은 조용히 종료, Safari는 composition 재시작 + 빈 `insertText`
 - [x] `linux-chrome-ibus-hangul` / `macos-chrome-apple` / `macos-safari-apple` 프로필 IME 테스트
 - [x] Storybook `IME/MaxLength Field`로 OS 캡처 (`fixtures/<profileId>/`)
 - [x] ime-logger 시나리오 `maxlength-overflow` 추가
-- [ ] OS golden fixtures (`fixtures/<profileId>/broken-7of6.json`)
+- [x] OS golden fixtures 커밋 + critical events 매칭 (macos-chrome-apple, macos-safari-apple broken/fixed)
 
 ## Capture
 

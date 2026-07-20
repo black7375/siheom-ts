@@ -18,4 +18,16 @@ export {
   confirmAndEndComposition,
   updateImeSessionForPreedit,
 } from "./confirmComposition";
-export { commitSafariSyllable, restartSafariComposition } from "./commitSafariSyllable";
+export {
+  commitSafariSyllable,
+  commitSafariSyllableCore,
+  restartSafariComposition,
+} from "./commitSafariSyllable";
+export {
+  markPendingMaxLengthReject,
+  readMaxLength,
+  rejectChromeCompositionOverflow,
+  rejectSafariCompositionOverflow,
+  rejectSafariReplacementOverflow,
+  takePendingMaxLengthReject,
+} from "./maxLength";

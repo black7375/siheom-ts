@@ -35,9 +35,10 @@ IME-faithful `fill` / `type` that plug into siheom via `overrideSiheom`, startin
 
 ### Phase 5 — MaxLength during composition
 
-- [x] `composeHangul` with `maxLength` allows overflow during composition (matches browser)
+- [x] `composeHangul` with `maxLength`: preedit may overflow, then the IME rejects it at commit (Chrome: empty `insertCompositionText` + `compositionend`; Safari: `deleteCompositionText` + empty `insertFromComposition`)
+- [x] Host clamp during composition (fixed UI): Chrome ends silently; Safari restarts composition and fires empty `insertText`
 - [x] MaxLengthField broken/fixed IME tests for linux / macOS Chrome / macOS Safari profiles
-- [ ] OS golden captures under `ime-bugs/maxlength/fixtures/`
+- [x] OS golden captures matched under `ime-bugs/maxlength/fixtures/` (macos-chrome-apple, macos-safari-apple)
 
 ### Coverage gaps (intentional behaviors)
 

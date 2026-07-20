@@ -4,11 +4,15 @@ import {
   applyReplacementText,
   clearImeSession,
   commitSafariSyllable,
+  commitSafariSyllableCore,
   hangulKeydownFields,
   hangulKeyupFields,
   pushCompositionStart,
   pushKeydown,
   pushKeyup,
+  readMaxLength,
+  rejectSafariCompositionOverflow,
+  rejectSafariReplacementOverflow,
   replacementInputType,
   restartSafariComposition,
   updateImeSessionForPreedit,
@@ -59,6 +63,8 @@ export async function composeHangulSafariReplacement(
     const stroke = strokes[strokeIndex];
     if (!stroke) continue;
 
+    const finalPreedit = stroke.preeditSteps[stroke.preeditSteps.length - 1] ?? "";
+
     for (let i = 0; i < stroke.preeditSteps.length; i++) {
       const preedit = stroke.preeditSteps[i] ?? "";
       const value = stroke.valuesAfterSteps[i] ?? element.value;
@@ -85,7 +91,6 @@ export async function composeHangulSafariReplacement(
       await settleAfterPreedit(settle ?? "microtask");
     }
 
-    const finalPreedit = stroke.preeditSteps[stroke.preeditSteps.length - 1] ?? "";
     if (shouldConfirmAfterStroke(strokes, strokeIndex) && finalPreedit) {
       confirmSyllable(element, finalPreedit, records);
     }
@@ -103,8 +108,11 @@ async function playStrokeSafariComposition(
   profile: ImeProfile,
   settle: "microtask" | "macrotask",
   deferredUpdateRace: boolean,
-): Promise<{ status: "aborted-deferred"; step: number } | { status: "ok" }> {
+): Promise<
+  { status: "aborted-deferred"; step: number } | { status: "maxlength-reject" } | { status: "ok" }
+> {
   const carets = stroke.valuesAfterSteps.map((value) => value.length - suffix.length);
+  const limit = readMaxLength(element);
 
   if (stroke.compositionStart) {
     pushCompositionStart(element, records);
@@ -118,26 +126,58 @@ async function playStrokeSafariComposition(
     updateImeSessionForPreedit(element, preedit, value, caret, suffix);
     applyPreedit(element, preedit, value, records, caret);
 
-    pushKeydown(element, records, {
-      ...hangulKeydownFields(profile, stroke),
-      isComposing: true,
-    });
-    pushKeyup(element, records, {
-      ...hangulKeyupFields(profile, stroke, true),
-    });
+    if (limit !== null && value.length > limit) {
+      // Overflow keystroke: Safari fires the keydown, then either the host
+      // clamped the DOM (fixed UI) or the overflow stays until reject (broken).
+      const clamped = value.slice(0, limit);
+      const hostClamped = element.value === clamped;
 
-    await settleAfterPreedit(settle);
-    if (deferredUpdateRace) {
-      await settleAfterPreedit(settle);
-    }
+      pushKeydown(element, records, {
+        ...hangulKeydownFields(profile, stroke),
+        isComposing: !hostClamped,
+      });
+      pushKeyup(element, records, {
+        ...hangulKeyupFields(profile, stroke, !hostClamped),
+      });
 
-    const writeback = deferredUpdateRace && consumeImeControlledWriteback(element);
-    const clobbered = element.value !== value;
-
-    if (writeback || clobbered) {
+      if (hostClamped) {
+        // Composition died with the clamp: restart, echo the preedit, then empty insertText.
+        pushCompositionStart(element, records);
+        applyPreedit(element, preedit, clamped, records, clamped.length);
+        rejectSafariReplacementOverflow(element, records);
+      } else {
+        rejectSafariCompositionOverflow(element, preedit, value, records);
+      }
       clearImeSession(element);
-      return { status: "aborted-deferred", step: i };
+      return { status: "maxlength-reject" };
     }
+
+    if (i === 0 && stroke.commitAfterFirstStep !== undefined) {
+      commitSafariSyllableCore(element, stroke.commitAfterFirstStep, element.value, records);
+      pushCompositionStart(element, records);
+    }
+  }
+
+  pushKeydown(element, records, {
+    ...hangulKeydownFields(profile, stroke),
+    isComposing: true,
+  });
+  pushKeyup(element, records, {
+    ...hangulKeyupFields(profile, stroke, true),
+  });
+
+  await settleAfterPreedit(settle);
+  if (deferredUpdateRace) {
+    await settleAfterPreedit(settle);
+  }
+
+  const lastValue = stroke.valuesAfterSteps[stroke.valuesAfterSteps.length - 1] ?? element.value;
+  const writeback = deferredUpdateRace && consumeImeControlledWriteback(element);
+  const clobbered = element.value !== lastValue;
+
+  if (writeback || clobbered) {
+    clearImeSession(element);
+    return { status: "aborted-deferred", step: stroke.preeditSteps.length - 1 };
   }
 
   return { status: "ok" };
@@ -216,6 +256,10 @@ export async function composeHangulSafariComposition(
         records,
         settle ?? "macrotask",
       );
+      return records;
+    }
+
+    if (result.status === "maxlength-reject") {
       return records;
     }
 

@@ -10,8 +10,11 @@ import {
   pushCompositionStart,
   pushKeydown,
   pushKeyup,
+  readMaxLength,
+  rejectChromeCompositionOverflow,
   setImeSession,
   snapshot,
+  takePendingMaxLengthReject,
   updateImeSessionForPreedit,
   type ComposedEventRecord,
 } from "../_internal";
@@ -78,7 +81,7 @@ function endComposition(
   clearImeSession(element);
 }
 
-type StrokeAbort = "aborted-blur" | "aborted-deferred" | "ok";
+type StrokeAbort = "aborted-blur" | "aborted-deferred" | "maxlength-reject" | "ok";
 
 async function playRemainingIsolated(
   element: HTMLInputElement | HTMLTextAreaElement,
@@ -195,6 +198,21 @@ async function playStrokeRespectingBlur(
   pushKeyup(element, records, {
     ...hangulKeyupFields(profile, stroke, true),
   });
+
+  const pendingReject = takePendingMaxLengthReject(element);
+  if (pendingReject) {
+    const limit = readMaxLength(element);
+    if (limit !== null && element.value.length > limit) {
+      rejectChromeCompositionOverflow(
+        element,
+        pendingReject.preedit,
+        pendingReject.overflowValue,
+        records,
+      );
+    }
+    return "maxlength-reject";
+  }
+
   return "ok";
 }
 
@@ -224,6 +242,15 @@ export async function composeHangul(
   const records: ComposedEventRecord[] = [];
 
   if (profile.id === "macos-safari-apple" && settle === "macrotask") {
+    element.focus();
+    return composeHangulSafariComposition(element, strokes, suffix, profile, {
+      commitFinal,
+      settle,
+      deferredUpdateRace,
+    });
+  }
+
+  if (profile.id === "macos-safari-apple" && readMaxLength(element) !== null) {
     element.focus();
     return composeHangulSafariComposition(element, strokes, suffix, profile, {
       commitFinal,
@@ -274,6 +301,10 @@ export async function composeHangul(
           result === "aborted-blur",
           profile,
         );
+        return records;
+      }
+
+      if (result === "maxlength-reject") {
         return records;
       }
     }

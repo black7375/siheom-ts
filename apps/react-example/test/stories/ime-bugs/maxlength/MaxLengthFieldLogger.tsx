@@ -81,9 +81,7 @@ export function MaxLengthFieldLogger() {
         aria-label="캡처 지시"
       >
         <ol className="list-decimal space-y-1 pl-5 text-muted-foreground">
-          <li>
-            maxLength를 6으로 두고 한글로 「가나다라마바사」(7글자)를 끊지 않고 입력합니다.
-          </li>
+          <li>maxLength를 6으로 두고 한글로 「가나다라마바사」(7글자)를 끊지 않고 입력합니다.</li>
           <li>broken이면 조합 중 글자 수가 7까지 올라갈 수 있습니다.</li>
           <li>fixed이면 입력 단계부터 6글자에서 멈춥니다.</li>
           <li>JSON을 복사·다운로드해 fixtures에 저장합니다.</li>

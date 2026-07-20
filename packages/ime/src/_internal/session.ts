@@ -6,6 +6,8 @@ export type ImeComposeSession = {
   preedit: string;
   /** Text after the caret / composition range. */
   suffix: string;
+  /** Overflow preedit waiting for browser-style rejection after keyup. */
+  pendingMaxLengthReject?: { preedit: string; overflowValue: string };
 };
 
 const sessions = new WeakMap<HTMLInputElement | HTMLTextAreaElement, ImeComposeSession>();

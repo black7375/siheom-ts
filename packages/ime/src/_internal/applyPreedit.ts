@@ -1,5 +1,6 @@
 import type { ComposedEventRecord } from "./types";
 import { dispatch, setInputValue, snapshot } from "./events";
+import { markPendingMaxLengthReject, readMaxLength } from "./maxLength";
 
 /** Apply one composition preedit snapshot: compositionupdate → beforeinput → value → input. */
 export function applyPreedit(
@@ -10,9 +11,10 @@ export function applyPreedit(
   caret: number = value.length,
 ) {
   const inputData = preedit === "" ? null : preedit;
+  const valueBefore = element.value;
 
   dispatch(element, "compositionupdate", { bubbles: true, data: preedit, cancelable: true });
-  records.push(snapshot(element, "compositionupdate", { data: preedit }));
+  records.push(snapshot(element, "compositionupdate", { data: preedit, value: valueBefore }));
 
   dispatch(element, "beforeinput", {
     bubbles: true,
@@ -26,6 +28,7 @@ export function applyPreedit(
       inputType: "insertCompositionText",
       data: preedit,
       isComposing: true,
+      value: valueBefore,
     }),
   );
 
@@ -41,7 +44,12 @@ export function applyPreedit(
       inputType: "insertCompositionText",
       data: inputData,
       isComposing: true,
-      value,
+      value: element.value,
     }),
   );
+
+  const limit = readMaxLength(element);
+  if (limit !== null && value.length > limit) {
+    markPendingMaxLengthReject(element, preedit, value);
+  }
 }

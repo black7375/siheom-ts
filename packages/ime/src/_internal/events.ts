@@ -21,6 +21,12 @@ export function dispatch<K extends keyof HTMLElementEventMap>(
     event = new CompositionEvent(type, init as CompositionEventInit);
   } else if (type === "beforeinput" || type === "input") {
     event = new InputEvent(type, init as InputEventInit);
+    // Chromium's InputEvent constructor drops WebKit-only inputTypes
+    // (deleteCompositionText, insertFromComposition) to "" — restore them.
+    const inputType = (init as InputEventInit).inputType;
+    if (inputType && (event as InputEvent).inputType !== inputType) {
+      Object.defineProperty(event, "inputType", { value: inputType });
+    }
   } else {
     event = new Event(type, init);
   }

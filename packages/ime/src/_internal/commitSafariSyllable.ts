@@ -10,7 +10,16 @@ export function commitSafariSyllable(
   records: ComposedEventRecord[],
 ) {
   applyPreedit(element, syllable, committedValue, records, committedValue.length);
+  commitSafariSyllableCore(element, syllable, committedValue, records);
+}
 
+/** The delete + insertFromComposition + compositionend block, without the preedit echo. */
+export function commitSafariSyllableCore(
+  element: HTMLInputElement | HTMLTextAreaElement,
+  syllable: string,
+  committedValue: string,
+  records: ComposedEventRecord[],
+) {
   dispatch(element, "beforeinput", {
     bubbles: true,
     cancelable: true,
