@@ -12,6 +12,8 @@ action 스텝은 **사용자 행동**을 데이터로 표현합니다. `@siheom/
 | `actions.type(target, text)` | 포커스 → 기존 내용 위에 입력 |
 | `actions.tab(target)` | 포커스 확인 후 Tab |
 | `actions.upload(target, file)` | 파일 업로드 |
+| `actions.hover(target)` | 마우스 오버 |
+| `actions.dragAndDrop(source, target)` | source를 target으로 드래그 |
 
 ```tsx
 actions.click(query.button("가입하기"))

@@ -12,6 +12,8 @@ An **action** step describes user behavior as data. `actions.*` from `@siheom/re
 | `actions.type(target, text)` | Focus → type without clearing |
 | `actions.tab(target)` | Assert focus, then Tab |
 | `actions.upload(target, file)` | Upload a file |
+| `actions.hover(target)` | Hover the pointer |
+| `actions.dragAndDrop(source, target)` | Drag source onto target |
 
 ```tsx
 actions.click(query.button("Sign up"))

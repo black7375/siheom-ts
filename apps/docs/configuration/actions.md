@@ -12,6 +12,8 @@
 | `actions.type(target, text)` | `text: string` | clear 없이 입력 |
 | `actions.tab(target)` | — | 포커스 확인 후 Tab |
 | `actions.upload(target, file)` | `file: File` | 파일 업로드 |
+| `actions.hover(target)` | — | `userEvent.hover` |
+| `actions.dragAndDrop(source, target)` | `target: Locator` | source에서 target으로 드래그 앤 드롭 |
 
 ## 예시
 
@@ -19,6 +21,7 @@
 actions.click(query.button("가입하기"))
 actions.fill(query.textbox(/비밀번호/), "secret123456")
 actions.upload(query.button("파일 선택"), file)
+actions.dragAndDrop(query.listitem("디자인"), query.listitem("완료"))
 ```
 
 ## 커스텀 action

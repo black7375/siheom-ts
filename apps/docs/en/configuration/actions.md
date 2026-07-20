@@ -12,6 +12,8 @@ Every action returns a step object `(target: Locator, ...args)`. `target` is a [
 | `actions.type(target, text)` | `text: string` | Type without clearing |
 | `actions.tab(target)` | — | Assert focus, then Tab |
 | `actions.upload(target, file)` | `file: File` | Upload a file |
+| `actions.hover(target)` | — | `userEvent.hover` |
+| `actions.dragAndDrop(source, target)` | `target: Locator` | Drag and drop source onto target |
 
 ## Examples
 
@@ -19,6 +21,7 @@ Every action returns a step object `(target: Locator, ...args)`. `target` is a [
 actions.click(query.button("Sign up"))
 actions.fill(query.textbox(/password/i), "secret123456")
 actions.upload(query.button("Choose file"), file)
+actions.dragAndDrop(query.listitem("Design"), query.listitem("Done"))
 ```
 
 ## Custom actions
