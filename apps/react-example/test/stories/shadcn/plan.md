@@ -74,6 +74,11 @@ Realistic scenarios for Siheom + shadcn/ui. One user story per folder; TDD via t
 - [x] kanban — drag-drop
   - [x] drag card — move card from 진행 중 to 완료 column
 
+## Phase 9 — Chart
+
+- [x] chart-dashboard — Chart + Card + Tabs
+  - [x] tab switch — 매출/방문자 차트 전환
+
 ## Deferred
 
-- [ ] chart-dashboard — Chart
+_(none)_
