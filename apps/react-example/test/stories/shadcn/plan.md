@@ -62,7 +62,7 @@ Realistic scenarios for Siheom + shadcn/ui. One user story per folder; TDD via t
 
 ## Phase 6 — Forms & upload
 
-- [ ] profile-avatar — upload + Avatar + Progress
+- [x] profile-avatar — upload + Avatar + Progress
 - [ ] two-factor — Input OTP
 
 ## Phase 7 — Composite
