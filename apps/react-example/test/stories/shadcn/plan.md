@@ -20,7 +20,9 @@ Realistic scenarios for Siheom + shadcn/ui. One user story per folder; TDD via t
   - [x] tab switch — notifications tab
   - [x] switch — dark mode toggle
   - [x] radio — notification frequency
-- [ ] document-actions — Dropdown Menu + Context Menu
+- [x] document-actions — Dropdown Menu + Context Menu
+  - [x] dropdown — copy via 더보기 menu
+  - [x] context menu — delete via right click
 - [ ] command-menu — Command palette (Cmd+K)
 
 ## Phase 2 — Selection & search
