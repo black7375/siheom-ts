@@ -2,7 +2,7 @@
 
 Teams need different actions. You may want to fold a repeating flow like picking an account from a combobox into one step, or replace `fill` with a project-specific implementation. The factory is the assembly point for that extension and replacement.
 
-**Input** is registries (`actions`, `assertions`, `givens`, `messages`). **Output** is the surface you already use: `runSiheom` / `actions` / `assertions` / `given`. `query` is shared.
+**Input** is registries (`actions`, `assertions`, `givens`, `effects`, `messages`, optional `fakeTimerScope`). **Output** is the surface you already use: `runSiheom` / `actions` / `assertions` / `given` / `effect`. `query` is shared.
 
 `@siheom/react` is a **pre-bound** entry point over the default registries. Extend and override in `@siheom/core`.
 
@@ -57,6 +57,27 @@ Passing an unknown key to `overrideSiheom` fails like this:
 overrideSiheom: cannot replace unknown actions keys: selectAccount. Use extendSiheom to add.
 ```
 
+## effects · fakeTimerScope
+
+For timer UI, put `effects` and (on React) `fakeTimerScope` on the base registry. `overrideSiheom` preserves these from the base. See [effect · withFakeTimers](/en/concepts/effects).
+
+```ts
+import { defaultGivens, reactEffects, reactFakeTimerScope } from "@siheom/react";
+
+overrideSiheom(
+  {
+    givens: defaultGivens,
+    actions: defaultActions,
+    assertions: defaultAssertions,
+    effects: reactEffects,
+    fakeTimerScope: reactFakeTimerScope,
+  },
+  { givens: { render: myRender } },
+);
+```
+
+You can also add or replace effect keys with `extendSiheom` / `overrideSiheom` (for example a custom `elapsed`).
+
 ## Message map
 
 Use the factory `messages` slot for failure-report section headers. See [Message map](/en/configuration/messages).
@@ -64,5 +85,6 @@ Use the factory `messages` slot for failure-report section headers. See [Message
 ## Next steps
 
 - [given](/en/concepts/given) — Bind providers in `given.render`
+- [effect · withFakeTimers](/en/concepts/effects) — Fake-timer scope
 - [Configuration](/en/configuration) — Pre-bound API and factory exports
 - [Message map](/en/configuration/messages) — Customize failure-report headers

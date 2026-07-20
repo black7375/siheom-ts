@@ -1,6 +1,6 @@
 # siheom-ts
 
-Data-first frontend test interpreter: tests are data (actions + assertions), executed by a pluggable runtime.
+Data-first frontend test interpreter: tests are data (actions + assertions + effects), executed by a pluggable runtime.
 
 ## Language
 
@@ -15,6 +15,18 @@ _Avoid_: renderer (except React Native Test Renderer as a named runtime), driver
 **액션 (Action)**:
 A named step in a 시험 (click, fill, …), including user-defined custom actions.
 _Avoid_: command, step (when meaning the typed action unit)
+
+**이펙트 (Effect)**:
+A named step that advances the test environment (especially time: `effect.elapsed`, `effect.runAllTimers`), not a direct user gesture. Used inside `withFakeTimers`.
+_Avoid_: action (when meaning time travel), wait helper, sleep
+
+**withFakeTimers**:
+A scope step that installs Vitest fake timers for nested steps only, then restores real timers. Not a global `vi.useFakeTimers()` flag.
+_Avoid_: global fake-timer mode, suite-wide timer mock
+
+**fakeTimerScope**:
+Optional registry hooks (`installFakeTimers`, `afterAction`, …) so a runtime package (e.g. `@siheom/react`) can adapt fake timers (`act`, `shouldAdvanceTime`) without global module state.
+_Avoid_: userEventSession, isFakeTimersActive global
 
 **쇼케이스 (Showcase)**:
 The set of example UIs and 시험s that prove siheom covers real frontend situations; ships with the docs site.
@@ -37,7 +49,7 @@ The framework-agnostic package (`@siheom/core` or equivalent) holding factory, a
 _Avoid_: main package (ambiguous with the npm root name)
 
 **런타임 패키지 (Runtime package)**:
-A per-framework package (e.g. `@siheom/react`) that supplies that framework's default `given` (at least `render`), peers for that framework's testing libraries, and a pre-bound `runSiheom` / `actions` / `query` / `assertions` / `given` surface.
+A per-framework package (e.g. `@siheom/react`) that supplies that framework's default `given` (at least `render`), peers for that framework's testing libraries, and a pre-bound `runSiheom` / `actions` / `query` / `assertions` / `given` / `effect` / `withFakeTimers` surface (plus `reactEffects` / `reactFakeTimerScope` when needed for `overrideSiheom`).
 _Avoid_: adapter package, binding
 
 **Skills 패키지 (Skills package)**:
@@ -57,7 +69,7 @@ Suite-wide default wrapping (Storybook-style global decorator) as a *pattern* vi
 _Avoid_: global decorator (as our API name), `globalWrappers` factory option
 
 **Factory**:
-Core composition via `extendSiheom` (add new action/assertion/given/message-map entries) and `overrideSiheom` (replace existing entries). Input is registries; output is the existing bindings surface (`runSiheom`, `actions`, `query`, `assertions`, `given`). Not the primary consumer entry — `@siheom/react` pre-bound imports remain default.
+Core composition via `extendSiheom` (add new action/assertion/given/effect/message-map entries) and `overrideSiheom` (replace existing entries). Input is registries (including optional `fakeTimerScope`); output is the existing bindings surface (`runSiheom`, `actions`, `query`, `assertions`, `given`, `effect`). Not the primary consumer entry — `@siheom/react` pre-bound imports remain default.
 _Avoid_: createSiheom-as-new-primary-API, builder, partial-merge-only extend
 
 **Extend**:

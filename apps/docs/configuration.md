@@ -5,7 +5,15 @@
 ## Pre-bound API (`@siheom/react`)
 
 ```ts
-import { actions, assertions, given, query, runSiheom } from "@siheom/react";
+import {
+  actions,
+  assertions,
+  effect,
+  given,
+  query,
+  runSiheom,
+  withFakeTimers,
+} from "@siheom/react";
 ```
 
 | export | 설명 |
@@ -14,14 +22,20 @@ import { actions, assertions, given, query, runSiheom } from "@siheom/react";
 | `actions` | 사용자 행동 스텝 |
 | `assertions` | 기대 상태 스텝 |
 | `given` | 전제 조건 (`render`) |
+| `effect` | 시간 진행 등 환경 effect 스텝 |
+| `withFakeTimers` | fake timers 스코프 |
 | `query` | role + name locator |
+| `reactEffects` / `reactFakeTimerScope` | `overrideSiheom` base용 React 어댑터 |
 
 ## API 참조
 
 - [given](/configuration/given)
 - [actions](/configuration/actions)
 - [assertions](/configuration/assertions)
+- [effect](/configuration/effects)
 - [메시지 맵](/configuration/messages) — 실패 리포트 헤더
+
+개념 설명은 [effect · withFakeTimers](/concepts/effects)를 보세요.
 
 ## Core factory (`@siheom/core`)
 
@@ -32,6 +46,9 @@ import {
   overrideSiheom,
   defaultActions,
   defaultAssertions,
+  defaultEffects,
+  effect,
+  withFakeTimers,
 } from "@siheom/core";
 ```
 
@@ -39,7 +56,7 @@ import {
 
 ## 타입
 
-`ActionStep`, `AssertionStep`, `GivenStep`, `Step`, `Locator` 등은 `@siheom/core`에서 export됩니다.
+`ActionStep`, `AssertionStep`, `GivenStep`, `EffectStep`, `FakeTimersScopeStep`, `Step`, `Locator` 등은 `@siheom/core`에서 export됩니다.
 
 ## 다음 단계
 

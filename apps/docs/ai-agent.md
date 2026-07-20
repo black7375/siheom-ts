@@ -22,8 +22,10 @@ npx skills add twinstae/siheom-ts
 
 - 시험 본문에 `await`를 쓰지 않고 `return runSiheom(...)` 사용
 - locator는 `query.<role>(name)`만 사용 (CSS·test id 금지)
+- 타이머 UI는 `withFakeTimers` + `effect.elapsed` + `query.timer` / `textContent` (전역 `vi.useFakeTimers` 금지)
 - 실패 시 `[Logs]` / `[A11y Snapshot]` 섹션을 우선 읽기
 - 커스텀 조작은 `extendSiheom`으로 레지스트리에 추가
+- `overrideSiheom`으로 render를 감쌀 때 `effects`·`fakeTimerScope`를 base에 유지
 
 공개 전까지는 `llms.txt`와 [siheom이란](/intro), [React 빠른 시작](/getting-started/react)을 컨텍스트로 제공하세요.
 
@@ -36,5 +38,6 @@ npx skills add twinstae/siheom-ts
 ## 다음 단계
 
 - [접근성 스냅샷](/concepts/a11y-snapshot) — 스냅샷 형식
+- [예제: Countdown](/examples/countdown) — withFakeTimers와 effect.elapsed
 - [예제: SignUpForm](/examples/signup-form) — errormessage와 region 스냅샷
 - [Factory](/concepts/factory) — 커스텀 스텝

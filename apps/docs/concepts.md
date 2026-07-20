@@ -1,6 +1,6 @@
 # 개념
 
-시험은 `given` · `action` · `assert` 스텝 객체의 배열입니다. 인터프리터가 실제 브라우저에서 순서대로 실행합니다.
+시험은 `given` · `action` · `assert` · (선택) `effect` 스텝 객체의 배열입니다. 인터프리터가 실제 브라우저에서 순서대로 실행합니다.
 
 ## 스텝 종류
 
@@ -9,6 +9,7 @@
 | **given** | `given.render(<App />)` | UI 마운트 등 전제 조건 |
 | **action** | `actions.click(query.button("저장"))` | 사용자 행동 |
 | **assert** | `assertions.visible(query.button("저장"))` | 기대 상태 |
+| **effect** | `effect.elapsed(1_000)` | 시간 진행 등 환경 효과 (`withFakeTimers` 안) |
 
 ```tsx
 return runSiheom(
@@ -25,6 +26,7 @@ return runSiheom(
 - [given](/concepts/given) — UI 마운트와 Provider
 - [action](/concepts/actions) — click, fill, type 등
 - [assertion](/concepts/assertions) — visible, a11ySnapshot 등
+- [effect · withFakeTimers](/concepts/effects) — fake timers와 시간 진행
 - [locator](/concepts/locator) — `query`와 role + name
 - [접근성 스냅샷](/concepts/a11y-snapshot) — 시맨틱 트리 assertion
 - [Factory](/concepts/factory) — 커스텀 스텝 추가·교체

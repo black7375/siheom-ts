@@ -15,6 +15,7 @@ const CONCEPTS = {
 		{ text: "given", link: "/concepts/given" },
 		{ text: "action", link: "/concepts/actions" },
 		{ text: "assertion", link: "/concepts/assertions" },
+		{ text: "effect · withFakeTimers", link: "/concepts/effects" },
 		{ text: "locator", link: "/concepts/locator" },
 		{ text: "접근성 스냅샷", link: "/concepts/a11y-snapshot" },
 		{ text: "Factory", link: "/concepts/factory" },
@@ -28,6 +29,7 @@ const CONFIGURATION = {
 		{ text: "given", link: "/configuration/given" },
 		{ text: "actions", link: "/configuration/actions" },
 		{ text: "assertions", link: "/configuration/assertions" },
+		{ text: "effect", link: "/configuration/effects" },
 		{ text: "메시지 맵", link: "/configuration/messages" },
 	],
 };
@@ -39,6 +41,7 @@ const EXAMPLES = {
 		{ text: "Counter", link: "/examples/counter" },
 		{ text: "SignUpForm", link: "/examples/signup-form" },
 		{ text: "라우팅 / 링크", link: "/examples/routing" },
+		{ text: "Countdown", link: "/examples/countdown" },
 	],
 };
 
@@ -67,6 +70,7 @@ const CONCEPTS_EN = {
 		{ text: "given", link: "/en/concepts/given" },
 		{ text: "actions", link: "/en/concepts/actions" },
 		{ text: "assertions", link: "/en/concepts/assertions" },
+		{ text: "effect · withFakeTimers", link: "/en/concepts/effects" },
 		{ text: "locator", link: "/en/concepts/locator" },
 		{ text: "Accessibility snapshot", link: "/en/concepts/a11y-snapshot" },
 		{ text: "Factory", link: "/en/concepts/factory" },
@@ -80,6 +84,7 @@ const CONFIGURATION_EN = {
 		{ text: "given", link: "/en/configuration/given" },
 		{ text: "actions", link: "/en/configuration/actions" },
 		{ text: "assertions", link: "/en/configuration/assertions" },
+		{ text: "effect", link: "/en/configuration/effects" },
 		{ text: "Message map", link: "/en/configuration/messages" },
 	],
 };
@@ -91,6 +96,7 @@ const EXAMPLES_EN = {
 		{ text: "Counter", link: "/en/examples/counter" },
 		{ text: "SignUpForm", link: "/en/examples/signup-form" },
 		{ text: "Routing / links", link: "/en/examples/routing" },
+		{ text: "Countdown", link: "/en/examples/countdown" },
 	],
 };
 

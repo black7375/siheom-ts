@@ -1,6 +1,6 @@
 # Concepts
 
-A Siheom test is an array of `given`, `action`, and `assert` step objects. The interpreter runs them in order in a real browser.
+A Siheom test is an array of `given`, `action`, `assert`, and optional `effect` step objects. The interpreter runs them in order in a real browser.
 
 ## Step kinds
 
@@ -9,6 +9,7 @@ A Siheom test is an array of `given`, `action`, and `assert` step objects. The i
 | **given** | `given.render(<App />)` | Preconditions (mount UI, …) |
 | **action** | `actions.click(query.button("Save"))` | User behavior |
 | **assert** | `assertions.visible(query.button("Save"))` | Expected state |
+| **effect** | `effect.elapsed(1_000)` | Environment effects such as time (`withFakeTimers`) |
 
 ```tsx
 return runSiheom(
@@ -25,6 +26,7 @@ Do not use `await` in the test body — `return runSiheom(...)` and let the inte
 - [given](/en/concepts/given) — Mount UI and providers
 - [actions](/en/concepts/actions) — click, fill, type, …
 - [assertions](/en/concepts/assertions) — visible, a11ySnapshot, …
+- [effect · withFakeTimers](/en/concepts/effects) — Fake timers and time travel
 - [locator](/en/concepts/locator) — `query` and role + name
 - [Accessibility snapshot](/en/concepts/a11y-snapshot) — Semantic tree assertions
 - [Factory](/en/concepts/factory) — Add or replace custom steps

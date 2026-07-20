@@ -70,7 +70,7 @@ Use `Todo[]`, not `typeof SEEDED_TODOS` when the fixture is a tuple/`as const`.
 ## runSiheom shape
 
 ```tsx
-import { actions, assertions, given, query, runSiheom } from "@siheom/react";
+import { actions, assertions, effect, given, query, runSiheom, withFakeTimers } from "@siheom/react";
 
 await runSiheom(
   given.render(<MyComponent />),           // or setup(…)
@@ -82,6 +82,7 @@ await runSiheom(
 - **given** — only `given.render(element)`. Wrap providers inside the element or in `setup()`.
 - **actions** — user input (`click`, `dblclick`, `hover`, `fill`, `type`, `tab`, `upload`).
 - **assertions** — observable UI state (`visible`, `focused`, `textContent`, `checked`, …). Prefer `assertions.not.`* over negating manually. If an assertion fails, read the Siheom log + a11y snapshot, fix the runner or component, then re-run — do not replace `checked`/`focused` with snapshots unless the spec is the whole tree.
+- **effect + withFakeTimers** — for timers/`Date`: wrap steps in `withFakeTimers(...)`, advance with `effect.elapsed(ms)`. Assert via `query.timer` / `textContent` (see [API.md](API.md)).
 
 Use `query.within(container, target)` when names collide inside a region.
 

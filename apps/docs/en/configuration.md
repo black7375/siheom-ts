@@ -5,7 +5,15 @@ Start with the `@siheom/react` pre-bound API; extend via `@siheom/core` factory.
 ## Pre-bound API (`@siheom/react`)
 
 ```ts
-import { actions, assertions, given, query, runSiheom } from "@siheom/react";
+import {
+  actions,
+  assertions,
+  effect,
+  given,
+  query,
+  runSiheom,
+  withFakeTimers,
+} from "@siheom/react";
 ```
 
 | Export | Role |
@@ -14,14 +22,20 @@ import { actions, assertions, given, query, runSiheom } from "@siheom/react";
 | `actions` | User-behavior steps |
 | `assertions` | Expected-state steps |
 | `given` | Preconditions (`render`) |
+| `effect` | Environment effect steps (time travel) |
+| `withFakeTimers` | Fake-timer scope |
 | `query` | Role + name locators |
+| `reactEffects` / `reactFakeTimerScope` | React adapters for `overrideSiheom` bases |
 
 ## API reference
 
 - [given](/en/configuration/given)
 - [actions](/en/configuration/actions)
 - [assertions](/en/configuration/assertions)
+- [effect](/en/configuration/effects)
 - [Message map](/en/configuration/messages) — Failure-report headers
+
+For the conceptual guide, see [effect · withFakeTimers](/en/concepts/effects).
 
 ## Core factory (`@siheom/core`)
 
@@ -32,6 +46,9 @@ import {
   overrideSiheom,
   defaultActions,
   defaultAssertions,
+  defaultEffects,
+  effect,
+  withFakeTimers,
 } from "@siheom/core";
 ```
 
@@ -39,7 +56,7 @@ Extend and replace registries with `extendSiheom` / `overrideSiheom`. See [Facto
 
 ## Types
 
-`ActionStep`, `AssertionStep`, `GivenStep`, `Step`, `Locator`, and related types are exported from `@siheom/core`.
+`ActionStep`, `AssertionStep`, `GivenStep`, `EffectStep`, `FakeTimersScopeStep`, `Step`, `Locator`, and related types are exported from `@siheom/core`.
 
 ## Next steps
 

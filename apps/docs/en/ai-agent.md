@@ -22,8 +22,10 @@ The skill guides agents to:
 
 - Use `return runSiheom(...)` without `await` in the test body
 - Use only `query.<role>(name)` locators (no CSS or test id)
+- For timer UI: `withFakeTimers` + `effect.elapsed` + `query.timer` / `textContent` (no global `vi.useFakeTimers`)
 - Read `[Logs]` and `[A11y Snapshot]` first on failure
 - Add custom flows via `extendSiheom`
+- When wrapping render with `overrideSiheom`, keep `effects` and `fakeTimerScope` on the base
 
 Until the package is public, provide [`llms.txt`](/llms.txt), [What is siheom?](/en/intro), and [React quick start](/en/getting-started/react) as context.
 
@@ -36,5 +38,6 @@ Until the package is public, provide [`llms.txt`](/llms.txt), [What is siheom?](
 ## Next steps
 
 - [Accessibility snapshot](/en/concepts/a11y-snapshot) — Snapshot format
+- [Example: Countdown](/en/examples/countdown) — withFakeTimers and effect.elapsed
 - [Example: SignUpForm](/en/examples/signup-form) — errormessage and region snapshots
 - [Factory](/en/concepts/factory) — Custom steps

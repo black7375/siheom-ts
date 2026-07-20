@@ -11,10 +11,11 @@ query.button("가입하기");
 query.textbox(/이메일/);
 query.checkbox("약관 동의");
 query.region("signup-form");
+query.timer("남은 시간");
 query.label("이메일");
 ```
 
-`query`는 aria-query의 concrete role 전체와 `label`, `text` 커스텀 role을 지원합니다. CSS 선택자, test id, xpath는 쓰지 않습니다.
+`query`는 aria-query의 concrete role 전체와 `label`, `text` 커스텀 role을 지원합니다. 카운트다운처럼 `role="timer"` UI는 `query.timer("…")`로 가리킵니다. CSS 선택자, test id, xpath는 쓰지 않습니다.
 
 ## 엄격함
 

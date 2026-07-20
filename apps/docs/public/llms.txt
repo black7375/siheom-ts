@@ -1,35 +1,64 @@
 # siheom
 
-> Data-first frontend test interpreter. Tests are data (given / action / assert steps); an interpreter runs them in a real browser.
+> Data-first frontend test interpreter. Tests are data (given / action / assert / effect steps); an interpreter runs them in a real browser.
 
 ## Docs
 
 - Korean (default): /intro
 - English: /en/intro
 - Glossary: CONTEXT.md in repo root
+- Timers: /concepts/effects · /en/concepts/effects
+- Countdown example: /examples/countdown · /en/examples/countdown
 
 ## Primary API (@siheom/react)
 
 ```ts
-import { actions, assertions, given, query, runSiheom } from "@siheom/react";
+import {
+  actions,
+  assertions,
+  effect,
+  given,
+  query,
+  runSiheom,
+  withFakeTimers,
+} from "@siheom/react";
 ```
 
 Do not use `await` in the test body — `return runSiheom(...)`.
 
+### Fake timers
+
+```ts
+return runSiheom(
+  withFakeTimers(
+    given.render(<TimerApp />),
+    actions.click(query.button("Start")),
+    effect.elapsed(1_000),
+    assertions.textContent(query.timer("Time remaining"), "24:59"),
+  ),
+);
+```
+
+- `withFakeTimers(...steps)` — scoped fake timers (restore after)
+- `effect.elapsed(ms)` / `effect.runAllTimers()` — advance time
+- Assert with normal assertions + `query.timer` — no timer-specific assert API
+- When using `overrideSiheom`, pass `effects: reactEffects` and `fakeTimerScope: reactFakeTimerScope` on the base
+
 ## Runtime
 
 - Recommended: vitest browser mode (Playwright provider), real Chromium
-- Not recommended: jsdom, happy-dom
+- Not recommended: jsdom, happy-dom (except package-unit tests)
 
 ## Factory (@siheom/core)
 
-- `extendSiheom` — add new registry keys (actions, assertions, givens, messages)
-- `overrideSiheom` — replace existing registry keys
+- `extendSiheom` — add new registry keys (actions, assertions, givens, effects, messages)
+- `overrideSiheom` — replace existing registry keys; preserves `fakeTimerScope` from base
 - Runtime contract: framework supplies `given.render`, not a separate Runtime type
 
 ## Locators
 
 - `query.*` uses ARIA role + accessible name (same information as screen readers)
+- `query.timer("…")` for `role="timer"`
 - No CSS selectors, test ids, or xpath
 
 ## Failure reports

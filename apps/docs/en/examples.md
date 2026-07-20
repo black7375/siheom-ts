@@ -7,6 +7,7 @@ Counter and SignUpForm in `apps/react-example` are the canonical examples. Each 
 - [Counter](/en/examples/counter) — Single button, increment, snapshots
 - [SignUpForm](/en/examples/signup-form) — Form validation, `errormessage`, region snapshots
 - [Routing / links](/en/examples/routing) — MemoryRouter, query strings, Link stub, `assertions.href`
+- [Countdown](/en/examples/countdown) — `withFakeTimers`, `effect.elapsed`, `query.timer`
 
 Run `bun run storybook` in the repo to inspect UI visually.
 
@@ -14,3 +15,4 @@ Run `bun run storybook` in the repo to inspect UI visually.
 
 - [React quick start](/en/getting-started/react) — Browser mode setup
 - [Accessibility snapshot](/en/concepts/a11y-snapshot) — Snapshot format
+- [effect · withFakeTimers](/en/concepts/effects) — Testing timer UI

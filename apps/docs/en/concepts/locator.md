@@ -11,10 +11,11 @@ query.button("Sign up");
 query.textbox(/email/i);
 query.checkbox("Terms");
 query.region("signup-form");
+query.timer("Time remaining");
 query.label("Email");
 ```
 
-`query` supports every concrete role from aria-query plus custom roles `label` and `text`. Do not use CSS selectors, test ids, or xpath.
+`query` supports every concrete role from aria-query plus custom roles `label` and `text`. Countdown-style `role="timer"` UI uses `query.timer("…")`. Do not use CSS selectors, test ids, or xpath.
 
 ## Strictness
 
