@@ -48,9 +48,42 @@ function isPointerInteractable(element: Element): boolean {
 }
 
 /**
+ * Resolve the label associated with a control via:
+ * - `HTMLElement.labels` (`for` / wrapping `<label>`)
+ * - `aria-labelledby`
+ * - nearest ancestor `<label>`
+ */
+function getAssociatedLabelElement(element: Element): HTMLElement | null {
+  if (element instanceof HTMLElement && "labels" in element) {
+    const labels = (element as HTMLInputElement).labels;
+    if (labels && labels.length > 0) {
+      return labels[0]!;
+    }
+  }
+
+  const labelledBy = element.getAttribute("aria-labelledby");
+  if (labelledBy) {
+    for (const id of labelledBy.trim().split(/\s+/)) {
+      if (!id) continue;
+      const ref = document.getElementById(id);
+      if (ref instanceof HTMLElement) {
+        return ref;
+      }
+    }
+  }
+
+  const closestLabel = element.closest("label");
+  if (closestLabel instanceof HTMLLabelElement) {
+    return closestLabel;
+  }
+
+  return null;
+}
+
+/**
  * Headless UI often exposes role=checkbox on a HiddenInput (Ark) or a covered
- * native input (React Aria). Playwright refuses those pointer targets; a real
- * user clicks the visible label text instead.
+ * native input (React Aria). Playwright refuses those pointer targets; click the
+ * associated label instead (same control the a11y name came from).
  */
 async function clickCheckboxOrRadio(target: Locator, locator: BrowserLocator) {
   const element = locator.query() ?? locator.element();
@@ -59,8 +92,14 @@ async function clickCheckboxOrRadio(target: Locator, locator: BrowserLocator) {
     return;
   }
 
-  const root = target.within ? toBrowserLocator(target.within) : page;
-  await root.getByText(target.name).click();
+  const label = getAssociatedLabelElement(element);
+  if (!label) {
+    throw new Error(
+      `Cannot click ${locatorLog(target)}: control is not pointer-interactable and has no associated label (for / aria-labelledby)`,
+    );
+  }
+
+  await page.elementLocator(label).click();
 }
 
 export function createBrowserActions(
