@@ -6,6 +6,7 @@ const meta = {
   component: MobileFilter,
 } satisfies Meta<typeof MobileFilter>;
 
+export default meta;
 type Story = StoryObj<typeof meta>;
 
 export const Primary: Story = {};

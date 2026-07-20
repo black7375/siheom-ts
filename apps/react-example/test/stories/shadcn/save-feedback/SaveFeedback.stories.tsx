@@ -4,9 +4,9 @@ import { SaveFeedback } from "./SaveFeedback";
 
 const meta = {
   component: SaveFeedback,
-};
+} satisfies Meta<typeof SaveFeedback>;
 
-export default meta satisfies Meta<typeof SaveFeedback>;
+export default meta;
 
 type Story = StoryObj<typeof meta>;
 

@@ -6,6 +6,7 @@ const meta = {
   component: StreamingChat,
 } satisfies Meta<typeof StreamingChat>;
 
+export default meta;
 type Story = StoryObj<typeof meta>;
 
 export const Primary: Story = {};

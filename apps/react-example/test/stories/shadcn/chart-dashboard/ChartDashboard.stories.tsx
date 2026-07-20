@@ -6,6 +6,7 @@ const meta = {
   component: ChartDashboard,
 } satisfies Meta<typeof ChartDashboard>;
 
+export default meta;
 type Story = StoryObj<typeof meta>;
 
 export const Primary: Story = {};

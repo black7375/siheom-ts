@@ -6,6 +6,7 @@ const meta = {
   component: KanbanBoard,
 } satisfies Meta<typeof KanbanBoard>;
 
+export default meta;
 type Story = StoryObj<typeof meta>;
 
 export const Primary: Story = {};
