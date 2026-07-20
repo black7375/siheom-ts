@@ -12,4 +12,4 @@ React controlled input에서 `setState`가 **한 박자 늦게** 반영되면, I
 - [x] `mode="fixed"`: 조합 중 동기 `setValue` — `김태희` 유지
 - [x] `composeHangul(..., { settle: "macrotask", deferredUpdateRace: true })` / `createImeActions({ … })`로 에뮬 재현
 - [x] Storybook logger (`IME/Delayed Controlled Update`) for OS capture under delayed updates
-- [x] `fixtures/` draft JSON slots (`linux-chrome-ibus-hangul/`, `emulator/`)
+- [x] `fixtures/` slots (`linux-ibus-hangul-chrome/`, `user-event/`)

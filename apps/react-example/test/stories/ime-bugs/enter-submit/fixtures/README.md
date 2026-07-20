@@ -1,9 +1,9 @@
 # Enter-submit capture fixtures
 
-| Directory                   | Meaning                                                               |
-| --------------------------- | --------------------------------------------------------------------- |
-| `linux-chrome-ibus-hangul/` | **OS evidence**: Enter confirm = `compositionend` → `Enter(ic:false)` |
-| `macos-safari-apple/`       | Draft slots for Safari (same event order as Linux ibus in practice)   |
+| Directory                   | Meaning                                                                                      |
+| --------------------------- | -------------------------------------------------------------------------------------------- |
+| `macos-safari-apple/`       | Draft slots for Safari (same event order as Linux ibus in practice)                          |
+| `linux-ibus-hangul-chrome/` | Real OS IME captures: Linux + Chrome + ibus-hangul (`profileId`: `linux-chrome-ibus-hangul`) |
 
 Linux Chrome + ibus-hangul matches the Safari bug class (not 229-first). Emulator profile
 `linux-chrome-ibus-hangul` uses the `webkit` Enter facet for that reason.

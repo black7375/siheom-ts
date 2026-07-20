@@ -44,7 +44,7 @@ export function getRegisteredProfileIds(): string[] {
 
 function registerBuiltins() {
   // Linux Chrome + ibus-hangul Enter-confirm is compositionend → Enter(isComposing:false),
-  // same order as Safari (OS capture in enter-submit/fixtures/linux-chrome-ibus-hangul/).
+  // same order as Safari (OS capture in enter-submit/fixtures/linux-ibus-hangul-chrome/).
   registerProfile({
     id: "linux-chrome-ibus-hangul",
     enterDuringComposition: "webkit",

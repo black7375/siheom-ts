@@ -83,7 +83,7 @@ export function SearchFieldLogger() {
         <ol className="list-decimal space-y-1 pl-5 text-muted-foreground">
           <li>
             Linux Chrome+ibus도 Safari처럼 compositionend 뒤 Enter(isComposing:false)가 옵니다
-            (fixtures/linux-chrome-ibus-hangul 참고).
+            (fixtures/linux-ibus-hangul-chrome 참고).
           </li>
           <li>검색란에 「김」을 조합한 뒤, 음절 확정용 Enter를 한 번 누릅니다.</li>
           <li>broken이면 submit 1, fixed(다음 Enter 무시)면 0이어야 합니다.</li>
