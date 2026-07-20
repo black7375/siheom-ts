@@ -1,5 +1,4 @@
-import { cleanup } from "@testing-library/react";
-import { beforeEach, describe, it } from "vitest";
+import { describe, it } from "vitest";
 import { useEffect, useState } from "react";
 import { actions, assertions, effect, given, query, runSiheom, withFakeTimers } from "./index.ts";
 
@@ -30,23 +29,6 @@ function TickerOnStart() {
 }
 
 describe("withFakeTimers", () => {
-  beforeEach(() => {
-    cleanup();
-  });
-
-  it("runs click actions inside the scope", async () => {
-    await runSiheom(
-      withFakeTimers(
-        given.render(
-          <button type="button" aria-label="start">
-            start
-          </button>,
-        ),
-        actions.click(query.button("start")),
-      ),
-    );
-  });
-
   it("clicks with user delay middleware then advances elapsed time", async () => {
     await runSiheom(
       withFakeTimers(

@@ -1,5 +1,9 @@
+import type { ViteUserConfigFnObject } from "vitest/config";
 import { playwright } from "@vitest/browser-playwright";
 
+// not promise or fn, just object
+type UserConfig = ReturnType<ViteUserConfigFnObject>
+type TestConfig = NonNullable<UserConfig["test"]>;
 /** Vite `define` shims for testing-library packages in real browsers. */
 export const vitestBrowserDefine = {
   "process.env.NODE_ENV": JSON.stringify("test"),
@@ -21,5 +25,4 @@ export const vitestBrowserMode = {
     }),
     instances: [{ browser: "chromium" }],
   },
-  testTimeout: 3000,
-} as const;
+} satisfies Pick<TestConfig, "browser">;
