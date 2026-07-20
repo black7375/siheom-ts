@@ -1,7 +1,7 @@
 import "../../../index.css";
 import { describe, it } from "vitest";
 import { actions, assertions, given, query, runSiheom } from "@siheom/react";
-import { ViewSwitcher } from "./ViewSwitcher";
+import { ViewSwitcher } from "./ViewSwitcher.tsx";
 
 describe("ViewSwitcher", () => {
   it("목록 보기에서 그리드 보기로 전환할 수 있다", async () => {

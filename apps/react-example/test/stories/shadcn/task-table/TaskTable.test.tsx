@@ -1,7 +1,7 @@
 import "../../../index.css";
 import { describe, it } from "vitest";
 import { actions, assertions, given, query, runSiheom } from "@siheom/react";
-import { TaskTable } from "./TaskTable";
+import { TaskTable } from "./TaskTable.tsx";
 
 describe("TaskTable", () => {
   it("첫 페이지에 할 일 목록이 보인다", async () => {

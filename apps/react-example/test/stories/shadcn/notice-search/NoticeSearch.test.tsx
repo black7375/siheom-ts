@@ -1,7 +1,7 @@
 import "../../../index.css";
 import { describe, it } from "vitest";
 import { actions, assertions, given, query, runSiheom } from "@siheom/react";
-import { NoticeSearch } from "./NoticeSearch";
+import { NoticeSearch } from "./NoticeSearch.tsx";
 
 describe("NoticeSearch", () => {
   it("검색 결과가 없으면 안내가 보인다", async () => {

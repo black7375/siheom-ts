@@ -1,7 +1,7 @@
 import "../../../index.css";
 import { describe, expect, it } from "vitest";
 import { actions, assertions, given, query, runSiheom } from "@siheom/react";
-import { TeamInviteForm } from "./TeamInviteForm";
+import { TeamInviteForm } from "./TeamInviteForm.tsx";
 
 describe("TeamInviteForm", () => {
   it("역할과 팀원을 선택하고 초대할 수 있다", async () => {

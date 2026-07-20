@@ -1,7 +1,7 @@
 import "../../../index.css";
 import { describe, it } from "vitest";
 import { actions, assertions, given, query, runSiheom } from "../runSiheom";
-import { DocumentActions } from "./DocumentActions";
+import { DocumentActions } from "./DocumentActions.tsx";
 
 describe("DocumentActions", () => {
   it("더보기 메뉴에서 문서를 복사할 수 있다", async () => {
