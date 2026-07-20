@@ -17,10 +17,14 @@ export default defineConfig({
 	define: vitestBrowserDefine,
 	root: "./",
 	resolve: {
+		dedupe: ["react", "react-dom"],
 		tsconfigPaths: true,
 		alias: {
 			"@showcase/tanstack-link": tanstackLinkStub,
 		},
+	},
+	optimizeDeps: {
+		include: ["react-aria-components"],
 	},
 	test: {
 		alias: {
