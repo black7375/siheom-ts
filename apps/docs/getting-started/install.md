@@ -1,6 +1,6 @@
 # 설치
 
-`@siheom/react`를 설치하고, vitest browser mode로 실제 브라우저에서 시험을 실행합니다.
+프레임워크 패키지 하나를 설치하고, vitest browser mode로 실제 브라우저에서 시험을 실행합니다.
 
 ## 패키지
 
@@ -8,6 +8,13 @@
 | --- | --- |
 | `@siheom/core` | factory, 인터프리터, 기본 actions/assertions |
 | `@siheom/react` | React `given.render`, pre-bound API |
+| `@siheom/vue` | Vue `given.render` |
+| `@siheom/svelte` | Svelte `given.render` |
+| `@siheom/angular` | Angular `given.render` |
+| `@siheom/qwik` | Qwik `given.render` |
+| `@siheom/react-native` | React Native Testing Library 기반 `given.render` |
+
+`@siheom/core`는 각 프레임워크 패키지의 의존성이라 따로 설치할 필요가 없습니다.
 
 ## 설치
 
@@ -17,7 +24,9 @@ bun add @siheom/react
 npm install @siheom/react
 ```
 
-browser mode 실행에 필요한 dev dependency:
+React 대신 Vue, Svelte, Angular, Qwik, React Native를 쓴다면 프레임워크에 맞는 빠른 시작 가이드를 참고하세요.
+
+browser mode 실행에 필요한 dev dependency(React 기준):
 
 ```bash
 bun add -d vitest @vitest/browser playwright @vitejs/plugin-react
@@ -32,10 +41,10 @@ siheom은 Testing Library를 감싸 재배포하지 않고 그 위에 얹힙니�
 - `@testing-library/react` ^16
 - `@testing-library/jest-dom` ^6
 - `@testing-library/user-event` ^14
-- `vitest` ^3
+- `vitest` ^4
 - `react` / `react-dom` ^18 또는 ^19
 
-jsdom이나 happy-dom은 siheom이 권장하는 실행 환경이 아닙니다. [React 빠른 시작](/getting-started/react)의 browser mode 설정을 따르세요.
+jsdom이나 happy-dom은 siheom이 권장하는 실행 환경이 아닙니다(React Native는 예외입니다). [React 빠른 시작](/getting-started/react)의 browser mode 설정을 따르세요.
 
 ## 최소 import
 
@@ -46,4 +55,5 @@ import { actions, assertions, given, query, runSiheom } from "@siheom/react";
 ## 다음 단계
 
 - [React 빠른 시작](/getting-started/react) — vitest browser mode와 첫 시험
+- [Vue](/getting-started/vue) · [Svelte](/getting-started/svelte) · [Angular](/getting-started/angular) · [Qwik](/getting-started/qwik) · [React Native](/getting-started/react-native) 빠른 시작
 - [설정과 API](/configuration) — export 목록

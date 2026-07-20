@@ -74,8 +74,15 @@ Unable to find an accessible element with the role "heading" ...
 | --- | --- |
 | `@siheom/core` | 인터프리터, factory, 기본 actions/assertions |
 | `@siheom/react` | React `given.render`, pre-bound `runSiheom` / `actions` / … |
+| `@siheom/vue` | Vue `given.render` |
+| `@siheom/svelte` | Svelte `given.render` |
+| `@siheom/angular` | Angular `given.render` |
+| `@siheom/qwik` | Qwik `given.render` |
+| `@siheom/react-native` | React Native Testing Library 기반 `given.render`와 RN 접근성 query |
 
 siheom core는 UI를 어떻게 그리는지 모릅니다. 프레임워크 패키지가 `given.render`를 제공하는 것이 유일한 약속입니다. [given](/concepts/given)을 참고하세요.
+
+core 위에서 실험적으로 쓸 수 있는 보조 패키지도 있습니다: 한글 IME 조합을 흉내 내는 `@siheom/ime`, `vitest-browser-react`의 locator 기반 렌더링을 쓰는 `@siheom/vitest-browser-react`.
 
 ## 다음 단계
 

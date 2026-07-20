@@ -5,6 +5,11 @@ const GETTING_STARTED = {
 	items: [
 		{ text: "설치", link: "/getting-started/install" },
 		{ text: "React 빠른 시작", link: "/getting-started/react" },
+		{ text: "Vue 빠른 시작", link: "/getting-started/vue" },
+		{ text: "Svelte 빠른 시작", link: "/getting-started/svelte" },
+		{ text: "Angular 빠른 시작", link: "/getting-started/angular" },
+		{ text: "Qwik 빠른 시작", link: "/getting-started/qwik" },
+		{ text: "React Native 빠른 시작", link: "/getting-started/react-native" },
 	],
 };
 
@@ -68,6 +73,11 @@ const GETTING_STARTED_EN = {
 	items: [
 		{ text: "Installation", link: "/en/getting-started/install" },
 		{ text: "React quick start", link: "/en/getting-started/react" },
+		{ text: "Vue quick start", link: "/en/getting-started/vue" },
+		{ text: "Svelte quick start", link: "/en/getting-started/svelte" },
+		{ text: "Angular quick start", link: "/en/getting-started/angular" },
+		{ text: "Qwik quick start", link: "/en/getting-started/qwik" },
+		{ text: "React Native quick start", link: "/en/getting-started/react-native" },
 	],
 };
 

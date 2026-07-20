@@ -74,8 +74,15 @@ Unable to find an accessible element with the role "heading" ...
 | --- | --- |
 | `@siheom/core` | Interpreter, factory, default actions/assertions |
 | `@siheom/react` | React `given.render`, pre-bound `runSiheom` / `actions` / … |
+| `@siheom/vue` | Vue `given.render` |
+| `@siheom/svelte` | Svelte `given.render` |
+| `@siheom/angular` | Angular `given.render` |
+| `@siheom/qwik` | Qwik `given.render` |
+| `@siheom/react-native` | `given.render` and RN accessibility queries on React Native Testing Library |
 
 siheom core does not know how to paint UI. A framework package provides **`given.render`**. See [given](/en/concepts/given).
+
+Two experimental packages build on core as well: `@siheom/ime`, which emulates Hangul IME composition, and `@siheom/vitest-browser-react`, a locator-based render on top of `vitest-browser-react`.
 
 ## Next steps
 
