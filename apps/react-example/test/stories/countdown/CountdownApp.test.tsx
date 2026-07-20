@@ -3,17 +3,12 @@ import { actions, assertions, effect, given, query, runSiheom, withFakeTimers } 
 import { CountdownApp } from "./CountdownApp";
 
 describe("CountdownApp", () => {
-  it("처음에는 25분이 표시된다", async () => {
-    await runSiheom(
-      given.render(<CountdownApp durationMinutes={25} />),
-      assertions.textContent(query.timer("남은 시간"), "25:00"),
-    );
-  });
-
   it("시작 후 1초가 지나면 24:59가 표시된다", async () => {
     await runSiheom(
       withFakeTimers(
         given.render(<CountdownApp durationMinutes={25} />),
+        assertions.textContent(query.timer("남은 시간"), "25:00"),
+        
         actions.click(query.button("시작")),
         effect.elapsed(1_000),
         assertions.textContent(query.timer("남은 시간"), "24:59"),
@@ -47,12 +42,16 @@ describe("CountdownApp", () => {
   });
 
   it("시간이 모두 지나면 완료가 표시된다", async () => {
-    const oneSecondInMinutes = 1 / 60;
-
     await runSiheom(
       withFakeTimers(
-        given.render(<CountdownApp durationMinutes={oneSecondInMinutes} />),
+        given.render(<CountdownApp durationMinutes={1} />),
         actions.click(query.button("시작")),
+        effect.elapsed(1_000 * 30),
+        assertions.textContent(query.timer("남은 시간"), "00:30"),
+        effect.elapsed(1_000 * 25),
+        assertions.textContent(query.timer("남은 시간"), "00:05"),
+        effect.elapsed(1_000 * 4),
+        assertions.textContent(query.timer("남은 시간"), "00:01"),
         effect.elapsed(1_000),
         assertions.visible(query.status("완료")),
       ),
