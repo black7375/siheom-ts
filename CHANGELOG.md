@@ -2,11 +2,11 @@
 
 ## 0.3.0
 
-0.2.0 이후 프레임워크 지원 범위를 넓히고, core에 effect/드래그앤드롭을 더한 릴리스입니다. `@siheom/core`, `@siheom/react`, `@siheom/vue`, `@siheom/svelte`, `@siheom/angular`, `@siheom/qwik`, `@siheom/react-native`, `@siheom/ime`, `@siheom/vitest-browser-react` 9개 패키지가 모두 0.3.0으로 나갑니다.
+0.2.0 이후 프레임워크 지원 범위를 넓히고, core에 effect/드래그앤드롭을 더한 릴리스입니다. `@siheom/core`, `@siheom/react`, `@siheom/vue`, `@siheom/svelte`, `@siheom/solid`, `@siheom/angular`, `@siheom/qwik`, `@siheom/react-native`, `@siheom/ime`, `@siheom/vitest-browser-react` 10개 패키지가 모두 0.3.0으로 나갑니다.
 
 ### 새 프레임워크 러너 (첫 공개)
 
-- `@siheom/vue`, `@siheom/svelte`, `@siheom/angular`, `@siheom/qwik` — `@siheom/react`와 같은 계약으로 `given.render`, `effect`, `withFakeTimers`를 각 프레임워크의 렌더러/fake timer scope에 맞춰 제공합니다.
+- `@siheom/vue`, `@siheom/svelte`, `@siheom/solid`, `@siheom/angular`, `@siheom/qwik` — `@siheom/react`와 같은 계약으로 `given.render`, `effect`, `withFakeTimers`를 각 프레임워크의 렌더러/fake timer scope에 맞춰 제공합니다.
 - `@siheom/react-native` — React Native Testing Library 위에서 `given.render`와 RN 접근성 role 기반 query/action/assertion, 실패 시 접근성 스냅샷을 제공합니다.
 
 ### 새 보조 패키지 (첫 공개)
@@ -22,7 +22,7 @@
 
 ### 문서
 
-- Vue/Svelte/Angular/Qwik/React Native Getting Started 가이드를 새로 썼습니다.
+- Vue/Svelte/Solid/Angular/Qwik/React Native Getting Started 가이드를 새로 썼습니다.
 - action 문서에 `hover`, `dragAndDrop`을 추가하고, 설치 가이드의 낡은 peer dependency 버전을 정리했습니다.
 
 ## 0.1.1

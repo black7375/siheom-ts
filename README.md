@@ -21,6 +21,7 @@ return runSiheom(
 | [`@siheom/react`](packages/react) | React `given.render` |
 | [`@siheom/vue`](packages/vue) | Vue `given.render` |
 | [`@siheom/svelte`](packages/svelte) | Svelte `given.render` |
+| [`@siheom/solid`](packages/solid) | Solid `given.render` |
 | [`@siheom/angular`](packages/angular) | Angular `given.render` |
 | [`@siheom/qwik`](packages/qwik) | Qwik `given.render` |
 | [`@siheom/react-native`](packages/react-native) | React Native Testing Library 기반 `given.render` |

@@ -76,6 +76,7 @@ Unable to find an accessible element with the role "heading" ...
 | `@siheom/react` | React `given.render`, pre-bound `runSiheom` / `actions` / … |
 | `@siheom/vue` | Vue `given.render` |
 | `@siheom/svelte` | Svelte `given.render` |
+| `@siheom/solid` | Solid `given.render` |
 | `@siheom/angular` | Angular `given.render` |
 | `@siheom/qwik` | Qwik `given.render` |
 | `@siheom/react-native` | `given.render` and RN accessibility queries on React Native Testing Library |

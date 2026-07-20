@@ -10,6 +10,7 @@ Install one framework package and run tests in a real browser with vitest browse
 | `@siheom/react` | React `given.render`, pre-bound API |
 | `@siheom/vue` | Vue `given.render` |
 | `@siheom/svelte` | Svelte `given.render` |
+| `@siheom/solid` | Solid `given.render` |
 | `@siheom/angular` | Angular `given.render` |
 | `@siheom/qwik` | Qwik `given.render` |
 | `@siheom/react-native` | `given.render` on top of React Native Testing Library |
@@ -55,5 +56,5 @@ import { actions, assertions, given, query, runSiheom } from "@siheom/react";
 ## Next steps
 
 - [React quick start](/en/getting-started/react) — Browser mode and your first test
-- Quick starts for [Vue](/en/getting-started/vue), [Svelte](/en/getting-started/svelte), [Angular](/en/getting-started/angular), [Qwik](/en/getting-started/qwik), [React Native](/en/getting-started/react-native)
+- Quick starts for [Vue](/en/getting-started/vue), [Svelte](/en/getting-started/svelte), [Solid](/en/getting-started/solid), [Angular](/en/getting-started/angular), [Qwik](/en/getting-started/qwik), [React Native](/en/getting-started/react-native)
 - [Configuration](/en/configuration) — Export surface

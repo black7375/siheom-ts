@@ -10,6 +10,7 @@
 | `@siheom/react` | React `given.render`, pre-bound API |
 | `@siheom/vue` | Vue `given.render` |
 | `@siheom/svelte` | Svelte `given.render` |
+| `@siheom/solid` | Solid `given.render` |
 | `@siheom/angular` | Angular `given.render` |
 | `@siheom/qwik` | Qwik `given.render` |
 | `@siheom/react-native` | React Native Testing Library 기반 `given.render` |
@@ -55,5 +56,5 @@ import { actions, assertions, given, query, runSiheom } from "@siheom/react";
 ## 다음 단계
 
 - [React 빠른 시작](/getting-started/react) — vitest browser mode와 첫 시험
-- [Vue](/getting-started/vue) · [Svelte](/getting-started/svelte) · [Angular](/getting-started/angular) · [Qwik](/getting-started/qwik) · [React Native](/getting-started/react-native) 빠른 시작
+- [Vue](/getting-started/vue) · [Svelte](/getting-started/svelte) · [Solid](/getting-started/solid) · [Angular](/getting-started/angular) · [Qwik](/getting-started/qwik) · [React Native](/getting-started/react-native) 빠른 시작
 - [설정과 API](/configuration) — export 목록
