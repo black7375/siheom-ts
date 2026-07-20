@@ -1,8 +1,4 @@
-import {
-  createRunSiheom,
-  effect,
-  withFakeTimers,
-} from "@siheom/core";
+import { createRunSiheom, effect, withFakeTimers } from "@siheom/core";
 import { actions, defaultBrowserActions } from "./action.ts";
 import { assertions, defaultBrowserAssertions } from "./assert.ts";
 import { defaultGivens, given } from "./given.ts";

@@ -12,10 +12,15 @@ function hasUserEventKeys(text: string): boolean {
   return /[{][^}]+[}]/.test(text);
 }
 
-export function createBrowserActions(options: BrowserActionsOptions = {}): ActionStepDefinitionDict {
+export function createBrowserActions(
+  options: BrowserActionsOptions = {},
+): ActionStepDefinitionDict {
   const resolveElement = options.resolveElement ?? "waitFor";
 
-  async function withPresentLocator(target: Locator, run: (locator: ReturnType<typeof toBrowserLocator>) => Promise<void>) {
+  async function withPresentLocator(
+    target: Locator,
+    run: (locator: ReturnType<typeof toBrowserLocator>) => Promise<void>,
+  ) {
     const locator = toBrowserLocator(target);
 
     if (resolveElement === "sync") {
@@ -64,9 +69,11 @@ export function createBrowserActions(options: BrowserActionsOptions = {}): Actio
         return;
       }
 
-      await expect.poll(() => {
-        expect(getElementFromLocator(target, true)).toHaveFocus();
-      }).toBeUndefined();
+      await expect
+        .poll(() => {
+          expect(getElementFromLocator(target, true)).toHaveFocus();
+        })
+        .toBeUndefined();
       await userEvent.tab();
       await new Promise((resolve) => setTimeout(resolve, 300));
     },

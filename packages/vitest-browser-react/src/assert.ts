@@ -3,7 +3,11 @@ import { getA11ySnapshot } from "../../core/src/getA11ySnapshot.ts";
 import { locatorLog } from "../../core/src/query.ts";
 import { tableToMarkdown } from "../../core/src/tableToMarkdown.ts";
 import { expect } from "vitest";
-import { getElementFromLocator, getElementsFromLocator, toBrowserLocator } from "./browserLocator.ts";
+import {
+  getElementFromLocator,
+  getElementsFromLocator,
+  toBrowserLocator,
+} from "./browserLocator.ts";
 
 type BrowserAssertionsOptions = {
   resolveElement?: "sync" | "waitFor";
@@ -76,7 +80,8 @@ export function createBrowserAssertions(options: BrowserAssertionsOptions = {}) 
     visible: async (target: Locator, expected: boolean) => {
       await waitUntil(async () => {
         const browserLocator = toBrowserLocator(target);
-        const element = resolveElement === "sync" ? browserLocator.element() : browserLocator.query();
+        const element =
+          resolveElement === "sync" ? browserLocator.element() : browserLocator.query();
 
         if (expected) {
           const resolved = element ?? browserLocator.element();
