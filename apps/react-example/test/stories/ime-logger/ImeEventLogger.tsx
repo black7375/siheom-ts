@@ -5,7 +5,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 
 import { LOGGED_EVENT_TYPES, readEditableValue } from "./recordInputEvents";
-import { CAPTURE_SCENARIOS, type CaptureScenario } from "./scenarios";
+import { CAPTURE_SCENARIOS, getCaptureScenario, type CaptureScenario } from "./scenarios";
 import {
   buildImeTrace,
   formatImeTraceJson,
@@ -14,20 +14,19 @@ import {
   type ImeEventRecord,
 } from "./serializeImeEvent";
 
+const DEFAULT_SCENARIO = CAPTURE_SCENARIOS[0] as CaptureScenario;
+
 export function ImeEventLogger() {
   const [os, setOs] = useState("linux");
   const [browser, setBrowser] = useState("chrome");
   const [ime, setIme] = useState("ibus-hangul");
-  const [scenarioId, setScenarioId] = useState(CAPTURE_SCENARIOS[0].id);
+  const [scenarioId, setScenarioId] = useState(DEFAULT_SCENARIO.id);
   const [events, setEvents] = useState<ImeEventRecord[]>([]);
   const [fieldValue, setFieldValue] = useState("");
   const [status, setStatus] = useState("");
   const inputRef = useRef<HTMLInputElement>(null);
 
-  const scenario = useMemo(
-    () => CAPTURE_SCENARIOS.find((item) => item.id === scenarioId) ?? CAPTURE_SCENARIOS[0],
-    [scenarioId],
-  );
+  const scenario = getCaptureScenario(scenarioId) ?? DEFAULT_SCENARIO;
 
   const profileId = useMemo(() => profileIdFromMeta(os, browser, ime), [os, browser, ime]);
 
