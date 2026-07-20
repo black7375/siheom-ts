@@ -4,6 +4,8 @@ import {
   clearImeSession,
   commitBetweenPreeditSteps,
   dispatch,
+  hangulKeydownFields,
+  hangulKeyupFields,
   keyForJamo,
   pushCompositionStart,
   pushKeydown,
@@ -14,6 +16,7 @@ import {
   type ComposedEventRecord,
 } from "../_internal";
 import { consumeImeControlledWriteback } from "../markImeControlledWriteback";
+import { resolveProfile, type ImeProfile } from "../profiles";
 
 export type { ComposedEventRecord } from "../_internal";
 
@@ -33,6 +36,8 @@ export type ComposeHangulOptions = {
    * *without* compositionend — matching Linux delayed-update OS captures.
    */
   deferredUpdateRace?: boolean;
+  /** OS IME profile (defaults to linux-chrome-ibus-hangul). */
+  profile?: string | ImeProfile;
 };
 
 async function flushMicrotasks() {
@@ -78,9 +83,10 @@ async function playRemainingIsolated(
   records: ComposedEventRecord[],
   settle: "microtask" | "macrotask",
   commit: boolean,
+  profile: ImeProfile,
 ) {
   for (const jamo of remaining) {
-    await playIsolatedJamo(element, jamo, suffix, records, settle, { commit });
+    await playIsolatedJamo(element, jamo, suffix, records, settle, { commit }, profile);
   }
 }
 
@@ -92,16 +98,16 @@ async function playIsolatedJamo(
   records: ComposedEventRecord[],
   settle: "microtask" | "macrotask",
   options: { commit: boolean },
+  profile: ImeProfile,
 ) {
   const meta = keyForJamo(jamo);
+  const stroke = { jamo, code: meta.code, key: meta.key };
   const committed = element.value.slice(0, element.value.length - suffix.length);
   const value = committed + jamo + suffix;
   const caret = committed.length + jamo.length;
 
   pushKeydown(element, records, {
-    key: "Process",
-    code: meta.code,
-    keyCode: 229,
+    ...hangulKeydownFields(profile, stroke),
     isComposing: false,
   });
 
@@ -124,10 +130,7 @@ async function playIsolatedJamo(
   }
 
   pushKeyup(element, records, {
-    key: meta.key,
-    code: meta.code,
-    keyCode: meta.key.charCodeAt(0),
-    isComposing: false,
+    ...hangulKeyupFields(profile, stroke, false),
   });
 }
 
@@ -139,13 +142,12 @@ async function playStrokeRespectingBlur(
   blurred: { current: boolean },
   settle: "microtask" | "macrotask",
   deferredUpdateRace: boolean,
+  profile: ImeProfile,
 ): Promise<StrokeAbort> {
   const carets = stroke.valuesAfterSteps.map((value) => value.length - suffix.length);
 
   pushKeydown(element, records, {
-    key: "Process",
-    code: stroke.code,
-    keyCode: 229,
+    ...hangulKeydownFields(profile, stroke),
     isComposing: stroke.keydownIsComposing,
   });
 
@@ -169,10 +171,7 @@ async function playStrokeRespectingBlur(
     if (writeback || clobbered) {
       clearImeSession(element);
       pushKeyup(element, records, {
-        key: stroke.key,
-        code: stroke.code,
-        keyCode: stroke.key.charCodeAt(0),
-        isComposing: false,
+        ...hangulKeyupFields(profile, stroke, false),
       });
       return "aborted-deferred";
     }
@@ -181,10 +180,7 @@ async function playStrokeRespectingBlur(
       blurred.current = false;
       endComposition(element, preedit, records);
       pushKeyup(element, records, {
-        key: stroke.key,
-        code: stroke.code,
-        keyCode: stroke.key.charCodeAt(0),
-        isComposing: false,
+        ...hangulKeyupFields(profile, stroke, false),
       });
       return "aborted-blur";
     }
@@ -193,10 +189,7 @@ async function playStrokeRespectingBlur(
   }
 
   pushKeyup(element, records, {
-    key: stroke.key,
-    code: stroke.code,
-    keyCode: stroke.key.charCodeAt(0),
-    isComposing: true,
+    ...hangulKeyupFields(profile, stroke, true),
   });
   return "ok";
 }
@@ -212,7 +205,9 @@ export async function composeHangul(
   text: string,
   options: ComposeHangulOptions = {},
 ): Promise<ComposedEventRecord[]> {
-  const { commitFinal = true, settle = "microtask", deferredUpdateRace = false } = options;
+  const { commitFinal = true, settle = "microtask", deferredUpdateRace = false, profile: profileOpt } =
+    options;
+  const profile = resolveProfile(profileOpt);
   const selectionStart = element.selectionStart ?? element.value.length;
   const selectionEnd = element.selectionEnd ?? element.value.length;
   const prefix = element.value.slice(0, selectionStart);
@@ -241,6 +236,7 @@ export async function composeHangul(
         blurred,
         settle,
         deferredUpdateRace,
+        profile,
       );
 
       if (result === "aborted-blur" || result === "aborted-deferred") {
@@ -252,6 +248,7 @@ export async function composeHangul(
           records,
           settle,
           result === "aborted-blur",
+          profile,
         );
         return records;
       }

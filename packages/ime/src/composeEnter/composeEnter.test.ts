@@ -5,6 +5,7 @@ import { composeEnter } from "./composeEnter";
 import { composeHangul, type ComposedEventRecord } from "../composeHangul";
 import { toCriticalEvents } from "../toCriticalEvents";
 import { resolveProfile } from "../profiles";
+import macosEnterGolden from "../../fixtures/macos-chrome-apple/broken-김-enter.json";
 
 async function withRecordedInput(
   run: (input: HTMLInputElement, recorder: ReturnType<typeof attachImeRecorder>) => Promise<void>,
@@ -100,6 +101,17 @@ describe("composeEnter during composition", () => {
       expect(k229).toBeGreaterThan(-1);
       expect(endIndex).toBeGreaterThan(k229);
       expect(enterIndex).toBeGreaterThan(endIndex);
+    });
+  });
+
+  it("chromium-apple (macos-chrome-apple): Enter 229 then confirm then duplicate Enter", async () => {
+    await withRecordedInput(async (input, recorder) => {
+      await composeHangul(input, "김", { commitFinal: false, profile: "macos-chrome-apple" });
+      await composeEnter(input, resolveProfile("macos-chrome-apple"));
+
+      expect(toCriticalEvents(recorder.events)).toEqual(
+        toCriticalEvents(macosEnterGolden.events),
+      );
     });
   });
 });

@@ -84,6 +84,34 @@ export async function composeEnter(
       });
       break;
     }
+    case "chromium-apple": {
+      pushKeydown(element, records, {
+        key: "Enter",
+        code: "Enter",
+        keyCode: 229,
+        isComposing: true,
+      });
+      confirmAndEndComposition(element, records);
+      pushKeyup(element, records, {
+        key: "Enter",
+        code: "Enter",
+        keyCode: 13,
+        isComposing: false,
+      });
+      pushKeydown(element, records, {
+        key: "Enter",
+        code: "Enter",
+        keyCode: 13,
+        isComposing: false,
+      });
+      pushKeyup(element, records, {
+        key: "Enter",
+        code: "Enter",
+        keyCode: 13,
+        isComposing: false,
+      });
+      break;
+    }
   }
 
   return records;

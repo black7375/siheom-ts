@@ -22,9 +22,17 @@ describe("IME profiles", () => {
     registerProfile({
       id: "test-custom-ime",
       enterDuringComposition: "chromium-duplicate",
+      hangulKeyEventKey: "process",
     });
     expect(resolveProfile("test-custom-ime").enterDuringComposition).toBe("chromium-duplicate");
     expect(getRegisteredProfileIds()).toContain("test-custom-ime");
+  });
+
+  it("resolves macos-chrome-apple with chromium-apple Enter and jamo keydown keys", () => {
+    expect(resolveProfile("macos-chrome-apple")).toMatchObject({
+      enterDuringComposition: "chromium-apple",
+      hangulKeyEventKey: "jamo",
+    });
   });
 
   it("throws for unknown profile ids", () => {

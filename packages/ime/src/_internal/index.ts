@@ -1,6 +1,7 @@
 export type { ComposedEventRecord } from "./types";
 export { clearImeSession, getImeSession, setImeSession, type ImeComposeSession } from "./session";
 export { keyForJamo } from "./jamoKeyMap";
+export { hangulKeydownFields, hangulKeyupFields } from "./hangulKeyEvent";
 export {
   dispatch,
   pushCompositionStart,

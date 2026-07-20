@@ -2,6 +2,7 @@ import { describe, expect, it } from "vitest";
 
 import { composeHangul } from "./composeHangul";
 import golden from "../../fixtures/linux-chrome-ibus-hangul/continuous-hangul.json";
+import macosGolden from "../../fixtures/macos-chrome-apple/continuous-hangul.json";
 import { goldenCritical } from "../goldenCritical";
 import { toCriticalEvents } from "../toCriticalEvents";
 import { planHangulKeystrokes } from "../planHangulKeystrokes";
@@ -58,6 +59,17 @@ describe("composeHangul", () => {
     const events = await composeHangul(input, "김태희");
     expect(input.value).toBe("김태희");
     expect(toCriticalEvents(events)).toEqual(goldenCritical(golden.events));
+
+    input.remove();
+  });
+
+  it("matches macos-chrome-apple continuous-hangul critical fields for 김태희", async () => {
+    const input = document.createElement("input");
+    document.body.append(input);
+
+    const events = await composeHangul(input, "김태희", { profile: "macos-chrome-apple" });
+    expect(input.value).toBe("김태희");
+    expect(toCriticalEvents(events)).toEqual(goldenCritical(macosGolden.events));
 
     input.remove();
   });

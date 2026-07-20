@@ -3,12 +3,18 @@ export type EnterDuringCompositionFacet =
   | "chromium"
   /** compositionend first → Enter with isComposing: false (Safari submit bug class) */
   | "webkit"
-  /** keydown 229 → compositionend → keydown Enter (13) */
-  | "chromium-duplicate";
+  /** keydown Process 229 → compositionend → keydown Enter (13) — Windows MS IME */
+  | "chromium-duplicate"
+  /** keydown Enter 229 → confirm update → compositionend → keyup Enter → keydown Enter — macOS Chrome Apple */
+  | "chromium-apple";
+
+/** Hangul keydown/keyup `key` field during composition (OS capture differs). */
+export type HangulKeyEventKey = "process" | "jamo";
 
 export type ImeProfile = {
   id: string;
   enterDuringComposition: EnterDuringCompositionFacet;
+  hangulKeyEventKey: HangulKeyEventKey;
 };
 
 export const DEFAULT_IME_PROFILE_ID = "linux-chrome-ibus-hangul";
@@ -48,19 +54,28 @@ function registerBuiltins() {
   registerProfile({
     id: "linux-chrome-ibus-hangul",
     enterDuringComposition: "webkit",
+    hangulKeyEventKey: "process",
   });
   registerProfile({
     id: "macos-safari",
     enterDuringComposition: "webkit",
+    hangulKeyEventKey: "process",
+  });
+  registerProfile({
+    id: "macos-chrome-apple",
+    enterDuringComposition: "chromium-apple",
+    hangulKeyEventKey: "jamo",
   });
   registerProfile({
     id: "windows-chrome-ms",
     enterDuringComposition: "chromium-duplicate",
+    hangulKeyEventKey: "process",
   });
   // Classic Chromium-order Enter confirm (229 first) — keep for matrix / other IMEs
   registerProfile({
     id: "chromium-enter-229",
     enterDuringComposition: "chromium",
+    hangulKeyEventKey: "process",
   });
 }
 

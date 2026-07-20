@@ -86,6 +86,7 @@ async function typeImeText(
       const leaveOpen = next?.kind === "keys" && /\{(Backspace|ArrowLeft|Enter)\}/i.test(next.text);
       await composeHangul(element, segment.text, {
         commitFinal: !leaveOpen,
+        profile,
         ...composeOptions,
       });
     } else {

@@ -5,7 +5,7 @@ import { SearchField } from "./SearchField";
 import { runWithImeSiheom } from "../shared/runWithImeSiheom";
 
 describe("SearchField + createImeActions (Enter during composition)", () => {
-  it.each(["macos-safari", "linux-chrome-ibus-hangul"] as const)(
+  it.each(["macos-safari", "macos-chrome-apple", "linux-chrome-ibus-hangul"] as const)(
     "%s + broken: 김{Enter} 확정 키가 submit된다",
     async (profile) => {
       const { runSiheom, actions, assertions, given } = runWithImeSiheom({ profile });
@@ -20,7 +20,7 @@ describe("SearchField + createImeActions (Enter during composition)", () => {
     },
   );
 
-  it.each(["macos-safari", "linux-chrome-ibus-hangul"] as const)(
+  it.each(["macos-safari", "macos-chrome-apple", "linux-chrome-ibus-hangul"] as const)(
     "%s + fixed: 김{Enter} 확정 키는 submit되지 않는다",
     async (profile) => {
       const { runSiheom, actions, assertions, given } = runWithImeSiheom({ profile });
