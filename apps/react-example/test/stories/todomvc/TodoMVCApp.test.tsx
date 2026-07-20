@@ -39,4 +39,13 @@ describe("TodoMVCApp", () => {
       assertions.visible(query.region("todo footer")),
     );
   });
+
+  it("공백만 입력하면 할 일이 생기지 않는다", async () => {
+    await runSiheom(
+      setup([]),
+      actions.fill(query.textbox("What needs to be done?"), "   {Enter}"),
+      assertions.not.visible(query.region("todo list")),
+      assertions.not.visible(query.region("todo footer")),
+    );
+  });
 });

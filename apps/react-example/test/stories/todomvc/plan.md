@@ -5,7 +5,7 @@ Spec: [TodoMVC app-spec](https://raw.githubusercontent.com/tastejs/todomvc/refs/
 - [x] no todos — todo list region and footer region are hidden
 - [x] new todo — input is focused on load
 - [x] new todo — Enter creates a todo and clears the input
-- [ ] new todo — trimmed empty input does not create a todo
+- [x] new todo — trimmed empty input does not create a todo
 - [ ] item — checkbox marks todo complete
 - [ ] mark all — toggles every todo to the checkbox state
 - [ ] mark all — checkbox reflects when all items are checked individually
