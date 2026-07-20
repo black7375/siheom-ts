@@ -58,7 +58,7 @@ Realistic scenarios for Siheom + shadcn/ui. One user story per folder; TDD via t
 
 - [x] save-feedback — Sonner toast
 - [x] mobile-filter — Sheet
-- [ ] billing-alert — Alert
+- [x] billing-alert — Alert
 
 ## Phase 6 — Forms & upload
 
