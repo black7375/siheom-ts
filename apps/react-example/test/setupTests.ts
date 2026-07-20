@@ -1,4 +1,3 @@
-import "@siheom/react/configure-testing-library";
 import "@testing-library/jest-dom/vitest";
 import { afterEach } from "vitest";
 import { cleanupReactRoots } from "@siheom/react";

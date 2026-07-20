@@ -15,7 +15,7 @@ export const vitestBrowserDefine = {
 export const vitestBrowserMode = {
   browser: {
     enabled: true,
-    headless: true,
+    headless: false,
     provider: playwright({
       contextOptions: {
         timezoneId: "Asia/Seoul",

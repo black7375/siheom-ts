@@ -1,5 +1,5 @@
 import "@testing-library/jest-dom/vitest";
-import { describe, expect, it } from "vitest";
+import { describe, it } from "vitest";
 import { defaultAssertions } from "./assert.ts";
 import { query } from "./query.ts";
 

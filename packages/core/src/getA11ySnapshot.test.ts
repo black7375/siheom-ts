@@ -3,16 +3,13 @@ import { getA11ySnapshot, getA11yTree } from "./getA11ySnapshot.ts";
 import { a11yFixtures, type A11yFixtureName } from "./a11y/a11yFixtures.ts";
 
 describe("getA11ySnapshot", () => {
-  it.each(Object.keys(a11yFixtures) as A11yFixtureName[])(
-    "fixture: %s",
-    async (name) => {
-      document.body.innerHTML = a11yFixtures[name];
+  it.each(Object.keys(a11yFixtures) as A11yFixtureName[])("fixture: %s", async (name) => {
+    document.body.innerHTML = a11yFixtures[name];
 
-      await expect(getA11ySnapshot(document.body)).toMatchFileSnapshot(
-        `__snapshots__/a11y-${name}.snap`,
-      );
-    },
-  );
+    await expect(getA11ySnapshot(document.body)).toMatchFileSnapshot(
+      `__snapshots__/a11y-${name}.snap`,
+    );
+  });
 
   it("escapes quotes and newlines in accessible names", async () => {
     document.body.innerHTML = `<button type="button" aria-label='Say "hi"\nnow'>x</button>`;

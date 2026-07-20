@@ -19,12 +19,6 @@
         "types": "./dist/index.d.cts",
         "default": "./dist/index.cjs"
       }
-    },
-    "./configure-testing-library": {
-      "import": {
-        "types": "./dist/configureTestingLibrary.d.mts",
-        "default": "./dist/configureTestingLibrary.mjs"
-      }
     }
   },
   "scripts": {
