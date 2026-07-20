@@ -3,3 +3,7 @@ export { planHangulKeystrokes } from "./hangulPlan";
 export type { HangulKeyStroke } from "./hangulPlan";
 export { composeHangul, toCriticalEvents } from "./composeHangul";
 export type { ComposedEventRecord, ComposeHangulOptions } from "./composeHangul";
+export { segmentTypeText } from "./segmentTypeText";
+export type { TypeSegment } from "./segmentTypeText";
+export { createImeActions } from "./createImeActions";
+export type { CreateImeActionsOptions } from "./createImeActions";
