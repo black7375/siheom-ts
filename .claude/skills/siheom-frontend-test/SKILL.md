@@ -43,19 +43,35 @@ Use `plan.md` beside the feature (create it from the spec if missing). Each `- [
 | Whole feature implemented, then tests | Skips Red; types/API drift; false green | Trim to test coverage; one plan item per cycle |
 | `typeof FIXTURE as const` as param type | Types driven by data, not tests | `Todo[]`, explicit types from domain |
 | Subset `it` ("enter edit mode" + "save on Enter") | Duplicates setup; second test restates middle step | One `it` per outcome; chain setup inside if needed |
-| `assertions.checked` on React `<Checkbox>` | Asserts HTML attribute; React sets property | `a11ySnapshot` or assert visible outcome (counter, list text) |
 | `<footer aria-label>` for `query.region` | Implicit `contentinfo`, not `region` | `<section aria-label="…">` |
 | CSS hides control (e.g. TodoMVC `.destroy`) | `query.button` never resolves | Keep control in a11y tree in tests, or `hover` + verify snapshot |
 | Multiple plan items / commits in one burst | No verifiable Red→Green per step | One item, one commit, then stop |
+| Assertion fails (e.g. `checked`, `focused`) | Runner or component bug | Fix root cause in `@siheom/core` or a11y on the component — do not swap to a weaker assertion |
+
+## Project scripts (package-manager agnostic)
+
+Do **not** assume Bun, npm, or fixed script names. Read the app’s `package.json` (or monorepo root + package filter) first.
+
+| Goal | Find a script like | If missing, ask the user to add |
+| ---- | ------------------ | ------------------------------- |
+| Tests | `test`, `vitest`, `test:run`, `unit` | Vitest (or their runner) wired to Siheom specs |
+| Typecheck | `typecheck`, `tsc`, `check:types` | `tsc --noEmit`, `tsgo --noEmit`, etc. |
+| Lint | `lint`, `oxlint` | [oxlint](https://oxc.rs/docs/guide/usage/linter.html) or ESLint |
+| Format | `format`, `fmt`, `oxfmt` | [oxfmt](https://oxc.rs/docs/guide/usage/formatter.html) or Prettier |
+
+Run with the user’s package manager (`npm run`, `pnpm`, `yarn`, `bun run`, …). Filter one file when supported, e.g. `npm run test -- TodoMVC`.
+
+**This repo (siheom-ts):** from root — `bun run test`, `bun run typecheck`, `bun run lint`; filter with `bun run --filter '@siheom/react-example' test`.
 
 ## Gate before commit
 
 Do not commit unless all are true:
 
-1. `bun run test` (package or repo) — all pass
-2. `bun run typecheck` — clean
-3. Exactly one plan item (or one structural refactor) in the diff
-4. Commit message says `structural` or `behavioral` / `feat` / `test` / `refactor` clearly
+1. **Test script** for the package — all pass
+2. **Typecheck script** (if present) — clean
+3. **Lint / format** (if present in CI or pre-commit) — clean
+4. Exactly one plan item (or one structural refactor) in the diff
+5. Commit message says `structural` or `behavioral` / `feat` / `test` / `refactor` clearly
 
 ## Workflow (Siheom, inside Green/Red)
 
@@ -63,7 +79,7 @@ Do not commit unless all are true:
 2. **Check accessible names** — every `query.*("…")` string must match a real accessible name on the component. If missing, fix the component (`<Label htmlFor>`, `aria-label`, `aria-labelledby`, landmark `aria-label`) before writing the test. Never query by placeholder, `data-testid`, or class.
 3. **Add fixture + setup** when state or provider, etc... setup repeats. **setup** is a plain function returning `given.render(…)`, not a custom `given` step.
 4. **Write the runSiheom chain** — `await runSiheom(given…, actions…, assertions…)`. Order: render → act → assert.
-5. **Run** — `bun run test <Filter>` in the app package (e.g. `apps/react-example`).
+5. **Run** — package test script with a filter for the spec file when the runner supports it.
 6. **Prune** — drop tests that only restate another test's middle step, constant re-exports, or implementation details.
 
 **Done when:** the filtered test file passes, every `query` target resolves to a documented accessible name, and plan.md matches reality.
@@ -93,7 +109,7 @@ await runSiheom(
 
 - **given** — only `given.render(element)`. Wrap providers inside the element or in `setup()`.
 - **actions** — user input (`click`, `dblclick`, `hover`, `fill`, `type`, `tab`, `upload`).
-- **assertions** — observable UI state (`visible`, `focused`, `textContent`, `checked`, …). Prefer `assertions.not.`* over negating manually.
+- **assertions** — observable UI state (`visible`, `focused`, `textContent`, `checked`, …). Prefer `assertions.not.`* over negating manually. If an assertion fails, read the Siheom log + a11y snapshot, fix the runner or component, then re-run — do not replace `checked`/`focused` with snapshots unless the spec is the whole tree.
 
 Use `actions.fill(…, "text{Enter}")` for submit; `{Escape}` to cancel. Use `query.within(container, target)` when names collide inside a region.
 
@@ -259,4 +275,3 @@ Before or while writing tests, the UI should expose:
 
 - Repo TDD rules: `AGENTS.md`
 - Action/assertion/query catalog: [API.md](API.md)
-- Example trace: `apps/react-example/test/stories/todomvc/plan.md` + git history
