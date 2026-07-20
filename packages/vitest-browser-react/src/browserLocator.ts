@@ -18,21 +18,24 @@ export function toBrowserLocator(locator: Locator): BrowserLocator {
   return queryFromRoot(root, locator);
 }
 
-export function getElementFromLocator(locator: Locator, sync: boolean): HTMLElement {
+export function getElementFromLocator(locator: Locator, sync: boolean): HTMLElement{
   const browserLocator = toBrowserLocator(locator);
-  return sync ? browserLocator.element() : (browserLocator.query() ?? browserLocator.element());
+  const result = sync ? browserLocator.element() : (browserLocator.query() ?? browserLocator.element());
+  if (result instanceof HTMLElement) {
+    return result;
+  }
+
+  throw new Error("Element not found");
 }
 
 export function getElementsFromLocator(locator: Locator, sync: boolean): HTMLElement[] {
   const browserLocator = toBrowserLocator(locator);
   if (sync) {
-    return browserLocator.elements();
-  }
+    const elements = browserLocator.elements().filter((element): element is HTMLElement => element instanceof HTMLElement);
 
-  const elements = browserLocator.elements();
-  if (elements.length > 0) {
     return elements;
   }
 
-  return [browserLocator.element()];
+  const elements = browserLocator.elements().filter((element): element is HTMLElement => element instanceof HTMLElement);
+  return elements;
 }
