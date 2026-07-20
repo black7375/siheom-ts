@@ -9,6 +9,7 @@
 - Glossary: CONTEXT.md in repo root
 - Timers: /concepts/effects · /en/concepts/effects
 - Countdown example: /examples/countdown · /en/examples/countdown
+- shadcn/ui examples (18 scenarios — Tabs, Dropdown/Context Menu, Command palette, Select/Combobox, Data Table, Calendar, Sheet, Alert, upload+Progress, Input OTP, Sidebar+Breadcrumb, drag-and-drop, Chart, streaming chat): /examples · /en/examples
 - Headless UI guide: /guides/headless-components · /en/guides/headless-components
 
 ## Primary API (@siheom/react)
