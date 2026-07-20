@@ -10,4 +10,5 @@ apps/*/dist
 apps/*/storybook-static
 **/__screenshots__/*
 apps/react-example/.vitest-attachments
+**/.vitest-attachments/
 apps/react-example/coverage

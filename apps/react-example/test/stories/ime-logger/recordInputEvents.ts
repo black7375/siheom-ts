@@ -1,7 +1,4 @@
-import {
-  serializeImeEvent,
-  type ImeEventRecord,
-} from "./serializeImeEvent";
+import { serializeImeEvent, type ImeEventRecord } from "./serializeImeEvent";
 
 export const LOGGED_EVENT_TYPES = [
   "keydown",

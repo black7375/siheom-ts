@@ -139,13 +139,21 @@ export function ImeEventLogger() {
           </ol>
           <p className="mt-3 flex flex-wrap items-center gap-2">
             <span>기대값:</span>
-            <span role="status" aria-label="시나리오 기대값" className="rounded bg-muted px-1.5 py-0.5 font-mono text-xs">
+            <span
+              role="status"
+              aria-label="시나리오 기대값"
+              className="rounded bg-muted px-1.5 py-0.5 font-mono text-xs"
+            >
               {scenario.expectedValue}
             </span>
             {fieldValue ? (
               <>
                 <span>· 현재:</span>
-                <span role="status" aria-label="현재 입력값" className="rounded bg-muted px-1.5 py-0.5 font-mono text-xs">
+                <span
+                  role="status"
+                  aria-label="현재 입력값"
+                  className="rounded bg-muted px-1.5 py-0.5 font-mono text-xs"
+                >
                   {fieldValue}
                   {valueMatches ? " ✓" : ""}
                 </span>
@@ -212,7 +220,12 @@ export function ImeEventLogger() {
         <Button type="button" onClick={handleCopy} disabled={events.length === 0}>
           JSON 복사
         </Button>
-        <Button type="button" variant="outline" onClick={handleDownload} disabled={events.length === 0}>
+        <Button
+          type="button"
+          variant="outline"
+          onClick={handleDownload}
+          disabled={events.length === 0}
+        >
           JSON 다운로드
         </Button>
         <Button type="button" variant="ghost" onClick={handleClear}>

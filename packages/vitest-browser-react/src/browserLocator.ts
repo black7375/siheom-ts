@@ -18,9 +18,11 @@ export function toBrowserLocator(locator: Locator): BrowserLocator {
   return queryFromRoot(root, locator);
 }
 
-export function getElementFromLocator(locator: Locator, sync: boolean): HTMLElement{
+export function getElementFromLocator(locator: Locator, sync: boolean): HTMLElement {
   const browserLocator = toBrowserLocator(locator);
-  const result = sync ? browserLocator.element() : (browserLocator.query() ?? browserLocator.element());
+  const result = sync
+    ? browserLocator.element()
+    : (browserLocator.query() ?? browserLocator.element());
   if (result instanceof HTMLElement) {
     return result;
   }
@@ -31,11 +33,15 @@ export function getElementFromLocator(locator: Locator, sync: boolean): HTMLElem
 export function getElementsFromLocator(locator: Locator, sync: boolean): HTMLElement[] {
   const browserLocator = toBrowserLocator(locator);
   if (sync) {
-    const elements = browserLocator.elements().filter((element): element is HTMLElement => element instanceof HTMLElement);
+    const elements = browserLocator
+      .elements()
+      .filter((element): element is HTMLElement => element instanceof HTMLElement);
 
     return elements;
   }
 
-  const elements = browserLocator.elements().filter((element): element is HTMLElement => element instanceof HTMLElement);
+  const elements = browserLocator
+    .elements()
+    .filter((element): element is HTMLElement => element instanceof HTMLElement);
   return elements;
 }

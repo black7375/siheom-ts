@@ -37,9 +37,7 @@ export function serializeImeEvent(event: Event, value: string): ImeEventRecord {
 
   const isKeyboard = "key" in event && typeof keyboard.key === "string";
   const isInputLike =
-    event.type === "beforeinput" ||
-    event.type === "input" ||
-    event.type.startsWith("composition");
+    event.type === "beforeinput" || event.type === "input" || event.type.startsWith("composition");
 
   return {
     type: event.type,
@@ -49,9 +47,9 @@ export function serializeImeEvent(event: Event, value: string): ImeEventRecord {
     isComposing: "isComposing" in event ? Boolean(keyboard.isComposing) : null,
     inputType: isInputLike && "inputType" in input ? (input.inputType ?? null) : null,
     data: isInputLike
-      ? ("data" in input
-          ? (input.data ?? composition.data ?? null)
-          : (composition.data ?? null))
+      ? "data" in input
+        ? (input.data ?? composition.data ?? null)
+        : (composition.data ?? null)
       : null,
     value,
   };

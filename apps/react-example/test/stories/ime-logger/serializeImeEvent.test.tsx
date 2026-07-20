@@ -48,10 +48,7 @@ describe("serializeImeEvent", () => {
 describe("buildImeTrace", () => {
   it("wraps events with profile metadata and derived profileId", () => {
     const events = [
-      serializeImeEvent(
-        new KeyboardEvent("keydown", { key: "a", code: "KeyA" }),
-        "a",
-      ),
+      serializeImeEvent(new KeyboardEvent("keydown", { key: "a", code: "KeyA" }), "a"),
     ];
 
     const trace = buildImeTrace({
