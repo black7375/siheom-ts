@@ -21,7 +21,9 @@ describe("MeetingBookingForm", () => {
     await runSiheom(
       setup(),
       actions.click(query.button("미팅 날짜")),
-      actions.click(query.within(query.region("미팅 날짜 달력"), query.button(FORMATTED_MEETING_DATE))),
+      actions.click(
+        query.within(query.region("미팅 날짜 달력"), query.button(FORMATTED_MEETING_DATE)),
+      ),
       assertions.textContent(query.button("미팅 날짜"), FORMATTED_MEETING_DATE),
       actions.click(query.button("예약하기")),
       assertions.textContent(query.status("예약 결과"), `${FORMATTED_MEETING_DATE} 미팅 예약됨`),

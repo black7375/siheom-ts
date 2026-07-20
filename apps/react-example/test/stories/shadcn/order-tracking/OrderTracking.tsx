@@ -28,9 +28,7 @@ export function OrderTracking() {
               aria-current={step.state === "current" ? "step" : undefined}
             >
               <Card
-                className={
-                  step.state === "current" ? "border-primary font-semibold" : undefined
-                }
+                className={step.state === "current" ? "border-primary font-semibold" : undefined}
               >
                 <CardHeader>
                   <CardTitle>{step.title}</CardTitle>

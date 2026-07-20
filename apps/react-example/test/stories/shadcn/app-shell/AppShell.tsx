@@ -89,11 +89,7 @@ function AppShellContent() {
   );
 }
 
-export function AppShell({
-  initialEntries = ["/"],
-}: {
-  initialEntries?: string[];
-}) {
+export function AppShell({ initialEntries = ["/"] }: { initialEntries?: string[] }) {
   return (
     <MemoryRouter initialEntries={initialEntries}>
       <SidebarProvider>

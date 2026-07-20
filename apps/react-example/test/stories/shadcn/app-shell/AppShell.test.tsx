@@ -14,10 +14,7 @@ describe("AppShell", () => {
       ),
       actions.click(query.within(query.navigation("앱 메뉴"), query.link("설정"))),
       assertions.visible(query.region("설정")),
-      assertions.current(
-        query.within(query.navigation("breadcrumb"), query.link("설정")),
-        "page",
-      ),
+      assertions.current(query.within(query.navigation("breadcrumb"), query.link("설정")), "page"),
       assertions.not.visible(query.region("대시보드")),
     );
   });

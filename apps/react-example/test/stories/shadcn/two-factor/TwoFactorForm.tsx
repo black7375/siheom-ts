@@ -20,12 +20,7 @@ export function TwoFactorForm() {
           }
         }}
       >
-        <InputOTP
-          maxLength={6}
-          value={code}
-          onChange={setCode}
-          aria-label="인증 코드"
-        >
+        <InputOTP maxLength={6} value={code} onChange={setCode} aria-label="인증 코드">
           <InputOTPGroup>
             <InputOTPSlot index={0} />
             <InputOTPSlot index={1} />

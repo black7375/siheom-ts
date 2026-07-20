@@ -12,7 +12,6 @@ export function filterNotices(notices: readonly Notice[], query: string): Notice
 
   return notices.filter(
     (notice) =>
-      notice.title.toLowerCase().includes(keyword) ||
-      notice.body.toLowerCase().includes(keyword),
+      notice.title.toLowerCase().includes(keyword) || notice.body.toLowerCase().includes(keyword),
   );
 }

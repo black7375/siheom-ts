@@ -53,10 +53,7 @@ export function MeetingBookingForm() {
                 defaultMonth={BOOKING_DEFAULT_MONTH}
                 components={{
                   DayButton: (props) => (
-                    <CalendarDayButton
-                      {...props}
-                      aria-label={formatMeetingDate(props.day.date)}
-                    />
+                    <CalendarDayButton {...props} aria-label={formatMeetingDate(props.day.date)} />
                   ),
                 }}
               />

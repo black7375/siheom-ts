@@ -70,9 +70,7 @@ export function ProfileAvatar() {
         />
       </div>
 
-      {uploading ? (
-        <Progress value={progress} aria-label="업로드 진행" />
-      ) : null}
+      {uploading ? <Progress value={progress} aria-label="업로드 진행" /> : null}
     </section>
   );
 }

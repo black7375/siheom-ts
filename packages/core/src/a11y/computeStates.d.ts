@@ -1,0 +1,14 @@
+import type { A11yStates } from "./types.ts";
+export declare function computeAriaHidden(el: Element, isVerbose?: boolean): boolean | null | undefined;
+export declare function computeAriaDisabled(el: Element, isVerbose?: boolean): boolean | null | undefined;
+export declare function computeAriaModal(el: Element, isVerbose?: boolean): boolean | null | undefined;
+export declare function computeAriaExpanded(el: Element, isVerbose?: boolean): boolean | null | undefined;
+export declare function computeAriaPressed(el: Element, isVerbose?: boolean): boolean | "mixed" | null | undefined;
+export declare function computeAriaChecked(el: Element, isVerbose?: boolean): boolean | "mixed" | null | undefined;
+export declare function computeAriaSelected(el: Element, isVerbose?: boolean): boolean | null | undefined;
+export declare function computeAriaCurrent(el: Element, isVerbose?: boolean): string | boolean | null | undefined;
+export declare function computeAriaInvalid(el: Element, isVerbose?: boolean): boolean | "grammar" | "spelling" | null | undefined;
+export declare function computeAriaRequired(el: Element, isVerbose?: boolean): boolean | null | undefined;
+export declare function computeAriaReadonly(el: Element, isVerbose?: boolean): boolean | null | undefined;
+export declare function computeAriaBusy(el: Element, isVerbose?: boolean): boolean | null | undefined;
+export declare function computeStates(el: Element, role: string, isVerbose?: boolean): A11yStates | undefined;

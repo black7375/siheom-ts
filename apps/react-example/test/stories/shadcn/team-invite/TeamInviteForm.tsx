@@ -27,11 +27,7 @@ import {
   type TeamRole,
 } from "./members.fixture";
 
-export function TeamInviteForm({
-  onInvite,
-}: {
-  onInvite: (invite: TeamInvite) => Promise<void>;
-}) {
+export function TeamInviteForm({ onInvite }: { onInvite: (invite: TeamInvite) => Promise<void> }) {
   const [role, setRole] = useState<TeamRole | "">("");
   const [member, setMember] = useState<TeamMember | null>(null);
   const [status, setStatus] = useState<string | null>(null);
@@ -57,11 +53,7 @@ export function TeamInviteForm({
         <FieldGroup>
           <Field>
             <FieldLabel htmlFor="team-role">역할</FieldLabel>
-            <Select
-              value={role}
-              onValueChange={(value) => setRole(value as TeamRole)}
-              required
-            >
+            <Select value={role} onValueChange={(value) => setRole(value as TeamRole)} required>
               <SelectTrigger id="team-role" className="w-full">
                 <SelectValue placeholder="역할 선택" />
               </SelectTrigger>
