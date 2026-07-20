@@ -74,4 +74,12 @@ describe("TodoMVCApp", () => {
       assertions.a11ySnapshot(query.region("todo list"), "all-completed.snap"),
     );
   });
+
+  it("제목을 더블클릭하면 수정 모드로 들어간다", async () => {
+    await runSiheom(
+      setup([TODO_BUY_MILK]),
+      actions.dblclick(query.label(`${TODO_BUY_MILK.title} title`)),
+      assertions.focused(query.textbox(`Edit ${TODO_BUY_MILK.title}`)),
+    );
+  });
 });

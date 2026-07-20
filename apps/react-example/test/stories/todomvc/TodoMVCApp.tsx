@@ -19,6 +19,7 @@ export function TodoMVCApp({
 
 function TodoMVCContent() {
   const [todos, setTodos] = useState<Todo[]>(() => readTodos());
+  const [editingId, setEditingId] = useState<string | null>(null);
   const hasTodos = todos.length > 0;
 
   return (
@@ -53,22 +54,13 @@ function TodoMVCContent() {
           <label htmlFor="toggle-all">Mark all as complete</label>
           <ul className="todo-list">
             {todos.map((todo) => (
-              <li
+              <TodoItem
                 key={todo.id}
-                aria-label={todo.title}
-                className={todo.completed ? "completed" : undefined}
-              >
-                <input
-                  className="toggle"
-                  type="checkbox"
-                  aria-label={`Mark ${todo.title} as complete`}
-                  checked={todo.completed}
-                  onChange={() => {
-                    setTodos((current) => toggleTodo(current, todo.id));
-                  }}
-                />
-                {todo.title}
-              </li>
+                todo={todo}
+                editing={editingId === todo.id}
+                onToggle={() => setTodos((current) => toggleTodo(current, todo.id))}
+                onStartEdit={() => setEditingId(todo.id)}
+              />
             ))}
           </ul>
         </section>
@@ -78,5 +70,46 @@ function TodoMVCContent() {
         <section className="footer" aria-label="todo footer" />
       ) : null}
     </section>
+  );
+}
+
+function TodoItem({
+  todo,
+  editing,
+  onToggle,
+  onStartEdit,
+}: {
+  todo: Todo;
+  editing: boolean;
+  onToggle: () => void;
+  onStartEdit: () => void;
+}) {
+  return (
+    <li
+      aria-label={todo.title}
+      className={[todo.completed ? "completed" : "", editing ? "editing" : ""]
+        .filter(Boolean)
+        .join(" ") || undefined}
+    >
+      <input
+        className="toggle"
+        type="checkbox"
+        aria-label={`Mark ${todo.title} as complete`}
+        checked={todo.completed}
+        onChange={onToggle}
+      />
+      {editing ? (
+        <input
+          className="edit"
+          aria-label={`Edit ${todo.title}`}
+          defaultValue={todo.title}
+          autoFocus
+        />
+      ) : (
+        <label aria-label={`${todo.title} title`} onDoubleClick={onStartEdit}>
+          {todo.title}
+        </label>
+      )}
+    </li>
   );
 }
