@@ -82,4 +82,14 @@ describe("TodoMVCApp", () => {
       assertions.focused(query.textbox(`Edit ${TODO_BUY_MILK.title}`)),
     );
   });
+
+  it("수정 내용을 Enter로 저장한다", async () => {
+    await runSiheom(
+      setup([TODO_BUY_MILK]),
+      actions.dblclick(query.label(`${TODO_BUY_MILK.title} title`)),
+      actions.fill(query.textbox(`Edit ${TODO_BUY_MILK.title}`), "Buy oat milk{Enter}"),
+      assertions.visible(query.listitem("Buy oat milk")),
+      assertions.not.visible(query.listitem("Buy milk")),
+    );
+  });
 });

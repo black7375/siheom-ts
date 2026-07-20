@@ -10,7 +10,7 @@ Spec: [TodoMVC app-spec](https://raw.githubusercontent.com/tastejs/todomvc/refs/
 - [x] mark all — toggles every todo to the checkbox state
 - [x] mark all — checkbox reflects when all items are checked individually
 - [x] editing — double-click title enters edit mode with focus
-- [ ] editing — Enter and blur save the title
+- [x] editing — Enter and blur save the title
 - [ ] editing — empty title removes the todo
 - [ ] editing — Escape discards changes
 - [ ] item — delete button removes the todo

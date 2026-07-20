@@ -1,6 +1,6 @@
 import { MemoryRouter, Route, Routes } from "react-router-dom";
 import { useState } from "react";
-import { addTodo, allCompleted, toggleAll, toggleTodo, type Todo } from "./todoLogic";
+import { addTodo, allCompleted, toggleAll, toggleTodo, updateTodoTitle, type Todo } from "./todoLogic";
 import { readTodos } from "./todoStorage";
 
 export function TodoMVCApp({
@@ -60,6 +60,10 @@ function TodoMVCContent() {
                 editing={editingId === todo.id}
                 onToggle={() => setTodos((current) => toggleTodo(current, todo.id))}
                 onStartEdit={() => setEditingId(todo.id)}
+                onFinishEdit={(title) => {
+                  setTodos((current) => updateTodoTitle(current, todo.id, title));
+                  setEditingId(null);
+                }}
               />
             ))}
           </ul>
@@ -78,11 +82,13 @@ function TodoItem({
   editing,
   onToggle,
   onStartEdit,
+  onFinishEdit,
 }: {
   todo: Todo;
   editing: boolean;
   onToggle: () => void;
   onStartEdit: () => void;
+  onFinishEdit: (title: string) => void;
 }) {
   return (
     <li
@@ -104,6 +110,12 @@ function TodoItem({
           aria-label={`Edit ${todo.title}`}
           defaultValue={todo.title}
           autoFocus
+          onBlur={(event) => onFinishEdit(event.currentTarget.value)}
+          onKeyDown={(event) => {
+            if (event.key === "Enter") {
+              onFinishEdit(event.currentTarget.value);
+            }
+          }}
         />
       ) : (
         <label aria-label={`${todo.title} title`} onDoubleClick={onStartEdit}>

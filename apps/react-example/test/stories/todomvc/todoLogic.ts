@@ -27,3 +27,9 @@ export function toggleAll(todos: Todo[], completed: boolean): Todo[] {
 export function allCompleted(todos: Todo[]): boolean {
   return todos.length > 0 && todos.every((todo) => todo.completed);
 }
+
+export function updateTodoTitle(todos: Todo[], id: string, title: string): Todo[] {
+  const trimmed = title.trim();
+  if (!trimmed) return todos.filter((todo) => todo.id !== id);
+  return todos.map((todo) => (todo.id === id ? { ...todo, title: trimmed } : todo));
+}
