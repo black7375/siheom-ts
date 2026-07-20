@@ -23,3 +23,8 @@ IME-faithful `fill` / `type` that plug into siheom via `overrideSiheom`, startin
 - [x] `arrow-edit-mid` script matches golden critical fields
 - [x] `registerProfile` / resolve profile id; linux-chrome-ibus-hangul is the default Hangul profile
 - [x] Enter-during-composition facets: webkit (`macos-safari`), chromium (`linux-chrome-ibus-hangul`), chromium-duplicate (`windows-chrome-ms`)
+
+### Phase 4 — Bug fixtures
+
+- [ ] OS capture of focus-steal aborted composition (Storybook `IME/Focus Steal Combobox`) compared to emulator
+- [ ] Enter-submit-during-composition fixture (SearchField) under macos-safari vs chromium profiles
