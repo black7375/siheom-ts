@@ -9,6 +9,7 @@
 - Glossary: CONTEXT.md in repo root
 - Timers: /concepts/effects · /en/concepts/effects
 - Countdown example: /examples/countdown · /en/examples/countdown
+- Headless UI guide: /guides/headless-components · /en/guides/headless-components
 
 ## Primary API (@siheom/react)
 
@@ -59,7 +60,23 @@ return runSiheom(
 
 - `query.*` uses ARIA role + accessible name (same information as screen readers)
 - `query.timer("…")` for `role="timer"`
+- `query.label("…")` resolves the **labeled control**, not the `<label>` element
+- Headless Select: role may be `combobox` → use `query.combobox("…")` (Ark UI), not always `query.label`
 - No CSS selectors, test ids, or xpath
+
+## Headless UI (Radix, React Aria, Ariakit, Ark UI)
+
+Full guide: /guides/headless-components · /en/guides/headless-components
+
+- Read `[A11y Snapshot]` before changing queries — match **role + accessible name**
+- No keyboard workarounds (`{ArrowDown}{Enter}`) or test hacks (`noValidate`, `disableEnforceFocus`)
+- Select open query by library:
+  - React Aria, Radix, Ariakit → `query.label("…")` (label wired to trigger)
+  - Ark UI → `query.combobox("…")` (trigger role is combobox)
+- Headless Select + forms: hidden input / `HiddenSelect` / React Aria `name` — not native FormData alone
+- Ariakit: native `<label htmlFor>`, not `SelectLabel`; checkbox `render={<button />}` on React 19
+- MUI: not recommended (floating labels, dialog+menu aria-hidden, unstable options in browser tests)
+- Reference specs: `apps/react-example/test/stories/headless/`
 
 ## Failure reports
 

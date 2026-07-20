@@ -8,6 +8,7 @@ Counter and SignUpForm in `apps/react-example` are the canonical examples. Each 
 - [SignUpForm](/en/examples/signup-form) — Form validation, `errormessage`, region snapshots
 - [Routing / links](/en/examples/routing) — MemoryRouter, query strings, Link stub, `assertions.href`
 - [Countdown](/en/examples/countdown) — `withFakeTimers`, `effect.elapsed`, `query.timer`
+- [Headless UI (react-example)](/en/guides/headless-components) — Radix / React Aria / Ariakit / Ark UI subscribe dialog specs
 
 Run `bun run storybook` in the repo to inspect UI visually.
 

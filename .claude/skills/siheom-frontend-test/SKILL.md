@@ -3,7 +3,8 @@ name: siheom-frontend-test
 description: >-
   Siheom frontend integration tests with @siheom/react. Self-contained for package
   users (no AGENTS.md required). Use when building or testing React UI, runSiheom
-  specs, accessible-name tests, or feature work with plan.md and Red-Green-Refactor.
+  specs, accessible-name tests, headless UI (Radix, React Aria, Ariakit, Ark UI),
+  or feature work with plan.md and Red-Green-Refactor.
   Discover npm/pnpm/yarn/bun scripts from package.json; ask user to add Vitest, oxlint,
   oxfmt if missing.
 ---
@@ -244,8 +245,11 @@ Before or while writing tests, the UI should expose:
 
 `query.label("…")` resolves the **labeled control**, not the `<label>` element. For double-click on visible text, give the target its own accessible name (e.g. icon only `button` with `aria-label="${title} 제목"`).
 
+Headless UI (Radix, React Aria, Ariakit, Ark UI): Select trigger role varies — React Aria/Radix/Ariakit often use `query.label("…")`; Ark UI uses `query.combobox("…")`. Read `[A11y Snapshot]` before picking queries; no `{ArrowDown}{Enter}` workarounds. Full guide: [HEADLESS.md](HEADLESS.md).
+
 ## Reference
 
 - TDD + Tidy First: [TDD.md](TDD.md)
 - Package manager + scripts + oxlint/oxfmt: [SETUP.md](SETUP.md)
 - Action/assertion/query catalog: [API.md](API.md)
+- Headless UI + Siheom: [HEADLESS.md](HEADLESS.md)

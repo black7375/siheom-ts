@@ -4,7 +4,9 @@ siheom 시험은 스텝 객체와 접근성 스냅샷으로 이루어져, AI 에
 
 ## llms.txt
 
-문서 사이트의 [`/llms.txt`](/llms.txt)에 API 요약, factory, locator, 실패 리포트 형식이 정리되어 있습니다. 에이전트 컨텍스트에 이 URL을 넣거나 파일 내용을 붙여 넣으세요.
+문서 사이트의 [`/llms.txt`](/llms.txt)에 API 요약, factory, locator, **헤드리스 UI 주의사항**, 실패 리포트 형식이 정리되어 있습니다. 에이전트 컨텍스트에 이 URL을 넣거나 파일 내용을 붙여 넣으세요.
+
+헤드리스 UI(Radix, React Aria, Ariakit, Ark UI)로 폼·Select·Dialog를 테스트할 때는 [헤드리스 UI 가이드](/guides/headless-components)와 레포 Skills [`HEADLESS.md`](https://github.com/twinstae/siheom-ts/blob/main/.claude/skills/siheom-frontend-test/HEADLESS.md)를 함께 제공하세요.
 
 레포 루트 [`CONTEXT.md`](https://github.com/twinstae/siheom-ts/blob/main/CONTEXT.md)에는 **시험**, **런타임**, **factory**, **메시지 맵** 등 glossary가 있습니다. siheom 관련 용어는 이 파일과 맞춥니다.
 
@@ -24,6 +26,7 @@ npx skills add twinstae/siheom-ts
 - locator는 `query.<role>(name)`만 사용 (CSS·test id 금지)
 - 타이머 UI는 `withFakeTimers` + `effect.elapsed` + `query.timer` / `textContent` (전역 `vi.useFakeTimers` 금지)
 - 실패 시 `[Logs]` / `[A11y Snapshot]` 섹션을 우선 읽기
+- 헤드리스 UI: snapshot role에 맞는 query (`query.label` vs `query.combobox`); 키보드 우회 금지 — [가이드](/guides/headless-components)
 - 커스텀 조작은 `extendSiheom`으로 레지스트리에 추가
 - `overrideSiheom`으로 render를 감쌀 때 `effects`·`fakeTimerScope`를 base에 유지
 
@@ -37,6 +40,7 @@ npx skills add twinstae/siheom-ts
 
 ## 다음 단계
 
+- [헤드리스 UI 가이드](/guides/headless-components) — Select query, dialog+form, 라이브러리별 주의
 - [접근성 스냅샷](/concepts/a11y-snapshot) — 스냅샷 형식
 - [예제: Countdown](/examples/countdown) — withFakeTimers와 effect.elapsed
 - [예제: SignUpForm](/examples/signup-form) — errormessage와 region 스냅샷

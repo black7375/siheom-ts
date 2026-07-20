@@ -8,6 +8,13 @@ const GETTING_STARTED = {
 	],
 };
 
+const GUIDES = {
+	text: "가이드",
+	items: [
+		{ text: "헤드리스 UI 컴포넌트", link: "/guides/headless-components" },
+	],
+};
+
 const CONCEPTS = {
 	text: "개념",
 	items: [
@@ -49,6 +56,7 @@ const sidebarKo = [
 	{ text: "siheom이란", link: "/intro" },
 	GETTING_STARTED,
 	CONCEPTS,
+	GUIDES,
 	{ text: "비교", link: "/comparisons" },
 	CONFIGURATION,
 	EXAMPLES,
@@ -60,6 +68,13 @@ const GETTING_STARTED_EN = {
 	items: [
 		{ text: "Installation", link: "/en/getting-started/install" },
 		{ text: "React quick start", link: "/en/getting-started/react" },
+	],
+};
+
+const GUIDES_EN = {
+	text: "Guides",
+	items: [
+		{ text: "Headless UI components", link: "/en/guides/headless-components" },
 	],
 };
 
@@ -104,6 +119,7 @@ const sidebarEn = [
 	{ text: "What is siheom?", link: "/en/intro" },
 	GETTING_STARTED_EN,
 	CONCEPTS_EN,
+	GUIDES_EN,
 	{ text: "Comparisons", link: "/en/comparisons" },
 	CONFIGURATION_EN,
 	EXAMPLES_EN,

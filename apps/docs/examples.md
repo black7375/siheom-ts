@@ -8,6 +8,7 @@
 - [SignUpForm](/examples/signup-form) — 폼 검증, `errormessage`, region 스냅샷
 - [라우팅 / 링크](/examples/routing) — MemoryRouter, query string, Link stub, `assertions.href`
 - [Countdown](/examples/countdown) — `withFakeTimers`, `effect.elapsed`, `query.timer`
+- [헤드리스 UI (react-example)](/guides/headless-components) — Radix / React Aria / Ariakit / Ark UI 구독 dialog 시나리오
 
 Storybook으로 UI를 눈으로 확인하려면 레포에서 `bun run storybook`을 실행하세요.
 
