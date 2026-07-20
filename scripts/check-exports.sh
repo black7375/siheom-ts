@@ -12,7 +12,7 @@ shift
 repo_root=$(cd "$(dirname "$0")/.." && pwd)
 cd "$package_dir"
 
-tarball=$(bun pm pack --quiet)
+tarball=$(bun pm pack --quiet | tr -d '\n\r')
 trap 'rm -f "$tarball"' EXIT
 
 exec bunx attw "$tarball" "$@"
