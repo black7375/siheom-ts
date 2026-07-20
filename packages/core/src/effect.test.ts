@@ -1,7 +1,6 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import { overrideSiheom } from "./factory.ts";
-import { createRunSiheom } from "./siheom.ts";
-import { defaultEffects, effect } from "./effect.ts";
+import { extendSiheom, overrideSiheom } from "./factory.ts";
+import { defaultEffects } from "./effect.ts";
 import { withFakeTimers } from "./withFakeTimers.ts";
 
 describe("defaultEffects.elapsed", () => {
@@ -74,22 +73,24 @@ describe("withFakeTimers", () => {
   it("advances timers scheduled inside the scope", async () => {
     const fn = vi.fn();
 
-    const runSiheom = createRunSiheom({
-      actions: {},
-      assertions: {},
-      givens: {
-        scheduleTimeout: async () => {
-          setTimeout(fn, 1_000);
+    const { runSiheom, given, effect: effectBindings } = extendSiheom(
+      {
+        actions: {},
+        assertions: {},
+        givens: {},
+        effects: defaultEffects,
+      },
+      {
+        givens: {
+          scheduleTimeout: async () => {
+            setTimeout(fn, 1_000);
+          },
         },
       },
-      effects: defaultEffects,
-    });
+    );
 
     await runSiheom(
-      withFakeTimers(
-        { given: "scheduleTimeout", log: "scheduleTimeout" },
-        effect.elapsed(1_000),
-      ),
+      withFakeTimers(given.scheduleTimeout(), effectBindings.elapsed(1_000)),
     );
 
     expect(fn).toHaveBeenCalledTimes(1);
