@@ -1,0 +1,8 @@
+"과일"
+combobox: "과일" [value="배"]
+  option: "사과"
+    - states: [selected=false]
+  option: "배"
+    - states: [selected=true]
+  option: "포도"
+    - states: [disabled=true] [selected=false]

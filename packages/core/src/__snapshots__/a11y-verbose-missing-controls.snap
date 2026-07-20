@@ -1,0 +1,5 @@
+generic: ""
+  generic: ""
+    - relations:
+      controls: null
+    button: "열기"

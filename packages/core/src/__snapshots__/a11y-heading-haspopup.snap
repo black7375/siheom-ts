@@ -1,4 +1,0 @@
-heading: "설정"
-  - properties: [level=2]
-button: "메뉴"
-  - properties: [haspopup="menu"]

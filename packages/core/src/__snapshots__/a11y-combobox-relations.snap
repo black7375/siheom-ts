@@ -1,0 +1,13 @@
+"도시"
+combobox: "도시"
+  - states: [expanded=true]
+  - properties: [autocomplete="list"] [haspopup="listbox"]
+  - relations:
+    activedescendant: "서울"
+    controls: "도시 목록"
+  "서울"
+listbox: "도시 목록"
+  option: "서울"
+    - states: [selected=true]
+  option: "부산"
+    - states: [selected=false]

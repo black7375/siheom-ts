@@ -9,7 +9,7 @@ export default defineConfig({
     ...vitestBrowserMode,
     coverage: {
       include: ["src/**/*.ts"],
-      exclude: ["src/**/*.test.ts", "src/**/index.ts"],
+      exclude: ["src/**/*.test.ts", "src/**/index.ts", "src/a11y/*Fixtures.ts"],
     },
   },
 });

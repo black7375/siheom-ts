@@ -1,0 +1,5 @@
+slider: "음량"
+  - properties: [orientation="horizontal"] [valuemax=100] [valuemin=0] [valuenow=40] [valuetext="40퍼센트"]
+progressbar: "업로드"
+  - properties: [valuemax=100] [valuemin=0] [valuenow=75]
+meter: "점수"

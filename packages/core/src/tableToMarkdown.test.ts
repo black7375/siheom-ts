@@ -1,32 +1,17 @@
 import { describe, expect, it } from "vitest";
 import { tableToMarkdown } from "./tableToMarkdown.ts";
+import { tableFixtures, type TableFixtureName } from "./a11y/tableFixtures.ts";
 
 describe("tableToMarkdown", () => {
-  it("renders thead/tbody cells as padded markdown including Korean width", async () => {
-    document.body.innerHTML = `
-      <table>
-        <thead><tr><th>이름</th><th>상태</th></tr></thead>
-        <tbody><tr><td>청소</td><td>완료</td></tr></tbody>
-      </table>
-    `;
+  it.each(Object.keys(tableFixtures) as TableFixtureName[])(
+    "fixture: %s",
+    async (name) => {
+      document.body.innerHTML = tableFixtures[name];
+      const table = document.querySelector("table, [role='table']") as HTMLTableElement;
 
-    await expect(tableToMarkdown(document.querySelector("table")!)).toMatchFileSnapshot(
-      "__snapshots__/table-korean-padded.snap",
-    );
-  });
-
-  it("uses input values inside cells", async () => {
-    document.body.innerHTML = `
-      <table>
-        <thead><tr><th>수량</th></tr></thead>
-        <tbody><tr><td><input value="3" /></td></tr></tbody>
-      </table>
-    `;
-
-    await expect(tableToMarkdown(document.querySelector("table")!)).toMatchFileSnapshot(
-      "__snapshots__/table-input-cell.snap",
-    );
-  });
+      await expect(tableToMarkdown(table)).toMatchFileSnapshot(`__snapshots__/table-${name}.snap`);
+    },
+  );
 
   it("throws when the table has no rows", () => {
     document.body.innerHTML = `<table></table>`;

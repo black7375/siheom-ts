@@ -1,0 +1,10 @@
+dialog: "삭제 확인" [description="이 항목을 삭제할까요?"]
+  - states: [modal=true]
+  - relations:
+    labelledby: "삭제 확인"
+  heading: "삭제 확인"
+    - properties: [level=2]
+  paragraph:
+    "이 항목을 삭제할까요?"
+  button: "취소"
+  button: "삭제"

@@ -1,0 +1,18 @@
+grid: "일정"
+  - properties: [colcount=3] [rowcount=2]
+  rowgroup:
+    row: "날짜 내용"
+      - properties: [rowindex=1]
+      columnheader: "날짜"
+        - properties: [colindex=1] [sort="ascending"]
+      columnheader: "내용"
+        - properties: [colindex=2] [colspan=2]
+  rowgroup:
+    row: "월 회의 오전"
+      - properties: [rowindex=2]
+      gridcell: "월"
+        - properties: [colindex=1]
+      gridcell: "회의"
+        - properties: [colindex=2] [rowspan=1]
+      gridcell: "오전"
+        - properties: [colindex=3]

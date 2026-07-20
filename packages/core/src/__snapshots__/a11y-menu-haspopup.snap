@@ -1,0 +1,12 @@
+button: "열기"
+  - states: [expanded=false]
+  - properties: [haspopup=true]
+button: "메뉴"
+  - states: [expanded=true]
+  - properties: [haspopup="menu"]
+menu: "동작"
+  menuitem: "복사"
+  menuitemcheckbox: "줄바꿈"
+    - states: [checked=true]
+  menuitemradio: "왼쪽"
+    - states: [checked=false]

@@ -1,0 +1,7 @@
+list: "할 일"
+  listitem:
+    - drag-and-drop: [grabbed=true] (deprecated)
+    "드래그 중"
+  listitem:
+    - drag-and-drop: [dropeffect="move"] (deprecated)
+    "놓기 영역"

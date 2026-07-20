@@ -1,37 +1,18 @@
 import { describe, expect, it } from "vitest";
-import { getA11ySnapshot } from "./getA11ySnapshot.ts";
+import { getA11ySnapshot, getA11yTree } from "./getA11ySnapshot.ts";
+import { a11yFixtures, type A11yFixtureName } from "./a11y/a11yFixtures.ts";
 
 describe("getA11ySnapshot", () => {
-  it("serializes a checked checkbox with role and name", async () => {
-    document.body.innerHTML = `<label><input type="checkbox" checked />완료</label>`;
+  it.each(Object.keys(a11yFixtures) as A11yFixtureName[])(
+    "fixture: %s",
+    async (name) => {
+      document.body.innerHTML = a11yFixtures[name];
 
-    await expect(getA11ySnapshot(document.body)).toMatchFileSnapshot(
-      "__snapshots__/a11y-checkbox-checked.snap",
-    );
-  });
-
-  it("serializes heading level and haspopup properties", async () => {
-    document.body.innerHTML = `
-      <h2>설정</h2>
-      <button type="button" aria-haspopup="menu">메뉴</button>
-    `;
-
-    await expect(getA11ySnapshot(document.body)).toMatchFileSnapshot(
-      "__snapshots__/a11y-heading-haspopup.snap",
-    );
-  });
-
-  it("serializes aria-describedby and aria-errormessage relations", async () => {
-    document.body.innerHTML = `
-      <label>이메일<input aria-describedby="hint" aria-errormessage="err" aria-invalid="true" /></label>
-      <div id="hint">힌트</div>
-      <div id="err">오류</div>
-    `;
-
-    await expect(getA11ySnapshot(document.body)).toMatchFileSnapshot(
-      "__snapshots__/a11y-relations.snap",
-    );
-  });
+      await expect(getA11ySnapshot(document.body)).toMatchFileSnapshot(
+        `__snapshots__/a11y-${name}.snap`,
+      );
+    },
+  );
 
   it("escapes quotes and newlines in accessible names", async () => {
     document.body.innerHTML = `<button type="button" aria-label='Say "hi"\nnow'>x</button>`;
@@ -45,5 +26,40 @@ describe("getA11ySnapshot", () => {
     document.body.innerHTML = `<div aria-hidden="true"><button>숨김</button></div>`;
 
     expect(getA11ySnapshot(document.querySelector("div")!)).toBe("");
+  });
+
+  it("verbose mode keeps nullish relation targets and generic wrappers", async () => {
+    document.body.innerHTML = `
+      <div aria-controls="missing-id">
+        <button type="button">열기</button>
+      </div>
+    `;
+
+    await expect(getA11ySnapshot(document.body, { mode: "verbose" })).toMatchFileSnapshot(
+      "__snapshots__/a11y-verbose-missing-controls.snap",
+    );
+  });
+
+  it("includes computeOther fields on matching elements", async () => {
+    document.body.innerHTML = `<button type="button" data-testid="save">저장</button>`;
+
+    await expect(
+      getA11ySnapshot(document.body, {
+        computeOther: (el) =>
+          el instanceof HTMLElement && el.dataset.testid
+            ? { testid: el.dataset.testid }
+            : undefined,
+      }),
+    ).toMatchFileSnapshot("__snapshots__/a11y-compute-other.snap");
+  });
+
+  it("returns a structured tree via getA11yTree", () => {
+    document.body.innerHTML = `<button type="button">저장</button>`;
+
+    const tree = getA11yTree(document.body);
+
+    expect(tree?.children.some((child) => child.role === "button" && child.name === "저장")).toBe(
+      true,
+    );
   });
 });

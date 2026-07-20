@@ -1,0 +1,10 @@
+status:
+  - live-region: [live=polite] [atomic=true]
+  "저장됨"
+alert:
+  - live-region: [live=assertive] [relevant="additions text"]
+  "오류 발생"
+generic:
+  - states: [busy=true]
+  - live-region: [live=off]
+  "동기화 중"

@@ -1,0 +1,12 @@
+tablist: "설정 탭"
+  - properties: [orientation="horizontal"]
+  tab: "일반"
+    - states: [selected=true]
+    - relations:
+      controls: "일반"
+  tab: "보안"
+    - states: [selected=false]
+tabpanel: "일반"
+  - relations:
+    labelledby: "일반"
+  "일반 내용"

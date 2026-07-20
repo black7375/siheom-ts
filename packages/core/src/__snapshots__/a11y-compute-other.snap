@@ -1,0 +1,2 @@
+button: "저장"
+  - other: [testid="save"]
