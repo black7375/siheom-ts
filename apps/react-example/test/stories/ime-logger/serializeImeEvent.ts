@@ -9,7 +9,7 @@ export type ImeEventRecord = {
   value: string;
 };
 
-export type ImeTraceSource = "os-ime" | "user-event";
+export type ImeTraceSource = "os-ime" | "user-event" | "cdp";
 
 export type ImeTraceMeta = {
   os: string;

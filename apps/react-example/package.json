@@ -22,6 +22,7 @@
     "@radix-ui/react-select": "^2.3.4",
     "@siheom/core": "workspace:*",
     "@siheom/ime": "workspace:*",
+    "@siheom/ime-cdp": "workspace:*",
     "@siheom/react": "workspace:*",
     "@siheom/vitest-browser-react": "workspace:*",
     "@tanstack/react-router": "^1.170.18",

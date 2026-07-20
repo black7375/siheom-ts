@@ -38,6 +38,7 @@
         "@radix-ui/react-select": "^2.3.4",
         "@siheom/core": "workspace:*",
         "@siheom/ime": "workspace:*",
+        "@siheom/ime-cdp": "workspace:*",
         "@siheom/react": "workspace:*",
         "@siheom/vitest-browser-react": "workspace:*",
         "@tanstack/react-router": "^1.170.18",
@@ -194,6 +195,30 @@
         "@testing-library/dom": "^10.0.0",
         "@testing-library/jest-dom": "^6.0.0",
         "@testing-library/user-event": "^14.0.0",
+        "vitest": "^4.1.10",
+      },
+    },
+    "packages/ime-cdp": {
+      "name": "@siheom/ime-cdp",
+      "version": "0.3.0",
+      "dependencies": {
+        "@siheom/core": "workspace:*",
+        "@siheom/ime": "workspace:*",
+      },
+      "devDependencies": {
+        "@testing-library/dom": "^10.4.1",
+        "@testing-library/jest-dom": "^6.9.1",
+        "@vitest/browser": "^4.1.10",
+        "@vitest/browser-playwright": "^4.1.10",
+        "@vitest/coverage-v8": "4.1.10",
+        "playwright": "^1.61.1",
+        "tsdown": "^0.22.8",
+        "typescript": "^7.0.2",
+        "vitest": "^4.1.10",
+      },
+      "peerDependencies": {
+        "@testing-library/dom": "^10.0.0",
+        "@vitest/browser": "^4.1.10",
         "vitest": "^4.1.10",
       },
     },
@@ -1215,6 +1240,8 @@
     "@siheom/docs": ["@siheom/docs@workspace:apps/docs"],
 
     "@siheom/ime": ["@siheom/ime@workspace:packages/ime"],
+
+    "@siheom/ime-cdp": ["@siheom/ime-cdp@workspace:packages/ime-cdp"],
 
     "@siheom/qwik": ["@siheom/qwik@workspace:packages/qwik"],
 

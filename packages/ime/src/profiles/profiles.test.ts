@@ -45,6 +45,14 @@ describe("IME profiles", () => {
     });
   });
 
+  it("resolves chromium-cdp with composition Hangul and process keys", () => {
+    expect(resolveProfile("chromium-cdp")).toMatchObject({
+      enterDuringComposition: "chromium",
+      hangulKeyEventKey: "process",
+      hangulComposeMode: "composition",
+    });
+  });
+
   it("throws for unknown profile ids", () => {
     expect(() => resolveProfile("not-a-real-profile")).toThrow(/Unknown IME profile/);
   });

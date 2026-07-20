@@ -97,6 +97,12 @@ function registerBuiltins() {
     hangulKeyEventKey: "process",
     hangulComposeMode: "composition",
   });
+  registerProfile({
+    id: "chromium-cdp",
+    enterDuringComposition: "chromium",
+    hangulKeyEventKey: "process",
+    hangulComposeMode: "composition",
+  });
 }
 
 registerBuiltins();

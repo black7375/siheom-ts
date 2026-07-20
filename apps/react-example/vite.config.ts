@@ -29,11 +29,18 @@ export default defineConfig({
 	test: {
 		alias: {
 			"@showcase/tanstack-link": tanstackLinkStub,
+			"@siheom/ime-cdp": path.resolve(dirname, "../../packages/ime-cdp/src/index.ts"),
+			"@siheom/ime": path.resolve(dirname, "../../packages/ime/src/index.ts"),
 		},
 		setupFiles: "./test/setupTests.ts",
 		include: ["test/**/*.test.tsx"],
 		css: true,
 		globals: true,
+		api: { allowWrite: true, allowExec: true },
 		...vitestBrowserMode,
+		browser: {
+			...vitestBrowserMode.browser,
+			api: { allowWrite: true, allowExec: true },
+		},
 	},
 });
