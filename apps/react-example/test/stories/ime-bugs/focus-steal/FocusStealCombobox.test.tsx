@@ -29,6 +29,16 @@ async function dispatchComposingInput(input: HTMLInputElement, value: string) {
   });
 }
 
+async function dispatchCompositionEnd(input: HTMLInputElement, data: string) {
+  await act(async () => {
+    input.dispatchEvent(
+      new CompositionEvent("compositionend", { bubbles: true, data }),
+    );
+    await Promise.resolve();
+    await Promise.resolve();
+  });
+}
+
 describe("FocusStealCombobox", () => {
   it("broken 모드: 영문 입력 후에는 포커스가 다시 검색 입력으로 돌아온다", async () => {
     await runSiheom(
@@ -75,6 +85,38 @@ describe("FocusStealCombobox", () => {
     });
 
     await dispatchComposingInput(input, "ㄱ");
+
+    expect(blurred).toBe(false);
+    expect(document.activeElement).toBe(input);
+  });
+
+  it("fixed 모드: compositionend(음절 경계)에도 DOM focus bounce가 없다", async () => {
+    await runSiheom(given.render(<FocusStealCombobox mode="fixed" />));
+
+    const input = document.getElementById(
+      "focus-steal-combobox-input",
+    ) as HTMLInputElement;
+    input.focus();
+
+    await act(async () => {
+      input.value = "김";
+      input.dispatchEvent(
+        new InputEvent("input", {
+          bubbles: true,
+          data: "김",
+          inputType: "insertCompositionText",
+          isComposing: false,
+        }),
+      );
+      await Promise.resolve();
+    });
+
+    let blurred = false;
+    input.addEventListener("blur", () => {
+      blurred = true;
+    });
+
+    await dispatchCompositionEnd(input, "김");
 
     expect(blurred).toBe(false);
     expect(document.activeElement).toBe(input);

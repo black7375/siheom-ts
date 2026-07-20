@@ -11,5 +11,8 @@ Storybook 키로거로 OS 트레이스를 캡처해 `@siheom/ime` 에뮬레이�
 
 - [x] `mode="broken"`: after each `input`, focus moves to the first option then back to the input
 - [x] After Latin (non-composing) typing in broken mode, focus ends on the input (no lasting option focus)
-- [x] `mode="fixed"`: does not bounce focus while `isComposing` is true
 - [x] Storybook logger story for OS capture of aborted Hangul composition
+- [x] OS `broken-hangul.json`: 김태희 → `ㄱㅣㅁㅌㅐㅎㅡㅣ` (full 풀어쓰기)
+- [x] `mode="fixed"` must not DOM-focus options (virtual highlight only) — bouncing on `compositionend` still breaks Hangul (음절 경계마다 end가 남)
+- [x] `mode="fixed"` must not rewrite controlled `value` during composition (React writeback corrupts preedit; capture showed `김ㅐㅢ`)
+- [ ] OS `fixed-hangul.json` re-captured as real `김태희` after the above fix

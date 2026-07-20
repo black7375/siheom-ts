@@ -10,7 +10,9 @@ export type FocusStealComboboxProps = {
   /**
    * `broken` — after every `input`, briefly focus the first option then return to the input
    * (aborts Hangul composition on blur; Latin is unaffected).
-   * `fixed` — only bounce focus when not composing.
+   * `fixed` — never move DOM focus; highlight via aria-selected only, and do not
+   * rewrite the controlled `value` while composing (React writeback + compositionend
+   * bounce both break Hangul mid-word).
    */
   mode?: "broken" | "fixed";
   suggestions?: string[];
@@ -37,6 +39,7 @@ export function FocusStealCombobox({
   onValueChange,
 }: FocusStealComboboxProps) {
   const [value, setValue] = useState("");
+  const [composing, setComposing] = useState(false);
   const firstOptionRef = useRef<HTMLButtonElement>(null);
   const localInputRef = useRef<HTMLInputElement>(null);
   const modeRef = useRef(mode);
@@ -50,9 +53,11 @@ export function FocusStealCombobox({
     const q = value.trim().toLowerCase();
     if (!q) return suggestions.slice(0, 5);
     const matched = suggestions.filter((item) => item.toLowerCase().includes(q));
-    // Keep a focus target even when the query is mid-composition jamo (ㄱ) with no match yet.
+    // Keep a highlight target even when the query is mid-composition jamo with no match yet.
     return (matched.length > 0 ? matched : suggestions).slice(0, 5);
   }, [suggestions, value]);
+
+  const activeOption = filtered[0];
 
   useEffect(() => {
     const node = localInputRef.current;
@@ -62,40 +67,43 @@ export function FocusStealCombobox({
       const option = firstOptionRef.current;
       const input = localInputRef.current;
       if (!option || !input) return;
-      // Real autoSelect bugs: briefly move focus to the option, then restore input.
-      // Latin is fine; Hangul composition aborts on the blur.
       option.focus();
       input.focus();
+    };
+
+    const syncValue = (next: string) => {
+      setValue(next);
+      onValueChangeRef.current?.(next);
     };
 
     const onInput = (event: Event) => {
       const target = event.target as HTMLInputElement;
       const next = target.value;
-      setValue(next);
-      onValueChangeRef.current?.(next);
-
-      const composing = (event as InputEvent).isComposing === true;
+      syncValue(next);
 
       if (modeRef.current === "broken") {
         queueMicrotask(bounceFocusThroughFirstOption);
-        return;
       }
-
-      if (!composing) {
-        queueMicrotask(bounceFocusThroughFirstOption);
-      }
+      // fixed: never DOM-focus options — virtual highlight via aria-selected only
     };
 
-    const onCompositionEnd = () => {
-      if (modeRef.current === "fixed" && localInputRef.current?.value.trim()) {
-        queueMicrotask(bounceFocusThroughFirstOption);
-      }
+    const onCompositionStart = () => {
+      setComposing(true);
+    };
+
+    const onCompositionEnd = (event: Event) => {
+      setComposing(false);
+      const target = event.target as HTMLInputElement;
+      syncValue(target.value);
+      // Do NOT bounce on compositionend — Hangul fires this at every syllable boundary.
     };
 
     node.addEventListener("input", onInput);
+    node.addEventListener("compositionstart", onCompositionStart);
     node.addEventListener("compositionend", onCompositionEnd);
     return () => {
       node.removeEventListener("input", onInput);
+      node.removeEventListener("compositionstart", onCompositionStart);
       node.removeEventListener("compositionend", onCompositionEnd);
     };
   }, []);
@@ -113,10 +121,17 @@ export function FocusStealCombobox({
           aria-autocomplete="list"
           aria-controls="focus-steal-combobox-listbox"
           aria-expanded={filtered.length > 0}
-          value={value}
+          aria-activedescendant={
+            mode === "fixed" && activeOption
+              ? `focus-steal-option-${activeOption}`
+              : undefined
+          }
+          // During composition, omit controlled value so React does not clobber IME preedit.
+          {...(composing ? {} : { value })}
           onChange={(event) => {
-            setValue(event.target.value);
-            onValueChange?.(event.target.value);
+            const next = event.target.value;
+            setValue(next);
+            onValueChange?.(next);
           }}
           placeholder="검색어 입력"
           autoComplete="off"
@@ -135,16 +150,20 @@ export function FocusStealCombobox({
           <li key={item} role="presentation">
             <button
               ref={index === 0 ? firstOptionRef : undefined}
+              id={`focus-steal-option-${item}`}
               type="button"
               role="option"
               aria-selected={index === 0}
+              tabIndex={mode === "fixed" ? -1 : 0}
               className={cn(
                 "flex w-full rounded-md px-2.5 py-1.5 text-left text-sm outline-none",
                 "hover:bg-muted focus-visible:bg-muted focus-visible:ring-2 focus-visible:ring-ring",
+                index === 0 && "bg-muted/80",
               )}
               onClick={() => {
                 setValue(item);
                 onValueChange?.(item);
+                localInputRef.current?.focus();
               }}
             >
               {item}

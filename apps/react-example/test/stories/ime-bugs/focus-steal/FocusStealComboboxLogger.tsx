@@ -97,19 +97,18 @@ export function FocusStealComboboxLogger() {
       <header className="flex flex-col gap-2">
         <h1 className="text-xl font-semibold">Focus-steal Combobox (IME bug)</h1>
         <p className="text-sm text-muted-foreground">
-          broken 모드는 매 <code className="rounded bg-muted px-1">input</code>마다 첫 제안으로
-          포커스를 보냈다가 다시 입력란으로 돌립니다. 영문은 괜찮고, 한글 조합만 blur 때문에
-          풀립니다 — 그 트레이스를 캡처하세요.
+          broken: 매 input마다 option → input DOM focus 왕복 (한글만 조합이 풀림). fixed: DOM
+          focus는 유지하고 aria-selected / aria-activedescendant로만 하이라이트합니다. 예전 fixed가
+          compositionend마다 bounce하거나 controlled value를 조합 중에 다시 쓰면{" "}
+          <code className="rounded bg-muted px-1">김ㅐㅢ</code>처럼 깨집니다.
         </p>
       </header>
 
       <section className="rounded-lg border border-border bg-muted/30 p-3 text-sm" aria-label="캡처 지시">
         <ol className="list-decimal space-y-1 pl-5 text-muted-foreground">
-          <li>모드를 broken으로 둡니다 (기본값).</li>
-          <li>검색란에 한글로 「김태희」를 입력합니다 (영문으로 apple 등을 치면 정상처럼 보입니다).</li>
-          <li>포커스는 입력란에 남아 있어도 조합이 중간중간 풀리는지 확인합니다.</li>
-          <li>JSON을 복사·다운로드해 fixtures에 저장합니다.</li>
-          <li>같은 입력을 fixed 모드에서도 한 번 캡처해 대비합니다.</li>
+          <li>broken으로 「김태희」→ 풀어쓰기 트레이스 (이미 fixtures에 있음).</li>
+          <li>fixed로 같은 입력을 다시 캡처해 최종값이 「김태희」인지 확인합니다.</li>
+          <li>JSON을 복사·다운로드해 linux-ibus-hangul-chrome/fixed-hangul.json을 덮어씁니다.</li>
         </ol>
         <p className="mt-3 flex flex-wrap gap-2">
           <span>현재 입력:</span>
