@@ -103,3 +103,27 @@ describe("composeEnter during composition", () => {
     });
   });
 });
+
+describe("composeEnter when not composing", () => {
+  it("fires plain Enter keydown/keyup with isComposing false", async () => {
+    await withRecordedInput(async (input, recorder) => {
+      input.value = "김";
+      input.setSelectionRange(1, 1);
+
+      await composeEnter(input, resolveProfile("linux-chrome-ibus-hangul"));
+
+      expect(
+        recorder.events.map((event) => ({
+          type: event.type,
+          key: event.key,
+          keyCode: event.keyCode,
+          isComposing: event.isComposing,
+        })),
+      ).toEqual([
+        { type: "keydown", key: "Enter", keyCode: 13, isComposing: false },
+        { type: "keyup", key: "Enter", keyCode: 13, isComposing: false },
+      ]);
+      expect(recorder.events.some((event) => event.type === "compositionend")).toBe(false);
+    });
+  });
+});

@@ -30,4 +30,17 @@ IME-faithful `fill` / `type` that plug into siheom via `overrideSiheom`, startin
 - [x] Emulator reproduces broken 풀어쓰기 (`ㄱㅣㅁㅌㅐㅎㅡㅣ`) and fixed `김태희` via createImeActions
 - [x] Enter-submit-during-composition fixture (SearchField); Linux ibus OS capture shows webkit-order Enter
 - [x] Delayed controlled update (stale setState mid-composition): `settle: "macrotask"` + `deferredUpdateRace`; OS critical events matched
-- [ ] Optional: maxlength during composition fixture
+### Coverage gaps (intentional behaviors)
+
+- [x] `composeEnter` when not composing fires plain Enter keydown/keyup (isComposing false)
+- [x] `createImeActions` type Hangul then `{Enter}` ends composition per profile
+- [x] `composeBackspace` with a selection range deletes the selection (not one grapheme)
+- [x] `createImeActions({ resolveElement: "sync" })` types when the element is already present
+- [x] `composeArrowLeft` when not composing moves the caret left without compositionend
+- [x] `fromFirstCompositionStart` returns the original list when there is no compositionstart
+- [x] `consumeImeControlledWriteback` returns false when the host never marked writeback
+- [x] `segmentTypeText` treats an unclosed `{` run as keys (remainder of string)
+- [x] `createImeActions` types Hangul into a `<textarea>`
+- [x] `createImeActions({ profile })` accepts a profile object (not only an id string)
+- [x] Unknown key descriptors like `{Home}` delegate to user-event
+- [x] Contenteditable targets fall back to user-event type

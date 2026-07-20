@@ -14,4 +14,8 @@ describe("segmentTypeText", () => {
       { kind: "keys", text: "{Enter}" },
     ]);
   });
+
+  it("treats an unclosed brace run as keys for the remainder", () => {
+    expect(segmentTypeText("hi{Enter")).toEqual([{ kind: "keys", text: "hi{Enter" }]);
+  });
 });

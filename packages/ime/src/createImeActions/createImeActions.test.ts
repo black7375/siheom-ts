@@ -11,6 +11,7 @@ import { attachImeRecorder } from "../attachImeRecorder";
 import { toCriticalEvents } from "../toCriticalEvents";
 import { createImeActions } from "./createImeActions";
 import { goldenCritical, fromFirstCompositionStart } from "../goldenCritical";
+import { resolveProfile } from "../profiles";
 import continuousGolden from "../../fixtures/linux-chrome-ibus-hangul/continuous-hangul.json";
 import mixedGolden from "../../fixtures/linux-chrome-ibus-hangul/mixed-en-ko.json";
 import backspaceGolden from "../../fixtures/linux-chrome-ibus-hangul/backspace-mid.json";
@@ -130,5 +131,85 @@ describe("createImeActions + overrideSiheom", () => {
       goldenCritical(arrowGolden.events),
     );
     recorderRef.current!.detach();
+  });
+
+  it("types Hangul then {Enter} ending composition before Enter (webkit profile)", async () => {
+    const { runSiheom, actions, assertions, given, recorderRef } = setup();
+
+    await runSiheom(
+      given.render(),
+      actions.type(query.textbox("이름"), "김{Enter}"),
+      assertions.value(query.textbox("이름"), "김"),
+    );
+
+    const types = toCriticalEvents(recorderRef.current!.events).map((event) => ({
+      type: event.type,
+      key: event.key,
+      isComposing: event.isComposing,
+    }));
+    const endIndex = types.findIndex((event) => event.type === "compositionend");
+    const enterIndex = types.findIndex(
+      (event) => event.type === "keydown" && event.key === "Enter",
+    );
+    expect(endIndex).toBeGreaterThan(-1);
+    expect(enterIndex).toBeGreaterThan(endIndex);
+    expect(types[enterIndex]?.isComposing).toBe(false);
+    recorderRef.current!.detach();
+  });
+
+  it("types with resolveElement sync when the element is already present", async () => {
+    setupLabeledInput();
+    const actions = createImeActions({ resolveElement: "sync" });
+    const assertions = createDefaultAssertions({ resolveElement: "sync" });
+
+    await actions.type(query.textbox("이름"), "김");
+    await assertions.value(query.textbox("이름"), "김");
+  });
+
+  it("types Hangul into a textarea", async () => {
+    document.body.innerHTML = "";
+    const label = document.createElement("label");
+    label.append("메모");
+    const textarea = document.createElement("textarea");
+    label.append(textarea);
+    document.body.append(label);
+
+    const actions = createImeActions();
+    const assertions = createDefaultAssertions();
+
+    await actions.type(query.textbox("메모"), "김");
+    await assertions.value(query.textbox("메모"), "김");
+  });
+
+  it("accepts a profile object instead of an id string", async () => {
+    setupLabeledInput();
+    const profile = resolveProfile("macos-safari");
+    const actions = createImeActions({ profile, resolveElement: "sync" });
+    const assertions = createDefaultAssertions({ resolveElement: "sync" });
+
+    await actions.type(query.textbox("이름"), "김{Enter}");
+    await assertions.value(query.textbox("이름"), "김");
+  });
+
+  it("delegates unknown key descriptors like {Home} to user-event", async () => {
+    setupLabeledInput();
+    const input = document.querySelector("input") as HTMLInputElement;
+    input.value = "ab";
+    input.setSelectionRange(2, 2);
+    const actions = createImeActions({ resolveElement: "sync" });
+    const assertions = createDefaultAssertions({ resolveElement: "sync" });
+
+    await actions.type(query.textbox("이름"), "{Home}");
+    await assertions.value(query.textbox("이름"), "ab");
+    expect(input.selectionStart).toBe(0);
+  });
+
+  it("types into a contenteditable via user-event fallback", async () => {
+    document.body.innerHTML = `<div role="textbox" aria-label="편집" contenteditable="true"></div>`;
+    const actions = createImeActions({ resolveElement: "sync" });
+    const assertions = createDefaultAssertions({ resolveElement: "sync" });
+
+    await actions.type(query.textbox("편집"), "hi");
+    await assertions.textContent(query.textbox("편집"), "hi");
   });
 });
