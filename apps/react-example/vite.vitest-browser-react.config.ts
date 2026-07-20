@@ -27,11 +27,15 @@ export default defineConfig({
 	define: vitestBrowserDefine,
 	root: "./",
 	resolve: {
+		dedupe: ["react", "react-dom"],
 		tsconfigPaths: true,
 		alias: {
 			"@siheom/react": siheomVitestBrowserReact,
 			"@showcase/tanstack-link": tanstackLinkStub,
 		},
+	},
+	optimizeDeps: {
+		include: ["recharts"],
 	},
 	test: {
 		alias: {
