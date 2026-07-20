@@ -1,77 +1,70 @@
 ---
 name: siheom-frontend-test
 description: >-
-  Siheom frontend integration tests with @siheom/react. Use when building or
-  testing React UI (features, TodoMVC, forms, routing), when the user asks for
-  Siheom/runSiheom specs, accessible UI tests, or TDD with plan.md. Always
-  pairs with AGENTS.md Red → Green → Refactor — one plan item per cycle.
+  Siheom frontend integration tests with @siheom/react. Self-contained for package
+  users (no AGENTS.md required). Use when building or testing React UI, runSiheom
+  specs, accessible-name tests, or feature work with plan.md and Red-Green-Refactor.
+  Discover npm/pnpm/yarn/bun scripts from package.json; ask user to add Vitest, oxlint,
+  oxfmt if missing.
 ---
 
 # Siheom Frontend Test
 
 Write tests users care about — through the **accessible name** tree, not CSS, placeholders, or Siheom internals.
 
-**Mandatory:** read `AGENTS.md` (TDD + Tidy First). This skill is the *how* inside that cycle. Agreement is not optional — if you cannot write a failing test first, stop and ask; do not scaffold the feature.
+**Self-contained:** this skill includes TDD + project setup for consumers of `@siheom/react`. If the repo has `AGENTS.md`, follow it too; otherwise use [TDD.md](TDD.md) and [SETUP.md](SETUP.md) here.
+
+**Do not** read `packages/core` unless extending the runner — see [API.md](API.md) and `runSiheom.tsx` pattern in examples.
 
 ## TDD cycle (one plan item at a time)
 
-Use `plan.md` beside the feature (create it from the spec if missing). Each `- [ ]` line is **one cycle**, not a batch.
+Full rules: [TDD.md](TDD.md). Summary:
 
 ```
-1. Open plan.md → next unchecked item only
-2. RED    → add one `it` that states the user-visible outcome; run tests; confirm THIS test fails
-3. GREEN  → minimum component/logic change until THIS test passes; run full package tests
-4. REFACTOR (optional) → tidy only while green; run tests again
-5. Mark plan.md `[x]` → commit (structural vs behavioral label in message)
-6. Repeat — never start the next `it` in the same turn as unfinished Green
+1. plan.md → next unchecked item only
+2. RED    → one `it`, user-visible outcome; run tests; confirm THIS test fails
+3. GREEN  → minimum code until THIS test passes; run package test script
+4. REFACTOR → tidy while green ([Tidy First](TDD.md))
+5. Mark `[x]` → commit (structural vs behavioral)
+6. Repeat
 ```
 
 | Phase | Allowed | Forbidden |
 | ----- | ------- | --------- |
-| RED | one new `it`, imports, fixture types | production code for later plan items |
-| GREEN | code required for the failing test only | "while we're here" features, full spec scaffold |
-| REFACTOR | rename/extract/style; shadcn swap | new behavior, new `it` |
+| RED | one new `it`, fixtures, types | production code for later plan items |
+| GREEN | code for the failing test only | full feature scaffold |
+| REFACTOR | rename/extract/style | new behavior, new `it` |
 
-**Tidy First:** structural commits (extract component, shadcn swap, prune duplicate tests) separate from behavioral commits (new `it` + code).
+**Recovery:** untested code → trim to passing specs → structural commit → resume plan.md.
 
-**Recovery:** if production code exists without a failing test, *trim* to what passing tests cover, commit structural, then resume plan.md — do not keep growing untested code.
+## Project scripts
 
-## Agent anti-patterns (real failures)
+**Before running tests:** read [SETUP.md](SETUP.md) — detect package manager from lockfile, map `package.json` scripts by intent, ask the user to add Vitest / typecheck / oxlint / oxfmt when missing.
 
-| Symptom | Why it breaks TDD | Fix |
-| ------- | ----------------- | --- |
-| Whole feature implemented, then tests | Skips Red; types/API drift; false green | Trim to test coverage; one plan item per cycle |
-| `typeof FIXTURE as const` as param type | Types driven by data, not tests | `Todo[]`, explicit types from domain |
-| Subset `it` ("enter edit mode" + "save on Enter") | Duplicates setup; second test restates middle step | One `it` per outcome; chain setup inside if needed |
-| `<footer aria-label>` for `query.region` | Implicit `contentinfo`, not `region` | `<section aria-label="…">` |
-| CSS hides control (e.g. TodoMVC `.destroy`) | `query.button` never resolves | Keep control in a11y tree in tests, or `hover` + verify snapshot |
-| Multiple plan items / commits in one burst | No verifiable Red→Green per step | One item, one commit, then stop |
-| Assertion fails (e.g. `checked`, `focused`) | Runner or component bug | Fix root cause in `@siheom/core` or a11y on the component — do not swap to a weaker assertion |
+Do **not** assume `bun`, `npm run test`, or script names. Examples:
 
-## Project scripts (package-manager agnostic)
+```bash
+npm run test:run -- MyFeature
+pnpm vitest MyFeature
+yarn unit MyFeature
+bun run test MyFeature
+```
 
-Do **not** assume Bun, npm, or fixed script names. Read the app’s `package.json` (or monorepo root + package filter) first.
+## Agent anti-patterns
 
-| Goal | Find a script like | If missing, ask the user to add |
-| ---- | ------------------ | ------------------------------- |
-| Tests | `test`, `vitest`, `test:run`, `unit` | Vitest (or their runner) wired to Siheom specs |
-| Typecheck | `typecheck`, `tsc`, `check:types` | `tsc --noEmit`, `tsgo --noEmit`, etc. |
-| Lint | `lint`, `oxlint` | [oxlint](https://oxc.rs/docs/guide/usage/linter.html) or ESLint |
-| Format | `format`, `fmt`, `oxfmt` | [oxfmt](https://oxc.rs/docs/guide/usage/formatter.html) or Prettier |
-
-Run with the user’s package manager (`npm run`, `pnpm`, `yarn`, `bun run`, …). Filter one file when supported, e.g. `npm run test -- TodoMVC`.
-
-**This repo (siheom-ts):** from root — `bun run test`, `bun run typecheck`, `bun run lint`; filter with `bun run --filter '@siheom/react-example' test`.
+| Symptom | Fix |
+| ------- | --- |
+| Whole feature before tests | Trim; one plan item per cycle ([TDD.md](TDD.md)) |
+| `typeof FIXTURE as const` as param type | Explicit domain types (`Todo[]`) |
+| Subset `it` duplicating setup | One outcome per `it`; chain steps inside |
+| `<footer aria-label>` for `query.region` | `<section aria-label="…">` |
+| CSS hides control from a11y tree | Fix visibility or use `hover` + assert |
+| Assertion fails (`checked`, `focused`, …) | Fix `@siheom/core` or component a11y — not a weaker assertion |
+| Assumed package manager / script names | [SETUP.md](SETUP.md) |
 
 ## Gate before commit
 
-Do not commit unless all are true:
-
-1. **Test script** for the package — all pass
-2. **Typecheck script** (if present) — clean
-3. **Lint / format** (if present in CI or pre-commit) — clean
-4. Exactly one plan item (or one structural refactor) in the diff
-5. Commit message says `structural` or `behavioral` / `feat` / `test` / `refactor` clearly
+See [TDD.md](TDD.md) + [SETUP.md](SETUP.md): test script passes; typecheck/lint/format when the project defines them; one plan item per commit; message labels structural vs behavioral.
 
 ## Workflow (Siheom, inside Green/Red)
 
@@ -273,5 +266,6 @@ Before or while writing tests, the UI should expose:
 
 ## Reference
 
-- Repo TDD rules: `AGENTS.md`
+- TDD + Tidy First (portable): [TDD.md](TDD.md)
+- Package manager + scripts + oxlint/oxfmt: [SETUP.md](SETUP.md)
 - Action/assertion/query catalog: [API.md](API.md)
