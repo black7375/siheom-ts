@@ -1,4 +1,4 @@
-import type { Locator } from "../../core/src/types.ts";
+import type { Locator } from "@siheom/core";
 import { locatorLog } from "./queryBuilders.ts";
 
 export const actions = {

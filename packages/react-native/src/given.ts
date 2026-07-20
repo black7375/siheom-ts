@@ -1,5 +1,5 @@
 import { cleanup, render } from "@testing-library/react-native";
-import type { GivenStep } from "../../core/src/types.ts";
+import type { GivenStep } from "@siheom/core";
 import type { ReactElement } from "react";
 import { setLastRender } from "./query.ts";
 

@@ -1,7 +1,6 @@
-import { userEvent } from "@testing-library/react-native";
-import { waitFor } from "@testing-library/react-native";
+import { fireEvent, userEvent, waitFor } from "@testing-library/react-native";
 import type { TestInstance } from "test-renderer";
-import type { ActionStepDefinitionDict, Locator } from "../../core/src/types.ts";
+import type { ActionStepDefinitionDict, Locator } from "@siheom/core";
 import { expect } from "vitest";
 import { getElement } from "./query.ts";
 
@@ -31,6 +30,19 @@ export function createDefaultActions(options: DefaultActionsOptions = {}) {
     });
   }
 
+  async function typeText(element: TestInstance, text: string) {
+    if (text.includes("{Enter}")) {
+      const [value] = text.split("{Enter}");
+      if (value) {
+        await user.type(element, value);
+      }
+      fireEvent(element, "submitEditing");
+      return;
+    }
+
+    await user.type(element, text);
+  }
+
   return {
     click: async (target: Locator) =>
       withPresentElement(target, async (element) => {
@@ -45,11 +57,11 @@ export function createDefaultActions(options: DefaultActionsOptions = {}) {
     fill: async (target: Locator, text: string) =>
       withPresentElement(target, async (element) => {
         await user.clear(element);
-        await user.type(element, text);
+        await typeText(element, text);
       }),
     type: async (target: Locator, text: string) =>
       withPresentElement(target, async (element) => {
-        await user.type(element, text);
+        await typeText(element, text);
       }),
     tab: async (_target: Locator) => {
       throw new Error("tab is not supported in React Native");

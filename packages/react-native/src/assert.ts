@@ -1,5 +1,5 @@
 import { waitFor } from "@testing-library/react-native";
-import type { AssertionStepDefinitionDict, Locator } from "../../core/src/types.ts";
+import type { AssertionStepDefinitionDict, Locator } from "@siheom/core";
 import { expect } from "vitest";
 import { getA11ySnapshot } from "./getA11ySnapshot.ts";
 import { getElement, getElements } from "./query.ts";

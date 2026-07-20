@@ -1,6 +1,6 @@
 import { screen, within as rntlWithin, type RenderResult } from "@testing-library/react-native";
 import type { TestInstance } from "test-renderer";
-import type { Locator } from "../../core/src/types.ts";
+import type { Locator } from "@siheom/core";
 
 export { query, locatorLog } from "./queryBuilders.ts";
 
@@ -49,6 +49,20 @@ export function getElement(locator: Locator, isVisible: boolean): TestInstance |
   }
 
   if (locator.role === "textbox") {
+    if (isVisible) {
+      return queries.getByLabelText(locator.name);
+    }
+    return queries.queryByLabelText(locator.name);
+  }
+
+  if (locator.role === "dialog") {
+    if (isVisible) {
+      return queries.getByLabelText(locator.name);
+    }
+    return queries.queryByLabelText(locator.name);
+  }
+
+  if (locator.role === "listitem" || locator.role === "list") {
     if (isVisible) {
       return queries.getByLabelText(locator.name);
     }

@@ -1,5 +1,5 @@
-import type { Locator } from "../../core/src/types.ts";
-import { concreteRoles, type ConcreteAriaRole } from "../../core/src/a11y/ariaRoles.ts";
+import type { Locator } from "@siheom/core";
+import { concreteRoles, type ConcreteAriaRole } from "@siheom/core/aria-roles";
 
 export function locatorLog(target: Locator): string {
   const targetLog =

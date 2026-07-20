@@ -1,5 +1,5 @@
 import { vi } from "vitest";
-import type { EffectStepDefinitionDict } from "../../core/src/types.ts";
+import type { EffectStepDefinitionDict } from "@siheom/core";
 
 export const reactNativeEffects = {
   elapsed: async (ms: number) => {

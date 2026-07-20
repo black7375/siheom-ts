@@ -3,7 +3,7 @@ import type {
   AssertionStepDefinitionDict,
   EffectStepDefinitionDict,
   GivenStepDefinitionDict,
-} from "../../core/src/types.ts";
+} from "@siheom/core";
 import { createDefaultActions } from "./action.ts";
 import { createDefaultAssertions } from "./assert.ts";
 import { createFakeTimerScopedRegistries, type SiheomRegistryBundle } from "./fakeTimerRegistries.ts";

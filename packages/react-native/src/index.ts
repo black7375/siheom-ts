@@ -1,6 +1,6 @@
-import { createRunSiheom } from "../../core/src/siheom.ts";
-import { effect } from "../../core/src/effect.ts";
-import { withFakeTimers } from "../../core/src/withFakeTimers.ts";
+import { createRunSiheom } from "@siheom/core/siheom";
+import { effect } from "@siheom/core/effect";
+import { withFakeTimers } from "@siheom/core/with-fake-timers";
 import { cleanupReactRoots, defaultGivens, given } from "./given.ts";
 import { reactNativeEffects } from "./effects.ts";
 import { reactNativeFakeTimerScope } from "./fakeTimerScope.ts";
