@@ -62,6 +62,18 @@ export function pauseCountdown(
   };
 }
 
+export function resetCountdown(
+  state: CountdownState,
+  now: number = Date.now(),
+): CountdownState {
+  return {
+    durationMs: state.durationMs,
+    startTime: null,
+    now,
+    frozenElapsedMs: 0,
+  };
+}
+
 export function setNow(state: CountdownState, now: number): CountdownState {
   return { ...state, now };
 }

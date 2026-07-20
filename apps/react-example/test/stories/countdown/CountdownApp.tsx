@@ -5,6 +5,7 @@ import {
   initialCountdown,
   pauseCountdown,
   remainingSeconds,
+  resetCountdown,
   setNow,
   startCountdown,
   type CountdownState,
@@ -38,6 +39,9 @@ export function CountdownApp({ durationMinutes = 25 }: { durationMinutes?: numbe
           시작
         </Button>
       )}
+      <Button aria-label="리셋" onClick={() => setState((current) => resetCountdown(current))}>
+        리셋
+      </Button>
     </div>
   );
 }
