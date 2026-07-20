@@ -1,5 +1,10 @@
 import { describe, expectTypeOf, it } from "vitest";
-import { createDefaultActions, createDefaultAssertions, overrideSiheom, defaultEffects } from "./index.ts";
+import {
+  createDefaultActions,
+  createDefaultAssertions,
+  overrideSiheom,
+  defaultEffects,
+} from "./index.ts";
 
 describe("overrideSiheom binding types", () => {
   it("keeps action and assertion bindings required", () => {
@@ -20,8 +25,6 @@ describe("overrideSiheom binding types", () => {
 
     // Must not be optional
     expectTypeOf(actions.fill).not.toEqualTypeOf<undefined>();
-    expectTypeOf(actions.fill!).parameters.toEqualTypeOf<
-      [import("./types.ts").Locator, string]
-    >();
+    expectTypeOf(actions.fill!).parameters.toEqualTypeOf<[import("./types.ts").Locator, string]>();
   });
 });

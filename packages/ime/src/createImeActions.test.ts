@@ -107,10 +107,7 @@ describe("createImeActions + overrideSiheom", () => {
 
     await runSiheom(
       given.render(),
-      actions.type(
-        query.textbox("이름"),
-        "김태희{Backspace}{Backspace}{Backspace}{Backspace}철수",
-      ),
+      actions.type(query.textbox("이름"), "김태희{Backspace}{Backspace}{Backspace}{Backspace}철수"),
       assertions.value(query.textbox("이름"), "김철수"),
     );
 

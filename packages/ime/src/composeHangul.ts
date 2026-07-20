@@ -5,12 +5,7 @@ import { applyPreedit, dispatch, snapshot } from "./composeHangulInternals";
 import { clearImeSession, setImeSession } from "./imeSession";
 
 export type { ComposedEventRecord } from "./composeHangulTypes";
-export {
-  applyPreedit,
-  dispatch,
-  setInputValue,
-  snapshot,
-} from "./composeHangulInternals";
+export { applyPreedit, dispatch, setInputValue, snapshot } from "./composeHangulInternals";
 
 export type ComposeHangulOptions = {
   /** When true (default), fire compositionend for the final syllable */
@@ -273,11 +268,7 @@ export async function composeHangul(
   text: string,
   options: ComposeHangulOptions = {},
 ): Promise<ComposedEventRecord[]> {
-  const {
-    commitFinal = true,
-    settle = "microtask",
-    deferredUpdateRace = false,
-  } = options;
+  const { commitFinal = true, settle = "microtask", deferredUpdateRace = false } = options;
   const selectionStart = element.selectionStart ?? element.value.length;
   const selectionEnd = element.selectionEnd ?? element.value.length;
   const prefix = element.value.slice(0, selectionStart);

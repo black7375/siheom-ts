@@ -104,7 +104,10 @@ export function FocusStealComboboxLogger() {
         </p>
       </header>
 
-      <section className="rounded-lg border border-border bg-muted/30 p-3 text-sm" aria-label="캡처 지시">
+      <section
+        className="rounded-lg border border-border bg-muted/30 p-3 text-sm"
+        aria-label="캡처 지시"
+      >
         <ol className="list-decimal space-y-1 pl-5 text-muted-foreground">
           <li>broken으로 「김태희」→ 풀어쓰기 트레이스 (이미 fixtures에 있음).</li>
           <li>fixed로 같은 입력을 다시 캡처해 최종값이 「김태희」인지 확인합니다.</li>

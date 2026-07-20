@@ -31,9 +31,7 @@ async function dispatchComposingInput(input: HTMLInputElement, value: string) {
 
 async function dispatchCompositionEnd(input: HTMLInputElement, data: string) {
   await act(async () => {
-    input.dispatchEvent(
-      new CompositionEvent("compositionend", { bubbles: true, data }),
-    );
+    input.dispatchEvent(new CompositionEvent("compositionend", { bubbles: true, data }));
     await Promise.resolve();
     await Promise.resolve();
   });
@@ -55,9 +53,7 @@ describe("FocusStealCombobox", () => {
   it("broken 모드: 조합 중에도 option으로 갔다가 input으로 돌아오며 blur가 한 번 난다", async () => {
     await runSiheom(given.render(<FocusStealCombobox mode="broken" />));
 
-    const input = document.getElementById(
-      "focus-steal-combobox-input",
-    ) as HTMLInputElement;
+    const input = document.getElementById("focus-steal-combobox-input") as HTMLInputElement;
     input.focus();
 
     let blurred = false;
@@ -74,9 +70,7 @@ describe("FocusStealCombobox", () => {
   it("fixed 모드: 조합 중에는 focus bounce(blur)가 없다", async () => {
     await runSiheom(given.render(<FocusStealCombobox mode="fixed" />));
 
-    const input = document.getElementById(
-      "focus-steal-combobox-input",
-    ) as HTMLInputElement;
+    const input = document.getElementById("focus-steal-combobox-input") as HTMLInputElement;
     input.focus();
 
     let blurred = false;
@@ -93,9 +87,7 @@ describe("FocusStealCombobox", () => {
   it("fixed 모드: compositionend(음절 경계)에도 DOM focus bounce가 없다", async () => {
     await runSiheom(given.render(<FocusStealCombobox mode="fixed" />));
 
-    const input = document.getElementById(
-      "focus-steal-combobox-input",
-    ) as HTMLInputElement;
+    const input = document.getElementById("focus-steal-combobox-input") as HTMLInputElement;
     input.focus();
 
     await act(async () => {

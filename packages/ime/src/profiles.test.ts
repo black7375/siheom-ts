@@ -23,9 +23,7 @@ describe("IME profiles", () => {
       id: "test-custom-ime",
       enterDuringComposition: "chromium-duplicate",
     });
-    expect(resolveProfile("test-custom-ime").enterDuringComposition).toBe(
-      "chromium-duplicate",
-    );
+    expect(resolveProfile("test-custom-ime").enterDuringComposition).toBe("chromium-duplicate");
     expect(getRegisteredProfileIds()).toContain("test-custom-ime");
   });
 

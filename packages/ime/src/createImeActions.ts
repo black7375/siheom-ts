@@ -20,9 +20,7 @@ export type CreateImeActionsOptions = {
   deferredUpdateRace?: ComposeHangulOptions["deferredUpdateRace"];
 };
 
-function isEditable(
-  element: HTMLElement,
-): element is HTMLInputElement | HTMLTextAreaElement {
+function isEditable(element: HTMLElement): element is HTMLInputElement | HTMLTextAreaElement {
   return element instanceof HTMLInputElement || element instanceof HTMLTextAreaElement;
 }
 
@@ -80,9 +78,7 @@ async function typeImeText(
     const next = segments[index + 1];
 
     if (segment.kind === "hangul") {
-      const leaveOpen =
-        next?.kind === "keys" &&
-        /\{(Backspace|ArrowLeft|Enter)\}/i.test(next.text);
+      const leaveOpen = next?.kind === "keys" && /\{(Backspace|ArrowLeft|Enter)\}/i.test(next.text);
       await composeHangul(element, segment.text, {
         commitFinal: !leaveOpen,
         ...composeOptions,
@@ -106,10 +102,7 @@ export function createImeActions(options: CreateImeActionsOptions = {}) {
     deferredUpdateRace: options.deferredUpdateRace,
   };
 
-  async function withPresentElement(
-    target: Locator,
-    run: (element: HTMLElement) => Promise<void>,
-  ) {
+  async function withPresentElement(target: Locator, run: (element: HTMLElement) => Promise<void>) {
     if (resolveElement === "sync") {
       const element = getElement(target, true);
       expect(element).toBeInTheDocument();

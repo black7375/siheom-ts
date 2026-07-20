@@ -26,15 +26,11 @@ function snapshotFromDom(
     keyCode: "keyCode" in keyboard ? (keyboard.keyCode ?? null) : null,
     isComposing:
       "isComposing" in keyboard || "isComposing" in input
-        ? ((keyboard as KeyboardEvent).isComposing ??
-          (input as InputEvent).isComposing ??
-          null)
+        ? ((keyboard as KeyboardEvent).isComposing ?? (input as InputEvent).isComposing ?? null)
         : null,
     inputType: "inputType" in input ? (input.inputType ?? null) : null,
     data:
-      event.type.startsWith("composition") ||
-      event.type === "beforeinput" ||
-      event.type === "input"
+      event.type.startsWith("composition") || event.type === "beforeinput" || event.type === "input"
         ? ((composition.data ?? input.data ?? null) as string | null)
         : null,
     value: element.value,

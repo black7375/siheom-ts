@@ -1,17 +1,8 @@
 import { assemble, disassemble } from "es-hangul";
 
 import type { ComposedEventRecord } from "./composeHangulTypes";
-import {
-  applyPreedit,
-  dispatch,
-  setInputValue,
-  snapshot,
-} from "./composeHangulInternals";
-import {
-  clearImeSession,
-  getImeSession,
-  setImeSession,
-} from "./imeSession";
+import { applyPreedit, dispatch, setInputValue, snapshot } from "./composeHangulInternals";
+import { clearImeSession, getImeSession, setImeSession } from "./imeSession";
 
 function hangulJamosOf(text: string): string[] {
   return disassemble(text)

@@ -53,15 +53,12 @@ describe("composeEnter during composition", () => {
     }));
 
     const confirmKeyIndex = types.findIndex(
-      (event) =>
-        event.type === "keydown" && event.keyCode === 229 && event.isComposing === true,
+      (event) => event.type === "keydown" && event.keyCode === 229 && event.isComposing === true,
     );
     const endIndex = types.findIndex((event) => event.type === "compositionend");
     expect(confirmKeyIndex).toBeGreaterThan(-1);
     expect(endIndex).toBeGreaterThan(confirmKeyIndex);
-    expect(types.some((event) => event.type === "keydown" && event.key === "Enter")).toBe(
-      false,
-    );
+    expect(types.some((event) => event.type === "keydown" && event.key === "Enter")).toBe(false);
 
     recorder.detach();
     input.remove();
@@ -113,9 +110,7 @@ describe("composeEnter during composition", () => {
       isComposing: event.isComposing,
     }));
 
-    const k229 = types.findIndex(
-      (event) => event.type === "keydown" && event.keyCode === 229,
-    );
+    const k229 = types.findIndex((event) => event.type === "keydown" && event.keyCode === 229);
     const endIndex = types.findIndex((event) => event.type === "compositionend");
     const enterIndex = types.findIndex(
       (event) => event.type === "keydown" && event.key === "Enter" && event.keyCode === 13,

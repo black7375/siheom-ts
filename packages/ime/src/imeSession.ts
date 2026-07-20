@@ -8,10 +8,7 @@ export type ImeComposeSession = {
   suffix: string;
 };
 
-const sessions = new WeakMap<
-  HTMLInputElement | HTMLTextAreaElement,
-  ImeComposeSession
->();
+const sessions = new WeakMap<HTMLInputElement | HTMLTextAreaElement, ImeComposeSession>();
 
 export function getImeSession(
   element: HTMLInputElement | HTMLTextAreaElement,

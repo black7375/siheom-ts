@@ -1,6 +1,4 @@
-export type TypeSegment =
-  | { kind: "hangul"; text: string }
-  | { kind: "keys"; text: string };
+export type TypeSegment = { kind: "hangul"; text: string } | { kind: "keys"; text: string };
 
 const HANGUL_CHAR = /[\u1100-\u11FF\u3130-\u318F\uAC00-\uD7A3]/;
 

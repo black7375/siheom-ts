@@ -73,9 +73,7 @@ describe("SearchField + createImeActions (Enter during composition)", () => {
   });
 
   it("linux-chrome-ibus-hangul + fixed: 확정 후 한 번 더 Enter면 submit", async () => {
-    const { runSiheom, actions, assertions, given } = runWithImeProfile(
-      "linux-chrome-ibus-hangul",
-    );
+    const { runSiheom, actions, assertions, given } = runWithImeProfile("linux-chrome-ibus-hangul");
 
     await runSiheom(
       given.render(<SearchField mode="fixed" />),

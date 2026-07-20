@@ -43,9 +43,7 @@ describe("DelayedControlledField + createImeActions (stale setState)", () => {
       actions.type(query.textbox("이름"), "김태희"),
     );
 
-    const input = document.getElementById(
-      "ime-delayed-controlled-input",
-    ) as HTMLInputElement;
+    const input = document.getElementById("ime-delayed-controlled-input") as HTMLInputElement;
     expect(input.value).not.toBe("김태희");
   });
 

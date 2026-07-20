@@ -20,8 +20,7 @@ export function registerProfile(profile: ImeProfile): void {
 }
 
 function envProfileId(): string | undefined {
-  const proc = (globalThis as { process?: { env?: Record<string, string | undefined> } })
-    .process;
+  const proc = (globalThis as { process?: { env?: Record<string, string | undefined> } }).process;
   return proc?.env?.SIHEOM_IME_PROFILE;
 }
 

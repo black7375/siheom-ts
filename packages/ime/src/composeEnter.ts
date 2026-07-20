@@ -1,10 +1,5 @@
 import type { ComposedEventRecord } from "./composeHangulTypes";
-import {
-  applyPreedit,
-  dispatch,
-  setInputValue,
-  snapshot,
-} from "./composeHangulInternals";
+import { applyPreedit, dispatch, setInputValue, snapshot } from "./composeHangulInternals";
 import { clearImeSession, getImeSession } from "./imeSession";
 import type { ImeProfile } from "./profiles";
 

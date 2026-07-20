@@ -76,7 +76,10 @@ export function SearchFieldLogger() {
         </p>
       </header>
 
-      <section className="rounded-lg border border-border bg-muted/30 p-3 text-sm" aria-label="캡처 지시">
+      <section
+        className="rounded-lg border border-border bg-muted/30 p-3 text-sm"
+        aria-label="캡처 지시"
+      >
         <ol className="list-decimal space-y-1 pl-5 text-muted-foreground">
           <li>
             Linux Chrome+ibus도 Safari처럼 compositionend 뒤 Enter(isComposing:false)가 옵니다
@@ -148,12 +151,7 @@ export function SearchFieldLogger() {
         mode: <code className="rounded bg-muted px-1.5 py-0.5">{mode}</code>
       </p>
 
-      <SearchField
-        key={mode}
-        mode={mode}
-        inputRef={inputRef}
-        onValueChange={setFieldValue}
-      />
+      <SearchField key={mode} mode={mode} inputRef={inputRef} onValueChange={setFieldValue} />
 
       <div className="flex flex-wrap gap-2">
         <Button
@@ -202,9 +200,7 @@ export function SearchFieldLogger() {
       <section className="flex flex-col gap-2" aria-label="이벤트 로그">
         <h2 className="text-sm font-medium">Events ({events.length})</h2>
         <pre className="max-h-[28rem] overflow-auto rounded-lg border border-border bg-muted/40 p-3 text-xs">
-          {events.length === 0
-            ? "아직 이벤트가 없습니다."
-            : formatImeTraceJson(buildTrace())}
+          {events.length === 0 ? "아직 이벤트가 없습니다." : formatImeTraceJson(buildTrace())}
         </pre>
       </section>
     </div>

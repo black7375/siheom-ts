@@ -113,9 +113,7 @@ export function FocusStealCombobox({
           aria-controls="focus-steal-combobox-listbox"
           aria-expanded={filtered.length > 0}
           aria-activedescendant={
-            mode === "fixed" && activeOption
-              ? `focus-steal-option-${activeOption}`
-              : undefined
+            mode === "fixed" && activeOption ? `focus-steal-option-${activeOption}` : undefined
           }
           value={value}
           onChange={(event) => {

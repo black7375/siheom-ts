@@ -10,18 +10,14 @@ import {
   serializeImeEvent,
   type ImeEventRecord,
 } from "../../ime-logger/serializeImeEvent";
-import {
-  DelayedControlledField,
-  type DelayedControlledFieldProps,
-} from "./DelayedControlledField";
+import { DelayedControlledField, type DelayedControlledFieldProps } from "./DelayedControlledField";
 
 /**
  * Capture shell: type Hangul quickly into a controlled input whose setState lags.
  * Emulator: createImeActions({ settle: "macrotask", deferredUpdateRace: true }).
  */
 export function DelayedControlledFieldLogger() {
-  const [mode, setMode] =
-    useState<NonNullable<DelayedControlledFieldProps["mode"]>>("broken");
+  const [mode, setMode] = useState<NonNullable<DelayedControlledFieldProps["mode"]>>("broken");
   const [os, setOs] = useState("linux");
   const [browser, setBrowser] = useState("chrome");
   const [ime, setIme] = useState("ibus-hangul");
@@ -76,12 +72,15 @@ export function DelayedControlledFieldLogger() {
         <h1 className="text-xl font-semibold">Delayed controlled update (IME bug)</h1>
         <p className="text-sm text-muted-foreground">
           React controlled input에서 <code className="rounded bg-muted px-1">setState</code>가 한
-          박자 늦으면, IME preedit 위를 오래된 <code className="rounded bg-muted px-1">value</code>가
-          덮어써 한글 조합이 깨집니다. 영어는 composition이 없어 잘 안 보입니다.
+          박자 늦으면, IME preedit 위를 오래된 <code className="rounded bg-muted px-1">value</code>
+          가 덮어써 한글 조합이 깨집니다. 영어는 composition이 없어 잘 안 보입니다.
         </p>
       </header>
 
-      <section className="rounded-lg border border-border bg-muted/30 p-3 text-sm" aria-label="캡처 지시">
+      <section
+        className="rounded-lg border border-border bg-muted/30 p-3 text-sm"
+        aria-label="캡처 지시"
+      >
         <ol className="list-decimal space-y-1 pl-5 text-muted-foreground">
           <li>broken이면 입력란에 「김태희」를 빠르게 조합합니다.</li>
           <li>값이 깨지거나 뒤로 돌아가면 재현 성공입니다 (fixed는 김태희 유지).</li>
@@ -209,9 +208,7 @@ export function DelayedControlledFieldLogger() {
       <section className="flex flex-col gap-2" aria-label="이벤트 로그">
         <h2 className="text-sm font-medium">Events ({events.length})</h2>
         <pre className="max-h-[28rem] overflow-auto rounded-lg border border-border bg-muted/40 p-3 text-xs">
-          {events.length === 0
-            ? "아직 이벤트가 없습니다."
-            : formatImeTraceJson(buildTrace())}
+          {events.length === 0 ? "아직 이벤트가 없습니다." : formatImeTraceJson(buildTrace())}
         </pre>
       </section>
     </div>
