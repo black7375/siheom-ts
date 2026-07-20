@@ -79,6 +79,11 @@ Realistic scenarios for Siheom + shadcn/ui. One user story per folder; TDD via t
 - [x] chart-dashboard — Chart + Card + Tabs
   - [x] tab switch — 매출/방문자 차트 전환
 
+## Phase 10 — LLM chat
+
+- [x] llm-chat — streaming chat + fake LLM API
+  - [x] stream — partial chunks accumulate in assistant status
+
 ## Deferred
 
 _(none)_
