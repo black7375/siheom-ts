@@ -1,4 +1,5 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+import { overrideSiheom } from "./factory.ts";
 import { createRunSiheom } from "./siheom.ts";
 import { defaultEffects, effect } from "./effect.ts";
 import { withFakeTimers } from "./withFakeTimers.ts";
@@ -45,18 +46,25 @@ describe("runSiheom effect steps", () => {
   it("runs an effect from the registry", async () => {
     let elapsedMs: number | null = null;
 
-    const runSiheom = createRunSiheom({
-      actions: {},
-      assertions: {},
-      givens: {},
-      effects: {
-        elapsed: async (ms: number) => {
-          elapsedMs = ms;
+    const { runSiheom, effect: effectBindings } = overrideSiheom(
+      {
+        actions: {},
+        assertions: {},
+        givens: {},
+        effects: {
+          elapsed: async (_ms: number) => {},
         },
       },
-    });
+      {
+        effects: {
+          elapsed: async (ms: number) => {
+            elapsedMs = ms;
+          },
+        },
+      },
+    );
 
-    await runSiheom({ effect: "elapsed", args: [500], log: "elapsed: 500ms" });
+    await runSiheom(effectBindings.elapsed(500));
 
     expect(elapsedMs).toBe(500);
   });
