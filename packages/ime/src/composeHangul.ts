@@ -15,11 +15,44 @@ export {
 export type ComposeHangulOptions = {
   /** When true (default), fire compositionend for the final syllable */
   commitFinal?: boolean;
+  /**
+   * When to yield after each preedit so host code (React setState, focus bounce) can run.
+   * - `microtask` (default): focus-steal blur detection
+   * - `macrotask`: `setTimeout(0)` — needed for deferred React writeback races
+   */
+  settle?: "microtask" | "macrotask";
+  /**
+   * With `settle: "macrotask"`, only flush every other preedit so an earlier
+   * deferred setState can overwrite a newer IME value (stale controlled input bug).
+   */
+  deferredUpdateRace?: boolean;
 };
 
 async function flushMicrotasks() {
   await Promise.resolve();
   await Promise.resolve();
+}
+
+async function flushMacrotask() {
+  await new Promise<void>((resolve) => {
+    setTimeout(resolve, 0);
+  });
+}
+
+async function settleAfterPreedit(
+  kind: "microtask" | "macrotask",
+  preeditIndex: number,
+  deferredUpdateRace: boolean,
+) {
+  if (kind === "microtask") {
+    await flushMicrotasks();
+    return;
+  }
+  // macrotask: optionally skip odd steps so a prior setTimeout(0) setState can clobber
+  if (deferredUpdateRace && preeditIndex % 2 === 0) {
+    return;
+  }
+  await flushMacrotask();
 }
 
 function endComposition(
@@ -44,6 +77,7 @@ async function playIsolatedJamo(
   suffix: string,
   records: ComposedEventRecord[],
   blurred: { current: boolean },
+  settle: "microtask" | "macrotask",
 ) {
   const meta = keyForJamo(jamo);
   const committed = element.value.slice(0, element.value.length - suffix.length);
@@ -78,14 +112,12 @@ async function playIsolatedJamo(
   });
 
   applyPreedit(element, jamo, value, records, caret);
-  await flushMicrotasks();
+  await settleAfterPreedit(settle, 1, false);
 
   if (blurred.current) {
     blurred.current = false;
-    endComposition(element, jamo, records);
-  } else {
-    endComposition(element, jamo, records);
   }
+  endComposition(element, jamo, records);
 
   dispatch(element, "keyup", {
     bubbles: true,
@@ -110,6 +142,9 @@ async function playStrokeRespectingBlur(
   suffix: string,
   records: ComposedEventRecord[],
   blurred: { current: boolean },
+  settle: "microtask" | "macrotask",
+  deferredUpdateRace: boolean,
+  preeditCounter: { current: number },
 ): Promise<"aborted" | "ok"> {
   const carets = stroke.valuesAfterSteps.map((value) => value.length - suffix.length);
 
@@ -149,7 +184,29 @@ async function playStrokeRespectingBlur(
     });
 
     applyPreedit(element, preedit, value, records, caret);
-    await flushMicrotasks();
+    await settleAfterPreedit(settle, preeditCounter.current, deferredUpdateRace);
+    preeditCounter.current += 1;
+
+    // Stale React controlled `value` wrote back an older string over IME preedit
+    if (element.value !== value) {
+      endComposition(element, preedit, records);
+      dispatch(element, "keyup", {
+        bubbles: true,
+        key: stroke.key,
+        code: stroke.code,
+        keyCode: stroke.key.charCodeAt(0),
+        isComposing: false,
+      });
+      records.push(
+        snapshot(element, "keyup", {
+          key: stroke.key,
+          code: stroke.code,
+          keyCode: stroke.key.charCodeAt(0),
+          isComposing: false,
+        }),
+      );
+      return "aborted";
+    }
 
     if (blurred.current) {
       blurred.current = false;
@@ -216,13 +273,18 @@ export async function composeHangul(
   text: string,
   options: ComposeHangulOptions = {},
 ): Promise<ComposedEventRecord[]> {
-  const { commitFinal = true } = options;
+  const {
+    commitFinal = true,
+    settle = "microtask",
+    deferredUpdateRace = false,
+  } = options;
   const selectionStart = element.selectionStart ?? element.value.length;
   const selectionEnd = element.selectionEnd ?? element.value.length;
   const prefix = element.value.slice(0, selectionStart);
   const suffix = element.value.slice(selectionEnd);
   const strokes = planHangulKeystrokes(text, { prefix });
   const records: ComposedEventRecord[] = [];
+  const preeditCounter = { current: 0 };
 
   const blurred = { current: false };
   const onBlur = () => {
@@ -243,12 +305,15 @@ export async function composeHangul(
         suffix,
         records,
         blurred,
+        settle,
+        deferredUpdateRace,
+        preeditCounter,
       );
 
       if (result === "aborted") {
         const remaining = strokes.slice(index + 1).map((s) => s.jamo);
         for (const jamo of remaining) {
-          await playIsolatedJamo(element, jamo, suffix, records, blurred);
+          await playIsolatedJamo(element, jamo, suffix, records, blurred, settle);
         }
         return records;
       }

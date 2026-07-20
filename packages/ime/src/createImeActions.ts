@@ -6,7 +6,7 @@ import { expect } from "vitest";
 import { composeArrowLeft } from "./composeArrowLeft";
 import { composeBackspace } from "./composeBackspace";
 import { composeEnter } from "./composeEnter";
-import { composeHangul } from "./composeHangul";
+import { composeHangul, type ComposeHangulOptions } from "./composeHangul";
 import { resolveProfile, type ImeProfile } from "./profiles";
 import { segmentTypeText } from "./segmentTypeText";
 
@@ -15,6 +15,9 @@ export type CreateImeActionsOptions = {
   resolveElement?: "sync" | "waitFor";
   /** Profile id, profile object, or env `SIHEOM_IME_PROFILE` / default linux-chrome-ibus-hangul */
   profile?: string | ImeProfile;
+  /** Passed through to `composeHangul` (e.g. stale controlled-input races). */
+  settle?: ComposeHangulOptions["settle"];
+  deferredUpdateRace?: ComposeHangulOptions["deferredUpdateRace"];
 };
 
 function isEditable(
@@ -63,6 +66,7 @@ async function typeImeText(
   element: HTMLElement,
   text: string,
   profile: ImeProfile,
+  composeOptions: Pick<ComposeHangulOptions, "settle" | "deferredUpdateRace">,
 ): Promise<void> {
   if (!isEditable(element)) {
     await user.type(element, text);
@@ -79,7 +83,10 @@ async function typeImeText(
       const leaveOpen =
         next?.kind === "keys" &&
         /\{(Backspace|ArrowLeft|Enter)\}/i.test(next.text);
-      await composeHangul(element, segment.text, { commitFinal: !leaveOpen });
+      await composeHangul(element, segment.text, {
+        commitFinal: !leaveOpen,
+        ...composeOptions,
+      });
     } else {
       await typeKeySegment(user, element, segment.text, profile);
     }
@@ -94,6 +101,10 @@ export function createImeActions(options: CreateImeActionsOptions = {}) {
   const user = options.user ?? userEvent.setup();
   const resolveElement = options.resolveElement ?? "waitFor";
   const profile = resolveProfile(options.profile);
+  const composeOptions = {
+    settle: options.settle,
+    deferredUpdateRace: options.deferredUpdateRace,
+  };
 
   async function withPresentElement(
     target: Locator,
@@ -118,12 +129,12 @@ export function createImeActions(options: CreateImeActionsOptions = {}) {
       withPresentElement(target, async (element) => {
         await user.click(element);
         await user.clear(element);
-        await typeImeText(user, element, text, profile);
+        await typeImeText(user, element, text, profile, composeOptions);
       }),
     type: async (target: Locator, text: string) =>
       withPresentElement(target, async (element) => {
         await user.click(element);
-        await typeImeText(user, element, text, profile);
+        await typeImeText(user, element, text, profile, composeOptions);
       }),
   } satisfies Pick<ActionStepDefinitionDict, "fill" | "type">;
 }
