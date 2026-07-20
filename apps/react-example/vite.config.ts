@@ -24,7 +24,7 @@ export default defineConfig({
 		},
 	},
 	optimizeDeps: {
-		include: ["react-aria-components"],
+		include: ["react-aria-components", "@ariakit/react"],
 	},
 	test: {
 		alias: {

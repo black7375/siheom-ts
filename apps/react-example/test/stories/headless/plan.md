@@ -14,7 +14,7 @@ Siheom specs for the same subscribe-dialog scenario across headless UI libraries
 
 - [x] React Aria (`ReactAria.tsx`)
 - [x] Radix UI (`Radix.tsx`)
-- [ ] Ariakit (`Ariakit.tsx`)
+- [x] Ariakit (`Ariakit.tsx`)
 - [ ] Material UI (`Mui.tsx`)
 - [ ] Ark UI (`ArkUi.tsx`)
 
