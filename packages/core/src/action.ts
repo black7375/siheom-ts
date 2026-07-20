@@ -10,9 +10,7 @@ type DefaultActionsOptions = {
   resolveElement?: "sync" | "waitFor";
 };
 
-export function createDefaultActions(
-  options: DefaultActionsOptions = {},
-): ActionStepDefinitionDict {
+export function createDefaultActions(options: DefaultActionsOptions = {}) {
   const user = options.user ?? userEvent.setup();
   const resolveElement = options.resolveElement ?? "waitFor";
 
@@ -79,8 +77,10 @@ export function createDefaultActions(
       withPresentElement(target, async (element) => {
         await user.upload(element, file);
       }),
-  };
+  } satisfies ActionStepDefinitionDict;
 }
+
+export type DefaultActions = ReturnType<typeof createDefaultActions>;
 
 export const defaultActions = createDefaultActions();
 

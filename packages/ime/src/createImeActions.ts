@@ -40,9 +40,7 @@ async function typeImeText(
  * Drop-in `fill` / `type` implementations for `overrideSiheom({ actions: createImeActions() })`.
  * Hangul runs use composition emulation; everything else uses `@testing-library/user-event`.
  */
-export function createImeActions(
-  options: CreateImeActionsOptions = {},
-): Pick<ActionStepDefinitionDict, "fill" | "type"> {
+export function createImeActions(options: CreateImeActionsOptions = {}) {
   const user = options.user ?? userEvent.setup();
   const resolveElement = options.resolveElement ?? "waitFor";
 
@@ -76,5 +74,7 @@ export function createImeActions(
         await user.click(element);
         await typeImeText(user, element, text);
       }),
-  };
+  } satisfies Pick<ActionStepDefinitionDict, "fill" | "type">;
 }
+
+export type ImeActions = ReturnType<typeof createImeActions>;

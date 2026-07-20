@@ -37,10 +37,6 @@ describe("createImeActions + overrideSiheom", () => {
       },
     );
 
-    if (!actions.fill || !assertions.value || !given.render) {
-      throw new Error("expected fill, value, and render bindings");
-    }
-
     await runSiheom(
       given.render(),
       actions.fill(query.textbox("이름"), "김태희"),

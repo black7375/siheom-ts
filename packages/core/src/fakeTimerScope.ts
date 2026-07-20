@@ -75,7 +75,7 @@ export function createFakeTimerScopedRegistries<
   const actions = wrapActionsAfterHook(
     createDefaultActions({ user, resolveElement: "sync" }),
     afterAction,
-  ) as TActions;
+  ) as unknown as TActions;
 
   return {
     ...registries,
