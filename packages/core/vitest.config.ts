@@ -7,5 +7,10 @@ export default defineConfig({
     globals: true,
     include: ["src/**/*.test.ts"],
     ...vitestBrowserMode,
+    coverage: {
+      include: ["src/**/*.ts"],
+      exclude: ["src/**/*.test.ts", "src/**/index.ts"],
+    },
   },
 });
+

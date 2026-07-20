@@ -12,3 +12,4 @@ apps/*/storybook-static
 apps/react-example/.vitest-attachments
 **/.vitest-attachments/
 apps/react-example/coverage
+packages/*/coverage

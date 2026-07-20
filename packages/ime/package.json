@@ -43,6 +43,7 @@
     "@testing-library/user-event": "^14.6.1",
     "@vitest/browser": "^4.1.10",
     "@vitest/browser-playwright": "^4.1.10",
+    "@vitest/coverage-v8": "4.1.10",
     "playwright": "^1.61.1",
     "tsdown": "^0.22.8",
     "typescript": "^7.0.2",

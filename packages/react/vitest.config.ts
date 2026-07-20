@@ -19,5 +19,9 @@ export default defineConfig({
     include: ["src/**/*.test.tsx"],
     setupFiles: ["src/testSetup.ts"],
     ...vitestBrowserMode,
+    coverage: {
+      include: ["src/**/*.{ts,tsx}"],
+      exclude: ["src/**/*.test.tsx", "src/**/index.ts", "src/testSetup.ts"],
+    },
   },
 });
