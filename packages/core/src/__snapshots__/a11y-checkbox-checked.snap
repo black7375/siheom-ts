@@ -1,0 +1,3 @@
+checkbox: "완료" [value="on"]
+  - states: [checked=true]
+"완료"

@@ -1,0 +1,5 @@
+"이메일"
+textbox: "이메일" [value=""] [description="힌트"]
+  - states: [invalid=true]
+"힌트"
+"오류"
