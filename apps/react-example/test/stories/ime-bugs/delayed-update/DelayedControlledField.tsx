@@ -1,11 +1,10 @@
 import { useEffect, useRef, useState } from "react";
 import { flushSync } from "react-dom";
-import { markImeControlledWriteback } from "@siheom/ime";
-
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 
 import { assignRef } from "../shared/assignRef";
+import { markImeControlledWriteback } from "../shared/markImeControlledWriteback";
 
 export type DelayedControlledFieldProps = {
   /**

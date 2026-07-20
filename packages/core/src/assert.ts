@@ -1,4 +1,3 @@
-import "@testing-library/jest-dom/vitest";
 import { waitFor } from "@testing-library/dom";
 import type { AssertionStepDefinitionDict, Locator } from "./types";
 import { getElement, getElements, locatorLog } from "./query";
