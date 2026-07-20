@@ -13,3 +13,9 @@ export function addTodo(todos: Todo[], title: string): Todo[] {
   if (!trimmed) return todos;
   return [...todos, createTodo(trimmed)];
 }
+
+export function toggleTodo(todos: Todo[], id: string): Todo[] {
+  return todos.map((todo) =>
+    todo.id === id ? { ...todo, completed: !todo.completed } : todo,
+  );
+}

@@ -1,0 +1,6 @@
+region: "todo list"
+  list:
+    listitem: "Buy milk"
+      checkbox: "Mark Buy milk as complete" [value="on"]
+        - states: [checked=true]
+      "Buy milk"
