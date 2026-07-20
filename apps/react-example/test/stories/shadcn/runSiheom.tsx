@@ -29,9 +29,7 @@ async function actAsync<T>(run: () => Promise<T> | T): Promise<T> {
   return result;
 }
 
-function wrapInActAsync<T extends Record<string, (...args: never[]) => Promise<void>>>(
-  impl: T,
-): T {
+function wrapInActAsync<T extends Record<string, (...args: never[]) => Promise<void>>>(impl: T): T {
   return Object.fromEntries(
     Object.entries(impl).map(([name, run]) => [
       name,
