@@ -23,7 +23,9 @@ Realistic scenarios for Siheom + shadcn/ui. One user story per folder; TDD via t
 - [x] document-actions — Dropdown Menu + Context Menu
   - [x] dropdown — copy via 더보기 menu
   - [x] context menu — delete via right click
-- [ ] command-menu — Command palette (Cmd+K)
+- [x] command-menu — Command palette (Cmd+K)
+  - [x] open — dialog from 빠른 실행 button
+  - [x] select — run command and close dialog
 
 ## Phase 2 — Selection & search
 
