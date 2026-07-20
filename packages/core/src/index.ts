@@ -14,7 +14,11 @@ export {
   wrapActionsAfterHook,
   createFakeTimerScopedRegistries,
 } from "./fakeTimerScope.ts";
-export type { FakeTimerScopeHooks, AfterActionHook } from "./fakeTimerScope.ts";
+export type {
+  FakeTimerScopeHooks,
+  AfterActionHook,
+  SiheomRegistryBundle,
+} from "./fakeTimerScope.ts";
 export type {
   ActionStep,
   ActionStepDefinitionDict,

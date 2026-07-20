@@ -1,5 +1,5 @@
-import { act } from "@testing-library/react";
 import { FAKE_TIMER_USER_DELAY_MS } from "@siheom/core";
+import { actAsync } from "./actAsync.ts";
 import { vi } from "vitest";
 
 /**
@@ -12,7 +12,7 @@ export const reactFakeTimerScope = {
     vi.useFakeTimers({ shouldAdvanceTime: true });
   },
   afterAction: async () => {
-    await act(async () => {
+    await actAsync(async () => {
       await vi.advanceTimersByTimeAsync(FAKE_TIMER_USER_DELAY_MS);
     });
   },

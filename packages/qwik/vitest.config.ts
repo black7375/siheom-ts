@@ -8,6 +8,8 @@ const dirname = path.dirname(fileURLToPath(import.meta.url));
 
 export default defineConfig({
   plugins: [qwikVite()],
+  // qwikVite sets `esbuild: false` in serve mode; Vite 8 expects `oxc: false` instead.
+  oxc: false,
   define: vitestBrowserDefine,
   resolve: {
     alias: {

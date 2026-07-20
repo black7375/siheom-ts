@@ -1,6 +1,5 @@
 import { beforeEach, describe, it, expect } from "vitest";
-import { cleanup } from "@testing-library/react";
-import { actions, assertions, given, query, runSiheom } from "@siheom/react";
+import { actions, assertions, cleanupReactRoots, given, query, runSiheom } from "@siheom/react";
 import { TodoMVCApp } from "./TodoMVCApp.tsx";
 import type { Todo } from "./todoLogic";
 import { SEEDED_TODOS, TODO_BUY_MILK, TODO_READ_BOOK, TODO_WALK_DOG } from "./todos.fixture";
@@ -172,7 +171,7 @@ describe("TodoMVCApp", () => {
       assertions.current(query.link("Active"), "page"),
     );
 
-    cleanup();
+    await cleanupReactRoots();
 
     await runSiheom(
       given.render(<TodoMVCApp initialEntries={["/active"]} />),
