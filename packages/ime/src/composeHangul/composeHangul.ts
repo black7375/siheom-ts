@@ -17,6 +17,10 @@ import {
 } from "../_internal";
 import { consumeImeControlledWriteback } from "../markImeControlledWriteback";
 import { resolveProfile, type ImeProfile } from "../profiles";
+import {
+  composeHangulSafariComposition,
+  composeHangulSafariReplacement,
+} from "./composeHangulSafari";
 
 export type { ComposedEventRecord } from "../_internal";
 
@@ -214,6 +218,22 @@ export async function composeHangul(
   const suffix = element.value.slice(selectionEnd);
   const strokes = planHangulKeystrokes(text, { prefix });
   const records: ComposedEventRecord[] = [];
+
+  if (profile.id === "macos-safari-apple" && settle === "macrotask") {
+    element.focus();
+    return composeHangulSafariComposition(element, strokes, suffix, profile, {
+      commitFinal,
+      settle,
+      deferredUpdateRace,
+    });
+  }
+
+  if (profile.hangulComposeMode === "replacement") {
+    element.focus();
+    return composeHangulSafariReplacement(element, strokes, suffix, profile, {
+      settle,
+    });
+  }
 
   const blurred = { current: false };
   const onBlur = () => {

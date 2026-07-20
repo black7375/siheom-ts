@@ -20,7 +20,7 @@ type ImeRecorder = ReturnType<typeof attachImeRecorder>;
 
 function runWithDeferredIme(
   deferredUpdateRace: boolean,
-  profile: "linux-chrome-ibus-hangul" | "macos-chrome-apple" = "linux-chrome-ibus-hangul",
+  profile: "linux-chrome-ibus-hangul" | "macos-chrome-apple" | "macos-safari-apple" = "linux-chrome-ibus-hangul",
 ) {
   const recorderRef: { current: ImeRecorder | undefined } = { current: undefined };
 
@@ -116,6 +116,39 @@ describe("DelayedControlledField + createImeActions (OS delayed-update)", () => 
     expect(toCriticalEvents(recorderRef.current!.events)).toEqual(
       goldenCritical(macosFixedGolden.events),
     );
+    recorderRef.current!.detach();
+  });
+
+  it("macos-safari-apple broken: stale writeback yields Safari-style garble (not Linux 풀어쓰기)", async () => {
+    const { runSiheom, actions, assertions, given, recorderRef } = runWithDeferredIme(
+      true,
+      "macos-safari-apple",
+    );
+    const linuxBroken = "ㄱㅣㅁㅌㅐㅎㅡㅣ";
+
+    await runSiheom(
+      given.render(<DelayedControlledField mode="broken" />),
+      actions.type(query.textbox("이름"), "김태희"),
+    );
+
+    const value = recorderRef.current!.events.at(-1)?.value ?? "";
+    expect(value).not.toBe(linuxBroken);
+    expect(value.length).toBeGreaterThan("김태희".length);
+    recorderRef.current!.detach();
+  });
+
+  it("macos-safari-apple fixed: final value matches OS capture", async () => {
+    const { runSiheom, actions, assertions, given, recorderRef } = runWithDeferredIme(
+      false,
+      "macos-safari-apple",
+    );
+
+    await runSiheom(
+      given.render(<DelayedControlledField mode="fixed" />),
+      actions.type(query.textbox("이름"), "김태희"),
+      assertions.value(query.textbox("이름"), "김태희"),
+    );
+
     recorderRef.current!.detach();
   });
 });

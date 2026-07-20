@@ -10,6 +10,6 @@ Safari뿐 아니라 **Linux Chrome + ibus-hangul**도 `compositionend` 뒤 `Ente
 
 - [x] `mode="broken"`: Enter when `!isComposing` submits
 - [x] `mode="fixed"`: swallows the **next** Enter after `compositionend` (not just same-microtask)
-- [x] `linux-chrome-ibus-hangul` / `macos-safari` / `macos-chrome-apple` profiles: `김{Enter}` → broken submits, fixed does not
+- [x] `linux-chrome-ibus-hangul` / `macos-safari` / `macos-safari-apple` / `macos-chrome-apple` profiles covered in SearchField IME tests
 - [x] `chromium-enter-229`: broken does not false-submit (229 confirm)
 - [x] OS Linux captures committed under `fixtures/linux-ibus-hangul-chrome/`

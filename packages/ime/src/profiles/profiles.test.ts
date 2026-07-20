@@ -23,15 +23,25 @@ describe("IME profiles", () => {
       id: "test-custom-ime",
       enterDuringComposition: "chromium-duplicate",
       hangulKeyEventKey: "process",
+      hangulComposeMode: "composition",
     });
     expect(resolveProfile("test-custom-ime").enterDuringComposition).toBe("chromium-duplicate");
     expect(getRegisteredProfileIds()).toContain("test-custom-ime");
+  });
+
+  it("resolves macos-safari-apple with replacement Hangul and jamo keys", () => {
+    expect(resolveProfile("macos-safari-apple")).toMatchObject({
+      hangulComposeMode: "replacement",
+      hangulKeyEventKey: "jamo",
+      enterDuringComposition: "webkit",
+    });
   });
 
   it("resolves macos-chrome-apple with chromium-apple Enter and jamo keydown keys", () => {
     expect(resolveProfile("macos-chrome-apple")).toMatchObject({
       enterDuringComposition: "chromium-apple",
       hangulKeyEventKey: "jamo",
+      hangulComposeMode: "composition",
     });
   });
 

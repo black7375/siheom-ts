@@ -24,6 +24,7 @@ IME-faithful `fill` / `type` that plug into siheom via `overrideSiheom`, startin
 - [x] `registerProfile` / resolve profile id; linux-chrome-ibus-hangul is the default Hangul profile
 - [x] Enter-during-composition facets: webkit (`macos-safari`, `linux-chrome-ibus-hangul`), chromium (`chromium-enter-229`), chromium-duplicate (`windows-chrome-ms`), chromium-apple (`macos-chrome-apple`)
 - [x] Hangul keydown `key` facet: `process` (Linux ibus) vs `jamo` (macOS Chrome Apple)
+- [x] Hangul compose mode: `composition` vs `replacement` (macOS Safari Apple insertText path)
 
 ### Phase 4 — Bug fixtures
 

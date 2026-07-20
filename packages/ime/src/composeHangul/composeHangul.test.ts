@@ -3,6 +3,10 @@ import { describe, expect, it } from "vitest";
 import { composeHangul } from "./composeHangul";
 import golden from "../../fixtures/linux-chrome-ibus-hangul/continuous-hangul.json";
 import macosGolden from "../../fixtures/macos-chrome-apple/continuous-hangul.json";
+import { attachImeRecorder } from "../attachImeRecorder";
+import { composeEnter } from "../composeEnter";
+import { resolveProfile } from "../profiles";
+import safariEnterGolden from "../../fixtures/macos-safari-apple/broken-김-enter.json";
 import { goldenCritical } from "../goldenCritical";
 import { toCriticalEvents } from "../toCriticalEvents";
 import { planHangulKeystrokes } from "../planHangulKeystrokes";
@@ -71,6 +75,23 @@ describe("composeHangul", () => {
     expect(input.value).toBe("김태희");
     expect(toCriticalEvents(events)).toEqual(goldenCritical(macosGolden.events));
 
+    input.remove();
+  });
+
+  it("matches macos-safari-apple enter-submit critical fields for 김 (replacement, no composition)", async () => {
+    const input = document.createElement("input");
+    document.body.append(input);
+    const recorder = attachImeRecorder(input);
+
+    await composeHangul(input, "김", {
+      profile: "macos-safari-apple",
+      commitFinal: false,
+    });
+    await composeEnter(input, resolveProfile("macos-safari-apple"));
+
+    expect(input.value).toBe("김");
+    expect(toCriticalEvents(recorder.events)).toEqual(goldenCritical(safariEnterGolden.events));
+    recorder.detach();
     input.remove();
   });
 });

@@ -11,10 +11,20 @@ export type EnterDuringCompositionFacet =
 /** Hangul keydown/keyup `key` field during composition (OS capture differs). */
 export type HangulKeyEventKey = "process" | "jamo";
 
+/** How Hangul keystrokes are applied to the field. */
+export type HangulComposeMode =
+  /** compositionstart/update/end + insertCompositionText (Linux, Chrome) */
+  | "composition"
+  /** insertText / insertReplacementText without composition (Safari Apple) */
+  | "replacement"
+  /** composition with input before keydown (Safari Apple delayed-update fixed) */
+  | "safari-composition";
+
 export type ImeProfile = {
   id: string;
   enterDuringComposition: EnterDuringCompositionFacet;
   hangulKeyEventKey: HangulKeyEventKey;
+  hangulComposeMode: HangulComposeMode;
 };
 
 export const DEFAULT_IME_PROFILE_ID = "linux-chrome-ibus-hangul";
@@ -55,27 +65,37 @@ function registerBuiltins() {
     id: "linux-chrome-ibus-hangul",
     enterDuringComposition: "webkit",
     hangulKeyEventKey: "process",
+    hangulComposeMode: "composition",
   });
   registerProfile({
     id: "macos-safari",
     enterDuringComposition: "webkit",
     hangulKeyEventKey: "process",
+    hangulComposeMode: "composition",
+  });
+  registerProfile({
+    id: "macos-safari-apple",
+    enterDuringComposition: "webkit",
+    hangulKeyEventKey: "jamo",
+    hangulComposeMode: "replacement",
   });
   registerProfile({
     id: "macos-chrome-apple",
     enterDuringComposition: "chromium-apple",
     hangulKeyEventKey: "jamo",
+    hangulComposeMode: "composition",
   });
   registerProfile({
     id: "windows-chrome-ms",
     enterDuringComposition: "chromium-duplicate",
     hangulKeyEventKey: "process",
+    hangulComposeMode: "composition",
   });
-  // Classic Chromium-order Enter confirm (229 first) — keep for matrix / other IMEs
   registerProfile({
     id: "chromium-enter-229",
     enterDuringComposition: "chromium",
     hangulKeyEventKey: "process",
+    hangulComposeMode: "composition",
   });
 }
 

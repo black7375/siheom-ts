@@ -5,7 +5,7 @@ import { SearchField } from "./SearchField";
 import { runWithImeSiheom } from "../shared/runWithImeSiheom";
 
 describe("SearchField + createImeActions (Enter during composition)", () => {
-  it.each(["macos-safari", "macos-chrome-apple", "linux-chrome-ibus-hangul"] as const)(
+  it.each(["macos-safari", "macos-safari-apple", "macos-chrome-apple", "linux-chrome-ibus-hangul"] as const)(
     "%s + broken: 김{Enter} 확정 키가 submit된다",
     async (profile) => {
       const { runSiheom, actions, assertions, given } = runWithImeSiheom({ profile });
@@ -19,6 +19,19 @@ describe("SearchField + createImeActions (Enter during composition)", () => {
       );
     },
   );
+
+  it("macos-safari-apple + fixed: compositionend 없어 Enter가 submit된다", async () => {
+    const { runSiheom, actions, assertions, given } = runWithImeSiheom({
+      profile: "macos-safari-apple",
+    });
+
+    await runSiheom(
+      given.render(<SearchField mode="fixed" />),
+      actions.type(query.searchbox("검색"), "김{Enter}"),
+      assertions.value(query.searchbox("검색"), "김"),
+      assertions.textContent(query.status("submit 횟수"), "1"),
+    );
+  });
 
   it.each(["macos-safari", "macos-chrome-apple", "linux-chrome-ibus-hangul"] as const)(
     "%s + fixed: 김{Enter} 확정 키는 submit되지 않는다",
