@@ -1,7 +1,7 @@
 import "../../index.css";
 import { describe, expect, it } from "vitest";
 import { actions, assertions, given, query, runSiheom } from "@siheom/react";
-import { ReactAriaSubscribe } from "./ReactAria";
+import { ReactAriaSubscribe } from "./ReactAria.tsx";
 import { SUBSCRIBER } from "./subscribe.fixture";
 
 describe("ReactAriaSubscribe", () => {
@@ -32,6 +32,7 @@ describe("ReactAriaSubscribe", () => {
       actions.click(
         query.within(query.dialog("구독하기"), query.checkbox("약관에 동의합니다")),
       ),
+      assertions.checked(query.checkbox("약관에 동의합니다")),
       actions.click(
         query.within(query.dialog("구독하기"), query.button("구독하기")),
       ),
