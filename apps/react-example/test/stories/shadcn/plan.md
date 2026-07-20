@@ -42,7 +42,10 @@ Realistic scenarios for Siheom + shadcn/ui. One user story per folder; TDD via t
   - [x] initial — first page tasks visible
   - [x] pagination — next page
   - [x] badge — task status labels
-- [ ] order-tracking — Timeline (Card composition)
+- [x] order-tracking — Timeline (Card composition)
+  - [x] initial — delivery timeline steps visible
+  - [x] current — active step marked with aria-current
+  - [x] order card — order summary in card header
 
 ## Phase 4 — Date
 
