@@ -16,6 +16,8 @@ import mixedGolden from "../fixtures/linux-chrome-ibus-hangul/mixed-en-ko.json";
 import backspaceGolden from "../fixtures/linux-chrome-ibus-hangul/backspace-mid.json";
 import arrowGolden from "../fixtures/linux-chrome-ibus-hangul/arrow-edit-mid.json";
 
+type ImeRecorder = ReturnType<typeof attachImeRecorder>;
+
 function setupLabeledInput(onInput?: (input: HTMLInputElement) => void) {
   document.body.innerHTML = "";
   const label = document.createElement("label");
@@ -27,29 +29,39 @@ function setupLabeledInput(onInput?: (input: HTMLInputElement) => void) {
   return input;
 }
 
+function setup(onInput?: (input: HTMLInputElement) => void) {
+  const recorderRef: { current: ImeRecorder | undefined } = { current: undefined };
+
+  const { runSiheom, actions, assertions, given } = overrideSiheom(
+    {
+      actions: createDefaultActions(),
+      assertions: createDefaultAssertions(),
+      givens: {
+        render: async () => {
+          setupLabeledInput((input) => {
+            recorderRef.current = attachImeRecorder(input);
+            onInput?.(input);
+          });
+        },
+      },
+      effects: defaultEffects,
+    },
+    {
+      actions: createImeActions(),
+    },
+  );
+
+  return { runSiheom, actions, assertions, given, recorderRef };
+}
+
 describe("createImeActions + overrideSiheom", () => {
   it("fills Hangul with compositionupdate (not user-event insertText-only)", async () => {
     let compositionUpdates = 0;
-
-    const { runSiheom, actions, assertions, given } = overrideSiheom(
-      {
-        actions: createDefaultActions(),
-        assertions: createDefaultAssertions(),
-        givens: {
-          render: async () => {
-            setupLabeledInput((input) => {
-              input.addEventListener("compositionupdate", () => {
-                compositionUpdates += 1;
-              });
-            });
-          },
-        },
-        effects: defaultEffects,
-      },
-      {
-        actions: createImeActions(),
-      },
-    );
+    const { runSiheom, actions, assertions, given } = setup((input) => {
+      input.addEventListener("compositionupdate", () => {
+        compositionUpdates += 1;
+      });
+    });
 
     await runSiheom(
       given.render(),
@@ -61,25 +73,7 @@ describe("createImeActions + overrideSiheom", () => {
   });
 
   it("types 김태희 matching continuous-hangul golden critical fields", async () => {
-    let recorder: ReturnType<typeof attachImeRecorder> | undefined;
-
-    const { runSiheom, actions, assertions, given } = overrideSiheom(
-      {
-        actions: createDefaultActions(),
-        assertions: createDefaultAssertions(),
-        givens: {
-          render: async () => {
-            setupLabeledInput((input) => {
-              recorder = attachImeRecorder(input);
-            });
-          },
-        },
-        effects: defaultEffects,
-      },
-      {
-        actions: createImeActions(),
-      },
-    );
+    const { runSiheom, actions, assertions, given, recorderRef } = setup();
 
     await runSiheom(
       given.render(),
@@ -87,33 +81,14 @@ describe("createImeActions + overrideSiheom", () => {
       assertions.value(query.textbox("이름"), "김태희"),
     );
 
-    expect(recorder).toBeDefined();
-    expect(toCriticalEvents(recorder!.events)).toEqual(
+    expect(toCriticalEvents(recorderRef.current!.events)).toEqual(
       goldenCritical(continuousGolden.events),
     );
-    recorder!.detach();
+    recorderRef.current!.detach();
   });
 
   it("types hello 안녕 with Hangul portion matching mixed-en-ko golden", async () => {
-    let recorder: ReturnType<typeof attachImeRecorder> | undefined;
-
-    const { runSiheom, actions, assertions, given } = overrideSiheom(
-      {
-        actions: createDefaultActions(),
-        assertions: createDefaultAssertions(),
-        givens: {
-          render: async () => {
-            setupLabeledInput((input) => {
-              recorder = attachImeRecorder(input);
-            });
-          },
-        },
-        effects: defaultEffects,
-      },
-      {
-        actions: createImeActions(),
-      },
-    );
+    const { runSiheom, actions, assertions, given, recorderRef } = setup();
 
     await runSiheom(
       given.render(),
@@ -121,33 +96,14 @@ describe("createImeActions + overrideSiheom", () => {
       assertions.value(query.textbox("이름"), "hello 안녕"),
     );
 
-    expect(recorder).toBeDefined();
-    expect(toCriticalEvents(fromFirstCompositionStart(recorder!.events))).toEqual(
+    expect(toCriticalEvents(fromFirstCompositionStart(recorderRef.current!.events))).toEqual(
       goldenCritical(fromFirstCompositionStart(mixedGolden.events)),
     );
-    recorder!.detach();
+    recorderRef.current!.detach();
   });
 
   it("types backspace-mid script matching golden critical fields", async () => {
-    let recorder: ReturnType<typeof attachImeRecorder> | undefined;
-
-    const { runSiheom, actions, assertions, given } = overrideSiheom(
-      {
-        actions: createDefaultActions(),
-        assertions: createDefaultAssertions(),
-        givens: {
-          render: async () => {
-            setupLabeledInput((input) => {
-              recorder = attachImeRecorder(input);
-            });
-          },
-        },
-        effects: defaultEffects,
-      },
-      {
-        actions: createImeActions(),
-      },
-    );
+    const { runSiheom, actions, assertions, given, recorderRef } = setup();
 
     await runSiheom(
       given.render(),
@@ -158,33 +114,14 @@ describe("createImeActions + overrideSiheom", () => {
       assertions.value(query.textbox("이름"), "김철수"),
     );
 
-    expect(recorder).toBeDefined();
-    expect(toCriticalEvents(recorder!.events)).toEqual(
+    expect(toCriticalEvents(recorderRef.current!.events)).toEqual(
       goldenCritical(backspaceGolden.events),
     );
-    recorder!.detach();
+    recorderRef.current!.detach();
   });
 
   it("types arrow-edit-mid script matching golden critical fields", async () => {
-    let recorder: ReturnType<typeof attachImeRecorder> | undefined;
-
-    const { runSiheom, actions, assertions, given } = overrideSiheom(
-      {
-        actions: createDefaultActions(),
-        assertions: createDefaultAssertions(),
-        givens: {
-          render: async () => {
-            setupLabeledInput((input) => {
-              recorder = attachImeRecorder(input);
-            });
-          },
-        },
-        effects: defaultEffects,
-      },
-      {
-        actions: createImeActions(),
-      },
-    );
+    const { runSiheom, actions, assertions, given, recorderRef } = setup();
 
     await runSiheom(
       given.render(),
@@ -192,10 +129,9 @@ describe("createImeActions + overrideSiheom", () => {
       assertions.value(query.textbox("이름"), "김태희"),
     );
 
-    expect(recorder).toBeDefined();
-    expect(toCriticalEvents(recorder!.events)).toEqual(
+    expect(toCriticalEvents(recorderRef.current!.events)).toEqual(
       goldenCritical(arrowGolden.events),
     );
-    recorder!.detach();
+    recorderRef.current!.detach();
   });
 });
