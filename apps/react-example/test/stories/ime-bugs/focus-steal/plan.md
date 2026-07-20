@@ -15,4 +15,6 @@ Storybook 키로거로 OS 트레이스를 캡처해 `@siheom/ime` 에뮬레이�
 - [x] OS `broken-hangul.json`: 김태희 → `ㄱㅣㅁㅌㅐㅎㅡㅣ` (full 풀어쓰기)
 - [x] `mode="fixed"` must not DOM-focus options (virtual highlight only) — bouncing on `compositionend` still breaks Hangul (음절 경계마다 end가 남)
 - [x] `mode="fixed"` must not rewrite controlled `value` during composition (React writeback corrupts preedit; capture showed `김ㅐㅢ`)
-- [ ] OS `fixed-hangul.json` re-captured as real `김태희` after the above fix
+- [x] OS `fixed-hangul.json` re-captured as real `김태희` after the above fix
+- [x] `@siheom/ime` `composeHangul` aborts on blur and yields 풀어쓰기 under focus bounce
+- [x] Integration: broken + createImeActions → OS broken final value; fixed → `김태희`

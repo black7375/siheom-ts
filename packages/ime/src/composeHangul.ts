@@ -1,6 +1,7 @@
-import { planHangulKeystrokes } from "./hangulPlan";
+import { planHangulKeystrokes, type HangulKeyStroke } from "./hangulPlan";
+import { keyForJamo } from "./jamoKeyMap";
 import type { ComposedEventRecord } from "./composeHangulTypes";
-import { dispatch, playStroke, snapshot } from "./composeHangulInternals";
+import { applyPreedit, dispatch, snapshot } from "./composeHangulInternals";
 import { clearImeSession, setImeSession } from "./imeSession";
 
 export type { ComposedEventRecord } from "./composeHangulTypes";
@@ -16,9 +17,199 @@ export type ComposeHangulOptions = {
   commitFinal?: boolean;
 };
 
+async function flushMicrotasks() {
+  await Promise.resolve();
+  await Promise.resolve();
+}
+
+function endComposition(
+  element: HTMLInputElement | HTMLTextAreaElement,
+  data: string,
+  records: ComposedEventRecord[],
+) {
+  dispatch(element, "compositionend", { bubbles: true, data });
+  records.push(
+    snapshot(element, "compositionend", {
+      data,
+      value: element.value,
+    }),
+  );
+  clearImeSession(element);
+}
+
+/** One jamo as its own composition session (after focus-steal abort). */
+async function playIsolatedJamo(
+  element: HTMLInputElement | HTMLTextAreaElement,
+  jamo: string,
+  suffix: string,
+  records: ComposedEventRecord[],
+  blurred: { current: boolean },
+) {
+  const meta = keyForJamo(jamo);
+  const committed = element.value.slice(0, element.value.length - suffix.length);
+  const value = committed + jamo + suffix;
+  const caret = committed.length + jamo.length;
+
+  dispatch(element, "keydown", {
+    bubbles: true,
+    cancelable: true,
+    key: "Process",
+    code: meta.code,
+    keyCode: 229,
+    isComposing: false,
+  });
+  records.push(
+    snapshot(element, "keydown", {
+      key: "Process",
+      code: meta.code,
+      keyCode: 229,
+      isComposing: false,
+    }),
+  );
+
+  dispatch(element, "compositionstart", { bubbles: true, data: "" });
+  records.push(snapshot(element, "compositionstart", { data: "" }));
+
+  setImeSession(element, {
+    composing: true,
+    committed,
+    preedit: jamo,
+    suffix,
+  });
+
+  applyPreedit(element, jamo, value, records, caret);
+  await flushMicrotasks();
+
+  if (blurred.current) {
+    blurred.current = false;
+    endComposition(element, jamo, records);
+  } else {
+    endComposition(element, jamo, records);
+  }
+
+  dispatch(element, "keyup", {
+    bubbles: true,
+    key: meta.key,
+    code: meta.code,
+    keyCode: meta.key.charCodeAt(0),
+    isComposing: false,
+  });
+  records.push(
+    snapshot(element, "keyup", {
+      key: meta.key,
+      code: meta.code,
+      keyCode: meta.key.charCodeAt(0),
+      isComposing: false,
+    }),
+  );
+}
+
+async function playStrokeRespectingBlur(
+  element: HTMLInputElement | HTMLTextAreaElement,
+  stroke: HangulKeyStroke,
+  suffix: string,
+  records: ComposedEventRecord[],
+  blurred: { current: boolean },
+): Promise<"aborted" | "ok"> {
+  const carets = stroke.valuesAfterSteps.map((value) => value.length - suffix.length);
+
+  dispatch(element, "keydown", {
+    bubbles: true,
+    cancelable: true,
+    key: "Process",
+    code: stroke.code,
+    keyCode: 229,
+    isComposing: stroke.keydownIsComposing,
+  });
+  records.push(
+    snapshot(element, "keydown", {
+      key: "Process",
+      code: stroke.code,
+      keyCode: 229,
+      isComposing: stroke.keydownIsComposing,
+    }),
+  );
+
+  if (stroke.compositionStart) {
+    dispatch(element, "compositionstart", { bubbles: true, data: "" });
+    records.push(snapshot(element, "compositionstart", { data: "" }));
+  }
+
+  for (let i = 0; i < stroke.preeditSteps.length; i++) {
+    const preedit = stroke.preeditSteps[i] ?? "";
+    const value = stroke.valuesAfterSteps[i] ?? element.value;
+    const caret = carets[i] ?? value.length - suffix.length;
+
+    const committedLen = caret - preedit.length;
+    setImeSession(element, {
+      composing: true,
+      committed: value.slice(0, committedLen),
+      preedit,
+      suffix,
+    });
+
+    applyPreedit(element, preedit, value, records, caret);
+    await flushMicrotasks();
+
+    if (blurred.current) {
+      blurred.current = false;
+      endComposition(element, preedit, records);
+      dispatch(element, "keyup", {
+        bubbles: true,
+        key: stroke.key,
+        code: stroke.code,
+        keyCode: stroke.key.charCodeAt(0),
+        isComposing: false,
+      });
+      records.push(
+        snapshot(element, "keyup", {
+          key: stroke.key,
+          code: stroke.code,
+          keyCode: stroke.key.charCodeAt(0),
+          isComposing: false,
+        }),
+      );
+      return "aborted";
+    }
+
+    if (i === 0 && stroke.commitAfterFirstStep !== undefined) {
+      dispatch(element, "compositionend", {
+        bubbles: true,
+        data: stroke.commitAfterFirstStep,
+      });
+      records.push(
+        snapshot(element, "compositionend", {
+          data: stroke.commitAfterFirstStep,
+          value,
+        }),
+      );
+      dispatch(element, "compositionstart", { bubbles: true, data: "" });
+      records.push(snapshot(element, "compositionstart", { data: "" }));
+    }
+  }
+
+  dispatch(element, "keyup", {
+    bubbles: true,
+    key: stroke.key,
+    code: stroke.code,
+    keyCode: stroke.key.charCodeAt(0),
+    isComposing: true,
+  });
+  records.push(
+    snapshot(element, "keyup", {
+      key: stroke.key,
+      code: stroke.code,
+      keyCode: stroke.key.charCodeAt(0),
+      isComposing: true,
+    }),
+  );
+  return "ok";
+}
+
 /**
  * Type Hangul `text` into an input by dispatching composition-faithful events.
- * Returns the serialized event records (same shape as the IME logger).
+ * If the field blurs mid-composition (focus-steal), remaining jamos are typed as
+ * isolated compositions — matching OS 풀어쓰기 (e.g. 김태희 → ㄱㅣㅁㅌㅐㅎㅡㅣ).
  */
 export async function composeHangul(
   element: HTMLInputElement | HTMLTextAreaElement,
@@ -33,41 +224,62 @@ export async function composeHangul(
   const strokes = planHangulKeystrokes(text, { prefix });
   const records: ComposedEventRecord[] = [];
 
+  const blurred = { current: false };
+  const onBlur = () => {
+    blurred.current = true;
+  };
+  element.addEventListener("blur", onBlur);
   element.focus();
 
-  for (const stroke of strokes) {
-    const carets = stroke.valuesAfterSteps.map((value) => value.length);
-    stroke.valuesAfterSteps = stroke.valuesAfterSteps.map((value) => value + suffix);
-    playStroke(element, stroke, records, carets);
-  }
+  try {
+    for (let index = 0; index < strokes.length; index++) {
+      const stroke = strokes[index];
+      if (!stroke) continue;
 
-  if (strokes.length === 0) {
-    return records;
-  }
+      stroke.valuesAfterSteps = stroke.valuesAfterSteps.map((value) => value + suffix);
+      const result = await playStrokeRespectingBlur(
+        element,
+        stroke,
+        suffix,
+        records,
+        blurred,
+      );
 
-  const last = strokes[strokes.length - 1];
-  const finalPreedit = last?.preeditSteps[last.preeditSteps.length - 1] ?? "";
-  const committed = element.value.slice(0, element.value.length - suffix.length - finalPreedit.length);
+      if (result === "aborted") {
+        const remaining = strokes.slice(index + 1).map((s) => s.jamo);
+        for (const jamo of remaining) {
+          await playIsolatedJamo(element, jamo, suffix, records, blurred);
+        }
+        return records;
+      }
+    }
 
-  if (commitFinal) {
-    dispatch(element, "compositionend", { bubbles: true, data: finalPreedit });
-    records.push(
-      snapshot(element, "compositionend", {
-        data: finalPreedit,
-        value: element.value,
-      }),
+    if (strokes.length === 0) {
+      return records;
+    }
+
+    const last = strokes[strokes.length - 1];
+    const finalPreedit = last?.preeditSteps[last.preeditSteps.length - 1] ?? "";
+    const committed = element.value.slice(
+      0,
+      element.value.length - suffix.length - finalPreedit.length,
     );
-    clearImeSession(element);
-  } else {
-    setImeSession(element, {
-      composing: true,
-      committed,
-      preedit: finalPreedit,
-      suffix,
-    });
-  }
 
-  return records;
+    if (commitFinal) {
+      endComposition(element, finalPreedit, records);
+    } else {
+      setImeSession(element, {
+        composing: true,
+        committed,
+        preedit: finalPreedit,
+        suffix,
+      });
+    }
+
+    return records;
+  } finally {
+    element.removeEventListener("blur", onBlur);
+  }
 }
 
 /** Critical fields for golden-trace comparison (keyup order is flaky across captures). */

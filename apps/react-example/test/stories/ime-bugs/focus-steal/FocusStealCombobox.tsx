@@ -10,9 +10,8 @@ export type FocusStealComboboxProps = {
   /**
    * `broken` — after every `input`, briefly focus the first option then return to the input
    * (aborts Hangul composition on blur; Latin is unaffected).
-   * `fixed` — never move DOM focus; highlight via aria-selected only, and do not
-   * rewrite the controlled `value` while composing (React writeback + compositionend
-   * bounce both break Hangul mid-word).
+   * `fixed` — never move DOM focus; highlight via aria-selected / aria-activedescendant only.
+   * (Bouncing on `compositionend` still breaks Hangul because syllable boundaries fire end.)
    */
   mode?: "broken" | "fixed";
   suggestions?: string[];
@@ -39,7 +38,6 @@ export function FocusStealCombobox({
   onValueChange,
 }: FocusStealComboboxProps) {
   const [value, setValue] = useState("");
-  const [composing, setComposing] = useState(false);
   const firstOptionRef = useRef<HTMLButtonElement>(null);
   const localInputRef = useRef<HTMLInputElement>(null);
   const modeRef = useRef(mode);
@@ -87,23 +85,16 @@ export function FocusStealCombobox({
       // fixed: never DOM-focus options — virtual highlight via aria-selected only
     };
 
-    const onCompositionStart = () => {
-      setComposing(true);
-    };
-
     const onCompositionEnd = (event: Event) => {
-      setComposing(false);
       const target = event.target as HTMLInputElement;
       syncValue(target.value);
       // Do NOT bounce on compositionend — Hangul fires this at every syllable boundary.
     };
 
     node.addEventListener("input", onInput);
-    node.addEventListener("compositionstart", onCompositionStart);
     node.addEventListener("compositionend", onCompositionEnd);
     return () => {
       node.removeEventListener("input", onInput);
-      node.removeEventListener("compositionstart", onCompositionStart);
       node.removeEventListener("compositionend", onCompositionEnd);
     };
   }, []);
@@ -126,8 +117,7 @@ export function FocusStealCombobox({
               ? `focus-steal-option-${activeOption}`
               : undefined
           }
-          // During composition, omit controlled value so React does not clobber IME preedit.
-          {...(composing ? {} : { value })}
+          value={value}
           onChange={(event) => {
             const next = event.target.value;
             setValue(next);

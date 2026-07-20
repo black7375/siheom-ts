@@ -8,7 +8,7 @@
 | File                              | Notes                                                                 |
 | --------------------------------- | --------------------------------------------------------------------- |
 | `broken-hangul.json`              | OS: 김태희 → `ㄱㅣㅁㅌㅐㅎㅡㅣ` (DOM focus bounce)                     |
-| `fixed-hangul.buggy-김ㅐㅢ.json`  | Old “fixed” that still bounced on `compositionend` / controlled value |
-| `fixed-hangul.json`               | Re-capture after virtual-focus fix — expect final `김태희`            |
+| `fixed-hangul.buggy-김ㅐㅢ.json`  | Old “fixed” that bounced on `compositionend`                          |
+| `fixed-hangul.json`               | OS: 김태희 intact after virtual-focus fix                             |
 
-Storybook: **IME / Focus Steal Combobox**. Regenerate `user-event/` via `userEventTraces.test.tsx`.
+Storybook: **IME / Focus Steal Combobox**. Emulator coverage: `FocusStealCombobox.ime.test.tsx`.
