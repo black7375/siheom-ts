@@ -4,6 +4,7 @@ import type { MessageMap } from "./messages.ts";
 import type {
   ActionStepDefinitionDict,
   AssertionStepDefinitionDict,
+  EffectStepDefinitionDict,
   GivenStepDefinitionDict,
   Locator,
 } from "./types.ts";
@@ -14,7 +15,8 @@ export type SiheomFactoryRegistries<
   TActions extends ActionStepDefinitionDict = ActionStepDefinitionDict,
   TAssertions extends AssertionStepDefinitionDict = AssertionStepDefinitionDict,
   TGivens extends GivenStepDefinitionDict = GivenStepDefinitionDict,
-> = SiheomRegistries<TActions, TAssertions, TGivens>;
+  TEffects extends EffectStepDefinitionDict = EffectStepDefinitionDict,
+> = SiheomRegistries<TActions, TAssertions, TGivens, TEffects>;
 
 type LocatorTargetStep = (target: Locator, ...args: never[]) => Promise<void>;
 
@@ -49,15 +51,27 @@ type GivenBindings<TGivens extends GivenStepDefinitionDict> = {
     : never;
 };
 
+type EffectBindings<TEffects extends EffectStepDefinitionDict> = {
+  [K in keyof TEffects]: TEffects[K] extends (...args: infer Args) => Promise<void>
+    ? (...args: Args) => {
+        effect: K & string;
+        args?: Args;
+        log: string;
+      }
+    : never;
+};
+
 export type SiheomBindings<
   TActions extends ActionStepDefinitionDict = ActionStepDefinitionDict,
   TAssertions extends AssertionStepDefinitionDict = AssertionStepDefinitionDict,
   TGivens extends GivenStepDefinitionDict = GivenStepDefinitionDict,
+  TEffects extends EffectStepDefinitionDict = EffectStepDefinitionDict,
 > = {
-  runSiheom: ReturnType<typeof createRunSiheom<TActions, TAssertions, TGivens>>;
+  runSiheom: ReturnType<typeof createRunSiheom<TActions, TAssertions, TGivens, TEffects>>;
   actions: ActionBindings<TActions>;
   assertions: AssertionBindings<TAssertions>;
   given: GivenBindings<TGivens>;
+  effect: EffectBindings<TEffects>;
   query: typeof query;
 };
 
@@ -124,18 +138,34 @@ function buildGivenBindings<TGivens extends GivenStepDefinitionDict>(
   return bindings;
 }
 
+function buildEffectBindings<TEffects extends EffectStepDefinitionDict>(
+  effects: TEffects,
+): EffectBindings<TEffects> {
+  const bindings = {} as EffectBindings<TEffects>;
+  for (const name of Object.keys(effects) as (keyof TEffects & string)[]) {
+    bindings[name] = ((...args: unknown[]) => ({
+      effect: name,
+      ...(args.length > 0 ? { args } : {}),
+      log: `${name}${args.length > 0 ? `: ${args.join(", ")}` : ""}`,
+    })) as EffectBindings<TEffects>[typeof name];
+  }
+  return bindings;
+}
+
 function toBindings<
   TActions extends ActionStepDefinitionDict,
   TAssertions extends AssertionStepDefinitionDict,
   TGivens extends GivenStepDefinitionDict,
+  TEffects extends EffectStepDefinitionDict,
 >(
-  registries: SiheomFactoryRegistries<TActions, TAssertions, TGivens>,
-): SiheomBindings<TActions, TAssertions, TGivens> {
+  registries: SiheomFactoryRegistries<TActions, TAssertions, TGivens, TEffects>,
+): SiheomBindings<TActions, TAssertions, TGivens, TEffects> {
   return {
     runSiheom: createRunSiheom(registries),
     actions: buildTargetStepBindings(registries.actions, "action"),
     assertions: buildTargetStepBindings(registries.assertions, "assert"),
     given: buildGivenBindings(registries.givens),
+    effect: buildEffectBindings(registries.effects),
     query,
   };
 }
@@ -144,6 +174,7 @@ type RegistryPatch = {
   actions?: Record<string, unknown>;
   assertions?: Record<string, unknown>;
   givens?: Record<string, unknown>;
+  effects?: Record<string, unknown>;
   messages?: MessageMap;
 };
 
@@ -151,8 +182,9 @@ function applySiheomPatch<
   TActions extends ActionStepDefinitionDict,
   TAssertions extends AssertionStepDefinitionDict,
   TGivens extends GivenStepDefinitionDict,
+  TEffects extends EffectStepDefinitionDict,
 >(
-  base: SiheomFactoryRegistries<TActions, TAssertions, TGivens>,
+  base: SiheomFactoryRegistries<TActions, TAssertions, TGivens, TEffects>,
   patch: RegistryPatch,
   mode: "extend" | "override",
 ) {
@@ -160,6 +192,7 @@ function applySiheomPatch<
     actions: mergeRegistryDict("action", base.actions, patch.actions ?? {}, mode),
     assertions: mergeRegistryDict("assertion", base.assertions, patch.assertions ?? {}, mode),
     givens: mergeRegistryDict("given", base.givens, patch.givens ?? {}, mode),
+    effects: mergeRegistryDict("effect", base.effects, patch.effects ?? {}, mode),
     messages: { ...base.messages, ...patch.messages },
   });
 }
@@ -168,22 +201,31 @@ export function extendSiheom<
   TActions extends ActionStepDefinitionDict,
   TAssertions extends AssertionStepDefinitionDict,
   TGivens extends GivenStepDefinitionDict,
+  TEffects extends EffectStepDefinitionDict,
   TNewActions extends ActionStepDefinitionDict = Record<string, never>,
   TNewAssertions extends AssertionStepDefinitionDict = Record<string, never>,
   TNewGivens extends GivenStepDefinitionDict = Record<string, never>,
+  TNewEffects extends EffectStepDefinitionDict = Record<string, never>,
 >(
-  base: SiheomFactoryRegistries<TActions, TAssertions, TGivens>,
+  base: SiheomFactoryRegistries<TActions, TAssertions, TGivens, TEffects>,
   extension: {
     actions?: TNewActions;
     assertions?: TNewAssertions;
     givens?: TNewGivens;
+    effects?: TNewEffects;
     messages?: MessageMap;
   },
-): SiheomBindings<TActions & TNewActions, TAssertions & TNewAssertions, TGivens & TNewGivens> {
+): SiheomBindings<
+  TActions & TNewActions,
+  TAssertions & TNewAssertions,
+  TGivens & TNewGivens,
+  TEffects & TNewEffects
+> {
   return applySiheomPatch(base, extension, "extend") as SiheomBindings<
     TActions & TNewActions,
     TAssertions & TNewAssertions,
-    TGivens & TNewGivens
+    TGivens & TNewGivens,
+    TEffects & TNewEffects
   >;
 }
 
@@ -191,18 +233,21 @@ export function overrideSiheom<
   TActions extends ActionStepDefinitionDict,
   TAssertions extends AssertionStepDefinitionDict,
   TGivens extends GivenStepDefinitionDict,
+  TEffects extends EffectStepDefinitionDict,
 >(
-  base: SiheomFactoryRegistries<TActions, TAssertions, TGivens>,
+  base: SiheomFactoryRegistries<TActions, TAssertions, TGivens, TEffects>,
   overrides: {
     actions?: Partial<TActions>;
     assertions?: Partial<TAssertions>;
     givens?: Partial<TGivens>;
+    effects?: Partial<TEffects>;
     messages?: MessageMap;
   },
-): SiheomBindings<TActions, TAssertions, TGivens> {
+): SiheomBindings<TActions, TAssertions, TGivens, TEffects> {
   return applySiheomPatch(base, overrides, "override") as SiheomBindings<
     TActions,
     TAssertions,
-    TGivens
+    TGivens,
+    TEffects
   >;
 }

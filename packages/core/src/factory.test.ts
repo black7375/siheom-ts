@@ -14,6 +14,9 @@ const base = {
   givens: {
     render: async () => {},
   },
+  effects: {
+    elapsed: async (_ms: number) => {},
+  },
 };
 
 describe("extendSiheom", () => {
@@ -77,6 +80,33 @@ describe("extendSiheom", () => {
     await runSiheom(given.withProviders("app"));
     expect(called).toEqual("app");
   });
+
+  it("adds a new effect and returns bindings that run it", async () => {
+    let called: number | null = null;
+    const pause = async (ms: number) => {
+      called = ms;
+    };
+
+    const { runSiheom, effect: effectBindings } = extendSiheom(base, {
+      effects: {
+        pause,
+      },
+    });
+
+    await runSiheom(effectBindings.pause(300));
+
+    expect(called).toBe(300);
+  });
+
+  it("rejects extending an existing effect key", () => {
+    expect(() =>
+      extendSiheom(base, {
+        effects: {
+          elapsed: async () => {},
+        },
+      }),
+    ).toThrow(/cannot add existing effect keys: elapsed/);
+  });
 });
 
 describe("overrideSiheom", () => {
@@ -118,6 +148,35 @@ describe("overrideSiheom", () => {
         },
       }),
     ).toThrow(/cannot replace unknown action keys: selectAccount/);
+  });
+
+  it("replaces an existing effect implementation", async () => {
+    let called: string | null = null;
+    const replacementElapsed = async () => {
+      called = "replacement";
+    };
+
+    const { runSiheom, effect: effectBindings } = overrideSiheom(base, {
+      effects: {
+        elapsed: replacementElapsed,
+      },
+    });
+
+    await runSiheom(effectBindings.elapsed(1_000));
+
+    expect(called).toBe("replacement");
+  });
+
+  it("rejects overriding an unknown effect key", () => {
+    expect(() =>
+      overrideSiheom(base, {
+        effects: {
+          pause: async () => {},
+        } as Partial<(typeof base)["effects"]> & {
+          pause: () => Promise<void>;
+        },
+      }),
+    ).toThrow(/cannot replace unknown effect keys: pause/);
   });
 });
 

@@ -10,6 +10,8 @@ export type AssertionStepDefinitionDict = Record<
 
 export type GivenStepDefinitionDict = Record<string, (...args: readonly any[]) => Promise<void>>;
 
+export type EffectStepDefinitionDict = Record<string, (...args: readonly any[]) => Promise<void>>;
+
 export type GivenStep<GivensDict extends GivenStepDefinitionDict = GivenStepDefinitionDict> = {
   given: keyof GivensDict & string;
   log: string;
@@ -36,8 +38,31 @@ export type AssertionStep<AssertionsDict extends AssertionStepDefinitionDict> = 
   args?: readonly any[];
 };
 
+export type EffectStep<EffectsDict extends EffectStepDefinitionDict = EffectStepDefinitionDict> = {
+  effect: keyof EffectsDict & string;
+  log: string;
+  args?: readonly any[];
+};
+
+export type FakeTimersScopeStep<
+  ActionsDict extends ActionStepDefinitionDict = ActionStepDefinitionDict,
+  AssertionsDict extends AssertionStepDefinitionDict = AssertionStepDefinitionDict,
+  GivensDict extends GivenStepDefinitionDict = GivenStepDefinitionDict,
+  EffectsDict extends EffectStepDefinitionDict = EffectStepDefinitionDict,
+> = {
+  scope: "fakeTimers";
+  steps: Step<ActionsDict, AssertionsDict, GivensDict, EffectsDict>[];
+  log: string;
+};
+
 export type Step<
   ActionsDict extends ActionStepDefinitionDict = Record<string, never>,
   AssertionsDict extends AssertionStepDefinitionDict = Record<string, never>,
   GivensDict extends GivenStepDefinitionDict = GivenStepDefinitionDict,
-> = GivenStep<GivensDict> | ActionStep<ActionsDict> | AssertionStep<AssertionsDict>;
+  EffectsDict extends EffectStepDefinitionDict = EffectStepDefinitionDict,
+> =
+  | GivenStep<GivensDict>
+  | ActionStep<ActionsDict>
+  | AssertionStep<AssertionsDict>
+  | EffectStep<EffectsDict>
+  | FakeTimersScopeStep<ActionsDict, AssertionsDict, GivensDict, EffectsDict>;

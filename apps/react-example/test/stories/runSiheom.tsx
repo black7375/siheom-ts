@@ -1,5 +1,5 @@
 import { render } from "@testing-library/react";
-import { overrideSiheom, defaultActions, defaultAssertions } from "@siheom/core";
+import { overrideSiheom, defaultActions, defaultAssertions, defaultEffects } from "@siheom/core";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { defaultGivens } from "@siheom/react";
 
@@ -12,6 +12,7 @@ export const { runSiheom } = overrideSiheom(
     givens: defaultGivens,
     actions: defaultActions,
     assertions: defaultAssertions,
+    effects: defaultEffects,
   },
   {
     givens: {

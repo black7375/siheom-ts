@@ -18,3 +18,13 @@ describe("query.within", () => {
     expect(dialogButton.closest('[role="dialog"]')).not.toBeNull();
   });
 });
+
+describe("query.timer", () => {
+  it("resolves role=timer by accessible name", () => {
+    document.body.innerHTML = `<div role="timer" aria-label="남은 시간">25:00</div>`;
+
+    const timer = getElement(query.timer("남은 시간"), true);
+
+    expect(timer.textContent).toBe("25:00");
+  });
+});
