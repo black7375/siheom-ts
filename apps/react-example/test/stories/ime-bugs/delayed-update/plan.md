@@ -13,5 +13,5 @@ React controlled input에서 `setState`가 **한 박자 늦게** 반영되면, I
 - [x] `composeHangul(..., { settle: "macrotask", deferredUpdateRace: true })` / `createImeActions({ … })`로 에뮬 재현
 - [x] Storybook logger (`IME/Delayed Controlled Update`) for OS capture under delayed updates
 - [x] `fixtures/` slots (`linux-ibus-hangul-chrome/`, `user-event/`)
-- [ ] `user-event/` Vitest file snapshots for broken/fixed 김태희
-- [ ] Emulator critical events / final value match OS `linux-ibus-hangul-chrome` goldens
+- [x] `user-event/` Vitest file snapshots for broken/fixed 김태희
+- [x] Emulator critical events / final value match OS `linux-ibus-hangul-chrome` goldens

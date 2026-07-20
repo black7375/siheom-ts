@@ -6,14 +6,25 @@ import {
   overrideSiheom,
   query,
 } from "@siheom/core";
-import { createImeActions } from "@siheom/ime";
+import {
+  attachImeRecorder,
+  createImeActions,
+  goldenCritical,
+  toCriticalEvents,
+} from "@siheom/ime";
 import { defaultGivens, reactEffects } from "@siheom/react";
 import { render } from "@testing-library/react";
 
 import { DelayedControlledField } from "./DelayedControlledField";
+import brokenGolden from "./fixtures/linux-ibus-hangul-chrome/broken-김태희.json";
+import fixedGolden from "./fixtures/linux-ibus-hangul-chrome/fixed-김태희.json";
 
-function runWithDeferredIme() {
-  return overrideSiheom(
+type ImeRecorder = ReturnType<typeof attachImeRecorder>;
+
+function runWithDeferredIme(deferredUpdateRace: boolean) {
+  const recorderRef: { current: ImeRecorder | undefined } = { current: undefined };
+
+  const api = overrideSiheom(
     {
       actions: createDefaultActions(),
       assertions: createDefaultAssertions(),
@@ -23,37 +34,52 @@ function runWithDeferredIme() {
     {
       actions: createImeActions({
         settle: "macrotask",
-        deferredUpdateRace: true,
+        deferredUpdateRace,
       }),
       givens: {
         render: async (element: React.ReactElement) => {
           render(element);
+          const input = document.getElementById(
+            "ime-delayed-controlled-input",
+          ) as HTMLInputElement;
+          recorderRef.current = attachImeRecorder(input);
         },
       },
     },
   );
+
+  return { ...api, recorderRef };
 }
 
-describe("DelayedControlledField + createImeActions (stale setState)", () => {
-  it("broken: 빠른 한글 입력 시 조합이 깨진다", async () => {
-    const { runSiheom, actions, assertions, given } = runWithDeferredIme();
+describe("DelayedControlledField + createImeActions (OS delayed-update)", () => {
+  it("broken: final value and critical events match linux-ibus-hangul-chrome", async () => {
+    const { runSiheom, actions, assertions, given, recorderRef } = runWithDeferredIme(true);
+    const expected = brokenGolden.events.at(-1)?.value ?? "ㄱㅣㅁㅌㅐㅎㅡㅣ";
 
     await runSiheom(
       given.render(<DelayedControlledField mode="broken" />),
       actions.type(query.textbox("이름"), "김태희"),
+      assertions.value(query.textbox("이름"), expected),
     );
 
-    const input = document.getElementById("ime-delayed-controlled-input") as HTMLInputElement;
-    expect(input.value).not.toBe("김태희");
+    expect(toCriticalEvents(recorderRef.current!.events)).toEqual(
+      goldenCritical(brokenGolden.events),
+    );
+    recorderRef.current!.detach();
   });
 
-  it("fixed: 동기 setState면 김태희가 유지된다", async () => {
-    const { runSiheom, actions, assertions, given } = runWithDeferredIme();
+  it("fixed: final value and critical events match linux-ibus-hangul-chrome", async () => {
+    const { runSiheom, actions, assertions, given, recorderRef } = runWithDeferredIme(false);
 
     await runSiheom(
       given.render(<DelayedControlledField mode="fixed" />),
       actions.type(query.textbox("이름"), "김태희"),
       assertions.value(query.textbox("이름"), "김태희"),
     );
+
+    expect(toCriticalEvents(recorderRef.current!.events)).toEqual(
+      goldenCritical(fixedGolden.events),
+    );
+    recorderRef.current!.detach();
   });
 });

@@ -19,3 +19,4 @@ export {
 export type { EnterDuringCompositionFacet, ImeProfile } from "./profiles";
 export { attachImeRecorder } from "./attachImeRecorder";
 export { goldenCritical, fromFirstCompositionStart } from "./goldenCompare";
+export { markImeControlledWriteback, consumeImeControlledWriteback } from "./imeWritebackSignal";

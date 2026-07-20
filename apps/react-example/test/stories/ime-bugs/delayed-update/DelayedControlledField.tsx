@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { flushSync } from "react-dom";
+import { markImeControlledWriteback } from "@siheom/ime";
 
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -77,6 +78,7 @@ export function DelayedControlledField({
         flushSync(() => {
           apply(leadingSnapshot);
         });
+        markImeControlledWriteback(node);
       }, delayMs);
       timersRef.current.push(id);
     };
