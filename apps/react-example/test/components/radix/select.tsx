@@ -54,13 +54,7 @@ function Select({
   );
 }
 
-function SelectItem({
-  value,
-  children,
-}: {
-  value: string;
-  children: React.ReactNode;
-}) {
+function SelectItem({ value, children }: { value: string; children: React.ReactNode }) {
   return (
     <SelectPrimitive.Item
       value={value}

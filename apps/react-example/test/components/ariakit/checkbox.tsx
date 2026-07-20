@@ -1,11 +1,6 @@
 "use client";
 
-import {
-  Checkbox,
-  CheckboxCheck,
-  CheckboxProvider,
-  useCheckboxStore,
-} from "@ariakit/react";
+import { Checkbox, CheckboxCheck, CheckboxProvider, useCheckboxStore } from "@ariakit/react";
 import { CheckIcon } from "lucide-react";
 
 import { cn } from "@/lib/utils";
@@ -41,7 +36,12 @@ function TermsCheckbox({
         </Checkbox>
         <span className="text-sm font-medium">{children}</span>
       </label>
-      <input type="hidden" name={name} value={checked ? "on" : "off"} required={required && !checked} />
+      <input
+        type="hidden"
+        name={name}
+        value={checked ? "on" : "off"}
+        required={required && !checked}
+      />
     </CheckboxProvider>
   );
 }

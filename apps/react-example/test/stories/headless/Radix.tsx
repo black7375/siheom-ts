@@ -7,11 +7,7 @@ import { Checkbox } from "@/components/radix/checkbox";
 import { Dialog } from "@/components/radix/dialog";
 import { Select, SelectItem } from "@/components/radix/select";
 import { TextField } from "@/components/radix/text-field";
-import {
-  SUBSCRIPTION_PLANS,
-  type SubscribeData,
-  type SubscriptionPlan,
-} from "./subscribe.fixture";
+import { SUBSCRIPTION_PLANS, type SubscribeData, type SubscriptionPlan } from "./subscribe.fixture";
 
 export function RadixSubscribe({
   onSubscribe,

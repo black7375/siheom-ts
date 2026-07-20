@@ -7,11 +7,7 @@ import { Checkbox } from "@/components/ark-ui/checkbox";
 import { Dialog } from "@/components/ark-ui/dialog";
 import { Select } from "@/components/ark-ui/select";
 import { TextField } from "@/components/ark-ui/text-field";
-import {
-  SUBSCRIPTION_PLANS,
-  type SubscribeData,
-  type SubscriptionPlan,
-} from "./subscribe.fixture";
+import { SUBSCRIPTION_PLANS, type SubscribeData, type SubscriptionPlan } from "./subscribe.fixture";
 
 export function ArkUiSubscribe({
   onSubscribe,

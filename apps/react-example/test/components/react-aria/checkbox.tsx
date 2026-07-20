@@ -1,10 +1,6 @@
 "use client";
 
-import {
-  CheckboxButton,
-  CheckboxField,
-  type CheckboxFieldProps,
-} from "react-aria-components";
+import { CheckboxButton, CheckboxField, type CheckboxFieldProps } from "react-aria-components";
 import { CheckIcon } from "lucide-react";
 
 import { cn } from "@/lib/utils";
@@ -26,9 +22,7 @@ function Checkbox({
                   "border-primary bg-primary text-primary-foreground",
               )}
             >
-              {isSelected && !isIndeterminate ? (
-                <CheckIcon className="size-3.5" />
-              ) : null}
+              {isSelected && !isIndeterminate ? <CheckIcon className="size-3.5" /> : null}
             </span>
             <span className="text-sm font-medium">{children}</span>
           </>

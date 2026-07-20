@@ -1,13 +1,7 @@
 "use client";
 
 import { useId } from "react";
-import {
-  Select,
-  SelectItem,
-  SelectPopover,
-  SelectProvider,
-  useSelectStore,
-} from "@ariakit/react";
+import { Select, SelectItem, SelectPopover, SelectProvider, useSelectStore } from "@ariakit/react";
 
 import { cn } from "@/lib/utils";
 

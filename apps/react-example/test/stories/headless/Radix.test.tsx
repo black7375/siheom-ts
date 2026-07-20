@@ -19,23 +19,16 @@ describe("RadixSubscribe", () => {
       actions.click(query.button("구독하기")),
       assertions.visible(query.dialog("구독하기")),
 
-      actions.fill(
-        query.within(query.dialog("구독하기"), query.textbox("이름")),
-        SUBSCRIBER.name,
-      ),
+      actions.fill(query.within(query.dialog("구독하기"), query.textbox("이름")), SUBSCRIBER.name),
       actions.fill(
         query.within(query.dialog("구독하기"), query.textbox("이메일")),
         SUBSCRIBER.email,
       ),
       actions.click(query.within(query.dialog("구독하기"), query.label("구독할 항목"))),
       actions.click(query.option(SUBSCRIBER.plan)),
-      actions.click(
-        query.within(query.dialog("구독하기"), query.checkbox("약관에 동의합니다")),
-      ),
+      actions.click(query.within(query.dialog("구독하기"), query.checkbox("약관에 동의합니다"))),
       assertions.checked(query.checkbox("약관에 동의합니다")),
-      actions.click(
-        query.within(query.dialog("구독하기"), query.button("구독하기")),
-      ),
+      actions.click(query.within(query.dialog("구독하기"), query.button("구독하기"))),
 
       assertions.not.visible(query.dialog("구독하기")),
     );

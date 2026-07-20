@@ -34,19 +34,11 @@ function Modal({ className, ...props }: ModalOverlayProps) {
 }
 
 function Dialog({ className, ...props }: React.ComponentProps<typeof RACDialog>) {
-  return (
-    <RACDialog className={cn("flex flex-col gap-4 outline-none", className)} {...props} />
-  );
+  return <RACDialog className={cn("flex flex-col gap-4 outline-none", className)} {...props} />;
 }
 
 function DialogTitle({ className, ...props }: React.ComponentProps<typeof Heading>) {
-  return (
-    <Heading
-      slot="title"
-      className={cn("text-base font-medium", className)}
-      {...props}
-    />
-  );
+  return <Heading slot="title" className={cn("text-base font-medium", className)} {...props} />;
 }
 
 export { Dialog, DialogTitle, DialogTrigger, Modal };

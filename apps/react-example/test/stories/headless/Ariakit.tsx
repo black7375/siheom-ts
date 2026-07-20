@@ -5,11 +5,7 @@ import { Checkbox } from "@/components/ariakit/checkbox";
 import { Dialog, useDialogStore } from "@/components/ariakit/dialog";
 import { Select, SelectItem } from "@/components/ariakit/select";
 import { TextField } from "@/components/ariakit/text-field";
-import {
-  SUBSCRIPTION_PLANS,
-  type SubscribeData,
-  type SubscriptionPlan,
-} from "./subscribe.fixture";
+import { SUBSCRIPTION_PLANS, type SubscribeData, type SubscriptionPlan } from "./subscribe.fixture";
 
 export function AriakitSubscribe({
   onSubscribe,
@@ -20,11 +16,7 @@ export function AriakitSubscribe({
 
   return (
     <section aria-label="ariakit-subscribe" className="mx-auto max-w-md p-4">
-      <Dialog
-        store={dialog}
-        title="구독하기"
-        trigger={<Button>구독하기</Button>}
-      >
+      <Dialog store={dialog} title="구독하기" trigger={<Button>구독하기</Button>}>
         <form
           className="flex flex-col gap-4"
           onSubmit={async (event) => {
