@@ -1,0 +1,361 @@
+{
+  "profileId": "synthetic-chromium-user-event",
+  "os": "synthetic",
+  "browser": "chromium",
+  "ime": "user-event",
+  "capturedAt": "1970-01-01T00:00:00.000Z",
+  "scenarioId": "maxlength-overflow",
+  "source": "user-event",
+  "events": [
+    {
+      "type": "keydown",
+      "key": "가",
+      "code": "Unknown",
+      "keyCode": 0,
+      "isComposing": false,
+      "inputType": null,
+      "data": null,
+      "value": ""
+    },
+    {
+      "type": "keypress",
+      "key": "가",
+      "code": "Unknown",
+      "keyCode": 0,
+      "isComposing": false,
+      "inputType": null,
+      "data": null,
+      "value": ""
+    },
+    {
+      "type": "beforeinput",
+      "key": null,
+      "code": null,
+      "keyCode": null,
+      "isComposing": false,
+      "inputType": "insertText",
+      "data": "가",
+      "value": ""
+    },
+    {
+      "type": "input",
+      "key": null,
+      "code": null,
+      "keyCode": null,
+      "isComposing": false,
+      "inputType": "insertText",
+      "data": "가",
+      "value": "가"
+    },
+    {
+      "type": "keyup",
+      "key": "가",
+      "code": "Unknown",
+      "keyCode": 0,
+      "isComposing": false,
+      "inputType": null,
+      "data": null,
+      "value": "가"
+    },
+    {
+      "type": "keydown",
+      "key": "나",
+      "code": "Unknown",
+      "keyCode": 0,
+      "isComposing": false,
+      "inputType": null,
+      "data": null,
+      "value": "가"
+    },
+    {
+      "type": "keypress",
+      "key": "나",
+      "code": "Unknown",
+      "keyCode": 0,
+      "isComposing": false,
+      "inputType": null,
+      "data": null,
+      "value": "가"
+    },
+    {
+      "type": "beforeinput",
+      "key": null,
+      "code": null,
+      "keyCode": null,
+      "isComposing": false,
+      "inputType": "insertText",
+      "data": "나",
+      "value": "가"
+    },
+    {
+      "type": "input",
+      "key": null,
+      "code": null,
+      "keyCode": null,
+      "isComposing": false,
+      "inputType": "insertText",
+      "data": "나",
+      "value": "가나"
+    },
+    {
+      "type": "keyup",
+      "key": "나",
+      "code": "Unknown",
+      "keyCode": 0,
+      "isComposing": false,
+      "inputType": null,
+      "data": null,
+      "value": "가나"
+    },
+    {
+      "type": "keydown",
+      "key": "다",
+      "code": "Unknown",
+      "keyCode": 0,
+      "isComposing": false,
+      "inputType": null,
+      "data": null,
+      "value": "가나"
+    },
+    {
+      "type": "keypress",
+      "key": "다",
+      "code": "Unknown",
+      "keyCode": 0,
+      "isComposing": false,
+      "inputType": null,
+      "data": null,
+      "value": "가나"
+    },
+    {
+      "type": "beforeinput",
+      "key": null,
+      "code": null,
+      "keyCode": null,
+      "isComposing": false,
+      "inputType": "insertText",
+      "data": "다",
+      "value": "가나"
+    },
+    {
+      "type": "input",
+      "key": null,
+      "code": null,
+      "keyCode": null,
+      "isComposing": false,
+      "inputType": "insertText",
+      "data": "다",
+      "value": "가나다"
+    },
+    {
+      "type": "keyup",
+      "key": "다",
+      "code": "Unknown",
+      "keyCode": 0,
+      "isComposing": false,
+      "inputType": null,
+      "data": null,
+      "value": "가나다"
+    },
+    {
+      "type": "keydown",
+      "key": "라",
+      "code": "Unknown",
+      "keyCode": 0,
+      "isComposing": false,
+      "inputType": null,
+      "data": null,
+      "value": "가나다"
+    },
+    {
+      "type": "keypress",
+      "key": "라",
+      "code": "Unknown",
+      "keyCode": 0,
+      "isComposing": false,
+      "inputType": null,
+      "data": null,
+      "value": "가나다"
+    },
+    {
+      "type": "beforeinput",
+      "key": null,
+      "code": null,
+      "keyCode": null,
+      "isComposing": false,
+      "inputType": "insertText",
+      "data": "라",
+      "value": "가나다"
+    },
+    {
+      "type": "input",
+      "key": null,
+      "code": null,
+      "keyCode": null,
+      "isComposing": false,
+      "inputType": "insertText",
+      "data": "라",
+      "value": "가나다라"
+    },
+    {
+      "type": "keyup",
+      "key": "라",
+      "code": "Unknown",
+      "keyCode": 0,
+      "isComposing": false,
+      "inputType": null,
+      "data": null,
+      "value": "가나다라"
+    },
+    {
+      "type": "keydown",
+      "key": "마",
+      "code": "Unknown",
+      "keyCode": 0,
+      "isComposing": false,
+      "inputType": null,
+      "data": null,
+      "value": "가나다라"
+    },
+    {
+      "type": "keypress",
+      "key": "마",
+      "code": "Unknown",
+      "keyCode": 0,
+      "isComposing": false,
+      "inputType": null,
+      "data": null,
+      "value": "가나다라"
+    },
+    {
+      "type": "beforeinput",
+      "key": null,
+      "code": null,
+      "keyCode": null,
+      "isComposing": false,
+      "inputType": "insertText",
+      "data": "마",
+      "value": "가나다라"
+    },
+    {
+      "type": "input",
+      "key": null,
+      "code": null,
+      "keyCode": null,
+      "isComposing": false,
+      "inputType": "insertText",
+      "data": "마",
+      "value": "가나다라마"
+    },
+    {
+      "type": "keyup",
+      "key": "마",
+      "code": "Unknown",
+      "keyCode": 0,
+      "isComposing": false,
+      "inputType": null,
+      "data": null,
+      "value": "가나다라마"
+    },
+    {
+      "type": "keydown",
+      "key": "바",
+      "code": "Unknown",
+      "keyCode": 0,
+      "isComposing": false,
+      "inputType": null,
+      "data": null,
+      "value": "가나다라마"
+    },
+    {
+      "type": "keypress",
+      "key": "바",
+      "code": "Unknown",
+      "keyCode": 0,
+      "isComposing": false,
+      "inputType": null,
+      "data": null,
+      "value": "가나다라마"
+    },
+    {
+      "type": "beforeinput",
+      "key": null,
+      "code": null,
+      "keyCode": null,
+      "isComposing": false,
+      "inputType": "insertText",
+      "data": "바",
+      "value": "가나다라마"
+    },
+    {
+      "type": "input",
+      "key": null,
+      "code": null,
+      "keyCode": null,
+      "isComposing": false,
+      "inputType": "insertText",
+      "data": "바",
+      "value": "가나다라마바"
+    },
+    {
+      "type": "keyup",
+      "key": "바",
+      "code": "Unknown",
+      "keyCode": 0,
+      "isComposing": false,
+      "inputType": null,
+      "data": null,
+      "value": "가나다라마바"
+    },
+    {
+      "type": "keydown",
+      "key": "사",
+      "code": "Unknown",
+      "keyCode": 0,
+      "isComposing": false,
+      "inputType": null,
+      "data": null,
+      "value": "가나다라마바"
+    },
+    {
+      "type": "keypress",
+      "key": "사",
+      "code": "Unknown",
+      "keyCode": 0,
+      "isComposing": false,
+      "inputType": null,
+      "data": null,
+      "value": "가나다라마바"
+    },
+    {
+      "type": "beforeinput",
+      "key": null,
+      "code": null,
+      "keyCode": null,
+      "isComposing": false,
+      "inputType": "insertText",
+      "data": "사",
+      "value": "가나다라마바"
+    },
+    {
+      "type": "input",
+      "key": null,
+      "code": null,
+      "keyCode": null,
+      "isComposing": false,
+      "inputType": "insertText",
+      "data": "사",
+      "value": "가나다라마바사"
+    },
+    {
+      "type": "keyup",
+      "key": "사",
+      "code": "Unknown",
+      "keyCode": 0,
+      "isComposing": false,
+      "inputType": null,
+      "data": null,
+      "value": "가나다라마바사"
+    }
+  ]
+}

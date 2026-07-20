@@ -32,6 +32,13 @@ IME-faithful `fill` / `type` that plug into siheom via `overrideSiheom`, startin
 - [x] Emulator reproduces broken 풀어쓰기 (`ㄱㅣㅁㅌㅐㅎㅡㅣ`) and fixed `김태희` via createImeActions
 - [x] Enter-submit-during-composition fixture (SearchField); Linux ibus OS capture shows webkit-order Enter
 - [x] Delayed controlled update (stale setState mid-composition): `settle: "macrotask"` + `deferredUpdateRace`; OS critical events matched
+
+### Phase 5 — MaxLength during composition
+
+- [x] `composeHangul` with `maxLength` allows overflow during composition (matches browser)
+- [x] MaxLengthField broken/fixed IME tests for linux / macOS Chrome / macOS Safari profiles
+- [ ] OS golden captures under `ime-bugs/maxlength/fixtures/`
+
 ### Coverage gaps (intentional behaviors)
 
 - [x] `composeEnter` when not composing fires plain Enter keydown/keyup (isComposing false)

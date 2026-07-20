@@ -9,6 +9,7 @@ describe("CAPTURE_SCENARIOS", () => {
       "mixed-en-ko",
       "backspace-mid",
       "arrow-edit-mid",
+      "maxlength-overflow",
     ]);
   });
 

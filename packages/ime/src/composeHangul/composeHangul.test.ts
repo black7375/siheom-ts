@@ -94,4 +94,15 @@ describe("composeHangul", () => {
     recorder.detach();
     input.remove();
   });
+
+  it("allows value to exceed maxLength during composition (browser default)", async () => {
+    const input = document.createElement("input");
+    input.maxLength = 3;
+    document.body.append(input);
+
+    await composeHangul(input, "가나다라");
+
+    expect(input.value).toBe("가나다라");
+    input.remove();
+  });
 });

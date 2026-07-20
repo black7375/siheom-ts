@@ -57,6 +57,17 @@ export const CAPTURE_SCENARIOS: CaptureScenario[] = [
     expectedValue: "김태희",
     userEventScript: "김희{ArrowLeft}태",
   },
+  {
+    id: "maxlength-overflow",
+    title: "maxLength 초과 조합",
+    steps: [
+      "입력란 maxLength를 6으로 둡니다.",
+      "한글로 「가나다라마바사」(7글자)를 끊지 않고 입력합니다.",
+      "조합 중 글자 수가 7까지 올라가는지 확인한 뒤 JSON을 저장합니다.",
+    ],
+    expectedValue: "가나다라마바사",
+    userEventScript: "가나다라마바사",
+  },
 ];
 
 export function getCaptureScenario(id: string): CaptureScenario | undefined {
