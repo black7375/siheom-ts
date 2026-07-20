@@ -1,0 +1,46 @@
+{
+  "name": "@siheom/ime",
+  "version": "0.0.0",
+  "private": true,
+  "description": "IME composition emulation for siheom (Hangul-first)",
+  "type": "module",
+  "license": "MIT",
+  "files": [
+    "dist"
+  ],
+  "main": "./dist/index.mjs",
+  "exports": {
+    "./package.json": "./package.json",
+    ".": {
+      "import": {
+        "types": "./dist/index.d.mts",
+        "default": "./dist/index.mjs"
+      },
+      "require": {
+        "types": "./dist/index.d.cts",
+        "default": "./dist/index.cjs"
+      }
+    }
+  },
+  "scripts": {
+    "build": "tsdown",
+    "typecheck": "tsgo --noEmit -p tsconfig.json",
+    "test": "vitest run"
+  },
+  "dependencies": {
+    "es-hangul": "^2.4.0"
+  },
+  "devDependencies": {
+    "@vitest/browser": "^4.1.10",
+    "@vitest/browser-playwright": "^4.1.10",
+    "playwright": "^1.61.1",
+    "tsdown": "^0.22.8",
+    "typescript": "^7.0.2",
+    "vitest": "^4.1.10"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/twinstae/siheom-ts.git",
+    "directory": "packages/ime"
+  }
+}

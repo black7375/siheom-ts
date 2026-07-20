@@ -1,0 +1,77 @@
+import { describe, expect, it } from "vitest";
+
+import { composeHangul, toCriticalEvents } from "./composeHangul";
+import golden from "../fixtures/linux-chrome-ibus-hangul/continuous-hangul.json";
+import { planHangulKeystrokes } from "./hangulPlan";
+
+function goldenCritical() {
+  return toCriticalEvents(
+    golden.events.map((event) => ({
+      type: event.type,
+      key: event.key,
+      code: event.code,
+      keyCode: event.keyCode,
+      isComposing: event.isComposing,
+      inputType: event.inputType,
+      data: event.data,
+      value: event.value,
+    })),
+  );
+}
+
+describe("planHangulKeystrokes", () => {
+  it("plans 김 with one composition session ending after ㅁ", () => {
+    const strokes = planHangulKeystrokes("김");
+    expect(strokes).toHaveLength(3);
+    expect(strokes[0]?.compositionStart).toBe(true);
+    expect(strokes[0]?.keydownIsComposing).toBe(false);
+    expect(strokes.map((s) => s.preeditSteps[0])).toEqual(["ㄱ", "기", "김"]);
+  });
+});
+
+describe("composeHangul", () => {
+  it("types 김 with compositionstart/update/end and insertCompositionText", async () => {
+    const input = document.createElement("input");
+    document.body.append(input);
+
+    const events = await composeHangul(input, "김");
+    expect(input.value).toBe("김");
+    expect(events.map((e) => e.type)).toEqual([
+      "keydown",
+      "compositionstart",
+      "compositionupdate",
+      "beforeinput",
+      "input",
+      "keyup",
+      "keydown",
+      "compositionupdate",
+      "beforeinput",
+      "input",
+      "keyup",
+      "keydown",
+      "compositionupdate",
+      "beforeinput",
+      "input",
+      "keyup",
+      "compositionend",
+    ]);
+    expect(events.filter((e) => e.type === "input").map((e) => e.value)).toEqual([
+      "ㄱ",
+      "기",
+      "김",
+    ]);
+
+    input.remove();
+  });
+
+  it("matches linux-chrome-ibus-hangul continuous-hangul critical fields for 김태희", async () => {
+    const input = document.createElement("input");
+    document.body.append(input);
+
+    const events = await composeHangul(input, "김태희");
+    expect(input.value).toBe("김태희");
+    expect(toCriticalEvents(events)).toEqual(goldenCritical());
+
+    input.remove();
+  });
+});
