@@ -1,9 +1,11 @@
 import { defineConfig } from "vitest/config";
+import { vitestBrowserDefine, vitestBrowserMode } from "../../scripts/vitest-browser.ts";
 
 export default defineConfig({
-	test: {
-		globals: true,
-		include: ["src/**/*.test.ts"],
-		environment: "jsdom",
-	},
+  define: vitestBrowserDefine,
+  test: {
+    globals: true,
+    include: ["src/**/*.test.ts"],
+    ...vitestBrowserMode,
+  },
 });

@@ -3,8 +3,7 @@ import { fileURLToPath } from "node:url";
 import { defineConfig } from "vitest/config";
 import react from "@vitejs/plugin-react";
 import tailwindcss from "@tailwindcss/vite";
-import { playwright } from '@vitest/browser-playwright'
-/// <reference types="vitest" />
+import { vitestBrowserDefine, vitestBrowserMode } from "../../scripts/vitest-browser.ts";
 
 const dirname = path.dirname(fileURLToPath(import.meta.url));
 
@@ -15,6 +14,7 @@ const tanstackLinkStub = path.resolve(
 
 export default defineConfig({
 	plugins: [react(), tailwindcss()],
+	define: vitestBrowserDefine,
 	root: "./",
 	resolve: {
 		tsconfigPaths: true,
@@ -30,22 +30,6 @@ export default defineConfig({
 		include: ["test/**/*.test.tsx"],
 		css: true,
 		globals: true,
-		environment: "jsdom",
-		browser: {
-			enabled: true,
-			headless: true,
-			provider: playwright({
-				contextOptions: {
-					timezoneId: "Asia/Seoul",
-					permissions: ["clipboard-read"],
-				}
-			}),
-			instances: [
-				{
-					browser: "chromium",
-				},
-			],
-		},
-		testTimeout: 3000,
+		...vitestBrowserMode,
 	},
 });

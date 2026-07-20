@@ -1,10 +1,12 @@
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { defineConfig } from "vitest/config";
+import { vitestBrowserDefine, vitestBrowserMode } from "../../scripts/vitest-browser.ts";
 
 const dirname = path.dirname(fileURLToPath(import.meta.url));
 
 export default defineConfig({
+  define: vitestBrowserDefine,
   resolve: {
     alias: {
       "@siheom/core": path.resolve(dirname, "../core/src/index.ts"),
@@ -13,7 +15,7 @@ export default defineConfig({
   test: {
     globals: true,
     include: ["src/**/*.test.ts"],
-    environment: "jsdom",
     setupFiles: ["src/testSetup.ts"],
+    ...vitestBrowserMode,
   },
 });
