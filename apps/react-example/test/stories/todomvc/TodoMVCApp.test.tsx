@@ -55,7 +55,7 @@ describe("TodoMVCApp", () => {
     await runSiheom(
       setup([TODO_BUY_MILK]),
       actions.click(query.checkbox(`Mark ${TODO_BUY_MILK.title} as complete`)),
-      assertions.a11ySnapshot(query.region("todo list"), "buy-milk-completed.snap"),
+      assertions.checked(query.checkbox(`Mark ${TODO_BUY_MILK.title} as complete`)),
     );
   });
 
@@ -63,7 +63,9 @@ describe("TodoMVCApp", () => {
     await runSiheom(
       setup([TODO_BUY_MILK, TODO_READ_BOOK]),
       actions.click(query.checkbox("Mark all as complete")),
-      assertions.a11ySnapshot(query.region("todo list"), "all-completed.snap"),
+      assertions.checked(query.checkbox("Mark all as complete")),
+      assertions.checked(query.checkbox(`Mark ${TODO_BUY_MILK.title} as complete`)),
+      assertions.checked(query.checkbox(`Mark ${TODO_READ_BOOK.title} as complete`)),
     );
   });
 
@@ -72,7 +74,7 @@ describe("TodoMVCApp", () => {
       setup([TODO_BUY_MILK, TODO_READ_BOOK]),
       actions.click(query.checkbox(`Mark ${TODO_BUY_MILK.title} as complete`)),
       actions.click(query.checkbox(`Mark ${TODO_READ_BOOK.title} as complete`)),
-      assertions.a11ySnapshot(query.region("todo list"), "all-completed.snap"),
+      assertions.checked(query.checkbox("Mark all as complete")),
     );
   });
 

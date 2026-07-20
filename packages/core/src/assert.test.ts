@@ -31,3 +31,24 @@ describe("assertions.textContent", () => {
     await defaultAssertions.textContent(query.status("남은 할 일"), "2 items left", false);
   });
 });
+
+describe("assertions.checked", () => {
+  it("passes for a controlled checkbox whose checked state is a property", async () => {
+    document.body.innerHTML = `<input type="checkbox" aria-label="Done" />`;
+    (document.querySelector("input") as HTMLInputElement).checked = true;
+
+    await defaultAssertions.checked(query.checkbox("Done"), true);
+  });
+
+  it("passes for a checkbox with aria-checked", async () => {
+    document.body.innerHTML = `<span role="checkbox" aria-checked="true" aria-label="Done" />`;
+
+    await defaultAssertions.checked(query.checkbox("Done"), true);
+  });
+
+  it("passes when the checkbox is not checked", async () => {
+    document.body.innerHTML = `<input type="checkbox" aria-label="Done" />`;
+
+    await defaultAssertions.checked(query.checkbox("Done"), false);
+  });
+});

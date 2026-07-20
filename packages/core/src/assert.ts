@@ -41,6 +41,23 @@ function assertAttributeWhen(
   });
 }
 
+function expectElementChecked(element: HTMLElement, expected: boolean) {
+  if (element instanceof HTMLInputElement && (element.type === "checkbox" || element.type === "radio")) {
+    if (expected) {
+      expect(element).toBeChecked();
+    } else {
+      expect(element).not.toBeChecked();
+    }
+    return;
+  }
+
+  if (expected) {
+    expect(element).toHaveAttribute("aria-checked", "true");
+  } else {
+    expect(element).not.toHaveAttribute("aria-checked", "true");
+  }
+}
+
 export const defaultAssertions = {
   visible: async (target: Locator, expected: boolean) => {
     await waitFor(async () => {
@@ -62,20 +79,7 @@ export const defaultAssertions = {
   },
   checked: async (target: Locator, expected: boolean) =>
     withPresentElement(target, (element) => {
-      if (element instanceof HTMLInputElement && element.type === "checkbox") {
-        if (expected) {
-          expect(element).toHaveAttribute("checked", "true");
-        } else {
-          expect(element).not.toHaveAttribute("checked", "true");
-        }
-        return;
-      }
-
-      if (expected) {
-        expect(element).toHaveAttribute("aria-checked", "true");
-      } else {
-        expect(element).not.toHaveAttribute("aria-checked", "true");
-      }
+      expectElementChecked(element, expected);
     }),
   expanded: async (target: Locator, expected: boolean) =>
     withPresentElement(target, (element) => {
