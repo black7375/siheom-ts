@@ -1,4 +1,4 @@
-import { userEvent } from "vitest/browser";
+import { page, userEvent, type Locator as BrowserLocator } from "vitest/browser";
 import type { ActionStepDefinitionDict, Locator } from "@siheom/core";
 import { locatorLog } from "../../core/src/query.ts";
 import { expect } from "vitest";
@@ -10,6 +10,57 @@ type BrowserActionsOptions = {
 
 function hasUserEventKeys(text: string): boolean {
   return /[{][^}]+[}]/.test(text);
+}
+
+function isCheckboxOrRadioTarget(target: Locator): boolean {
+  return target.role === "checkbox" || target.role === "radio";
+}
+
+/** True when Playwright can realistically pointer-click this element. */
+function isPointerInteractable(element: Element): boolean {
+  const rect = element.getBoundingClientRect();
+  if (rect.width < 2 || rect.height < 2) {
+    return false;
+  }
+
+  const style = getComputedStyle(element);
+  if (
+    style.visibility === "hidden" ||
+    style.display === "none" ||
+    style.pointerEvents === "none" ||
+    Number.parseFloat(style.opacity) === 0
+  ) {
+    return false;
+  }
+
+  const cx = rect.left + rect.width / 2;
+  const cy = rect.top + rect.height / 2;
+  if (cx < 0 || cy < 0 || cx > window.innerWidth || cy > window.innerHeight) {
+    return false;
+  }
+
+  const top = document.elementFromPoint(cx, cy);
+  if (!top) {
+    return false;
+  }
+
+  return top === element || element.contains(top);
+}
+
+/**
+ * Headless UI often exposes role=checkbox on a HiddenInput (Ark) or a covered
+ * native input (React Aria). Playwright refuses those pointer targets; a real
+ * user clicks the visible label text instead.
+ */
+async function clickCheckboxOrRadio(target: Locator, locator: BrowserLocator) {
+  const element = locator.query() ?? locator.element();
+  if (isPointerInteractable(element)) {
+    await locator.click();
+    return;
+  }
+
+  const root = target.within ? toBrowserLocator(target.within) : page;
+  await root.getByText(target.name).click();
 }
 
 export function createBrowserActions(
@@ -35,6 +86,11 @@ export function createBrowserActions(
   return {
     click: async (target: Locator) =>
       withPresentLocator(target, async (locator) => {
+        if (isCheckboxOrRadioTarget(target)) {
+          await clickCheckboxOrRadio(target, locator);
+          return;
+        }
+
         await locator.click();
       }),
     dblclick: async (target: Locator) =>
