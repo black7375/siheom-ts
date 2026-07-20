@@ -1,4 +1,4 @@
-import "@testing-library/jest-dom";
+import "@testing-library/jest-dom/vitest";
 import { waitFor } from "@testing-library/dom";
 import type { AssertionStepDefinitionDict, Locator } from "./types";
 import { getElement, getElements, locatorLog } from "./query";
@@ -6,40 +6,9 @@ import { expect } from "vitest";
 import { getA11ySnapshot } from "./getA11ySnapshot";
 import { tableToMarkdown } from "./tableToMarkdown";
 
-async function withPresentElement(
-  target: Locator,
-  assertMatch: (element: HTMLElement) => void,
-) {
-  await waitFor(async () => {
-    const element = getElement(target, true);
-
-    expect(element).toBeInTheDocument();
-    assertMatch(element);
-  });
-}
-
-async function withPresentElementFlag(
-  target: Locator,
-  flag: boolean,
-  assertMatch: (element: HTMLElement, flag: boolean) => void,
-) {
-  await withPresentElement(target, (element) => assertMatch(element, flag));
-}
-
-function assertAttributeWhen(
-  target: Locator,
-  flag: boolean,
-  positive: (element: HTMLElement) => void,
-  negative: (element: HTMLElement) => void,
-) {
-  return withPresentElementFlag(target, flag, (element, flag) => {
-    if (flag) {
-      positive(element);
-      return;
-    }
-    negative(element);
-  });
-}
+type DefaultAssertionsOptions = {
+  resolveElement?: "sync" | "waitFor";
+};
 
 function expectElementChecked(element: HTMLElement, expected: boolean) {
   if (element instanceof HTMLInputElement && (element.type === "checkbox" || element.type === "radio")) {
@@ -58,125 +27,186 @@ function expectElementChecked(element: HTMLElement, expected: boolean) {
   }
 }
 
-export const defaultAssertions = {
-  visible: async (target: Locator, expected: boolean) => {
-    await waitFor(async () => {
-      const element = getElement(target, expected);
+export function createDefaultAssertions(
+  options: DefaultAssertionsOptions = {},
+) {
+  const resolveElement = options.resolveElement ?? "waitFor";
 
-      if (expected) {
-        expect(element).toBeInTheDocument();
-        expect(element).not.toHaveAttribute("aria-hidden", "true");
-        return;
-      }
-
-      if (element === null) {
-        expect(element).not.toBeInTheDocument();
-        return;
-      }
-
-      expect(element).not.toHaveAttribute("aria-hidden", "false");
-    });
-  },
-  checked: async (target: Locator, expected: boolean) =>
-    withPresentElement(target, (element) => {
-      expectElementChecked(element, expected);
-    }),
-  expanded: async (target: Locator, expected: boolean) =>
-    withPresentElement(target, (element) => {
-      expect(element).toHaveAttribute("aria-expanded", expected ? "true" : "false");
-    }),
-  selected: async (target: Locator, expected: boolean) =>
-    withPresentElement(target, (element) => {
-      expect(element).toHaveAttribute("aria-selected", expected ? "true" : "false");
-    }),
-  disabled: async (target: Locator, expected: boolean) =>
-    withPresentElement(target, (element) => {
-      if (element.hasAttribute("disabled")) {
-        expect(element).toHaveAttribute("disabled", expected ? "disabled" : null);
-        return;
-      }
-
-      expect(element).toHaveAttribute("aria-disabled", expected ? "true" : "false");
-    }),
-  focused: async (target: Locator, expected: boolean) =>
-    withPresentElement(target, (element) => {
-      if (expected) {
-        expect(element).toHaveFocus();
-      } else {
-        expect(element).not.toHaveFocus();
-      }
-    }),
-  current: async (
+  async function withPresentElement(
     target: Locator,
-    expected: "true" | "false" | "page" | "step" | "location" | "date" | "time",
-    flag = true,
-  ) =>
-    assertAttributeWhen(
-      target,
-      flag,
-      (element) => expect(element).toHaveAttribute("aria-current", expected),
-      (element) => expect(element).not.toHaveAttribute("aria-current", expected),
-    ),
-  count: async (target: Locator, expected: number, flag = true) => {
+    assertMatch: (element: HTMLElement) => void,
+  ) {
+    if (resolveElement === "sync") {
+      const element = getElement(target, true);
+      expect(element).toBeInTheDocument();
+      assertMatch(element);
+      return;
+    }
+
     await waitFor(async () => {
-      const elements = getElements(target, true);
+      const element = getElement(target, true);
 
+      expect(element).toBeInTheDocument();
+      assertMatch(element);
+    });
+  }
+
+  async function withPresentElementFlag(
+    target: Locator,
+    flag: boolean,
+    assertMatch: (element: HTMLElement, flag: boolean) => void,
+  ) {
+    await withPresentElement(target, (element) => assertMatch(element, flag));
+  }
+
+  function assertAttributeWhen(
+    target: Locator,
+    flag: boolean,
+    positive: (element: HTMLElement) => void,
+    negative: (element: HTMLElement) => void,
+  ) {
+    return withPresentElementFlag(target, flag, (element, flag) => {
       if (flag) {
-        expect(elements).toHaveLength(expected);
-      } else {
-        expect(elements).not.toHaveLength(expected);
+        positive(element);
+        return;
       }
+      negative(element);
     });
-  },
-  value: async (target: Locator, expected: string, flag = true) =>
-    assertAttributeWhen(
-      target,
-      flag,
-      (element) => expect(element).toHaveValue(expected),
-      (element) => expect(element).not.toHaveValue(expected),
-    ),
-  href: async (target: Locator, expected: string, flag = true) =>
-    assertAttributeWhen(
-      target,
-      flag,
-      (element) => expect(element).toHaveAttribute("href", expected),
-      (element) => expect(element).not.toHaveAttribute("href", expected),
-    ),
-  errormessage: async (target: Locator, expected: string, flag = true) =>
-    assertAttributeWhen(
-      target,
-      flag,
-      (element) => expect(element).toHaveAccessibleErrorMessage(expected),
-      (element) => expect(element).not.toHaveAccessibleErrorMessage(expected),
-    ),
-  description: async (target: Locator, expected: string) =>
-    withPresentElement(target, (element) => {
-      expect(element).toHaveAccessibleDescription(expected);
-    }),
-  textContent: async (target: Locator, expected: string, flag = true) =>
-    assertAttributeWhen(
-      target,
-      flag,
-      (element) => expect(element).toHaveTextContent(expected),
-      (element) => expect(element).not.toHaveTextContent(expected),
-    ),
-  a11ySnapshot: async (target: Locator, path: string) => {
-    await withPresentElement(target, () => {});
+  }
 
-    await expect(getA11ySnapshot(getElement(target, true))).toMatchFileSnapshot(
-      `__snapshots__/${path}`,
-    );
-  },
-  tableSnapshot: async (target: Locator, path: string) => {
-    await withPresentElement(target, (element) => {
-      expect(element).toBeInstanceOf(HTMLTableElement);
-    });
+  async function waitUntil(assertion: () => void | Promise<void>) {
+    if (resolveElement === "sync") {
+      await assertion();
+      return;
+    }
 
-    await expect(tableToMarkdown(getElement(target, true) as HTMLTableElement)).toMatchFileSnapshot(
-      `__snapshots__/${path}`,
-    );
-  },
-} satisfies AssertionStepDefinitionDict;
+    await waitFor(assertion);
+  }
+
+  return {
+    visible: async (target: Locator, expected: boolean) => {
+      await waitUntil(async () => {
+        const element = getElement(target, expected);
+
+        if (expected) {
+          expect(element).toBeInTheDocument();
+          expect(element).not.toHaveAttribute("aria-hidden", "true");
+          return;
+        }
+
+        if (element === null) {
+          expect(element).not.toBeInTheDocument();
+          return;
+        }
+
+        expect(element).not.toHaveAttribute("aria-hidden", "false");
+      });
+    },
+    checked: async (target: Locator, expected: boolean) =>
+      withPresentElement(target, (element) => {
+        expectElementChecked(element, expected);
+      }),
+    expanded: async (target: Locator, expected: boolean) =>
+      withPresentElement(target, (element) => {
+        expect(element).toHaveAttribute("aria-expanded", expected ? "true" : "false");
+      }),
+    selected: async (target: Locator, expected: boolean) =>
+      withPresentElement(target, (element) => {
+        expect(element).toHaveAttribute("aria-selected", expected ? "true" : "false");
+      }),
+    disabled: async (target: Locator, expected: boolean) =>
+      withPresentElement(target, (element) => {
+        if (element.hasAttribute("disabled")) {
+          expect(element).toHaveAttribute("disabled", expected ? "disabled" : null);
+          return;
+        }
+
+        expect(element).toHaveAttribute("aria-disabled", expected ? "true" : "false");
+      }),
+    focused: async (target: Locator, expected: boolean) =>
+      withPresentElement(target, (element) => {
+        if (expected) {
+          expect(element).toHaveFocus();
+        } else {
+          expect(element).not.toHaveFocus();
+        }
+      }),
+    current: async (
+      target: Locator,
+      expected: "true" | "false" | "page" | "step" | "location" | "date" | "time",
+      flag = true,
+    ) =>
+      assertAttributeWhen(
+        target,
+        flag,
+        (element) => expect(element).toHaveAttribute("aria-current", expected),
+        (element) => expect(element).not.toHaveAttribute("aria-current", expected),
+      ),
+    count: async (target: Locator, expected: number, flag = true) => {
+      await waitUntil(async () => {
+        const elements = getElements(target, true);
+
+        if (flag) {
+          expect(elements).toHaveLength(expected);
+        } else {
+          expect(elements).not.toHaveLength(expected);
+        }
+      });
+    },
+    value: async (target: Locator, expected: string, flag = true) =>
+      assertAttributeWhen(
+        target,
+        flag,
+        (element) => expect(element).toHaveValue(expected),
+        (element) => expect(element).not.toHaveValue(expected),
+      ),
+    href: async (target: Locator, expected: string, flag = true) =>
+      assertAttributeWhen(
+        target,
+        flag,
+        (element) => expect(element).toHaveAttribute("href", expected),
+        (element) => expect(element).not.toHaveAttribute("href", expected),
+      ),
+    errormessage: async (target: Locator, expected: string, flag = true) =>
+      assertAttributeWhen(
+        target,
+        flag,
+        (element) => expect(element).toHaveAccessibleErrorMessage(expected),
+        (element) => expect(element).not.toHaveAccessibleErrorMessage(expected),
+      ),
+    description: async (target: Locator, expected: string) =>
+      withPresentElement(target, (element) => {
+        expect(element).toHaveAccessibleDescription(expected);
+      }),
+    textContent: async (target: Locator, expected: string, flag = true) =>
+      assertAttributeWhen(
+        target,
+        flag,
+        (element) => expect(element).toHaveTextContent(expected),
+        (element) => expect(element).not.toHaveTextContent(expected),
+      ),
+    a11ySnapshot: async (target: Locator, path: string) => {
+      await withPresentElement(target, () => {});
+
+      await expect(getA11ySnapshot(getElement(target, true))).toMatchFileSnapshot(
+        `__snapshots__/${path}`,
+      );
+    },
+    tableSnapshot: async (target: Locator, path: string) => {
+      await withPresentElement(target, (element) => {
+        expect(element).toBeInstanceOf(HTMLTableElement);
+      });
+
+      await expect(tableToMarkdown(getElement(target, true) as HTMLTableElement)).toMatchFileSnapshot(
+        `__snapshots__/${path}`,
+      );
+    },
+  } satisfies AssertionStepDefinitionDict;
+}
+
+export type DefaultAssertions = ReturnType<typeof createDefaultAssertions>;
+
+export const defaultAssertions = createDefaultAssertions();
 
 export const assertions = {
   description: (target: Locator, expected: string) =>

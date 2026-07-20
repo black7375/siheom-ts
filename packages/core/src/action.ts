@@ -1,61 +1,89 @@
 import { waitFor } from "@testing-library/dom";
-import { userEvent } from "@testing-library/user-event";
+import { userEvent, type UserEvent } from "@testing-library/user-event";
 import type { ActionStepDefinitionDict, Locator } from "./types";
 import { getElement, locatorLog } from "./query";
 import { expect } from "vitest";
 
-async function withPresentElement(
-  target: Locator,
-  run: (element: HTMLElement) => Promise<void>,
-) {
-  await waitFor(async () => {
-    const element = getElement(target, true);
+type DefaultActionsOptions = {
+  user?: UserEvent;
+  /** Inside `withFakeTimers`, elements are resolved synchronously. */
+  resolveElement?: "sync" | "waitFor";
+};
 
-    expect(element).toBeInTheDocument();
-    await run(element);
-  });
-}
+export function createDefaultActions(options: DefaultActionsOptions = {}): ActionStepDefinitionDict {
+  const user = options.user ?? userEvent.setup();
+  const resolveElement = options.resolveElement ?? "waitFor";
 
-export const defaultActions = {
-  click: async (target: Locator) =>
-    withPresentElement(target, async (element) => {
-      await userEvent.click(element);
-    }),
-  dblclick: async (target: Locator) =>
-    withPresentElement(target, async (element) => {
-      await userEvent.dblClick(element);
-    }),
-  hover: async (target: Locator) =>
-    withPresentElement(target, async (element) => {
-      await userEvent.hover(element);
-    }),
-  fill: async (target: Locator, text: string) =>
-    withPresentElement(target, async (element) => {
-      await userEvent.click(element);
-      await userEvent.clear(element);
-      await userEvent.type(element, text);
-    }),
-  type: async (target: Locator, text: string) =>
-    withPresentElement(target, async (element) => {
-      await userEvent.click(element);
-      await userEvent.type(element, text);
-    }),
-  tab: async (target: Locator) => {
+  async function withPresentElement(
+    target: Locator,
+    run: (element: HTMLElement) => Promise<void>,
+  ) {
+    if (resolveElement === "sync") {
+      const element = getElement(target, true);
+      expect(element).toBeInTheDocument();
+      await run(element);
+      return;
+    }
+
     await waitFor(async () => {
       const element = getElement(target, true);
 
-      expect(element).toHaveFocus();
-
-      await userEvent.tab();
-
-      await new Promise((resolve) => setTimeout(resolve, 300));
+      expect(element).toBeInTheDocument();
+      await run(element);
     });
-  },
-  upload: async (target: Locator, file: File) =>
-    withPresentElement(target, async (element) => {
-      await userEvent.upload(element, file);
-    }),
-} satisfies ActionStepDefinitionDict;
+  }
+
+  return {
+    click: async (target: Locator) =>
+      withPresentElement(target, async (element) => {
+        await user.click(element);
+      }),
+    dblclick: async (target: Locator) =>
+      withPresentElement(target, async (element) => {
+        await user.dblClick(element);
+      }),
+    hover: async (target: Locator) =>
+      withPresentElement(target, async (element) => {
+        await user.hover(element);
+      }),
+    fill: async (target: Locator, text: string) =>
+      withPresentElement(target, async (element) => {
+        await user.click(element);
+        await user.clear(element);
+        await user.type(element, text);
+      }),
+    type: async (target: Locator, text: string) =>
+      withPresentElement(target, async (element) => {
+        await user.click(element);
+        await user.type(element, text);
+      }),
+    tab: async (target: Locator) => {
+      if (resolveElement === "sync") {
+        const element = getElement(target, true);
+        expect(element).toHaveFocus();
+        await user.tab();
+        await new Promise((resolve) => setTimeout(resolve, 300));
+        return;
+      }
+
+      await waitFor(async () => {
+        const element = getElement(target, true);
+
+        expect(element).toHaveFocus();
+
+        await user.tab();
+
+        await new Promise((resolve) => setTimeout(resolve, 300));
+      });
+    },
+    upload: async (target: Locator, file: File) =>
+      withPresentElement(target, async (element) => {
+        await user.upload(element, file);
+      }),
+  };
+}
+
+export const defaultActions = createDefaultActions();
 
 export const actions = {
   click: (target: Locator) =>

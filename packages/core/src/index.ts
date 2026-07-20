@@ -5,10 +5,16 @@ export type { MessageMap } from "./messages.ts";
 export { extendSiheom, overrideSiheom } from "./factory.ts";
 export type { SiheomBindings, SiheomFactoryRegistries } from "./factory.ts";
 export { query } from "./query.ts";
-export { assertions, defaultAssertions } from "./assert.ts";
-export { actions, defaultActions } from "./action.ts";
+export { assertions, defaultAssertions, createDefaultAssertions } from "./assert.ts";
+export { actions, defaultActions, createDefaultActions } from "./action.ts";
 export { effect, defaultEffects } from "./effect.ts";
 export { withFakeTimers } from "./withFakeTimers.ts";
+export {
+  FAKE_TIMER_USER_DELAY_MS,
+  wrapActionsAfterHook,
+  createFakeTimerScopedRegistries,
+} from "./fakeTimerScope.ts";
+export type { FakeTimerScopeHooks, AfterActionHook } from "./fakeTimerScope.ts";
 export type {
   ActionStep,
   ActionStepDefinitionDict,

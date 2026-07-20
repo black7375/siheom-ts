@@ -194,6 +194,7 @@ function applySiheomPatch<
     givens: mergeRegistryDict("given", base.givens, patch.givens ?? {}, mode),
     effects: mergeRegistryDict("effect", base.effects, patch.effects ?? {}, mode),
     messages: { ...base.messages, ...patch.messages },
+    fakeTimerScope: base.fakeTimerScope,
   });
 }
 
