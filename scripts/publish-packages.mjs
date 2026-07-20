@@ -16,7 +16,17 @@ const __dirname = dirname(fileURLToPath(import.meta.url));
 const ROOT = resolve(__dirname, "..");
 const PACKAGES_DIR = join(ROOT, "packages");
 
-const PUBLISH_ORDER = ["@siheom/core", "@siheom/react"];
+const PUBLISH_ORDER = [
+  "@siheom/core",
+  "@siheom/react",
+  "@siheom/vue",
+  "@siheom/svelte",
+  "@siheom/angular",
+  "@siheom/qwik",
+  "@siheom/react-native",
+  "@siheom/ime",
+  "@siheom/vitest-browser-react",
+];
 
 function readJson(path) {
   return JSON.parse(readFileSync(path, "utf8"));
@@ -24,7 +34,8 @@ function readJson(path) {
 
 function getWorkspaceVersions() {
   const versions = new Map();
-  for (const dir of ["core", "react"]) {
+  for (const name of PUBLISH_ORDER) {
+    const dir = name.replace("@siheom/", "");
     const pkgJson = readJson(join(PACKAGES_DIR, dir, "package.json"));
     versions.set(pkgJson.name, pkgJson.version);
   }
