@@ -25,7 +25,7 @@ describe("delayed-update user-event capture fixtures", () => {
   it.each(SCENARIOS)(
     "records $id the way @testing-library/user-event fires events",
     async (scenario) => {
-      const { container } = render(<DelayedControlledField mode={scenario.mode} />);
+      const { container } = await render(<DelayedControlledField mode={scenario.mode} />);
       const input = container.querySelector("#ime-delayed-controlled-input") as HTMLInputElement;
 
       const user = userEvent.setup();

@@ -17,6 +17,11 @@ const siheomVitestBrowserReact = path.resolve(
 	"../../packages/vitest-browser-react/src/index.ts",
 );
 
+const testingLibraryReactCompat = path.resolve(
+	dirname,
+	"../../packages/vitest-browser-react/src/testingLibraryReactCompat.ts",
+);
+
 export default defineConfig({
 	plugins: [react(), tailwindcss()],
 	define: vitestBrowserDefine,
@@ -32,7 +37,7 @@ export default defineConfig({
 		alias: {
 			"@siheom/react": siheomVitestBrowserReact,
 			"@showcase/tanstack-link": tanstackLinkStub,
-			"@testing-library/react": "vitest-browser-react"
+			"@testing-library/react": testingLibraryReactCompat,
 		},
 		setupFiles: "./test/setupTests.vitest-browser-react.ts",
 		include: ["test/**/*.test.tsx"],

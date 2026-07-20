@@ -18,3 +18,4 @@ export const runSiheom = createRunSiheom({
 
 export { actions, assertions, query, given, effect, withFakeTimers };
 export { cleanupReactRoots, defaultGivens, reactEffects, reactFakeTimerScope };
+export { act, render, cleanup } from "./testingLibraryReactCompat.ts";

@@ -25,7 +25,7 @@ describe("focus-steal user-event capture fixtures", () => {
   it.each(SCENARIOS)(
     "records $id the way @testing-library/user-event fires events",
     async (scenario) => {
-      const { container } = render(<FocusStealCombobox mode={scenario.mode} />);
+      const { container } = await render(<FocusStealCombobox mode={scenario.mode} />);
       const input = container.querySelector("#focus-steal-combobox-input") as HTMLInputElement;
 
       const user = userEvent.setup();
