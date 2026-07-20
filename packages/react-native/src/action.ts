@@ -48,10 +48,10 @@ export function createDefaultActions(options: DefaultActionsOptions = {}) {
       withPresentElement(target, async (element) => {
         await user.press(element);
       }),
-    dblclick: async (target: Locator) => {
+    dblclick: async (_target: Locator) => {
       throw new Error("dblclick is not supported in React Native");
     },
-    hover: async (target: Locator) => {
+    hover: async (_target: Locator) => {
       throw new Error("hover is not supported in React Native");
     },
     fill: async (target: Locator, text: string) =>

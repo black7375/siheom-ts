@@ -24,7 +24,7 @@
   },
   "scripts": {
     "build": "tsdown",
-    "check-exports": "attw --pack .",
+    "check-exports": "bash ../../scripts/check-exports.sh .",
     "typecheck": "tsgo --noEmit -p tsconfig.json",
     "test": "vitest run"
   },

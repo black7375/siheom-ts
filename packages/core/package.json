@@ -61,9 +61,17 @@
       }
     }
   },
+  "typesVersions": {
+    "*": {
+      "siheom": ["./dist/siheom.d.mts"],
+      "effect": ["./dist/effect.d.mts"],
+      "with-fake-timers": ["./dist/withFakeTimers.d.mts"],
+      "aria-roles": ["./dist/a11y/ariaRoles.d.mts"]
+    }
+  },
   "scripts": {
     "build": "tsdown",
-    "check-exports": "attw --pack .",
+    "check-exports": "bash ../../scripts/check-exports.sh .",
     "typecheck": "tsgo --noEmit -p tsconfig.json",
     "test": "vitest run"
   },
