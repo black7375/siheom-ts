@@ -10,7 +10,11 @@ import type {
 } from "./types";
 import { getA11ySnapshot } from "./getA11ySnapshot";
 import { formatFailureReport, type MessageMap } from "./messages.ts";
-import { createFakeTimerScopedRegistries, type FakeTimerScopeHooks } from "./fakeTimerScope.ts";
+import {
+  createFakeTimerScopedRegistries,
+  type FakeTimerScopeHooks,
+  type SiheomRegistryBundle,
+} from "./fakeTimerScope.ts";
 
 export type SiheomRegistries<
   TActions extends ActionStepDefinitionDict = ActionStepDefinitionDict,
@@ -24,6 +28,14 @@ export type SiheomRegistries<
   effects: TEffects;
   messages?: MessageMap;
   fakeTimerScope?: FakeTimerScopeHooks;
+  createFakeTimerScopedRegistries?: <
+    TActions extends ActionStepDefinitionDict,
+    TAssertions extends AssertionStepDefinitionDict,
+    TGivens extends GivenStepDefinitionDict,
+    TEffects extends EffectStepDefinitionDict,
+  >(
+    registries: SiheomRegistryBundle<TActions, TAssertions, TGivens, TEffects>,
+  ) => SiheomRegistryBundle<TActions, TAssertions, TGivens, TEffects>;
 };
 
 async function runSteps<
@@ -100,7 +112,9 @@ async function runFakeTimersScope<
     });
   installFakeTimers();
   try {
-    const scopedRegistries = createFakeTimerScopedRegistries(registries);
+    const scopeRegistries =
+      registries.createFakeTimerScopedRegistries ?? createFakeTimerScopedRegistries;
+    const scopedRegistries = scopeRegistries(registries);
     await runSteps(scopedRegistries, scope.steps.flat(), logs);
   } finally {
     vi.useRealTimers();

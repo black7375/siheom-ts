@@ -5,6 +5,7 @@
   "type": "module",
   "scripts": {
     "test": "vitest run",
+    "test:vitest-browser-react": "vitest run --config vite.vitest-browser-react.config.ts",
     "vitest": "vitest",
     "typecheck": "tsgo --noEmit -p tsconfig.json",
     "storybook": "storybook dev -p 6006",
@@ -15,6 +16,7 @@
     "@fontsource-variable/geist": "^5.2.9",
     "@siheom/core": "workspace:*",
     "@siheom/react": "workspace:*",
+    "@siheom/vitest-browser-react": "workspace:*",
     "@tanstack/react-router": "^1.170.18",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",

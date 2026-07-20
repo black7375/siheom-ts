@@ -80,9 +80,9 @@ function serializeProperties(props: A11yProperties): string {
 
 function formatRelation(rel: A11yRelation | { id: string; name: string | null }): string {
   if (rel.name === null) {
-    return `null (#${rel.id})`;
+    return `null`;
   }
-  return `"${escapeString(rel.name)}" (#${rel.id})`;
+  return `"${escapeString(rel.name)}"`;
 }
 
 function serializeRelationsBlock(relations: A11yRelations, baseIndent: string): string[] {

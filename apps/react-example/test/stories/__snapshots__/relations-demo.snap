@@ -7,18 +7,18 @@ form: "relations-demo"
     - states: [invalid=true]
   generic: "Settings Panel"
     - relations:
-      labelledby: "Settings Panel" (#panel-title)
+      labelledby: "Settings Panel"
     heading: "Settings Panel"
       - properties: [level=2]
     button: "Toggle Panel"
       - states: [expanded=true]
       - relations:
-        controls: "Settings Panel" (#panel)
+        controls: "Settings Panel"
   region: "Feature details"
     "More information about this feature"
   button: "Help"
     - relations:
-      details: "Feature details" (#detail-info)
+      details: "Feature details"
   navigation: "Main navigation"
     menu:
       menuitem: "Home"

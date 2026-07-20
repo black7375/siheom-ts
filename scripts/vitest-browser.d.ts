@@ -1,12 +1,17 @@
+/** Vite `define` shims for testing-library packages in real browsers. */
+export declare const vitestBrowserDefine: {
+    readonly "process.env.NODE_ENV": string;
+    readonly "process.env.VTL_SKIP_AUTO_CLEANUP": "undefined";
+    readonly "process.env.QTL_SKIP_AUTO_CLEANUP": "undefined";
+};
 /** Shared Vitest browser mode config (matches apps/react-example). */
 export declare const vitestBrowserMode: {
-    readonly browser: {
-        readonly enabled: true;
-        readonly headless: true;
-        readonly provider: import("vitest/node").BrowserProviderOption<import("@vitest/browser-playwright").PlaywrightProviderOptions>;
-        readonly instances: readonly [{
-            readonly browser: "chromium";
-        }];
+    browser: {
+        enabled: true;
+        headless: true;
+        provider: import("vitest/node").BrowserProviderOption<import("@vitest/browser-playwright").PlaywrightProviderOptions>;
+        instances: {
+            browser: "chromium";
+        }[];
     };
-    readonly testTimeout: 3000;
 };

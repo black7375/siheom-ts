@@ -1,6 +1,6 @@
 form: "회원가입"
   - relations:
-    labelledby: "회원가입" (#signup-form-title)
+    labelledby: "회원가입"
   group:
     "이메일"
     textbox: "이메일" [value=""]
