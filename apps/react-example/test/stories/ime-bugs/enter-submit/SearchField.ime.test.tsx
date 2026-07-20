@@ -1,41 +1,14 @@
 import { describe, it } from "vitest";
-import {
-  createDefaultActions,
-  createDefaultAssertions,
-  defaultEffects,
-  overrideSiheom,
-  query,
-} from "@siheom/core";
-import { createImeActions } from "@siheom/ime";
-import { defaultGivens, reactEffects } from "@siheom/react";
-import { render } from "@testing-library/react";
+import { query } from "@siheom/core";
 
 import { SearchField } from "./SearchField";
-
-function runWithImeProfile(profile: string) {
-  return overrideSiheom(
-    {
-      actions: createDefaultActions(),
-      assertions: createDefaultAssertions(),
-      givens: defaultGivens,
-      effects: { ...defaultEffects, ...reactEffects },
-    },
-    {
-      actions: createImeActions({ profile }),
-      givens: {
-        render: async (element: React.ReactElement) => {
-          render(element);
-        },
-      },
-    },
-  );
-}
+import { runWithImeSiheom } from "../shared/runWithImeSiheom";
 
 describe("SearchField + createImeActions (Enter during composition)", () => {
   it.each(["macos-safari", "linux-chrome-ibus-hangul"] as const)(
     "%s + broken: 김{Enter} 확정 키가 submit된다",
     async (profile) => {
-      const { runSiheom, actions, assertions, given } = runWithImeProfile(profile);
+      const { runSiheom, actions, assertions, given } = runWithImeSiheom({ profile });
 
       await runSiheom(
         given.render(<SearchField mode="broken" />),
@@ -50,7 +23,7 @@ describe("SearchField + createImeActions (Enter during composition)", () => {
   it.each(["macos-safari", "linux-chrome-ibus-hangul"] as const)(
     "%s + fixed: 김{Enter} 확정 키는 submit되지 않는다",
     async (profile) => {
-      const { runSiheom, actions, assertions, given } = runWithImeProfile(profile);
+      const { runSiheom, actions, assertions, given } = runWithImeSiheom({ profile });
 
       await runSiheom(
         given.render(<SearchField mode="fixed" />),
@@ -62,7 +35,9 @@ describe("SearchField + createImeActions (Enter during composition)", () => {
   );
 
   it("chromium-enter-229 + broken: 229 확정이라 false submit 없음", async () => {
-    const { runSiheom, actions, assertions, given } = runWithImeProfile("chromium-enter-229");
+    const { runSiheom, actions, assertions, given } = runWithImeSiheom({
+      profile: "chromium-enter-229",
+    });
 
     await runSiheom(
       given.render(<SearchField mode="broken" />),
@@ -73,7 +48,9 @@ describe("SearchField + createImeActions (Enter during composition)", () => {
   });
 
   it("linux-chrome-ibus-hangul + fixed: 확정 후 한 번 더 Enter면 submit", async () => {
-    const { runSiheom, actions, assertions, given } = runWithImeProfile("linux-chrome-ibus-hangul");
+    const { runSiheom, actions, assertions, given } = runWithImeSiheom({
+      profile: "linux-chrome-ibus-hangul",
+    });
 
     await runSiheom(
       given.render(<SearchField mode="fixed" />),

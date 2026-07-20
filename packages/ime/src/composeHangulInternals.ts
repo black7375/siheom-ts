@@ -1,5 +1,6 @@
 import type { HangulKeyStroke } from "./hangulPlan";
 import type { ComposedEventRecord } from "./composeHangulTypes";
+import { clearImeSession, getImeSession, setImeSession } from "./imeSession";
 
 export type { ComposedEventRecord } from "./composeHangulTypes";
 
@@ -45,6 +46,115 @@ export function snapshot(
     data: partial.data ?? null,
     value: partial.value ?? element.value,
   };
+}
+
+type KeyEventInit = {
+  key: string;
+  code: string;
+  keyCode: number;
+  isComposing: boolean;
+  cancelable?: boolean;
+};
+
+export function pushKeydown(
+  element: HTMLInputElement | HTMLTextAreaElement,
+  records: ComposedEventRecord[],
+  init: KeyEventInit,
+) {
+  dispatch(element, "keydown", {
+    bubbles: true,
+    cancelable: init.cancelable ?? true,
+    key: init.key,
+    code: init.code,
+    keyCode: init.keyCode,
+    isComposing: init.isComposing,
+  });
+  records.push(
+    snapshot(element, "keydown", {
+      key: init.key,
+      code: init.code,
+      keyCode: init.keyCode,
+      isComposing: init.isComposing,
+    }),
+  );
+}
+
+export function pushKeyup(
+  element: HTMLInputElement | HTMLTextAreaElement,
+  records: ComposedEventRecord[],
+  init: KeyEventInit,
+) {
+  dispatch(element, "keyup", {
+    bubbles: true,
+    key: init.key,
+    code: init.code,
+    keyCode: init.keyCode,
+    isComposing: init.isComposing,
+  });
+  records.push(
+    snapshot(element, "keyup", {
+      key: init.key,
+      code: init.code,
+      keyCode: init.keyCode,
+      isComposing: init.isComposing,
+    }),
+  );
+}
+
+export function pushCompositionStart(
+  element: HTMLInputElement | HTMLTextAreaElement,
+  records: ComposedEventRecord[],
+) {
+  dispatch(element, "compositionstart", { bubbles: true, data: "" });
+  records.push(snapshot(element, "compositionstart", { data: "" }));
+}
+
+export function commitBetweenPreeditSteps(
+  element: HTMLInputElement | HTMLTextAreaElement,
+  stroke: HangulKeyStroke,
+  value: string,
+  records: ComposedEventRecord[],
+  stepIndex: number,
+) {
+  if (stepIndex !== 0 || stroke.commitAfterFirstStep === undefined) return;
+
+  dispatch(element, "compositionend", {
+    bubbles: true,
+    data: stroke.commitAfterFirstStep,
+  });
+  records.push(
+    snapshot(element, "compositionend", {
+      data: stroke.commitAfterFirstStep,
+      value,
+    }),
+  );
+  pushCompositionStart(element, records);
+}
+
+/** Confirm an active IME session with compositionend (Enter / ArrowLeft paths). */
+export function confirmAndEndComposition(
+  element: HTMLInputElement | HTMLTextAreaElement,
+  records: ComposedEventRecord[],
+) {
+  const session = getImeSession(element);
+  if (!session?.composing) return;
+
+  const caret = session.committed.length + session.preedit.length;
+  const value = session.committed + session.preedit + session.suffix;
+  applyPreedit(element, session.preedit, value, records, caret);
+
+  dispatch(element, "compositionend", {
+    bubbles: true,
+    data: session.preedit,
+  });
+  records.push(
+    snapshot(element, "compositionend", {
+      data: session.preedit,
+      value,
+    }),
+  );
+  clearImeSession(element);
+  setInputValue(element, value, caret);
 }
 
 export function applyPreedit(
@@ -97,26 +207,15 @@ export function playStroke(
   records: ComposedEventRecord[],
   carets?: number[],
 ) {
-  dispatch(element, "keydown", {
-    bubbles: true,
-    cancelable: true,
+  pushKeydown(element, records, {
     key: "Process",
     code: stroke.code,
     keyCode: 229,
     isComposing: stroke.keydownIsComposing,
   });
-  records.push(
-    snapshot(element, "keydown", {
-      key: "Process",
-      code: stroke.code,
-      keyCode: 229,
-      isComposing: stroke.keydownIsComposing,
-    }),
-  );
 
   if (stroke.compositionStart) {
-    dispatch(element, "compositionstart", { bubbles: true, data: "" });
-    records.push(snapshot(element, "compositionstart", { data: "" }));
+    pushCompositionStart(element, records);
   }
 
   for (let i = 0; i < stroke.preeditSteps.length; i++) {
@@ -124,36 +223,29 @@ export function playStroke(
     const value = stroke.valuesAfterSteps[i] ?? element.value;
     const caret = carets?.[i] ?? value.length;
     applyPreedit(element, preedit, value, records, caret);
-
-    if (i === 0 && stroke.commitAfterFirstStep !== undefined) {
-      dispatch(element, "compositionend", {
-        bubbles: true,
-        data: stroke.commitAfterFirstStep,
-      });
-      records.push(
-        snapshot(element, "compositionend", {
-          data: stroke.commitAfterFirstStep,
-          value,
-        }),
-      );
-      dispatch(element, "compositionstart", { bubbles: true, data: "" });
-      records.push(snapshot(element, "compositionstart", { data: "" }));
-    }
+    commitBetweenPreeditSteps(element, stroke, value, records, i);
   }
 
-  dispatch(element, "keyup", {
-    bubbles: true,
+  pushKeyup(element, records, {
     key: stroke.key,
     code: stroke.code,
     keyCode: stroke.key.charCodeAt(0),
     isComposing: true,
   });
-  records.push(
-    snapshot(element, "keyup", {
-      key: stroke.key,
-      code: stroke.code,
-      keyCode: stroke.key.charCodeAt(0),
-      isComposing: true,
-    }),
-  );
+}
+
+export function updateImeSessionForPreedit(
+  element: HTMLInputElement | HTMLTextAreaElement,
+  preedit: string,
+  value: string,
+  caret: number,
+  suffix: string,
+) {
+  const committedLen = caret - preedit.length;
+  setImeSession(element, {
+    composing: true,
+    committed: value.slice(0, committedLen),
+    preedit,
+    suffix,
+  });
 }

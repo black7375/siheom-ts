@@ -3,6 +3,8 @@ import { useEffect, useRef, useState } from "react";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 
+import { assignRef } from "../shared/assignRef";
+
 export type SearchFieldProps = {
   /**
    * `broken` — submit on Enter when `!event.isComposing` (Safari / Linux-ibus confirm-Enter bug).
@@ -15,15 +17,6 @@ export type SearchFieldProps = {
   onSubmit?: (query: string) => void;
   onValueChange?: (value: string) => void;
 };
-
-function assignRef<T>(ref: React.Ref<T> | undefined, value: T | null) {
-  if (!ref) return;
-  if (typeof ref === "function") {
-    ref(value);
-    return;
-  }
-  (ref as React.MutableRefObject<T | null>).current = value;
-}
 
 export function SearchField({
   mode = "broken",

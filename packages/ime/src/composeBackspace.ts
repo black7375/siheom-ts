@@ -1,17 +1,19 @@
-import { assemble, disassemble } from "es-hangul";
+import { assemble } from "es-hangul";
 
+import { hangulJamos } from "./hangulProgression";
 import type { ComposedEventRecord } from "./composeHangulTypes";
-import { applyPreedit, dispatch, setInputValue, snapshot } from "./composeHangulInternals";
+import {
+  applyPreedit,
+  dispatch,
+  pushKeydown,
+  pushKeyup,
+  setInputValue,
+  snapshot,
+} from "./composeHangulInternals";
 import { clearImeSession, getImeSession, setImeSession } from "./imeSession";
 
-function hangulJamosOf(text: string): string[] {
-  return disassemble(text)
-    .split("")
-    .filter((jamo) => jamo.trim().length > 0);
-}
-
 function shrinkPreedit(preedit: string): string {
-  const jamos = hangulJamosOf(preedit);
+  const jamos = hangulJamos(preedit);
   if (jamos.length <= 1) return "";
   return assemble(jamos.slice(0, -1));
 }
@@ -26,22 +28,12 @@ export async function composeBackspace(
   const session = getImeSession(element);
 
   if (session?.composing) {
-    dispatch(element, "keydown", {
-      bubbles: true,
-      cancelable: true,
+    pushKeydown(element, records, {
       key: "Process",
       code: "Backspace",
       keyCode: 229,
       isComposing: true,
     });
-    records.push(
-      snapshot(element, "keydown", {
-        key: "Process",
-        code: "Backspace",
-        keyCode: 229,
-        isComposing: true,
-      }),
-    );
 
     const nextPreedit = shrinkPreedit(session.preedit);
     const caret = session.committed.length + nextPreedit.length;
@@ -53,64 +45,34 @@ export async function composeBackspace(
       dispatch(element, "compositionend", { bubbles: true, data: "" });
       records.push(snapshot(element, "compositionend", { data: "", value }));
       clearImeSession(element);
-      // Caret stays at end of committed (before suffix)
       setInputValue(element, value, caret);
 
-      dispatch(element, "keyup", {
-        bubbles: true,
+      pushKeyup(element, records, {
         key: "Backspace",
         code: "Backspace",
         keyCode: 8,
         isComposing: false,
       });
-      records.push(
-        snapshot(element, "keyup", {
-          key: "Backspace",
-          code: "Backspace",
-          keyCode: 8,
-          isComposing: false,
-        }),
-      );
       return records;
     }
 
     setImeSession(element, { ...session, preedit: nextPreedit });
 
-    dispatch(element, "keyup", {
-      bubbles: true,
+    pushKeyup(element, records, {
       key: "Backspace",
       code: "Backspace",
       keyCode: 8,
       isComposing: true,
     });
-    records.push(
-      snapshot(element, "keyup", {
-        key: "Backspace",
-        code: "Backspace",
-        keyCode: 8,
-        isComposing: true,
-      }),
-    );
     return records;
   }
 
-  // Plain deleteContentBackward
-  dispatch(element, "keydown", {
-    bubbles: true,
-    cancelable: true,
+  pushKeydown(element, records, {
     key: "Backspace",
     code: "Backspace",
     keyCode: 8,
     isComposing: false,
   });
-  records.push(
-    snapshot(element, "keydown", {
-      key: "Backspace",
-      code: "Backspace",
-      keyCode: 8,
-      isComposing: false,
-    }),
-  );
 
   dispatch(element, "beforeinput", {
     bubbles: true,
@@ -155,21 +117,12 @@ export async function composeBackspace(
     }),
   );
 
-  dispatch(element, "keyup", {
-    bubbles: true,
+  pushKeyup(element, records, {
     key: "Backspace",
     code: "Backspace",
     keyCode: 8,
     isComposing: false,
   });
-  records.push(
-    snapshot(element, "keyup", {
-      key: "Backspace",
-      code: "Backspace",
-      keyCode: 8,
-      isComposing: false,
-    }),
-  );
 
   return records;
 }

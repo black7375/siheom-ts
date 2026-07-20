@@ -28,8 +28,8 @@
     "local-release": "changeset version && changeset publish",
     "storybook": "bun run --filter '@siheom/react-example' storybook",
     "install:nose": "bash scripts/install-nose.sh",
-    "dup:jscpd": "jscpd packages/core/src packages/react/src apps/react-example/test",
-    "dup:nose": "nose query -r packages/core/src -r packages/react/src -r apps/react-example/test top=20",
+    "dup:jscpd": "jscpd packages/core/src packages/react/src packages/ime/src apps/react-example/test",
+    "dup:nose": "nose query -r packages/core/src -r packages/react/src -r packages/ime/src -r apps/react-example/test top=20",
     "dup": "bun run dup:jscpd && bun run dup:nose"
   },
   "devDependencies": {

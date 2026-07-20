@@ -1,42 +1,22 @@
 import type { ComposedEventRecord } from "./composeHangul";
 import { toCriticalEvents } from "./composeHangul";
 
-export function goldenToRecords(
-  events: Array<{
-    type: string;
-    key: string | null;
-    code: string | null;
-    keyCode: number | null;
-    isComposing: boolean | null;
-    inputType: string | null;
-    data: string | null;
-    value: string;
-  }>,
-): ComposedEventRecord[] {
-  return events.map((event) => ({
-    type: event.type,
-    key: event.key,
-    code: event.code,
-    keyCode: event.keyCode,
-    isComposing: event.isComposing,
-    inputType: event.inputType,
-    data: event.data,
-    value: event.value,
-  }));
+export type GoldenEventRecord = {
+  type: string;
+  key: string | null;
+  code: string | null;
+  keyCode: number | null;
+  isComposing: boolean | null;
+  inputType: string | null;
+  data: string | null;
+  value: string;
+};
+
+export function goldenToRecords(events: GoldenEventRecord[]): ComposedEventRecord[] {
+  return events.map((event) => ({ ...event }));
 }
 
-export function goldenCritical(
-  events: Array<{
-    type: string;
-    key: string | null;
-    code: string | null;
-    keyCode: number | null;
-    isComposing: boolean | null;
-    inputType: string | null;
-    data: string | null;
-    value: string;
-  }>,
-) {
+export function goldenCritical(events: GoldenEventRecord[]) {
   return toCriticalEvents(goldenToRecords(events));
 }
 

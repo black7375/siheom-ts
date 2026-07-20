@@ -6,12 +6,7 @@ import {
   overrideSiheom,
   query,
 } from "@siheom/core";
-import {
-  attachImeRecorder,
-  createImeActions,
-  goldenCritical,
-  toCriticalEvents,
-} from "@siheom/ime";
+import { attachImeRecorder, createImeActions, goldenCritical, toCriticalEvents } from "@siheom/ime";
 import { defaultGivens, reactEffects } from "@siheom/react";
 import { render } from "@testing-library/react";
 
@@ -39,9 +34,7 @@ function runWithDeferredIme(deferredUpdateRace: boolean) {
       givens: {
         render: async (element: React.ReactElement) => {
           render(element);
-          const input = document.getElementById(
-            "ime-delayed-controlled-input",
-          ) as HTMLInputElement;
+          const input = document.getElementById("ime-delayed-controlled-input") as HTMLInputElement;
           recorderRef.current = attachImeRecorder(input);
         },
       },

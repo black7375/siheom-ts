@@ -1,7 +1,16 @@
 import { planHangulKeystrokes, type HangulKeyStroke } from "./hangulPlan";
 import { keyForJamo } from "./jamoKeyMap";
 import type { ComposedEventRecord } from "./composeHangulTypes";
-import { applyPreedit, dispatch, snapshot } from "./composeHangulInternals";
+import {
+  applyPreedit,
+  commitBetweenPreeditSteps,
+  dispatch,
+  pushCompositionStart,
+  pushKeydown,
+  pushKeyup,
+  snapshot,
+  updateImeSessionForPreedit,
+} from "./composeHangulInternals";
 import { clearImeSession, setImeSession } from "./imeSession";
 import { consumeImeControlledWriteback } from "./imeWritebackSignal";
 
@@ -62,30 +71,6 @@ function endComposition(
 
 type StrokeAbort = "aborted-blur" | "aborted-deferred" | "ok";
 
-function pushKeyup(
-  element: HTMLInputElement | HTMLTextAreaElement,
-  key: string,
-  code: string,
-  isComposing: boolean,
-  records: ComposedEventRecord[],
-) {
-  dispatch(element, "keyup", {
-    bubbles: true,
-    key,
-    code,
-    keyCode: key.charCodeAt(0),
-    isComposing,
-  });
-  records.push(
-    snapshot(element, "keyup", {
-      key,
-      code,
-      keyCode: key.charCodeAt(0),
-      isComposing,
-    }),
-  );
-}
-
 /** One jamo as its own composition session (after focus-steal / deferred abort). */
 async function playIsolatedJamo(
   element: HTMLInputElement | HTMLTextAreaElement,
@@ -100,25 +85,14 @@ async function playIsolatedJamo(
   const value = committed + jamo + suffix;
   const caret = committed.length + jamo.length;
 
-  dispatch(element, "keydown", {
-    bubbles: true,
-    cancelable: true,
+  pushKeydown(element, records, {
     key: "Process",
     code: meta.code,
     keyCode: 229,
     isComposing: false,
   });
-  records.push(
-    snapshot(element, "keydown", {
-      key: "Process",
-      code: meta.code,
-      keyCode: 229,
-      isComposing: false,
-    }),
-  );
 
-  dispatch(element, "compositionstart", { bubbles: true, data: "" });
-  records.push(snapshot(element, "compositionstart", { data: "" }));
+  pushCompositionStart(element, records);
 
   setImeSession(element, {
     composing: true,
@@ -133,11 +107,15 @@ async function playIsolatedJamo(
   if (options.commit) {
     endComposition(element, jamo, records);
   } else {
-    // Delayed-update OS captures abandon composition without compositionend
     clearImeSession(element);
   }
 
-  pushKeyup(element, meta.key, meta.code, false, records);
+  pushKeyup(element, records, {
+    key: meta.key,
+    code: meta.code,
+    keyCode: meta.key.charCodeAt(0),
+    isComposing: false,
+  });
 }
 
 async function playStrokeRespectingBlur(
@@ -151,26 +129,15 @@ async function playStrokeRespectingBlur(
 ): Promise<StrokeAbort> {
   const carets = stroke.valuesAfterSteps.map((value) => value.length - suffix.length);
 
-  dispatch(element, "keydown", {
-    bubbles: true,
-    cancelable: true,
+  pushKeydown(element, records, {
     key: "Process",
     code: stroke.code,
     keyCode: 229,
     isComposing: stroke.keydownIsComposing,
   });
-  records.push(
-    snapshot(element, "keydown", {
-      key: "Process",
-      code: stroke.code,
-      keyCode: 229,
-      isComposing: stroke.keydownIsComposing,
-    }),
-  );
 
   if (stroke.compositionStart) {
-    dispatch(element, "compositionstart", { bubbles: true, data: "" });
-    records.push(snapshot(element, "compositionstart", { data: "" }));
+    pushCompositionStart(element, records);
   }
 
   for (let i = 0; i < stroke.preeditSteps.length; i++) {
@@ -178,13 +145,7 @@ async function playStrokeRespectingBlur(
     const value = stroke.valuesAfterSteps[i] ?? element.value;
     const caret = carets[i] ?? value.length - suffix.length;
 
-    const committedLen = caret - preedit.length;
-    setImeSession(element, {
-      composing: true,
-      committed: value.slice(0, committedLen),
-      preedit,
-      suffix,
-    });
+    updateImeSessionForPreedit(element, preedit, value, caret, suffix);
 
     applyPreedit(element, preedit, value, records, caret);
     await settleAfterPreedit(settle);
@@ -193,36 +154,37 @@ async function playStrokeRespectingBlur(
     const clobbered = element.value !== value;
 
     if (writeback || clobbered) {
-      // React re-applied controlled `value` — IME session dies without compositionend
       clearImeSession(element);
-      pushKeyup(element, stroke.key, stroke.code, false, records);
+      pushKeyup(element, records, {
+        key: stroke.key,
+        code: stroke.code,
+        keyCode: stroke.key.charCodeAt(0),
+        isComposing: false,
+      });
       return "aborted-deferred";
     }
 
     if (blurred.current) {
       blurred.current = false;
       endComposition(element, preedit, records);
-      pushKeyup(element, stroke.key, stroke.code, false, records);
+      pushKeyup(element, records, {
+        key: stroke.key,
+        code: stroke.code,
+        keyCode: stroke.key.charCodeAt(0),
+        isComposing: false,
+      });
       return "aborted-blur";
     }
 
-    if (i === 0 && stroke.commitAfterFirstStep !== undefined) {
-      dispatch(element, "compositionend", {
-        bubbles: true,
-        data: stroke.commitAfterFirstStep,
-      });
-      records.push(
-        snapshot(element, "compositionend", {
-          data: stroke.commitAfterFirstStep,
-          value,
-        }),
-      );
-      dispatch(element, "compositionstart", { bubbles: true, data: "" });
-      records.push(snapshot(element, "compositionstart", { data: "" }));
-    }
+    commitBetweenPreeditSteps(element, stroke, value, records, i);
   }
 
-  pushKeyup(element, stroke.key, stroke.code, true, records);
+  pushKeyup(element, records, {
+    key: stroke.key,
+    code: stroke.code,
+    keyCode: stroke.key.charCodeAt(0),
+    isComposing: true,
+  });
   return "ok";
 }
 
@@ -237,11 +199,7 @@ export async function composeHangul(
   text: string,
   options: ComposeHangulOptions = {},
 ): Promise<ComposedEventRecord[]> {
-  const {
-    commitFinal = true,
-    settle = "microtask",
-    deferredUpdateRace = false,
-  } = options;
+  const { commitFinal = true, settle = "microtask", deferredUpdateRace = false } = options;
   const selectionStart = element.selectionStart ?? element.value.length;
   const selectionEnd = element.selectionEnd ?? element.value.length;
   const prefix = element.value.slice(0, selectionStart);
@@ -281,8 +239,6 @@ export async function composeHangul(
       }
 
       if (result === "aborted-deferred") {
-        // Current stroke already contributed its leading snapshot to the value;
-        // later jamos are typed as isolated sessions without compositionend.
         const remaining = strokes.slice(index + 1).map((s) => s.jamo);
         for (const jamo of remaining) {
           await playIsolatedJamo(element, jamo, suffix, records, settle, { commit: false });

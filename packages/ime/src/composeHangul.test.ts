@@ -2,22 +2,8 @@ import { describe, expect, it } from "vitest";
 
 import { composeHangul, toCriticalEvents } from "./composeHangul";
 import golden from "../fixtures/linux-chrome-ibus-hangul/continuous-hangul.json";
+import { goldenCritical } from "./goldenCompare";
 import { planHangulKeystrokes } from "./hangulPlan";
-
-function goldenCritical() {
-  return toCriticalEvents(
-    golden.events.map((event) => ({
-      type: event.type,
-      key: event.key,
-      code: event.code,
-      keyCode: event.keyCode,
-      isComposing: event.isComposing,
-      inputType: event.inputType,
-      data: event.data,
-      value: event.value,
-    })),
-  );
-}
 
 describe("planHangulKeystrokes", () => {
   it("plans 김 with one composition session ending after ㅁ", () => {
@@ -70,7 +56,7 @@ describe("composeHangul", () => {
 
     const events = await composeHangul(input, "김태희");
     expect(input.value).toBe("김태희");
-    expect(toCriticalEvents(events)).toEqual(goldenCritical());
+    expect(toCriticalEvents(events)).toEqual(goldenCritical(golden.events));
 
     input.remove();
   });

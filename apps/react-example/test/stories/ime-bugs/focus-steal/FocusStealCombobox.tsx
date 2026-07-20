@@ -4,6 +4,8 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { cn } from "@/lib/utils";
 
+import { assignRef } from "../shared/assignRef";
+
 const DEFAULT_SUGGESTIONS = ["김태희", "김철수", "이영희", "박민수", "최수연", "apple"];
 
 export type FocusStealComboboxProps = {
@@ -20,15 +22,6 @@ export type FocusStealComboboxProps = {
   inputRef?: React.Ref<HTMLInputElement>;
   onValueChange?: (value: string) => void;
 };
-
-function assignRef<T>(ref: React.Ref<T> | undefined, value: T | null) {
-  if (!ref) return;
-  if (typeof ref === "function") {
-    ref(value);
-    return;
-  }
-  (ref as React.MutableRefObject<T | null>).current = value;
-}
 
 export function FocusStealCombobox({
   mode = "broken",

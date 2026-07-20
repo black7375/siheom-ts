@@ -36,6 +36,26 @@ function syllableText(parts: SyllableParts): string {
   return assemble([choseong, jungseong, ...(jongseong ? [jongseong] : [])]);
 }
 
+function pushBoundaryStroke(
+  strokes: HangulKeyStroke[],
+  meta: { code: string; key: string },
+  jamo: string,
+  preeditSteps: [string, string],
+  valuesAfterSteps: [string, string],
+  commitAfterFirstStep: string,
+) {
+  strokes.push({
+    jamo,
+    code: meta.code,
+    key: meta.key,
+    keydownIsComposing: true,
+    compositionStart: false,
+    preeditSteps,
+    valuesAfterSteps,
+    commitAfterFirstStep,
+  });
+}
+
 function tryGrowSyllable(current: SyllableParts, jamo: string): SyllableParts | null {
   if (canBeChoseong(jamo) && !current.choseong) {
     return { choseong: jamo };
@@ -105,16 +125,14 @@ export function planHangulKeystrokes(
       current = { choseong: moved, jungseong: jamo };
       const nextPreedit = syllableText(current);
 
-      strokes.push({
+      pushBoundaryStroke(
+        strokes,
+        meta,
         jamo,
-        code: meta.code,
-        key: meta.key,
-        keydownIsComposing: true,
-        compositionStart: false,
-        preeditSteps: [strippedText, nextPreedit],
-        valuesAfterSteps: [afterCommit, afterCommit + nextPreedit],
-        commitAfterFirstStep: strippedText,
-      });
+        [strippedText, nextPreedit],
+        [afterCommit, afterCommit + nextPreedit],
+        strippedText,
+      );
 
       committed = afterCommit;
       composing = true;
@@ -146,16 +164,14 @@ export function planHangulKeystrokes(
       const oldText = syllableText(current);
       const afterCommit = committed + oldText;
 
-      strokes.push({
+      pushBoundaryStroke(
+        strokes,
+        meta,
         jamo,
-        code: meta.code,
-        key: meta.key,
-        keydownIsComposing: true,
-        compositionStart: false,
-        preeditSteps: [oldText, jamo],
-        valuesAfterSteps: [afterCommit, afterCommit + jamo],
-        commitAfterFirstStep: oldText,
-      });
+        [oldText, jamo],
+        [afterCommit, afterCommit + jamo],
+        oldText,
+      );
 
       committed = afterCommit;
       current = { choseong: jamo };

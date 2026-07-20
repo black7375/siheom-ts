@@ -5,6 +5,8 @@ import { markImeControlledWriteback } from "@siheom/ime";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 
+import { assignRef } from "../shared/assignRef";
+
 export type DelayedControlledFieldProps = {
   /**
    * `broken` — defer setState one macrotask with a *leading* snapshot for that tick.
@@ -19,15 +21,6 @@ export type DelayedControlledFieldProps = {
   inputRef?: React.Ref<HTMLInputElement>;
   onValueChange?: (value: string) => void;
 };
-
-function assignRef<T>(ref: React.Ref<T> | undefined, value: T | null) {
-  if (!ref) return;
-  if (typeof ref === "function") {
-    ref(value);
-    return;
-  }
-  (ref as React.MutableRefObject<T | null>).current = value;
-}
 
 export function DelayedControlledField({
   mode = "broken",
