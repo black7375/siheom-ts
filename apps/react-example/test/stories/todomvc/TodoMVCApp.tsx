@@ -22,11 +22,7 @@ import {
 } from "./todoLogic";
 import { readTodos, writeTodos } from "./todoStorage";
 
-export function TodoMVCApp({
-  initialEntries = ["/"],
-}: {
-  initialEntries?: string[];
-}) {
+export function TodoMVCApp({ initialEntries = ["/"] }: { initialEntries?: string[] }) {
   return (
     <MemoryRouter initialEntries={initialEntries}>
       <Routes>
@@ -66,7 +62,10 @@ function TodoMVCContent() {
       </header>
 
       {hasTodos ? (
-        <section aria-label="todo list" className="overflow-hidden rounded-xl border bg-card shadow-sm">
+        <section
+          aria-label="todo list"
+          className="overflow-hidden rounded-xl border bg-card shadow-sm"
+        >
           <div className="flex items-center gap-2 border-b px-3 py-2">
             <Checkbox
               id="toggle-all"
@@ -136,15 +135,7 @@ function TodoMVCContent() {
   );
 }
 
-function FilterLink({
-  to,
-  label,
-  active,
-}: {
-  to: string;
-  label: string;
-  active: boolean;
-}) {
+function FilterLink({ to, label, active }: { to: string; label: string; active: boolean }) {
   return (
     <Link
       to={to}

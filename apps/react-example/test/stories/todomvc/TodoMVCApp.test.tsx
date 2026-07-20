@@ -25,10 +25,7 @@ describe("TodoMVCApp", () => {
   });
 
   it("페이지 로드 시 새 할 일 입력에 포커스가 있다", async () => {
-    await runSiheom(
-      setup([]),
-      assertions.focused(query.textbox("What needs to be done?")),
-    );
+    await runSiheom(setup([]), assertions.focused(query.textbox("What needs to be done?")));
   });
 
   it("Enter로 할 일을 추가하고 입력을 비운다", async () => {

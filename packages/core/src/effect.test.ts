@@ -73,7 +73,11 @@ describe("withFakeTimers", () => {
   it("advances timers scheduled inside the scope", async () => {
     const fn = vi.fn();
 
-    const { runSiheom, given, effect: effectBindings } = extendSiheom(
+    const {
+      runSiheom,
+      given,
+      effect: effectBindings,
+    } = extendSiheom(
       {
         actions: {},
         assertions: {},
@@ -89,9 +93,7 @@ describe("withFakeTimers", () => {
       },
     );
 
-    await runSiheom(
-      withFakeTimers(given.scheduleTimeout(), effectBindings.elapsed(1_000)),
-    );
+    await runSiheom(withFakeTimers(given.scheduleTimeout(), effectBindings.elapsed(1_000)));
 
     expect(fn).toHaveBeenCalledTimes(1);
   });

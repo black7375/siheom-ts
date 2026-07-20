@@ -11,7 +11,10 @@ type DefaultAssertionsOptions = {
 };
 
 function expectElementChecked(element: HTMLElement, expected: boolean) {
-  if (element instanceof HTMLInputElement && (element.type === "checkbox" || element.type === "radio")) {
+  if (
+    element instanceof HTMLInputElement &&
+    (element.type === "checkbox" || element.type === "radio")
+  ) {
     if (expected) {
       expect(element).toBeChecked();
     } else {
@@ -27,15 +30,10 @@ function expectElementChecked(element: HTMLElement, expected: boolean) {
   }
 }
 
-export function createDefaultAssertions(
-  options: DefaultAssertionsOptions = {},
-) {
+export function createDefaultAssertions(options: DefaultAssertionsOptions = {}) {
   const resolveElement = options.resolveElement ?? "waitFor";
 
-  async function withPresentElement(
-    target: Locator,
-    assertMatch: (element: HTMLElement) => void,
-  ) {
+  async function withPresentElement(target: Locator, assertMatch: (element: HTMLElement) => void) {
     if (resolveElement === "sync") {
       const element = getElement(target, true);
       expect(element).toBeInTheDocument();
@@ -197,9 +195,9 @@ export function createDefaultAssertions(
         expect(element).toBeInstanceOf(HTMLTableElement);
       });
 
-      await expect(tableToMarkdown(getElement(target, true) as HTMLTableElement)).toMatchFileSnapshot(
-        `__snapshots__/${path}`,
-      );
+      await expect(
+        tableToMarkdown(getElement(target, true) as HTMLTableElement),
+      ).toMatchFileSnapshot(`__snapshots__/${path}`);
     },
   } satisfies AssertionStepDefinitionDict;
 }

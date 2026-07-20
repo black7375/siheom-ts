@@ -1,5 +1,13 @@
 import { describe, it } from "vitest";
-import { actions, assertions, effect, given, query, runSiheom, withFakeTimers } from "@siheom/react";
+import {
+  actions,
+  assertions,
+  effect,
+  given,
+  query,
+  runSiheom,
+  withFakeTimers,
+} from "@siheom/react";
 import { CountdownApp } from "./CountdownApp";
 
 describe("CountdownApp", () => {
@@ -8,7 +16,7 @@ describe("CountdownApp", () => {
       withFakeTimers(
         given.render(<CountdownApp durationMinutes={25} />),
         assertions.textContent(query.timer("남은 시간"), "25:00"),
-        
+
         actions.click(query.button("시작")),
         effect.elapsed(1_000),
         assertions.textContent(query.timer("남은 시간"), "24:59"),

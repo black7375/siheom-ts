@@ -7,4 +7,3 @@ Pomodoro-style countdown timer example.
 - [x] pause — remaining time does not decrease while paused
 - [x] reset — returns to 25:00
 - [x] complete — shows done state when timer reaches zero
-

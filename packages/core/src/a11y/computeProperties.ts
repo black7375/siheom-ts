@@ -57,7 +57,12 @@ export function computeMultiselectable(el: Element): boolean | undefined {
 }
 
 export function computeAutocomplete(el: Element): string | undefined {
-  return getEnumeratedAttribute(el, "aria-autocomplete", ["none", "inline", "list", "both"] as const);
+  return getEnumeratedAttribute(el, "aria-autocomplete", [
+    "none",
+    "inline",
+    "list",
+    "both",
+  ] as const);
 }
 
 export function computeValuemin(el: Element): number | undefined {

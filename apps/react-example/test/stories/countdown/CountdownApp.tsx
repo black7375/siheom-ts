@@ -9,11 +9,7 @@ import {
 } from "./countdownLogic";
 
 export function CountdownApp({ durationMinutes = 25 }: { durationMinutes?: number }) {
-  const [state, dispatch] = useReducer(
-    countdownReducer,
-    durationMinutes,
-    initialCountdown,
-  );
+  const [state, dispatch] = useReducer(countdownReducer, durationMinutes, initialCountdown);
   const running = state.startTime !== null;
   const complete = isComplete(state);
 

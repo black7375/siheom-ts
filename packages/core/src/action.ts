@@ -10,14 +10,13 @@ type DefaultActionsOptions = {
   resolveElement?: "sync" | "waitFor";
 };
 
-export function createDefaultActions(options: DefaultActionsOptions = {}): ActionStepDefinitionDict {
+export function createDefaultActions(
+  options: DefaultActionsOptions = {},
+): ActionStepDefinitionDict {
   const user = options.user ?? userEvent.setup();
   const resolveElement = options.resolveElement ?? "waitFor";
 
-  async function withPresentElement(
-    target: Locator,
-    run: (element: HTMLElement) => Promise<void>,
-  ) {
+  async function withPresentElement(target: Locator, run: (element: HTMLElement) => Promise<void>) {
     if (resolveElement === "sync") {
       const element = getElement(target, true);
       expect(element).toBeInTheDocument();

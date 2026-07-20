@@ -14,15 +14,14 @@ export const FAKE_TIMER_USER_DELAY_MS = 50;
 
 export type AfterActionHook = () => void | Promise<void>;
 
-export type FakeTimerScopeHooks<
-  TGivens extends GivenStepDefinitionDict = GivenStepDefinitionDict,
-> = {
-  /** Override how fake timers are installed for this scope (e.g. React needs `shouldAdvanceTime: true`). */
-  installFakeTimers?: () => void;
-  createUser?: (advanceTimers: (delay: number) => void) => UserEvent;
-  afterAction?: AfterActionHook;
-  wrapGivens?: (givens: TGivens) => TGivens;
-};
+export type FakeTimerScopeHooks<TGivens extends GivenStepDefinitionDict = GivenStepDefinitionDict> =
+  {
+    /** Override how fake timers are installed for this scope (e.g. React needs `shouldAdvanceTime: true`). */
+    installFakeTimers?: () => void;
+    createUser?: (advanceTimers: (delay: number) => void) => UserEvent;
+    afterAction?: AfterActionHook;
+    wrapGivens?: (givens: TGivens) => TGivens;
+  };
 
 export type SiheomRegistryBundle<
   TActions extends ActionStepDefinitionDict = ActionStepDefinitionDict,
@@ -67,8 +66,7 @@ export function createFakeTimerScopedRegistries<
     vi.advanceTimersByTime(delay);
   };
   const user =
-    registries.fakeTimerScope?.createUser?.(advanceTimers) ??
-    userEvent.setup({ advanceTimers });
+    registries.fakeTimerScope?.createUser?.(advanceTimers) ?? userEvent.setup({ advanceTimers });
   const afterAction =
     registries.fakeTimerScope?.afterAction ??
     (async () => {

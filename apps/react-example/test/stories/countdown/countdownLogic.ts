@@ -20,8 +20,7 @@ export type CountdownAction =
   | { type: "tick"; now?: number };
 
 export function elapsedMs(state: CountdownState): number {
-  const runningElapsed =
-    state.startTime === null ? 0 : Math.max(0, state.now - state.startTime);
+  const runningElapsed = state.startTime === null ? 0 : Math.max(0, state.now - state.startTime);
   return state.frozenElapsedMs + runningElapsed;
 }
 
@@ -47,10 +46,7 @@ export function isComplete(state: CountdownState): boolean {
   return remainingSeconds(state) <= 0 && state.frozenElapsedMs >= state.durationMs;
 }
 
-export function countdownReducer(
-  state: CountdownState,
-  action: CountdownAction,
-): CountdownState {
+export function countdownReducer(state: CountdownState, action: CountdownAction): CountdownState {
   const now = action.now ?? Date.now();
 
   switch (action.type) {

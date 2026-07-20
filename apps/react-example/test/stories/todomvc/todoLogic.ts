@@ -15,9 +15,7 @@ export function addTodo(todos: Todo[], title: string): Todo[] {
 }
 
 export function toggleTodo(todos: Todo[], id: string): Todo[] {
-  return todos.map((todo) =>
-    todo.id === id ? { ...todo, completed: !todo.completed } : todo,
-  );
+  return todos.map((todo) => (todo.id === id ? { ...todo, completed: !todo.completed } : todo));
 }
 
 export function toggleAll(todos: Todo[], completed: boolean): Todo[] {

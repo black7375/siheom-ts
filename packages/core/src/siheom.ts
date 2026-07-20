@@ -114,7 +114,10 @@ export function createRunSiheom<
   TEffects extends EffectStepDefinitionDict,
 >(registries: SiheomRegistries<TActions, TAssertions, TGivens, TEffects>) {
   return async function runSiheom(
-    ...steps: (Step<TActions, TAssertions, TGivens, TEffects> | Step<TActions, TAssertions, TGivens, TEffects>[])[]
+    ...steps: (
+      | Step<TActions, TAssertions, TGivens, TEffects>
+      | Step<TActions, TAssertions, TGivens, TEffects>[]
+    )[]
   ) {
     const logs: string[] = [];
     await runSteps(registries, steps.flat(), logs);
