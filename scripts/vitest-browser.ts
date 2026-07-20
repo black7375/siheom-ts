@@ -25,4 +25,5 @@ export const vitestBrowserMode = {
     }),
     instances: [{ browser: "chromium" }],
   },
-} satisfies Pick<TestConfig, "browser">;
+  testTimeout: 1000,
+} satisfies Pick<TestConfig, "browser" | "testTimeout">;

@@ -1,7 +1,7 @@
 import { createRunSiheom, effect, withFakeTimers } from "@siheom/core";
 import { actions, defaultBrowserActions } from "./action.ts";
 import { assertions, defaultBrowserAssertions } from "./assert.ts";
-import { defaultGivens, given } from "./given.ts";
+import { cleanupReactRoots, defaultGivens, given } from "./given.ts";
 import { reactEffects } from "./effects.ts";
 import { reactFakeTimerScope } from "./fakeTimerScope.ts";
 import { createBrowserFakeTimerScopedRegistries } from "./fakeTimerRegistries.ts";
@@ -17,4 +17,4 @@ export const runSiheom = createRunSiheom({
 });
 
 export { actions, assertions, query, given, effect, withFakeTimers };
-export { defaultGivens, reactEffects, reactFakeTimerScope };
+export { cleanupReactRoots, defaultGivens, reactEffects, reactFakeTimerScope };

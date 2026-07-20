@@ -1,6 +1,10 @@
-import { render } from "vitest-browser-react/pure";
+import { cleanup, render } from "vitest-browser-react";
 import type { GivenStep } from "@siheom/core";
 import type { ReactElement } from "react";
+
+export async function cleanupReactRoots(): Promise<void> {
+  await cleanup();
+}
 
 export const defaultGivens = {
   render: async (element: ReactElement) => {
