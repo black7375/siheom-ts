@@ -1,7 +1,7 @@
 import "../../index.css";
 import { describe, expect, it } from "vitest";
 import { actions, assertions, given, query, runSiheom } from "@siheom/react";
-import { AriakitSubscribe } from "./Ariakit";
+import { AriakitSubscribe } from "./Ariakit.tsx";
 import { SUBSCRIBER } from "./subscribe.fixture";
 
 describe("AriakitSubscribe", () => {

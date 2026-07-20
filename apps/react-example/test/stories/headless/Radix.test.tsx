@@ -1,7 +1,7 @@
 import "../../index.css";
 import { describe, expect, it } from "vitest";
 import { actions, assertions, given, query, runSiheom } from "@siheom/react";
-import { RadixSubscribe } from "./Radix";
+import { RadixSubscribe } from "./Radix.tsx";
 import { SUBSCRIBER } from "./subscribe.fixture";
 
 describe("RadixSubscribe", () => {
