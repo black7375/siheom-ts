@@ -8,14 +8,9 @@ import { Checkbox } from "@/components/react-aria/checkbox";
 import { Dialog, DialogTitle, DialogTrigger, Modal } from "@/components/react-aria/modal";
 import { Select, SelectItem } from "@/components/react-aria/select";
 import { TextField } from "@/components/react-aria/text-field";
-import { SUBSCRIPTION_PLANS, type SubscriptionPlan } from "./subscribe.fixture";
+import { SUBSCRIPTION_PLANS, type SubscribeData, type SubscriptionPlan } from "./subscribe.fixture";
 
-export type SubscribeData = {
-  name: string;
-  email: string;
-  plan: SubscriptionPlan;
-  terms: boolean;
-};
+export type { SubscribeData };
 
 export function ReactAriaSubscribe({
   onSubscribe,
