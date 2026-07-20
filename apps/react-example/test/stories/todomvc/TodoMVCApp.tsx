@@ -1,6 +1,14 @@
 import { MemoryRouter, Route, Routes } from "react-router-dom";
 import { useState } from "react";
-import { addTodo, allCompleted, toggleAll, toggleTodo, updateTodoTitle, type Todo } from "./todoLogic";
+import {
+  addTodo,
+  allCompleted,
+  removeTodo,
+  toggleAll,
+  toggleTodo,
+  updateTodoTitle,
+  type Todo,
+} from "./todoLogic";
 import { readTodos } from "./todoStorage";
 
 export function TodoMVCApp({
@@ -64,6 +72,8 @@ function TodoMVCContent() {
                   setTodos((current) => updateTodoTitle(current, todo.id, title));
                   setEditingId(null);
                 }}
+                onCancelEdit={() => setEditingId(null)}
+                onDelete={() => setTodos((current) => removeTodo(current, todo.id))}
               />
             ))}
           </ul>
@@ -83,12 +93,16 @@ function TodoItem({
   onToggle,
   onStartEdit,
   onFinishEdit,
+  onCancelEdit,
+  onDelete,
 }: {
   todo: Todo;
   editing: boolean;
   onToggle: () => void;
   onStartEdit: () => void;
   onFinishEdit: (title: string) => void;
+  onCancelEdit: () => void;
+  onDelete: () => void;
 }) {
   return (
     <li
@@ -115,6 +129,9 @@ function TodoItem({
             if (event.key === "Enter") {
               onFinishEdit(event.currentTarget.value);
             }
+            if (event.key === "Escape") {
+              onCancelEdit();
+            }
           }}
         />
       ) : (
@@ -122,6 +139,12 @@ function TodoItem({
           {todo.title}
         </label>
       )}
+      <button
+        type="button"
+        className="destroy"
+        aria-label={`Delete ${todo.title}`}
+        onClick={onDelete}
+      />
     </li>
   );
 }

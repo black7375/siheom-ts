@@ -13,7 +13,7 @@ Spec: [TodoMVC app-spec](https://raw.githubusercontent.com/tastejs/todomvc/refs/
 - [x] editing — Enter and blur save the title
 - [x] editing — empty title removes the todo
 - [x] editing — Escape discards changes
-- [ ] item — delete button removes the todo
+- [x] item — delete button removes the todo
 - [ ] counter — shows active count with correct pluralization
 - [ ] clear completed — removes completed todos and hides when none remain
 - [ ] persistence — todos are stored in localStorage

@@ -7,3 +7,4 @@ region: "todo list"
       checkbox: "Mark Buy milk as complete" [value="on"]
         - states: [checked=true]
       "Buy milk"
+      button: "Delete Buy milk"

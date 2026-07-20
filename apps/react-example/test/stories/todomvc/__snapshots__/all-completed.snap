@@ -7,7 +7,9 @@ region: "todo list"
       checkbox: "Mark Buy milk as complete" [value="on"]
         - states: [checked=true]
       "Buy milk"
+      button: "Delete Buy milk"
     listitem: "Read a book"
       checkbox: "Mark Read a book as complete" [value="on"]
         - states: [checked=true]
       "Read a book"
+      button: "Delete Read a book"

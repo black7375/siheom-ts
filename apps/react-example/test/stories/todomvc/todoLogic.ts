@@ -33,3 +33,7 @@ export function updateTodoTitle(todos: Todo[], id: string, title: string): Todo[
   if (!trimmed) return todos.filter((todo) => todo.id !== id);
   return todos.map((todo) => (todo.id === id ? { ...todo, title: trimmed } : todo));
 }
+
+export function removeTodo(todos: Todo[], id: string): Todo[] {
+  return todos.filter((todo) => todo.id !== id);
+}

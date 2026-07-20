@@ -112,4 +112,13 @@ describe("TodoMVCApp", () => {
       assertions.not.visible(query.textbox("Edit Buy milk")),
     );
   });
+
+  it("삭제 버튼으로 할 일을 제거한다", async () => {
+    await runSiheom(
+      setup([TODO_BUY_MILK, TODO_READ_BOOK]),
+      actions.click(query.button(`Delete ${TODO_BUY_MILK.title}`)),
+      assertions.not.visible(query.listitem("Buy milk")),
+      assertions.visible(query.listitem(TODO_READ_BOOK.title)),
+    );
+  });
 });
