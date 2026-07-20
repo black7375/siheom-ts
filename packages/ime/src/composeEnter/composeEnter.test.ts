@@ -109,9 +109,7 @@ describe("composeEnter during composition", () => {
       await composeHangul(input, "김", { commitFinal: false, profile: "macos-chrome-apple" });
       await composeEnter(input, resolveProfile("macos-chrome-apple"));
 
-      expect(toCriticalEvents(recorder.events)).toEqual(
-        toCriticalEvents(macosEnterGolden.events),
-      );
+      expect(toCriticalEvents(recorder.events)).toEqual(toCriticalEvents(macosEnterGolden.events));
     });
   });
 });

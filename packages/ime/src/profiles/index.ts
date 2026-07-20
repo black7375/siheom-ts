@@ -4,4 +4,9 @@ export {
   registerProfile,
   resolveProfile,
 } from "./profiles";
-export type { EnterDuringCompositionFacet, HangulComposeMode, HangulKeyEventKey, ImeProfile } from "./profiles";
+export type {
+  EnterDuringCompositionFacet,
+  HangulComposeMode,
+  HangulKeyEventKey,
+  ImeProfile,
+} from "./profiles";

@@ -1,4 +1,3 @@
-import "vitest-browser-react";
 import "./index.css";
 
 declare global {

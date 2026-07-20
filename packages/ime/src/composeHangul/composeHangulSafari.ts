@@ -4,17 +4,13 @@ import {
   applyReplacementText,
   clearImeSession,
   commitSafariSyllable,
-  dispatch,
   hangulKeydownFields,
   hangulKeyupFields,
-  keyForJamo,
   pushCompositionStart,
   pushKeydown,
   pushKeyup,
   replacementInputType,
   restartSafariComposition,
-  setImeSession,
-  snapshot,
   updateImeSessionForPreedit,
   type ComposedEventRecord,
 } from "../_internal";
@@ -38,21 +34,6 @@ async function settleAfterPreedit(settle: "microtask" | "macrotask") {
   await new Promise<void>((resolve) => {
     setTimeout(resolve, 0);
   });
-}
-
-function endComposition(
-  element: HTMLInputElement | HTMLTextAreaElement,
-  data: string,
-  records: ComposedEventRecord[],
-) {
-  dispatch(element, "compositionend", { bubbles: true, data });
-  records.push(
-    snapshot(element, "compositionend", {
-      data,
-      value: element.value,
-    }),
-  );
-  clearImeSession(element);
 }
 
 function confirmSyllable(
@@ -207,7 +188,7 @@ export async function composeHangulSafariComposition(
   profile: ImeProfile,
   options: Pick<ComposeHangulOptions, "commitFinal" | "settle" | "deferredUpdateRace">,
 ): Promise<ComposedEventRecord[]> {
-  const { commitFinal = true, settle = "macrotask", deferredUpdateRace = false } = options;
+  const { settle = "macrotask", deferredUpdateRace = false } = options;
   const records: ComposedEventRecord[] = [];
 
   for (let index = 0; index < strokes.length; index++) {

@@ -17,7 +17,12 @@ export {
   registerProfile,
   resolveProfile,
 } from "./profiles";
-export type { EnterDuringCompositionFacet, HangulComposeMode, HangulKeyEventKey, ImeProfile } from "./profiles";
+export type {
+  EnterDuringCompositionFacet,
+  HangulComposeMode,
+  HangulKeyEventKey,
+  ImeProfile,
+} from "./profiles";
 export { attachImeRecorder } from "./attachImeRecorder";
 export { goldenCritical, fromFirstCompositionStart } from "./goldenCritical";
 export { toCriticalEvents } from "./toCriticalEvents";

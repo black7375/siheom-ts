@@ -5,7 +5,6 @@ export function hangulKeydownFields(
   profile: ImeProfile,
   stroke: JamoStroke,
 ): { key: string; code: string; keyCode: number } {
-  const meta = keyForJamo(stroke.jamo);
   if (profile.hangulKeyEventKey === "jamo") {
     return { key: stroke.jamo, code: stroke.code, keyCode: 229 };
   }

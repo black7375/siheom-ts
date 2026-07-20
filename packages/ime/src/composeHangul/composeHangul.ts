@@ -209,8 +209,12 @@ export async function composeHangul(
   text: string,
   options: ComposeHangulOptions = {},
 ): Promise<ComposedEventRecord[]> {
-  const { commitFinal = true, settle = "microtask", deferredUpdateRace = false, profile: profileOpt } =
-    options;
+  const {
+    commitFinal = true,
+    settle = "microtask",
+    deferredUpdateRace = false,
+    profile: profileOpt,
+  } = options;
   const profile = resolveProfile(profileOpt);
   const selectionStart = element.selectionStart ?? element.value.length;
   const selectionEnd = element.selectionEnd ?? element.value.length;
