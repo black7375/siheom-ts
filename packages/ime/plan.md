@@ -17,3 +17,9 @@ IME-faithful `fill` / `type` that plug into siheom via `overrideSiheom`, startin
 - [x] `segmentTypeText` splits a type string into Hangul runs, Latin runs, and `{Key}` descriptors
 - [x] `createImeActions()` returns `{ fill, type }` that compose Hangul via `composeHangul` and delegate the rest to user-event
 - [x] `overrideSiheom(..., { actions: createImeActions() })` can fill `"김태희"` and fires `compositionupdate` (not only `insertText`)
+- [x] `overrideSiheom` + `actions.type("김태희")` records match `continuous-hangul` golden critical fields
+- [x] `mixed-en-ko`: Hangul portion of recorded events matches golden after Latin prefix
+- [x] `backspace-mid` script matches golden critical fields
+- [x] `arrow-edit-mid` script matches golden critical fields
+- [x] `registerProfile` / resolve profile id; linux-chrome-ibus-hangul is the default Hangul profile
+- [x] Enter-during-composition facets: webkit (`macos-safari`), chromium (`linux-chrome-ibus-hangul`), chromium-duplicate (`windows-chrome-ms`)

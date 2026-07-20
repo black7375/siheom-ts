@@ -3,12 +3,18 @@ import { userEvent, type UserEvent } from "@testing-library/user-event";
 import { getElement, type ActionStepDefinitionDict, type Locator } from "@siheom/core";
 import { expect } from "vitest";
 
+import { composeArrowLeft } from "./composeArrowLeft";
+import { composeBackspace } from "./composeBackspace";
+import { composeEnter } from "./composeEnter";
 import { composeHangul } from "./composeHangul";
+import { resolveProfile, type ImeProfile } from "./profiles";
 import { segmentTypeText } from "./segmentTypeText";
 
 export type CreateImeActionsOptions = {
   user?: UserEvent;
   resolveElement?: "sync" | "waitFor";
+  /** Profile id, profile object, or env `SIHEOM_IME_PROFILE` / default linux-chrome-ibus-hangul */
+  profile?: string | ImeProfile;
 };
 
 function isEditable(
@@ -17,21 +23,65 @@ function isEditable(
   return element instanceof HTMLInputElement || element instanceof HTMLTextAreaElement;
 }
 
+async function typeKeySegment(
+  user: UserEvent,
+  element: HTMLInputElement | HTMLTextAreaElement,
+  text: string,
+  profile: ImeProfile,
+): Promise<void> {
+  let i = 0;
+  while (i < text.length) {
+    if (text[i] === "{") {
+      const end = text.indexOf("}", i + 1);
+      if (end === -1) {
+        await user.keyboard(text.slice(i));
+        return;
+      }
+      const name = text.slice(i + 1, end);
+      if (/^Backspace$/i.test(name)) {
+        await composeBackspace(element);
+      } else if (/^ArrowLeft$/i.test(name)) {
+        await composeArrowLeft(element);
+      } else if (/^Enter$/i.test(name)) {
+        await composeEnter(element, profile);
+      } else {
+        await user.keyboard(`{${name}}`);
+      }
+      i = end + 1;
+      continue;
+    }
+
+    let j = i + 1;
+    while (j < text.length && text[j] !== "{") j++;
+    await user.keyboard(text.slice(i, j));
+    i = j;
+  }
+}
+
 async function typeImeText(
   user: UserEvent,
   element: HTMLElement,
   text: string,
+  profile: ImeProfile,
 ): Promise<void> {
   if (!isEditable(element)) {
     await user.type(element, text);
     return;
   }
 
-  for (const segment of segmentTypeText(text)) {
+  const segments = segmentTypeText(text);
+  for (let index = 0; index < segments.length; index++) {
+    const segment = segments[index];
+    if (!segment) continue;
+    const next = segments[index + 1];
+
     if (segment.kind === "hangul") {
-      await composeHangul(element, segment.text);
+      const leaveOpen =
+        next?.kind === "keys" &&
+        /\{(Backspace|ArrowLeft|Enter)\}/i.test(next.text);
+      await composeHangul(element, segment.text, { commitFinal: !leaveOpen });
     } else {
-      await user.keyboard(segment.text);
+      await typeKeySegment(user, element, segment.text, profile);
     }
   }
 }
@@ -43,6 +93,7 @@ async function typeImeText(
 export function createImeActions(options: CreateImeActionsOptions = {}) {
   const user = options.user ?? userEvent.setup();
   const resolveElement = options.resolveElement ?? "waitFor";
+  const profile = resolveProfile(options.profile);
 
   async function withPresentElement(
     target: Locator,
@@ -67,12 +118,12 @@ export function createImeActions(options: CreateImeActionsOptions = {}) {
       withPresentElement(target, async (element) => {
         await user.click(element);
         await user.clear(element);
-        await typeImeText(user, element, text);
+        await typeImeText(user, element, text, profile);
       }),
     type: async (target: Locator, text: string) =>
       withPresentElement(target, async (element) => {
         await user.click(element);
-        await typeImeText(user, element, text);
+        await typeImeText(user, element, text, profile);
       }),
   } satisfies Pick<ActionStepDefinitionDict, "fill" | "type">;
 }

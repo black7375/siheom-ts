@@ -69,27 +69,40 @@ function tryGrowSyllable(current: SyllableParts, jamo: string): SyllableParts | 
   return null;
 }
 
+export type PlanHangulKeystrokesOptions = {
+  /** Already-committed text before this Hangul run (e.g. Latin prefix). */
+  prefix?: string;
+};
+
 /** Plan per-keystroke Hangul IME behavior for `text` (2-set style / ibus-hangul-like). */
-export function planHangulKeystrokes(text: string): HangulKeyStroke[] {
+export function planHangulKeystrokes(
+  text: string,
+  options: PlanHangulKeystrokesOptions = {},
+): HangulKeyStroke[] {
   const jamos = hangulJamos(text);
   const strokes: HangulKeyStroke[] = [];
-  let committed = "";
+  let committed = options.prefix ?? "";
   let current: SyllableParts = {};
   let composing = false;
 
   for (const jamo of jamos) {
     const meta = keyForJamo(jamo);
 
-    // Vowel after jongseong: commit syllable without jongseong, start next with jong+vowel
+    // Vowel after jongseong: commit previous syllable, start next with (moved jong)+vowel.
+    // Double batchim (ㄹㅅ→ㄽ): keep first jong, move last jong as next choseong (철+수).
     if (canBeJungseong(jamo) && current.choseong && current.jungseong && current.jongseong) {
-      const jong = current.jongseong;
+      const jongChars = [...current.jongseong];
+      const moved =
+        jongChars.length > 1 ? (jongChars[jongChars.length - 1] ?? "") : current.jongseong;
+      const keptJong = jongChars.length > 1 ? jongChars[0] : undefined;
       const stripped: SyllableParts = {
         choseong: current.choseong,
         jungseong: current.jungseong,
+        ...(keptJong ? { jongseong: keptJong } : {}),
       };
       const strippedText = syllableText(stripped);
       const afterCommit = committed + strippedText;
-      current = { choseong: jong, jungseong: jamo };
+      current = { choseong: moved, jungseong: jamo };
       const nextPreedit = syllableText(current);
 
       strokes.push({

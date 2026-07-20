@@ -1,164 +1,15 @@
-import type { HangulKeyStroke } from "./hangulPlan";
 import { planHangulKeystrokes } from "./hangulPlan";
+import type { ComposedEventRecord } from "./composeHangulTypes";
+import { dispatch, playStroke, snapshot } from "./composeHangulInternals";
+import { clearImeSession, setImeSession } from "./imeSession";
 
-export type ComposedEventRecord = {
-  type: string;
-  key: string | null;
-  code: string | null;
-  keyCode: number | null;
-  isComposing: boolean | null;
-  inputType: string | null;
-  data: string | null;
-  value: string;
-};
-
-function setInputValue(element: HTMLInputElement | HTMLTextAreaElement, value: string) {
-  element.value = value;
-  // Keep caret at end — Hangul IME default for simple typing
-  const end = value.length;
-  element.setSelectionRange(end, end);
-}
-
-function dispatch<K extends keyof HTMLElementEventMap>(
-  element: HTMLElement,
-  type: K,
-  init: EventInit & Record<string, unknown>,
-) {
-  let event: Event;
-  if (type.startsWith("key")) {
-    event = new KeyboardEvent(type, init as KeyboardEventInit);
-  } else if (type.startsWith("composition")) {
-    event = new CompositionEvent(type, init as CompositionEventInit);
-  } else if (type === "beforeinput" || type === "input") {
-    event = new InputEvent(type, init as InputEventInit);
-  } else {
-    event = new Event(type, init);
-  }
-  element.dispatchEvent(event);
-}
-
-function applyPreedit(
-  element: HTMLInputElement | HTMLTextAreaElement,
-  preedit: string,
-  value: string,
-  records: ComposedEventRecord[],
-) {
-  dispatch(element, "compositionupdate", { bubbles: true, data: preedit, cancelable: true });
-  records.push(snapshot(element, "compositionupdate", { data: preedit }));
-
-  dispatch(element, "beforeinput", {
-    bubbles: true,
-    cancelable: true,
-    inputType: "insertCompositionText",
-    data: preedit,
-    isComposing: true,
-  });
-  records.push(
-    snapshot(element, "beforeinput", {
-      inputType: "insertCompositionText",
-      data: preedit,
-      isComposing: true,
-    }),
-  );
-
-  setInputValue(element, value);
-  dispatch(element, "input", {
-    bubbles: true,
-    inputType: "insertCompositionText",
-    data: preedit,
-    isComposing: true,
-  });
-  records.push(
-    snapshot(element, "input", {
-      inputType: "insertCompositionText",
-      data: preedit,
-      isComposing: true,
-      value,
-    }),
-  );
-}
-
-function snapshot(
-  element: HTMLInputElement | HTMLTextAreaElement,
-  type: string,
-  partial: Partial<ComposedEventRecord>,
-): ComposedEventRecord {
-  return {
-    type,
-    key: partial.key ?? null,
-    code: partial.code ?? null,
-    keyCode: partial.keyCode ?? null,
-    isComposing: partial.isComposing ?? null,
-    inputType: partial.inputType ?? null,
-    data: partial.data ?? null,
-    value: partial.value ?? element.value,
-  };
-}
-
-function playStroke(
-  element: HTMLInputElement | HTMLTextAreaElement,
-  stroke: HangulKeyStroke,
-  records: ComposedEventRecord[],
-) {
-  dispatch(element, "keydown", {
-    bubbles: true,
-    cancelable: true,
-    key: "Process",
-    code: stroke.code,
-    keyCode: 229,
-    isComposing: stroke.keydownIsComposing,
-  });
-  records.push(
-    snapshot(element, "keydown", {
-      key: "Process",
-      code: stroke.code,
-      keyCode: 229,
-      isComposing: stroke.keydownIsComposing,
-    }),
-  );
-
-  if (stroke.compositionStart) {
-    dispatch(element, "compositionstart", { bubbles: true, data: "" });
-    records.push(snapshot(element, "compositionstart", { data: "" }));
-  }
-
-  for (let i = 0; i < stroke.preeditSteps.length; i++) {
-    const preedit = stroke.preeditSteps[i] ?? "";
-    const value = stroke.valuesAfterSteps[i] ?? element.value;
-    applyPreedit(element, preedit, value, records);
-
-    if (i === 0 && stroke.commitAfterFirstStep !== undefined) {
-      dispatch(element, "compositionend", {
-        bubbles: true,
-        data: stroke.commitAfterFirstStep,
-      });
-      records.push(
-        snapshot(element, "compositionend", {
-          data: stroke.commitAfterFirstStep,
-          value,
-        }),
-      );
-      dispatch(element, "compositionstart", { bubbles: true, data: "" });
-      records.push(snapshot(element, "compositionstart", { data: "" }));
-    }
-  }
-
-  dispatch(element, "keyup", {
-    bubbles: true,
-    key: stroke.key,
-    code: stroke.code,
-    keyCode: stroke.key.charCodeAt(0),
-    isComposing: true,
-  });
-  records.push(
-    snapshot(element, "keyup", {
-      key: stroke.key,
-      code: stroke.code,
-      keyCode: stroke.key.charCodeAt(0),
-      isComposing: true,
-    }),
-  );
-}
+export type { ComposedEventRecord } from "./composeHangulTypes";
+export {
+  applyPreedit,
+  dispatch,
+  setInputValue,
+  snapshot,
+} from "./composeHangulInternals";
 
 export type ComposeHangulOptions = {
   /** When true (default), fire compositionend for the final syllable */
@@ -175,18 +26,30 @@ export async function composeHangul(
   options: ComposeHangulOptions = {},
 ): Promise<ComposedEventRecord[]> {
   const { commitFinal = true } = options;
-  const strokes = planHangulKeystrokes(text);
+  const selectionStart = element.selectionStart ?? element.value.length;
+  const selectionEnd = element.selectionEnd ?? element.value.length;
+  const prefix = element.value.slice(0, selectionStart);
+  const suffix = element.value.slice(selectionEnd);
+  const strokes = planHangulKeystrokes(text, { prefix });
   const records: ComposedEventRecord[] = [];
 
   element.focus();
 
   for (const stroke of strokes) {
-    playStroke(element, stroke, records);
+    const carets = stroke.valuesAfterSteps.map((value) => value.length);
+    stroke.valuesAfterSteps = stroke.valuesAfterSteps.map((value) => value + suffix);
+    playStroke(element, stroke, records, carets);
   }
 
-  if (commitFinal && strokes.length > 0) {
-    const last = strokes[strokes.length - 1];
-    const finalPreedit = last?.preeditSteps[last.preeditSteps.length - 1] ?? "";
+  if (strokes.length === 0) {
+    return records;
+  }
+
+  const last = strokes[strokes.length - 1];
+  const finalPreedit = last?.preeditSteps[last.preeditSteps.length - 1] ?? "";
+  const committed = element.value.slice(0, element.value.length - suffix.length - finalPreedit.length);
+
+  if (commitFinal) {
     dispatch(element, "compositionend", { bubbles: true, data: finalPreedit });
     records.push(
       snapshot(element, "compositionend", {
@@ -194,23 +57,24 @@ export async function composeHangul(
         value: element.value,
       }),
     );
+    clearImeSession(element);
+  } else {
+    setImeSession(element, {
+      composing: true,
+      committed,
+      preedit: finalPreedit,
+      suffix,
+    });
   }
 
   return records;
 }
 
-/** Critical fields for golden-trace comparison (ignore flaky keyup.key). */
+/** Critical fields for golden-trace comparison (keyup order is flaky across captures). */
 export function toCriticalEvents(events: ComposedEventRecord[]) {
-  return events.map((event) => {
-    if (event.type === "keyup") {
-      return {
-        type: event.type,
-        code: event.code,
-        isComposing: event.isComposing,
-        value: event.value,
-      };
-    }
-    return {
+  return events
+    .filter((event) => event.type !== "keyup")
+    .map((event) => ({
       type: event.type,
       key: event.key,
       code: event.code,
@@ -219,6 +83,5 @@ export function toCriticalEvents(events: ComposedEventRecord[]) {
       inputType: event.inputType,
       data: event.data,
       value: event.value,
-    };
-  });
+    }));
 }
