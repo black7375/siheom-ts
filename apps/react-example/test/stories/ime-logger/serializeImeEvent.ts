@@ -9,11 +9,15 @@ export type ImeEventRecord = {
   value: string;
 };
 
+export type ImeTraceSource = "os-ime" | "user-event";
+
 export type ImeTraceMeta = {
   os: string;
   browser: string;
   ime: string;
   capturedAt: string;
+  scenarioId: string;
+  source: ImeTraceSource;
 };
 
 export type ImeTrace = ImeTraceMeta & {
@@ -59,6 +63,8 @@ export function buildImeTrace({
   ime,
   events,
   capturedAt,
+  scenarioId,
+  source,
 }: ImeTraceMeta & { events: ImeEventRecord[] }): ImeTrace {
   return {
     profileId: profileIdFromMeta(os, browser, ime),
@@ -66,6 +72,8 @@ export function buildImeTrace({
     browser,
     ime,
     capturedAt,
+    scenarioId,
+    source,
     events,
   };
 }

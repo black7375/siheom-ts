@@ -17,4 +17,13 @@ describe("ImeEventLogger", () => {
       assertions.visible(query.heading("Events (0)")),
     );
   });
+
+  it("시나리오를 고르면 지시와 기대값이 보인다", () => {
+    return runSiheom(
+      given.render(<ImeEventLogger />),
+      assertions.textContent(query.status("시나리오 기대값"), "김태희"),
+      actions.click(query.button("영어가 섞인 입력")),
+      assertions.textContent(query.status("시나리오 기대값"), "hello 안녕"),
+    );
+  });
 });

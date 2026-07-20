@@ -60,6 +60,8 @@ describe("buildImeTrace", () => {
       ime: "nalgaeset",
       events,
       capturedAt: "2026-07-20T00:00:00.000Z",
+      scenarioId: "continuous-hangul",
+      source: "os-ime",
     });
 
     expect(trace).toEqual({
@@ -68,6 +70,8 @@ describe("buildImeTrace", () => {
       browser: "chrome",
       ime: "nalgaeset",
       capturedAt: "2026-07-20T00:00:00.000Z",
+      scenarioId: "continuous-hangul",
+      source: "os-ime",
       events,
     });
   });
@@ -79,8 +83,11 @@ describe("buildImeTrace", () => {
       ime: "",
       events: [],
       capturedAt: "2026-07-20T00:00:00.000Z",
+      scenarioId: "mixed-en-ko",
+      source: "user-event",
     });
 
     expect(trace.profileId).toBe("macos-safari");
+    expect(trace.source).toBe("user-event");
   });
 });
