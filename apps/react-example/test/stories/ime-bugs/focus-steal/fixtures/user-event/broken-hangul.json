@@ -1,0 +1,161 @@
+{
+  "profileId": "synthetic-chromium-user-event",
+  "os": "synthetic",
+  "browser": "chromium",
+  "ime": "user-event",
+  "capturedAt": "1970-01-01T00:00:00.000Z",
+  "scenarioId": "focus-steal-hangul-broken",
+  "source": "user-event",
+  "events": [
+    {
+      "type": "keydown",
+      "key": "김",
+      "code": "Unknown",
+      "keyCode": 0,
+      "isComposing": false,
+      "inputType": null,
+      "data": null,
+      "value": ""
+    },
+    {
+      "type": "keypress",
+      "key": "김",
+      "code": "Unknown",
+      "keyCode": 0,
+      "isComposing": false,
+      "inputType": null,
+      "data": null,
+      "value": ""
+    },
+    {
+      "type": "beforeinput",
+      "key": null,
+      "code": null,
+      "keyCode": null,
+      "isComposing": false,
+      "inputType": "insertText",
+      "data": "김",
+      "value": ""
+    },
+    {
+      "type": "input",
+      "key": null,
+      "code": null,
+      "keyCode": null,
+      "isComposing": false,
+      "inputType": "insertText",
+      "data": "김",
+      "value": "김"
+    },
+    {
+      "type": "keyup",
+      "key": "김",
+      "code": "Unknown",
+      "keyCode": 0,
+      "isComposing": false,
+      "inputType": null,
+      "data": null,
+      "value": "김"
+    },
+    {
+      "type": "keydown",
+      "key": "태",
+      "code": "Unknown",
+      "keyCode": 0,
+      "isComposing": false,
+      "inputType": null,
+      "data": null,
+      "value": "김"
+    },
+    {
+      "type": "keypress",
+      "key": "태",
+      "code": "Unknown",
+      "keyCode": 0,
+      "isComposing": false,
+      "inputType": null,
+      "data": null,
+      "value": "김"
+    },
+    {
+      "type": "beforeinput",
+      "key": null,
+      "code": null,
+      "keyCode": null,
+      "isComposing": false,
+      "inputType": "insertText",
+      "data": "태",
+      "value": "김"
+    },
+    {
+      "type": "input",
+      "key": null,
+      "code": null,
+      "keyCode": null,
+      "isComposing": false,
+      "inputType": "insertText",
+      "data": "태",
+      "value": "김태"
+    },
+    {
+      "type": "keyup",
+      "key": "태",
+      "code": "Unknown",
+      "keyCode": 0,
+      "isComposing": false,
+      "inputType": null,
+      "data": null,
+      "value": "김태"
+    },
+    {
+      "type": "keydown",
+      "key": "희",
+      "code": "Unknown",
+      "keyCode": 0,
+      "isComposing": false,
+      "inputType": null,
+      "data": null,
+      "value": "김태"
+    },
+    {
+      "type": "keypress",
+      "key": "희",
+      "code": "Unknown",
+      "keyCode": 0,
+      "isComposing": false,
+      "inputType": null,
+      "data": null,
+      "value": "김태"
+    },
+    {
+      "type": "beforeinput",
+      "key": null,
+      "code": null,
+      "keyCode": null,
+      "isComposing": false,
+      "inputType": "insertText",
+      "data": "희",
+      "value": "김태"
+    },
+    {
+      "type": "input",
+      "key": null,
+      "code": null,
+      "keyCode": null,
+      "isComposing": false,
+      "inputType": "insertText",
+      "data": "희",
+      "value": "김태희"
+    },
+    {
+      "type": "keyup",
+      "key": "희",
+      "code": "Unknown",
+      "keyCode": 0,
+      "isComposing": false,
+      "inputType": null,
+      "data": null,
+      "value": "김태희"
+    }
+  ]
+}

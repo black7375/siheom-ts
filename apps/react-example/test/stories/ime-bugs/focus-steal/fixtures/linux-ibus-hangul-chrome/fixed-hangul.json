@@ -1,0 +1,10 @@
+{
+  "profileId": "linux-chrome-ibus-hangul",
+  "os": "linux",
+  "browser": "chrome",
+  "ime": "ibus-hangul",
+  "capturedAt": "1970-01-01T00:00:00.000Z",
+  "scenarioId": "focus-steal-hangul-fixed",
+  "source": "os-ime",
+  "events": []
+}

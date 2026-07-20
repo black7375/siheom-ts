@@ -12,7 +12,10 @@ import {
 } from "../../ime-logger/serializeImeEvent";
 import { FocusStealCombobox, type FocusStealComboboxProps } from "./FocusStealCombobox";
 
-const SCENARIO_ID = "focus-steal-hangul";
+const SCENARIO_ID_BY_MODE = {
+  broken: "focus-steal-hangul-broken",
+  fixed: "focus-steal-hangul-fixed",
+} as const;
 
 /**
  * Storybook capture shell: broken/fixed combobox + IME event log.
@@ -68,7 +71,7 @@ export function FocusStealComboboxLogger() {
       ime,
       events,
       capturedAt: new Date().toISOString(),
-      scenarioId: SCENARIO_ID,
+      scenarioId: SCENARIO_ID_BY_MODE[mode],
       source: "os-ime",
     });
 
@@ -83,7 +86,7 @@ export function FocusStealComboboxLogger() {
     const url = URL.createObjectURL(blob);
     const anchor = document.createElement("a");
     anchor.href = url;
-    anchor.download = `${profileId || "ime-trace"}-${SCENARIO_ID}-${mode}-${Date.now()}.json`;
+    anchor.download = `${profileId || "ime-trace"}-${mode}-hangul-${Date.now()}.json`;
     anchor.click();
     URL.revokeObjectURL(url);
     setStatus("JSON 파일을 다운로드했습니다.");

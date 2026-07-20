@@ -1,8 +1,13 @@
 # Focus-steal capture fixtures
 
-Save OS IME traces from Storybook **IME / Focus Steal Combobox** here:
+| Directory                   | Meaning                                                                                      |
+| --------------------------- | -------------------------------------------------------------------------------------------- |
+| `user-event/`               | `@testing-library/user-event` synthetic traces (Vitest snapshot)                             |
+| `linux-ibus-hangul-chrome/` | Real OS IME captures: Linux + Chrome + ibus-hangul (`profileId`: `linux-chrome-ibus-hangul`) |
 
-- `broken-김태희.json` — `mode=broken` while typing 김태희 (composition aborted)
-- `fixed-김태희.json` — same typing under `mode=fixed` (composition intact)
+| File                 | Mode   | Status                                                                 |
+| -------------------- | ------ | ---------------------------------------------------------------------- |
+| `broken-hangul.json` | broken | OS capture present — 김태희 → `ㄱㅣㅁㅌㅐㅎㅡㅣ` (composition aborted) |
+| `fixed-hangul.json`  | fixed  | Draft (`events: []`) — replace after Storybook capture                 |
 
-Use the story’s Copy/Download JSON. Tag `scenarioId` is `focus-steal-hangul`.
+Storybook: **IME / Focus Steal Combobox**. Regenerate `user-event/` via `userEventTraces.test.tsx`.
