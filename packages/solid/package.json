@@ -1,0 +1,75 @@
+{
+  "name": "@siheom/solid",
+  "version": "0.3.0",
+  "description": "Solid runtime for siheom (data-first frontend test interpreter)",
+  "type": "module",
+  "license": "MIT",
+  "files": [
+    "dist"
+  ],
+  "main": "./dist/index.mjs",
+  "exports": {
+    "./package.json": "./package.json",
+    ".": {
+      "import": {
+        "types": "./dist/index.d.mts",
+        "default": "./dist/index.mjs"
+      },
+      "require": {
+        "types": "./dist/index.d.cts",
+        "default": "./dist/index.cjs"
+      }
+    }
+  },
+  "scripts": {
+    "build": "tsdown",
+    "check-exports": "bash ../../scripts/check-exports.sh .",
+    "typecheck": "tsgo --noEmit -p tsconfig.json",
+    "test": "vitest run"
+  },
+  "dependencies": {
+    "@siheom/core": "workspace:*"
+  },
+  "peerDependencies": {
+    "@solidjs/testing-library": "^0.8.0",
+    "@testing-library/dom": "^10.0.0",
+    "@testing-library/jest-dom": "^6.0.0",
+    "@testing-library/user-event": "^14.0.0",
+    "solid-js": "^1.9.0",
+    "vitest": "^4.1.10"
+  },
+  "devDependencies": {
+    "@arethetypeswrong/cli": "^0.18.5",
+    "@solidjs/testing-library": "^0.8.10",
+    "@testing-library/dom": "^10.4.1",
+    "@testing-library/jest-dom": "^6.9.1",
+    "@testing-library/user-event": "^14.6.1",
+    "@types/node": "^26.1.1",
+    "@vitest/browser": "^4.1.10",
+    "@vitest/browser-playwright": "^4.1.10",
+    "playwright": "^1.61.1",
+    "solid-js": "^1.9.10",
+    "tsdown": "^0.22.8",
+    "typescript": "^7.0.2",
+    "vite": "^8.1.5",
+    "vite-plugin-solid": "^2.11.10",
+    "vitest": "^4.1.10"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/twinstae/siheom-ts.git",
+    "directory": "packages/solid"
+  },
+  "homepage": "https://github.com/twinstae/siheom-ts",
+  "bugs": {
+    "url": "https://github.com/twinstae/siheom-ts/issues"
+  },
+  "author": "Taehee Kim <rabolution@gmail.com> (https://x.com/stelo_kim)",
+  "keywords": [
+    "test",
+    "testing-library",
+    "solid",
+    "solid-js",
+    "typescript"
+  ]
+}

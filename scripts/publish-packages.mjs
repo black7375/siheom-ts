@@ -21,6 +21,7 @@ const PUBLISH_ORDER = [
   "@siheom/react",
   "@siheom/vue",
   "@siheom/svelte",
+  "@siheom/solid",
   "@siheom/angular",
   "@siheom/qwik",
   "@siheom/react-native",
