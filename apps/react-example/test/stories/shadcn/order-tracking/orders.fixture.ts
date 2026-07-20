@@ -31,7 +31,3 @@ export const ORDER_STEPS = [
 ] as const;
 
 export type OrderStep = (typeof ORDER_STEPS)[number];
-
-export function getCurrentStep(steps: readonly OrderStep[]): OrderStep {
-  return steps.find((step) => step.state === "current") ?? steps[0];
-}
