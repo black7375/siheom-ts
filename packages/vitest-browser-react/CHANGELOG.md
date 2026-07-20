@@ -1,6 +1,10 @@
 # @siheom/vitest-browser-react
 
-## 0.0.1
+## 0.3.0
+
+### Minor Changes
+
+- `vitest-browser-react`의 locator 기반 렌더링 위에 얹은 실험적 React 러너를 처음 npm에 공개합니다. Testing Library와 호환되는 `render`/`cleanup`/`act` 레이어를 함께 제공합니다.
 
 ### Patch Changes
 

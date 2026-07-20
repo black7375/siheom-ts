@@ -1,6 +1,6 @@
 {
   "name": "@siheom/ime",
-  "version": "0.0.1",
+  "version": "0.3.0",
   "description": "IME composition emulation for siheom (Hangul-first)",
   "type": "module",
   "license": "MIT",
