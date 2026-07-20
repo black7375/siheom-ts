@@ -29,7 +29,10 @@ Realistic scenarios for Siheom + shadcn/ui. One user story per folder; TDD via t
 
 ## Phase 2 — Selection & search
 
-- [ ] team-invite — Select + Combobox
+- [x] team-invite — Select + Combobox
+  - [x] select role — 멤버 / 관리자
+  - [x] combobox search — filter and pick team member
+  - [x] submit — invite confirmation status
 - [ ] notice-search — Search + Empty
 - [ ] view-switcher — Toggle Group
 
