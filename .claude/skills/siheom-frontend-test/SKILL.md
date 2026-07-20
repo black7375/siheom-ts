@@ -34,7 +34,7 @@ await runSiheom(
 ```
 
 - **given** — only `given.render(element)`. Wrap providers inside the element or in `setup()`.
-- **actions** — user input (`click`, `dblclick`, `fill`, `type`, `tab`, `upload`).
+- **actions** — user input (`click`, `dblclick`, `hover`, `fill`, `type`, `tab`, `upload`).
 - **assertions** — observable UI state (`visible`, `focused`, `textContent`, `checked`, …). Prefer `assertions.not.`* over negating manually.
 
 Use `actions.fill(…, "text{Enter}")` for submit; `{Escape}` to cancel. Use `query.within(container, target)` when names collide inside a region.

@@ -58,6 +58,7 @@ Common roles also include: `heading`, `list`, `dialog`, `tab`, `tabpanel`, `comb
 |--------|--------|
 | `click(target)` | Single click |
 | `dblclick(target)` | Double click |
+| `hover(target)` | Move pointer over element |
 | `fill(target, text)` | Clear field, then type. Append `{Enter}`, `{Escape}`, `{Tab}` in `text` |
 | `type(target, text)` | Type without clearing |
 | `tab(target)` | Tab from focused element |
