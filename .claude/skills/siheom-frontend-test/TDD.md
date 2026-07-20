@@ -1,60 +1,73 @@
 # TDD and Tidy First
 
-Use this when the repo has **no** `AGENTS.md`. If `AGENTS.md` exists, follow it; this file is the same discipline in portable form.
+You should read them. And understand WHY behind the principle. Say it aloud in your own language. Are you agree with it? Do you feel them? If you can answer "Yes. Because ...". Go ahead.
 
-## Core cycle
+## CORE DEVELOPMENT PRINCIPLES
 
-**Red → Green → Refactor.** One test at a time. One small increment per cycle.
+- Always follow the TDD cycle: Red → Green → Refactor
+- Write the simplest failing test first
+- Implement the minimum code needed to make tests pass
+- Refactor only after tests are passing
+- Follow Beck's "Tidy First" approach by separating structural changes from behavioral changes
+- Maintain high code quality throughout development
 
-- **Red** — simplest failing test that describes behavior
-- **Green** — minimum code to pass; no extra features
-- **Refactor** — tidy only while tests are green
+## TDD METHODOLOGY GUIDANCE
 
-## plan.md
+- Start by writing a failing test that defines a small increment of functionality
+- Use meaningful test names that describe behavior (e.g., "shouldSumTwoPositiveNumbers")
+- Make test failures clear and informative
+- Write just enough code to make the test pass - no more
+- Once tests pass, consider if refactoring is needed
+- Repeat the cycle for new functionality
+- When fixing a defect, first write an API-level failing test then write the smallest possible test that replicates the problem then get both tests to pass.
 
-Create `plan.md` beside the feature (from the product spec). Each `- [ ]` line is **one cycle**:
+## TIDY FIRST APPROACH
 
-1. Next unchecked item only
-2. Write the failing `it`
-3. Minimum production code to pass
-4. Run tests (full suite for the package, not just the new file)
-5. Refactor if needed (structural commit separate)
-6. Mark `[x]`, commit, repeat
+- Separate all changes into two distinct types:
+  1. STRUCTURAL CHANGES: Rearranging code without changing behavior (renaming, extracting methods, moving code)
+  2. BEHAVIORAL CHANGES: Adding or modifying actual functionality
+- Never mix structural and behavioral changes in the same commit
+- Always make structural changes first when both are needed
+- Validate structural changes do not alter behavior by running tests before and after
 
-## Tidy First
+## COMMIT DISCIPLINE
 
-| Type | Examples |
-| ---- | -------- |
-| **Structural** | Rename, extract, move, shadcn swap, prune duplicate tests |
-| **Behavioral** | New `it`, new user-visible behavior |
+- Only commit when:
+  1. ALL tests are passing
+  2. ALL compiler/linter warnings have been resolved
+  3. The change represents a single logical unit of work
+  4. Commit messages clearly state whether the commit contains structural or behavioral changes
+- Use small, frequent commits rather than large, infrequent ones
 
-Never mix both in one commit. Structural first when both are needed. Tests must pass before and after structural work.
+## CODE QUALITY STANDARDS
 
-## Commit discipline
+- Eliminate duplication ruthlessly
+- Express intent clearly through naming and structure
+- Make dependencies explicit
+- Keep methods small and focused on a single responsibility
+- Minimize state and side effects
+- Use the simplest solution that could possibly work
 
-Commit only when:
+## REFACTORING GUIDELINES
 
-1. All tests pass
-2. Typecheck clean (if the project has it)
-3. Lint/format clean (if the project has it)
-4. One logical unit of work
-5. Message states **structural** vs **behavioral** (or `refactor` / `feat` / `test`)
+- Refactor only when tests are passing (in the "Green" phase)
+- Use established refactoring patterns with their proper names
+- Make one refactoring change at a time
+- Run tests after each refactoring step
+- Prioritize refactorings that remove duplication or improve clarity
 
-Small, frequent commits.
+## EXAMPLE WORKFLOW
 
-## Bug fixes
+When approaching a new feature:
 
-1. API-level failing test (user-visible symptom)
-2. Smallest test that reproduces the root cause
-3. Fix until both pass
+1. Write a simple failing test for a small part of the feature
+2. Implement the bare minimum to make it pass
+3. Run tests to confirm they pass (Green)
+4. Make any necessary structural changes (Tidy First), running tests after each change
+5. Commit structural changes separately
+6. Add another test for the next small increment of functionality
+7. Repeat until the feature is complete, committing behavioral changes separately from structural ones
 
-## Code quality (while refactoring)
+Follow this process precisely, always prioritizing clean, well-tested code over quick implementation.
 
-- Remove duplication
-- Pure functions for derived state
-- Explicit dependencies, small methods
-- Simplest solution that works
-
-## Anti-pattern: big-bang implementation
-
-Do **not** scaffold the whole feature then add tests. If that already happened: **trim** to what tests cover, commit structural, resume `plan.md`.
+Always write one test at a time, make it run, then improve structure. Always run all the tests, typecheck, lint, format, duplication check... (except long-running tests) each time.

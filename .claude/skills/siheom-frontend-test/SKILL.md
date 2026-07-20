@@ -41,27 +41,6 @@ Full rules: [TDD.md](TDD.md). Summary:
 
 **Before running tests:** read [SETUP.md](SETUP.md) — detect package manager from lockfile, map `package.json` scripts by intent, ask the user to add Vitest / typecheck / oxlint / oxfmt when missing.
 
-Do **not** assume `bun`, `npm run test`, or script names. Examples:
-
-```bash
-npm run test:run -- MyFeature
-pnpm vitest MyFeature
-yarn unit MyFeature
-bun run test MyFeature
-```
-
-## Agent anti-patterns
-
-| Symptom | Fix |
-| ------- | --- |
-| Whole feature before tests | Trim; one plan item per cycle ([TDD.md](TDD.md)) |
-| `typeof FIXTURE as const` as param type | Explicit domain types (`Todo[]`) |
-| Subset `it` duplicating setup | One outcome per `it`; chain steps inside |
-| `<footer aria-label>` for `query.region` | `<section aria-label="…">` |
-| CSS hides control from a11y tree | Fix visibility or use `hover` + assert |
-| Assertion fails (`checked`, `focused`, …) | Fix `@siheom/core` or component a11y — not a weaker assertion |
-| Assumed package manager / script names | [SETUP.md](SETUP.md) |
-
 ## Gate before commit
 
 See [TDD.md](TDD.md) + [SETUP.md](SETUP.md): test script passes; typecheck/lint/format when the project defines them; one plan item per commit; message labels structural vs behavioral.
@@ -104,7 +83,7 @@ await runSiheom(
 - **actions** — user input (`click`, `dblclick`, `hover`, `fill`, `type`, `tab`, `upload`).
 - **assertions** — observable UI state (`visible`, `focused`, `textContent`, `checked`, …). Prefer `assertions.not.`* over negating manually. If an assertion fails, read the Siheom log + a11y snapshot, fix the runner or component, then re-run — do not replace `checked`/`focused` with snapshots unless the spec is the whole tree.
 
-Use `actions.fill(…, "text{Enter}")` for submit; `{Escape}` to cancel. Use `query.within(container, target)` when names collide inside a region.
+Use `query.within(container, target)` when names collide inside a region.
 
 ## setup and fixture
 
@@ -266,6 +245,6 @@ Before or while writing tests, the UI should expose:
 
 ## Reference
 
-- TDD + Tidy First (portable): [TDD.md](TDD.md)
+- TDD + Tidy First: [TDD.md](TDD.md)
 - Package manager + scripts + oxlint/oxfmt: [SETUP.md](SETUP.md)
 - Action/assertion/query catalog: [API.md](API.md)
