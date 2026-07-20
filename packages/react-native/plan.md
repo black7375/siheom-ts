@@ -5,24 +5,26 @@ RNTL-backed runtime. Target: exercise public APIs through `runSiheom`.
 ## Runner
 
 - [x] Counter press increments visible button label
-- [ ] Failed assertion includes RN a11y snapshot section
+- [x] Failed assertion includes RN a11y snapshot section
 
 ## Actions
 
-- [ ] `click` maps to `userEvent.press`
-- [ ] `fill` clears then types into a labeled TextInput
-- [ ] `type` appends into a TextInput
+- [x] `click` maps to `userEvent.press`
+- [x] `fill` clears then types into a labeled TextInput
+- [x] `type` appends into a TextInput
+- [x] `{Enter}` in fill/type fires `submitEditing`
 
 ## Assertions
 
-- [ ] `visible` / `not.visible` via `toBeOnTheScreen`
-- [ ] `checked` for Switch / checkbox role
+- [x] `visible` / `not.visible` via `toBeOnTheScreen`
+- [x] `checked` for Switch / checkbox role
 
 ## Query
 
-- [ ] `query.label` resolves TextInput by accessibility label
-- [ ] `query.button` resolves Pressable with role button
+- [x] `query.label` resolves TextInput by accessibility label
+- [x] `query.button` resolves Pressable with role button
+- [x] `query.dialog` / `query.listitem` resolve via accessibility label (mock engine)
 
 ## A11y snapshot
 
-- [ ] Snapshot includes role, name, and checked state on failure
+- [x] Snapshot includes role, name, and checked state on failure

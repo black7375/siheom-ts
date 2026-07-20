@@ -6,7 +6,10 @@ import type {
 } from "@siheom/core";
 import { createDefaultActions } from "./action.ts";
 import { createDefaultAssertions } from "./assert.ts";
-import { createFakeTimerScopedRegistries, type SiheomRegistryBundle } from "./fakeTimerRegistries.ts";
+import {
+  createFakeTimerScopedRegistries,
+  type SiheomRegistryBundle,
+} from "./fakeTimerRegistries.ts";
 
 export const reactNativeActions = createDefaultActions() as ActionStepDefinitionDict;
 export const reactNativeAssertions = createDefaultAssertions() as AssertionStepDefinitionDict;

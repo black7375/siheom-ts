@@ -54,7 +54,10 @@ function readRole(props: Record<string, unknown>): string | undefined {
   return undefined;
 }
 
-function readName(props: Record<string, unknown>, typeName: string | undefined): string | undefined {
+function readName(
+  props: Record<string, unknown>,
+  typeName: string | undefined,
+): string | undefined {
   if (typeof props.accessibilityLabel === "string") {
     return props.accessibilityLabel;
   }
@@ -192,7 +195,9 @@ export function getA11ySnapshot(root: unknown): string {
     return "";
   }
 
-  const tree = buildNode(root as { type: unknown; props: Record<string, unknown>; children: unknown[] });
+  const tree = buildNode(
+    root as { type: unknown; props: Record<string, unknown>; children: unknown[] },
+  );
   if (!tree) {
     return "";
   }

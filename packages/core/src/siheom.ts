@@ -58,9 +58,7 @@ async function runSteps<
   const getFailureSnapshot = registries.getFailureSnapshot ?? defaultFailureSnapshot;
 
   const handleError = (error: Error) => {
-    throw new Error(
-      formatFailureReport(logs, error, getFailureSnapshot(), registries.messages),
-    );
+    throw new Error(formatFailureReport(logs, error, getFailureSnapshot(), registries.messages));
   };
 
   for (const step of steps) {
