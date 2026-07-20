@@ -13,6 +13,12 @@ export type CountdownState = {
   frozenElapsedMs: number;
 };
 
+export type CountdownAction =
+  | { type: "start"; now?: number }
+  | { type: "pause"; now?: number }
+  | { type: "reset"; now?: number }
+  | { type: "tick"; now?: number };
+
 export function elapsedMs(state: CountdownState): number {
   const runningElapsed =
     state.startTime === null ? 0 : Math.max(0, state.now - state.startTime);
@@ -37,55 +43,52 @@ export function initialCountdown(
   };
 }
 
-export function startCountdown(
-  state: CountdownState,
-  now: number = Date.now(),
-): CountdownState {
-  if (remainingSeconds(state) <= 0) {
-    return state;
-  }
-  return { ...state, startTime: now, now };
-}
-
-export function pauseCountdown(
-  state: CountdownState,
-  now: number = Date.now(),
-): CountdownState {
-  if (state.startTime === null) {
-    return state;
-  }
-  return {
-    ...state,
-    frozenElapsedMs: elapsedMs({ ...state, now }),
-    startTime: null,
-    now,
-  };
-}
-
-export function resetCountdown(
-  state: CountdownState,
-  now: number = Date.now(),
-): CountdownState {
-  return {
-    durationMs: state.durationMs,
-    startTime: null,
-    now,
-    frozenElapsedMs: 0,
-  };
-}
-
-export function setNow(state: CountdownState, now: number): CountdownState {
-  const next = { ...state, now };
-  if (state.startTime !== null && remainingSeconds(next) <= 0) {
-    return {
-      ...next,
-      startTime: null,
-      frozenElapsedMs: state.durationMs,
-    };
-  }
-  return next;
-}
-
 export function isComplete(state: CountdownState): boolean {
   return remainingSeconds(state) <= 0 && state.frozenElapsedMs >= state.durationMs;
+}
+
+export function countdownReducer(
+  state: CountdownState,
+  action: CountdownAction,
+): CountdownState {
+  const now = action.now ?? Date.now();
+
+  switch (action.type) {
+    case "start": {
+      if (remainingSeconds(state) <= 0) {
+        return state;
+      }
+      return { ...state, startTime: now, now };
+    }
+    case "pause": {
+      if (state.startTime === null) {
+        return state;
+      }
+      return {
+        ...state,
+        frozenElapsedMs: elapsedMs({ ...state, now }),
+        startTime: null,
+        now,
+      };
+    }
+    case "reset": {
+      return {
+        durationMs: state.durationMs,
+        startTime: null,
+        now,
+        frozenElapsedMs: 0,
+      };
+    }
+    case "tick": {
+      const next = { ...state, now };
+      if (state.startTime !== null && remainingSeconds(next) <= 0) {
+        return {
+          ...next,
+          startTime: null,
+          frozenElapsedMs: state.durationMs,
+        };
+      }
+      return next;
+    }
+  }
 }

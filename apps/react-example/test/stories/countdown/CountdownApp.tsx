@@ -1,19 +1,19 @@
 import { Button } from "@/components/ui/button";
-import { useEffect, useState } from "react";
+import { useEffect, useReducer } from "react";
 import {
+  countdownReducer,
   formatSeconds,
   initialCountdown,
   isComplete,
-  pauseCountdown,
   remainingSeconds,
-  resetCountdown,
-  setNow,
-  startCountdown,
-  type CountdownState,
 } from "./countdownLogic";
 
 export function CountdownApp({ durationMinutes = 25 }: { durationMinutes?: number }) {
-  const [state, setState] = useState<CountdownState>(() => initialCountdown(durationMinutes));
+  const [state, dispatch] = useReducer(
+    countdownReducer,
+    durationMinutes,
+    initialCountdown,
+  );
   const running = state.startTime !== null;
   const complete = isComplete(state);
 
@@ -21,7 +21,7 @@ export function CountdownApp({ durationMinutes = 25 }: { durationMinutes?: numbe
     if (!running) return;
 
     const intervalId = setInterval(() => {
-      setState((current) => setNow(current, Date.now()));
+      dispatch({ type: "tick", now: Date.now() });
     }, 1_000);
 
     return () => clearInterval(intervalId);
@@ -38,17 +38,17 @@ export function CountdownApp({ durationMinutes = 25 }: { durationMinutes?: numbe
         </div>
       )}
       {running ? (
-        <Button aria-label="일시정지" onClick={() => setState((current) => pauseCountdown(current))}>
+        <Button aria-label="일시정지" onClick={() => dispatch({ type: "pause" })}>
           일시정지
         </Button>
       ) : (
         !complete && (
-          <Button aria-label="시작" onClick={() => setState((current) => startCountdown(current))}>
+          <Button aria-label="시작" onClick={() => dispatch({ type: "start" })}>
             시작
           </Button>
         )
       )}
-      <Button aria-label="리셋" onClick={() => setState((current) => resetCountdown(current))}>
+      <Button aria-label="리셋" onClick={() => dispatch({ type: "reset" })}>
         리셋
       </Button>
     </div>
