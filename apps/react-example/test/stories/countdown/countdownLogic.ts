@@ -75,5 +75,17 @@ export function resetCountdown(
 }
 
 export function setNow(state: CountdownState, now: number): CountdownState {
-  return { ...state, now };
+  const next = { ...state, now };
+  if (state.startTime !== null && remainingSeconds(next) <= 0) {
+    return {
+      ...next,
+      startTime: null,
+      frozenElapsedMs: state.durationMs,
+    };
+  }
+  return next;
+}
+
+export function isComplete(state: CountdownState): boolean {
+  return remainingSeconds(state) <= 0 && state.frozenElapsedMs >= state.durationMs;
 }

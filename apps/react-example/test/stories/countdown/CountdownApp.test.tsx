@@ -47,11 +47,13 @@ describe("CountdownApp", () => {
   });
 
   it("시간이 모두 지나면 완료가 표시된다", async () => {
+    const oneSecondInMinutes = 1 / 60;
+
     await runSiheom(
       withFakeTimers(
-        given.render(<CountdownApp durationMinutes={25} />),
+        given.render(<CountdownApp durationMinutes={oneSecondInMinutes} />),
         actions.click(query.button("시작")),
-        effect.elapsed(25 * 60 * 1_000),
+        effect.elapsed(1_000),
         assertions.visible(query.status("완료")),
       ),
     );
