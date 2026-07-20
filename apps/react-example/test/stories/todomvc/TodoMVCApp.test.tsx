@@ -1,5 +1,5 @@
 import { beforeEach, describe, it } from "vitest";
-import { assertions, given, query, runSiheom } from "@siheom/react";
+import { actions, assertions, given, query, runSiheom } from "@siheom/react";
 import { TodoMVCApp } from "./TodoMVCApp";
 import type { Todo } from "./todoLogic";
 import { writeTodos } from "./todoStorage";
@@ -26,6 +26,17 @@ describe("TodoMVCApp", () => {
     await runSiheom(
       setup([]),
       assertions.focused(query.textbox("What needs to be done?")),
+    );
+  });
+
+  it("Enter로 할 일을 추가하고 입력을 비운다", async () => {
+    await runSiheom(
+      setup([]),
+      actions.fill(query.textbox("What needs to be done?"), "Buy milk{Enter}"),
+      assertions.visible(query.listitem("Buy milk")),
+      assertions.value(query.textbox("What needs to be done?"), ""),
+      assertions.visible(query.region("todo list")),
+      assertions.visible(query.region("todo footer")),
     );
   });
 });

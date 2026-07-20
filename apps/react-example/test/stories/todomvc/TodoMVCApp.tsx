@@ -1,6 +1,6 @@
 import { MemoryRouter, Route, Routes } from "react-router-dom";
 import { useState } from "react";
-import type { Todo } from "./todoLogic";
+import { addTodo, type Todo } from "./todoLogic";
 import { readTodos } from "./todoStorage";
 
 export function TodoMVCApp({
@@ -18,7 +18,7 @@ export function TodoMVCApp({
 }
 
 function TodoMVCContent() {
-  const [todos] = useState<Todo[]>(() => readTodos());
+  const [todos, setTodos] = useState<Todo[]>(() => readTodos());
   const hasTodos = todos.length > 0;
 
   return (
@@ -30,11 +30,29 @@ function TodoMVCContent() {
           aria-label="What needs to be done?"
           autoFocus
           placeholder="What needs to be done?"
+          onKeyDown={(event) => {
+            if (event.key !== "Enter") return;
+            setTodos((current) => addTodo(current, event.currentTarget.value));
+            event.currentTarget.value = "";
+          }}
         />
       </header>
 
-      {hasTodos ? <section className="main" aria-label="todo list" /> : null}
-      {hasTodos ? <footer className="footer" aria-label="todo footer" /> : null}
+      {hasTodos ? (
+        <section className="main" aria-label="todo list">
+          <ul className="todo-list">
+            {todos.map((todo) => (
+              <li key={todo.id} aria-label={todo.title}>
+                {todo.title}
+              </li>
+            ))}
+          </ul>
+        </section>
+      ) : null}
+
+      {hasTodos ? (
+        <section className="footer" aria-label="todo footer" />
+      ) : null}
     </section>
   );
 }
