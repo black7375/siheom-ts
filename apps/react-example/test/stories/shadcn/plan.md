@@ -69,7 +69,11 @@ Realistic scenarios for Siheom + shadcn/ui. One user story per folder; TDD via t
 
 - [x] app-shell — Sidebar + Breadcrumb
 
+## Phase 8 — Kanban
+
+- [x] kanban — drag-drop
+  - [x] drag card — move card from 진행 중 to 완료 column
+
 ## Deferred
 
-- [ ] kanban — drag-drop (needs Siheom drag action)
 - [ ] chart-dashboard — Chart
