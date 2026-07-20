@@ -10,11 +10,9 @@ import type {
 } from "./types";
 import { getA11ySnapshot } from "./getA11ySnapshot";
 import { formatFailureReport, type MessageMap } from "./messages.ts";
-import {
-  createFakeTimerScopedRegistries,
-  type FakeTimerScopeHooks,
-  type SiheomRegistryBundle,
-} from "./fakeTimerScope.ts";
+import type { FakeTimerScopeHooks, SiheomRegistryBundle } from "./fakeTimerScope.ts";
+
+export type { FakeTimerScopeHooks, SiheomRegistryBundle } from "./fakeTimerScope.ts";
 
 export type SiheomRegistries<
   TActions extends ActionStepDefinitionDict = ActionStepDefinitionDict,
@@ -36,7 +34,16 @@ export type SiheomRegistries<
   >(
     registries: SiheomRegistryBundle<TActions, TAssertions, TGivens, TEffects>,
   ) => SiheomRegistryBundle<TActions, TAssertions, TGivens, TEffects>;
+  getFailureSnapshot?: () => string;
 };
+
+function defaultFailureSnapshot(): string {
+  if (typeof document === "undefined") {
+    return "";
+  }
+
+  return getA11ySnapshot(document.body);
+}
 
 async function runSteps<
   TActions extends ActionStepDefinitionDict,
@@ -48,9 +55,11 @@ async function runSteps<
   steps: Step<TActions, TAssertions, TGivens, TEffects>[],
   logs: string[],
 ) {
+  const getFailureSnapshot = registries.getFailureSnapshot ?? defaultFailureSnapshot;
+
   const handleError = (error: Error) => {
     throw new Error(
-      formatFailureReport(logs, error, getA11ySnapshot(document.body), registries.messages),
+      formatFailureReport(logs, error, getFailureSnapshot(), registries.messages),
     );
   };
 
@@ -112,8 +121,10 @@ async function runFakeTimersScope<
     });
   installFakeTimers();
   try {
+    const { createFakeTimerScopedRegistries: createDefaultScopedRegistries } =
+      await import("./fakeTimerScope.ts");
     const scopeRegistries =
-      registries.createFakeTimerScopedRegistries ?? createFakeTimerScopedRegistries;
+      registries.createFakeTimerScopedRegistries ?? createDefaultScopedRegistries;
     const scopedRegistries = scopeRegistries(registries);
     await runSteps(scopedRegistries, scope.steps.flat(), logs);
   } finally {
