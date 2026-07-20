@@ -86,7 +86,7 @@ describe("defaultActions", () => {
       done.textContent = "디자인";
     });
     document.querySelector('[aria-label="디자인"]')!.addEventListener("dragstart", (event) => {
-      event.dataTransfer?.setData("text/plain", "design");
+      (event as DragEvent).dataTransfer?.setData("text/plain", "design");
     });
     document.getElementById("done")!.addEventListener("dragover", (event) => {
       event.preventDefault();

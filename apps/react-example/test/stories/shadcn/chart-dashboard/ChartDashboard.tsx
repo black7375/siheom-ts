@@ -10,12 +10,7 @@ import {
   type ChartConfig,
 } from "@/components/ui/chart";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import {
-  REVENUE_SERIES,
-  REVENUE_TOTAL,
-  VISITOR_SERIES,
-  VISITOR_TOTAL,
-} from "./metrics.fixture";
+import { REVENUE_SERIES, REVENUE_TOTAL, VISITOR_SERIES, VISITOR_TOTAL } from "./metrics.fixture";
 
 const revenueChartConfig = {
   value: {
@@ -58,12 +53,7 @@ export function ChartDashboard() {
                 <ChartContainer config={revenueChartConfig} className="min-h-48 w-full">
                   <BarChart accessibilityLayer data={[...REVENUE_SERIES]}>
                     <CartesianGrid vertical={false} />
-                    <XAxis
-                      dataKey="label"
-                      tickLine={false}
-                      axisLine={false}
-                      tickMargin={8}
-                    />
+                    <XAxis dataKey="label" tickLine={false} axisLine={false} tickMargin={8} />
                     <ChartTooltip content={<ChartTooltipContent hideLabel />} />
                     <Bar dataKey="value" fill="var(--color-value)" radius={4} />
                   </BarChart>
@@ -87,12 +77,7 @@ export function ChartDashboard() {
                 <ChartContainer config={visitorChartConfig} className="min-h-48 w-full">
                   <BarChart accessibilityLayer data={[...VISITOR_SERIES]}>
                     <CartesianGrid vertical={false} />
-                    <XAxis
-                      dataKey="label"
-                      tickLine={false}
-                      axisLine={false}
-                      tickMargin={8}
-                    />
+                    <XAxis dataKey="label" tickLine={false} axisLine={false} tickMargin={8} />
                     <ChartTooltip content={<ChartTooltipContent hideLabel />} />
                     <Bar dataKey="value" fill="var(--color-value)" radius={4} />
                   </BarChart>

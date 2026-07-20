@@ -13,3 +13,5 @@ apps/react-example/.vitest-attachments
 **/.vitest-attachments/
 apps/react-example/coverage
 packages/*/coverage
+packages/core/src/**/*.d.ts
+packages/**/*.tgz

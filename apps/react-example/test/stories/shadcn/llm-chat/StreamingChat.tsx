@@ -17,13 +17,7 @@ function appendAssistantReply(messages: ChatMessage[], content: string): ChatMes
   return [...messages, { role: "assistant", content }];
 }
 
-function AssistantMessage({
-  content,
-  streaming,
-}: {
-  content: string;
-  streaming: boolean;
-}) {
+function AssistantMessage({ content, streaming }: { content: string; streaming: boolean }) {
   if (streaming && content === "") {
     return (
       <p role="status" aria-label="어시스턴트 응답 대기 중" className="text-muted-foreground">
@@ -69,13 +63,16 @@ export function StreamingChat({ api = fakeLlmApi }: { api?: LlmApi }) {
     setStreaming(true);
 
     try {
-      await api.sendMessageStream(nextMessages.filter((message) => message.content !== ""), (chunk) => {
-        setMessages((current) => {
-          const last = current.at(-1);
-          const accumulated = last?.role === "assistant" ? `${last.content}${chunk}` : chunk;
-          return appendAssistantReply(current, accumulated);
-        });
-      });
+      await api.sendMessageStream(
+        nextMessages.filter((message) => message.content !== ""),
+        (chunk) => {
+          setMessages((current) => {
+            const last = current.at(-1);
+            const accumulated = last?.role === "assistant" ? `${last.content}${chunk}` : chunk;
+            return appendAssistantReply(current, accumulated);
+          });
+        },
+      );
     } finally {
       setStreaming(false);
     }
@@ -132,7 +129,11 @@ export function StreamingChat({ api = fakeLlmApi }: { api?: LlmApi }) {
               rows={3}
             />
           </div>
-          <Button type="button" onClick={() => void handleSend()} disabled={streaming || !draft.trim()}>
+          <Button
+            type="button"
+            onClick={() => void handleSend()}
+            disabled={streaming || !draft.trim()}
+          >
             <SendIcon className="size-4" aria-hidden="true" />
             전송
           </Button>
