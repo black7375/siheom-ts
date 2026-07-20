@@ -115,7 +115,11 @@ export function createDefaultAssertions(options: DefaultAssertionsOptions = {}) 
     disabled: async (target: Locator, expected: boolean) =>
       withPresentElement(target, (element) => {
         if (element.hasAttribute("disabled")) {
-          expect(element).toHaveAttribute("disabled", expected ? "disabled" : null);
+          if (expected) {
+            expect(element).toHaveAttribute("disabled");
+          } else {
+            expect(element).not.toHaveAttribute("disabled");
+          }
           return;
         }
 

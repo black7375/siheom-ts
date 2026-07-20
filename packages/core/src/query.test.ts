@@ -28,3 +28,22 @@ describe("query.timer", () => {
     expect(timer.textContent).toBe("25:00");
   });
 });
+
+describe("query.label", () => {
+  it("resolves an input by its accessible label text", () => {
+    document.body.innerHTML = `<label>이메일<input type="email" /></label>`;
+
+    const input = getElement(query.label("이메일"), true);
+
+    expect(input).toBeInstanceOf(HTMLInputElement);
+    expect((input as HTMLInputElement).type).toBe("email");
+  });
+});
+
+describe("query invisible path", () => {
+  it("returns null when querying a missing role as not visible", () => {
+    document.body.innerHTML = ``;
+
+    expect(getElement(query.button("없음"), false)).toBeNull();
+  });
+});
