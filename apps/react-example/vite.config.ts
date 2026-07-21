@@ -38,6 +38,11 @@ export default defineConfig({
 		],
 	},
 	test: {
+		onConsoleLog(log, type) {
+			if (type === "stderr" && log.includes("act(")) {
+				return false;
+			}
+		},
 		alias: {
 			"@showcase/tanstack-link": tanstackLinkStub,
 			"@siheom/ime-cdp": path.resolve(dirname, "../../packages/ime-cdp/src/index.ts"),
