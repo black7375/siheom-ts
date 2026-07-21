@@ -1,4 +1,5 @@
 import {
+  applyPreedit,
   clearImeSession,
   dispatch,
   getImeSession,
@@ -69,8 +70,8 @@ function hangulProfileForConversion(profile: ImeProfile): ImeProfile {
 
 /**
  * Confirm the Hanja candidate and leave the field ready for the next syllable.
- * Append profiles briefly show hangul+hanja (김金); settle to hanja-only so chaining works
- * (same end state apps get after stripping on compositionend).
+ * Append: OS fires Enter then another preedit pulse at 김金; we then compositionend +
+ * settle to hanja-only so chaining matches apps that strip on compositionend.
  */
 function confirmHanjaCandidate(
   element: HTMLInputElement | HTMLTextAreaElement,
@@ -104,6 +105,14 @@ function confirmHanjaCandidate(
         isComposing: true,
         value: appended,
       }),
+    );
+
+    applyPreedit(
+      element,
+      hanja,
+      appended,
+      records,
+      committedPrefix.length + hangul.length + hanja.length,
     );
   } else {
     committedPrefix =
