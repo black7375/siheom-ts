@@ -70,8 +70,8 @@ function hangulProfileForConversion(profile: ImeProfile): ImeProfile {
 
 /**
  * Confirm the Hanja candidate and leave the field ready for the next syllable.
- * Append: OS fires Enter then another preedit pulse at 김金; we then compositionend +
- * settle to hanja-only so chaining matches apps that strip on compositionend.
+ * Append: Enter + preedit pulse at 김金, then compositionend + settle to hanja-only.
+ * Replace: OS pulses / Enter / delete+insertFromComposition commit (see Safari golden).
  */
 function confirmHanjaCandidate(
   element: HTMLInputElement | HTMLTextAreaElement,
@@ -79,54 +79,188 @@ function confirmHanjaCandidate(
   hanja: string,
   profile: ImeProfile,
 ): ComposedEventRecord[] {
+  if (profile.hanjaConversion === "append") {
+    return confirmChromeAppendCandidate(element, hangul, hanja);
+  }
+  return confirmSafariReplaceCandidate(element, hangul, hanja);
+}
+
+function confirmChromeAppendCandidate(
+  element: HTMLInputElement | HTMLTextAreaElement,
+  hangul: string,
+  hanja: string,
+): ComposedEventRecord[] {
   const records: ComposedEventRecord[] = [];
   const session = getImeSession(element);
   const suffix = session?.suffix ?? "";
+  const committed = session?.committed ?? "";
+  const committedPrefix = committed.endsWith(hangul)
+    ? committed.slice(0, -hangul.length)
+    : committed;
 
-  let committedPrefix: string;
-  if (profile.hanjaConversion === "append") {
-    const committed = session?.committed ?? "";
-    committedPrefix = committed.endsWith(hangul) ? committed.slice(0, -hangul.length) : committed;
-
-    const appended = element.value;
-    dispatch(element, "keydown", {
-      bubbles: true,
-      cancelable: true,
+  const appended = element.value;
+  dispatch(element, "keydown", {
+    bubbles: true,
+    cancelable: true,
+    key: "Enter",
+    code: "Enter",
+    keyCode: 229,
+    isComposing: true,
+  });
+  records.push(
+    snapshot(element, "keydown", {
       key: "Enter",
       code: "Enter",
       keyCode: 229,
       isComposing: true,
-    });
-    records.push(
-      snapshot(element, "keydown", {
-        key: "Enter",
-        code: "Enter",
-        keyCode: 229,
-        isComposing: true,
-        value: appended,
-      }),
-    );
+      value: appended,
+    }),
+  );
 
-    applyPreedit(
-      element,
-      hanja,
-      appended,
-      records,
-      committedPrefix.length + hangul.length + hanja.length,
-    );
-  } else {
-    committedPrefix =
-      session?.committed ??
-      element.value.slice(0, Math.max(0, element.value.length - hanja.length));
-  }
+  applyPreedit(
+    element,
+    hanja,
+    appended,
+    records,
+    committedPrefix.length + hangul.length + hanja.length,
+  );
 
   const settled = committedPrefix + hanja + suffix;
-
   dispatch(element, "compositionend", { bubbles: true, data: hanja });
   records.push(snapshot(element, "compositionend", { data: hanja, value: element.value }));
-
   setInputValue(element, settled, committedPrefix.length + hanja.length);
   clearImeSession(element);
-
   return records;
+}
+
+function confirmSafariReplaceCandidate(
+  element: HTMLInputElement | HTMLTextAreaElement,
+  _hangul: string,
+  hanja: string,
+): ComposedEventRecord[] {
+  const records: ComposedEventRecord[] = [];
+  const session = getImeSession(element);
+  const suffix = session?.suffix ?? "";
+  const committedPrefix =
+    session?.committed ?? element.value.slice(0, Math.max(0, element.value.length - hanja.length));
+  const settled = committedPrefix + hanja + suffix;
+  const caret = committedPrefix.length + hanja.length;
+
+  applyPreedit(element, hanja, settled, records, caret);
+  applyPreedit(element, hanja, settled, records, caret);
+
+  dispatch(element, "keydown", {
+    bubbles: true,
+    cancelable: true,
+    key: "Enter",
+    code: "Enter",
+    keyCode: 229,
+    isComposing: true,
+  });
+  records.push(
+    snapshot(element, "keydown", {
+      key: "Enter",
+      code: "Enter",
+      keyCode: 229,
+      isComposing: true,
+      value: settled,
+    }),
+  );
+
+  applyPreedit(element, hanja, settled, records, caret);
+  commitSafariInsertFromComposition(element, hanja, settled, records);
+
+  dispatch(element, "keydown", {
+    bubbles: true,
+    cancelable: true,
+    key: "Enter",
+    code: "Enter",
+    keyCode: 229,
+    isComposing: false,
+  });
+  records.push(
+    snapshot(element, "keydown", {
+      key: "Enter",
+      code: "Enter",
+      keyCode: 229,
+      isComposing: false,
+      value: settled,
+    }),
+  );
+
+  clearImeSession(element);
+  return records;
+}
+
+/** Safari: deleteCompositionText then insertFromComposition (no compositionend). */
+function commitSafariInsertFromComposition(
+  element: HTMLInputElement | HTMLTextAreaElement,
+  syllable: string,
+  committedValue: string,
+  records: ComposedEventRecord[],
+) {
+  dispatch(element, "beforeinput", {
+    bubbles: true,
+    cancelable: true,
+    inputType: "deleteCompositionText",
+    data: null,
+    isComposing: true,
+  });
+  records.push(
+    snapshot(element, "beforeinput", {
+      inputType: "deleteCompositionText",
+      data: null,
+      isComposing: true,
+      value: committedValue,
+    }),
+  );
+
+  const cleared = committedValue.slice(0, committedValue.length - syllable.length);
+  setInputValue(element, cleared, cleared.length);
+  dispatch(element, "input", {
+    bubbles: true,
+    inputType: "deleteCompositionText",
+    data: null,
+    isComposing: true,
+  });
+  records.push(
+    snapshot(element, "input", {
+      inputType: "deleteCompositionText",
+      data: null,
+      isComposing: true,
+      value: cleared,
+    }),
+  );
+
+  dispatch(element, "beforeinput", {
+    bubbles: true,
+    cancelable: true,
+    inputType: "insertFromComposition",
+    data: syllable,
+    isComposing: true,
+  });
+  records.push(
+    snapshot(element, "beforeinput", {
+      inputType: "insertFromComposition",
+      data: syllable,
+      isComposing: true,
+      value: cleared,
+    }),
+  );
+
+  setInputValue(element, committedValue, committedValue.length);
+  dispatch(element, "input", {
+    bubbles: true,
+    inputType: "insertFromComposition",
+    data: syllable,
+    isComposing: true,
+  });
+  records.push(
+    snapshot(element, "input", {
+      inputType: "insertFromComposition",
+      data: syllable,
+      isComposing: true,
+      value: committedValue,
+    }),
+  );
 }
