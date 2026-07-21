@@ -260,7 +260,7 @@ export function placeholderStyleWhileComposing(
     return baseStyle ?? {};
   }
   return {
-    ...(baseStyle ?? {}),
+    ...baseStyle,
     display: "none",
   };
 }

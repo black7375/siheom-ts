@@ -16,7 +16,7 @@ import {
   toCriticalEvents,
 } from "@siheom/ime";
 import { defaultGivens, reactEffects } from "@siheom/react";
-import { render, waitFor } from "@testing-library/react";
+import { waitFor } from "@testing-library/react";
 
 import { LexicalLogger } from "./LexicalLogger";
 import { readLexicalPlainText } from "./readLexicalPlainText";

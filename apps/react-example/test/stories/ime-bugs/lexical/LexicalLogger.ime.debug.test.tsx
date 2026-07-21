@@ -10,7 +10,6 @@ import {
 } from "@siheom/core";
 import { createImeActions } from "@siheom/ime";
 import { defaultGivens, reactEffects } from "@siheom/react";
-import { render, waitFor } from "@testing-library/react";
 
 import { LexicalLogger } from "./LexicalLogger";
 import { createLexicalCompositionDebugLog } from "./lexicalCompositionDebugLog";
