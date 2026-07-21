@@ -58,7 +58,7 @@ Slate `androidInputManager` comments (0.126):
 - **Broken continuous** `가나다가나다` → `ㄱ가나다가나다` (only orphan `ㄱ`).
 - App patches caused DOM wipe / explosion or post-hoc rewrite UX.
 
-See [`slate-placeholder-fix-alternatives.md`](./slate-placeholder-fix-alternatives.md) for next steps.
+See [`slate-placeholder-exploration-hypotheses.md`](./slate-placeholder-exploration-hypotheses.md) for next work (understanding, not patching). Archive: [`slate-placeholder-fix-alternatives.md`](./slate-placeholder-fix-alternatives.md).
 
 ### Device tri-mode compare (2026-07-21)
 
