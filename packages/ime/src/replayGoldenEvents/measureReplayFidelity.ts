@@ -42,8 +42,7 @@ export async function measureReplayFidelity(
   const steps: FidelityStep[] = [];
   const writeback = options.writeback ?? "none";
 
-  for (let index = 0; index < events.length; index++) {
-    const event = events[index];
+  for (const [index, event] of events.entries()) {
     playGoldenEvent(trace, event);
 
     if (trace instanceof ImeTrace && event.type === "input" && event.value != null) {
