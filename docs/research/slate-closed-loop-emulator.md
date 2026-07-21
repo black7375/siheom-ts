@@ -69,6 +69,40 @@ The closed-loop emulator is validated against the pile of existing device captur
 When both hold across captures (single syllable, and continuous `가나다가나다`), the emulation
 is a validated device model and "fixed in emulation ⇒ fixed on device" holds.
 
+### Status (2026-07-21) — first closed-loop increment
+
+`composeHangulAndroidFirefoxSlateClosedLoop` (dispatch composition/beforeinput per stroke,
+Slate mediates via `androidInputManager`, no golden replay):
+
+| | `가` | `가나다` | `가나다가나다` |
+| --- | --- | --- | --- |
+| **patched** Slate | `가` ✓ | `가나다` ✓ | `가나다가나다` ✓ (open-loop replay exploded here) |
+| **unpatched** Slate | `ㄱ가` | `ㄱ가간가나가낟가나다` | explosion |
+| device (for ref) | `ㄱ` | `ㄱ가나다` | orphan `ㄱ` |
+
+**Proven:** the fix (patched slate-react) works against *real* Slate for single and continuous
+Hangul when driven by clean editor-mediated composition — much stronger than a golden-replay
+green.
+
+**Directional, not exact, faithfulness:** unpatched closed-loop reproduces the orphan-`ㄱ`
+*family* (`ㄱ가…`) — closer to the device (`ㄱ`) than open-loop replay (`ㄱ가가`) — but not the
+exact device string.
+
+### Why exact unpatched match is research-grade
+
+DOM probe (patched) shows Slate applies the replace `ㄱ→가` itself from `beforeinput.data` via
+Transforms (`<span data-slate-string>ㄱ</span>` → `…가…`) — no browser DOM writeback needed,
+which is why patched passes without one.
+
+The device bug (orphan `ㄱ`) lives in the **unpatched** path, where `androidInputManager`
+reconciles from **DOM mutations** (MutationObserver), not from `data`. To reproduce it exactly
+the emulator would have to model the browser's composition DOM writeback **and** the specific
+desync between that writeback and Slate's pending-diff flush that strands the first jamo. Note:
+a *correct* DOM writeback would make unpatched Slate reconcile to the correct `가` (no bug) —
+so the device bug is precisely a writeback/flush **timing desync**, not a plain mutation.
+Modeling that timing is the next milestone; until then the guarantee is *directional* (fix
+proven on real Slate; exact device-bug reproduction pending).
+
 ## Harness notes
 
 - Tests run in **vitest browser mode** (real Chromium) — `apps/react-example/vite.config.ts`.

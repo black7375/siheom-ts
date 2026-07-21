@@ -17,11 +17,15 @@ where the device gives `ㄱ` (double-mediation of recorded events). See
 `docs/research/slate-closed-loop-emulator.md`. Replace AF golden replay with a closed-loop
 emulator that drives real Slate and lets it mediate.
 
-- [ ] RED: closed-loop emulator types `가` into real (patched) Slate → editor shows `가`
+- [x] RED: closed-loop emulator types `가` into real (patched) Slate → editor shows `가`
       (generative events, no golden replay)
-- [ ] GREEN: `composeHangulAndroidFirefoxSlateClosedLoop` — dispatch composition/beforeinput
-      per stroke, read editor DOM between steps, Slate mediates; wire profile mode
-- [ ] Continuous: emulator types `가나다` into patched Slate → `가나다`
-- [ ] Faithfulness gate: same emulator on **unpatched** Slate → `ㄱ` (matches device);
-      calibrate against `가나다가나다` device captures
+- [x] GREEN: `composeHangulAndroidFirefoxSlateClosedLoop` — dispatch composition/beforeinput
+      per stroke, Slate mediates (`SlateLogger.ime.closed-loop.test.tsx`)
+- [x] Continuous: emulator types `가나다` / `가나다가나다` into patched Slate → correct
+      (open-loop replay exploded here)
+- [~] Faithfulness gate: unpatched Slate → orphan-`ㄱ` *family* (`ㄱ가…`), directionally like
+      device (`ㄱ`) but not exact — exact match needs browser writeback/flush desync model
+      (research-grade, see `docs/research/slate-closed-loop-emulator.md`)
+- [ ] Model composition DOM writeback + pending-diff flush desync → unpatched emul == device `ㄱ`
 - [ ] Replace `android-firefox-slate-placeholder-*` golden-replay modes with closed-loop
+- [ ] Wire closed-loop as an `@siheom/ime` profile mode (`createImeActions({ profile })`)
