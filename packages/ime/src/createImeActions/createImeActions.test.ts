@@ -13,9 +13,11 @@ import { createImeActions } from "./createImeActions";
 import { goldenCritical, fromFirstCompositionStart } from "../goldenCritical";
 import { resolveProfile } from "../profiles";
 import continuousGolden from "../../fixtures/linux-chrome-ibus-hangul/continuous-hangul.json";
+import androidContinuousGolden from "../../fixtures/android-chrome/continuous-hangul.json";
 import mixedGolden from "../../fixtures/linux-chrome-ibus-hangul/mixed-en-ko.json";
 import backspaceGolden from "../../fixtures/linux-chrome-ibus-hangul/backspace-mid.json";
 import arrowGolden from "../../fixtures/linux-chrome-ibus-hangul/arrow-edit-mid.json";
+import type { CreateImeActionsOptions } from "./createImeActions";
 
 type ImeRecorder = ReturnType<typeof attachImeRecorder>;
 
@@ -30,7 +32,10 @@ function setupLabeledInput(onInput?: (input: HTMLInputElement) => void) {
   return input;
 }
 
-function setup(onInput?: (input: HTMLInputElement) => void) {
+function setup(
+  onInput?: (input: HTMLInputElement) => void,
+  imeOptions?: CreateImeActionsOptions,
+) {
   const recorderRef: { current: ImeRecorder | undefined } = { current: undefined };
 
   const { runSiheom, actions, assertions, given } = overrideSiheom(
@@ -48,7 +53,7 @@ function setup(onInput?: (input: HTMLInputElement) => void) {
       effects: defaultEffects,
     },
     {
-      actions: createImeActions(),
+      actions: createImeActions(imeOptions),
     },
   );
 
@@ -73,20 +78,32 @@ describe("createImeActions + overrideSiheom", () => {
     expect(compositionUpdates).toBeGreaterThan(0);
   });
 
-  it("types 김태희 matching continuous-hangul golden critical fields", async () => {
-    const { runSiheom, actions, assertions, given, recorderRef } = setup();
+  it.each([
+    {
+      label: "linux-chrome-ibus-hangul",
+      imeOptions: undefined as CreateImeActionsOptions | undefined,
+      golden: continuousGolden,
+    },
+    {
+      label: "android-chrome",
+      imeOptions: { profile: "android-chrome" } satisfies CreateImeActionsOptions,
+      golden: androidContinuousGolden,
+    },
+  ])(
+    "types 김태희 with $label matching continuous-hangul golden critical fields",
+    async ({ imeOptions, golden }) => {
+      const { runSiheom, actions, assertions, given, recorderRef } = setup(undefined, imeOptions);
 
-    await runSiheom(
-      given.render(),
-      actions.type(query.textbox("이름"), "김태희"),
-      assertions.value(query.textbox("이름"), "김태희"),
-    );
+      await runSiheom(
+        given.render(),
+        actions.type(query.textbox("이름"), "김태희"),
+        assertions.value(query.textbox("이름"), "김태희"),
+      );
 
-    expect(toCriticalEvents(recorderRef.current!.events)).toEqual(
-      goldenCritical(continuousGolden.events),
-    );
-    recorderRef.current!.detach();
-  });
+      expect(toCriticalEvents(recorderRef.current!.events)).toEqual(goldenCritical(golden.events));
+      recorderRef.current!.detach();
+    },
+  );
 
   it("types hello 안녕 with Hangul portion matching mixed-en-ko golden", async () => {
     const { runSiheom, actions, assertions, given, recorderRef } = setup();
