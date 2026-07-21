@@ -34,7 +34,9 @@ describe("composeHanjaConversion", () => {
       profile: "macos-chrome-apple",
     });
 
-    expect(toCriticalEvents(events)).toEqual(toCriticalEvents(chromeAppendThroughKimKim(chromeFixed.events)));
+    expect(toCriticalEvents(events)).toEqual(
+      toCriticalEvents(chromeAppendThroughKimKim(chromeFixed.events)),
+    );
     expect(input.value).toBe("김金");
 
     input.remove();
@@ -52,7 +54,9 @@ describe("composeHanjaConversion", () => {
       profile: "macos-safari-apple",
     });
 
-    expect(toCriticalEvents(events)).toEqual(toCriticalEvents(safariReplaceThroughKim(safariFixed.events)));
+    expect(toCriticalEvents(events)).toEqual(
+      toCriticalEvents(safariReplaceThroughKim(safariFixed.events)),
+    );
     expect(input.value).toBe("金");
 
     input.remove();

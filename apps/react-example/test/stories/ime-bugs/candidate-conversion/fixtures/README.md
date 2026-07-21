@@ -1,13 +1,13 @@
 # Hanja autocomplete conflict — capture fixtures
 
-| Directory             | Meaning                                                                              |
-| --------------------- | ------------------------------------------------------------------------------------ |
-| `user-event/`         | `@testing-library/user-event` synthetic traces (`userEventTraces.test.tsx`)          |
-| `macos-chrome-apple/` | OS capture: macOS + Chrome + Apple IME (`profileId`: `macos-chrome-apple`)           |
+| Directory             | Meaning                                                                     |
+| --------------------- | --------------------------------------------------------------------------- |
+| `user-event/`         | `@testing-library/user-event` synthetic traces (`userEventTraces.test.tsx`) |
+| `macos-chrome-apple/` | OS capture: macOS + Chrome + Apple IME (`profileId`: `macos-chrome-apple`)  |
 
-| File                     | Notes                                                                 |
-| ------------------------ | --------------------------------------------------------------------- |
-| `broken-hanja-name.json` | Combobox steals keys; Chrome may also leave 김金                      |
+| File                     | Notes                                                               |
+| ------------------------ | ------------------------------------------------------------------- |
+| `broken-hanja-name.json` | Combobox steals keys; Chrome may also leave 김金                    |
 | `fixed-hanja-name.json`  | Keys deferred to IME; app strips leftover Hangul so final is 金泰熙 |
 
 Empty shells (`events: []`) until Storybook re-capture.

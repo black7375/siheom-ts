@@ -106,7 +106,9 @@ function confirmHanjaCandidate(
       }),
     );
   } else {
-    committedPrefix = session?.committed ?? element.value.slice(0, Math.max(0, element.value.length - hanja.length));
+    committedPrefix =
+      session?.committed ??
+      element.value.slice(0, Math.max(0, element.value.length - hanja.length));
   }
 
   const settled = committedPrefix + hanja + suffix;

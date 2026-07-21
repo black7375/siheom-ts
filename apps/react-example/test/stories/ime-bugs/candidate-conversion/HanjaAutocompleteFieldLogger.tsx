@@ -33,7 +33,7 @@ export function HanjaAutocompleteFieldLogger() {
   const listenersCleanupRef = useRef<(() => void) | null>(null);
 
   const profileId = useMemo(() => profileIdFromMeta(os, browser, ime), [os, browser, ime]);
-  const scenario = CAPTURE_SCENARIOS[0];
+  const scenario = CAPTURE_SCENARIOS[0]!;
 
   const appendEvent = useCallback((event: Event) => {
     const value = readEditableValue(event.target);
@@ -88,8 +88,8 @@ export function HanjaAutocompleteFieldLogger() {
         <h1 className="text-xl font-semibold">Hanja autocomplete conflict (IME bug)</h1>
         <p className="text-sm text-muted-foreground">
           broken: combobox가 한자 후보 키를 가로챕니다. fixed: 키는 IME에 넘기고, macOS Chrome이
-          「김」→「김金」처럼 <em>append</em>하는 브라우저 한계는 직전에 남은 한글을 지워{" "}
-          「金」으로 맞춥니다 (IME 의도 보정).
+          「김」→「김金」처럼 <em>append</em>하는 브라우저 한계는 직전에 남은 한글을 지워 「金」으로
+          맞춥니다 (IME 의도 보정).
         </p>
       </header>
 

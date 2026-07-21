@@ -2,10 +2,7 @@ import { describe, expect, it } from "vitest";
 import { act } from "@testing-library/react";
 import { given } from "@siheom/react";
 
-import {
-  HanjaAutocompleteField,
-  stripHangulBeforeHanja,
-} from "./HanjaAutocompleteField";
+import { HanjaAutocompleteField, stripHangulBeforeHanja } from "./HanjaAutocompleteField";
 import { runSiheom } from "../../runSiheom";
 
 describe("stripHangulBeforeHanja", () => {
