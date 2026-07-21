@@ -4,7 +4,8 @@ import {
   planChromeCompositionOverflow,
   planSafariCompositionOverflow,
 } from "./planMaxLength";
-import { planSafariInsertFromComposition } from "./planSafari";
+import { planSafariInsertFromComposition, planSafariSyllableCommit, planRestartSafariComposition } from "./planSafari";
+import { replacementInputType } from "./replacementInputType";
 
 describe("planChromeCompositionOverflow", () => {
   it("uses empty input data then compositionend", () => {
@@ -41,5 +42,35 @@ describe("planSafariInsertFromComposition", () => {
     ]);
     expect(steps[1]).toMatchObject({ kind: "setValue", value: "", caret: 0 });
     expect(steps[4]).toMatchObject({ kind: "setValue", value: "김", caret: 1 });
+  });
+});
+
+describe("planSafariSyllableCommit", () => {
+  it("echoes preedit then delete/insertFromComposition and compositionend", () => {
+    const steps = planSafariSyllableCommit("김", "김", {
+      valueBefore: "김",
+      maxLength: null,
+    });
+    expect(steps.some((s) => s.kind === "compositionupdate")).toBe(true);
+    expect(
+      steps.some(
+        (s) => s.kind === "beforeinput" && s.fields.inputType === "deleteCompositionText",
+      ),
+    ).toBe(true);
+    expect(steps.at(-1)).toMatchObject({ kind: "compositionend", data: "김" });
+  });
+});
+
+describe("planRestartSafariComposition", () => {
+  it("emits compositionstart", () => {
+    expect(planRestartSafariComposition()).toEqual([{ kind: "compositionstart" }]);
+  });
+});
+
+describe("replacementInputType", () => {
+  it("detects append vs replacement", () => {
+    expect(replacementInputType("김", "김태", "태")).toBe("insertText");
+    expect(replacementInputType("김", "김", "김")).toBe("insertReplacementText");
+    expect(replacementInputType("가", "나", "나")).toBe("insertReplacementText");
   });
 });

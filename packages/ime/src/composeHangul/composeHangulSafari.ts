@@ -1,51 +1,37 @@
 import type { HangulKeyStroke } from "../planHangulKeystrokes";
 import {
-  applyReplacementText,
   clearImeSession,
-  commitSafariSyllable,
   hangulKeydownFields,
   hangulKeyupFields,
   ImeTrace,
   playEventPlan,
+  planReplacementText,
+  planRestartSafariComposition,
+  planSafariSyllableCommit,
   readMaxLength,
   replacementInputType,
-  restartSafariComposition,
   type ComposedEventRecord,
 } from "../_internal";
 import { consumeImeControlledWriteback } from "../markImeControlledWriteback";
 import type { ImeProfile } from "../profiles";
 
 import type { ComposeHangulOptions } from "./composeHangul";
+import { playPreeditStep } from "./playPreeditStep";
 import {
   decideSafariOverflow,
   decideStrokeStepOutcome,
-  planChromePreeditStep,
   planSafariBoundaryCommit,
   planSafariDeferredBrokenStep,
   planSafariOverflowReject,
   planSafariStrokeCompositionStart,
   planSafariStrokeKeys,
 } from "./planStroke";
+import { settleAfterPreedit } from "./settle";
 
 function shouldConfirmAfterStroke(strokes: HangulKeyStroke[], index: number): boolean {
   const next = strokes[index + 1];
   if (!next) return true;
   return next.compositionStart;
-}
-
-async function settleAfterPreedit(settle: "microtask" | "macrotask") {
-  if (settle === "microtask") {
-    await Promise.resolve();
-    await Promise.resolve();
-    return;
-  }
-  await new Promise<void>((resolve) => {
-    setTimeout(resolve, 0);
-  });
-}
-
-function confirmSyllable(trace: ImeTrace, syllable: string) {
-  applyReplacementText(trace, syllable, trace.element.value, "insertReplacementText");
 }
 
 /** macOS Safari Apple: insertText / insertReplacementText + jamo keydown (no composition). */
@@ -71,12 +57,15 @@ export async function composeHangulSafariReplacement(
       const caret = value.length - suffix.length;
       const previousValue = element.value;
 
-      applyReplacementText(
+      playEventPlan(
         trace,
-        preedit,
-        value,
-        replacementInputType(previousValue, value, preedit),
-        caret,
+        planReplacementText(
+          preedit,
+          value,
+          replacementInputType(previousValue, value, preedit),
+          caret,
+          previousValue,
+        ),
       );
 
       playEventPlan(trace, [
@@ -97,7 +86,16 @@ export async function composeHangulSafariReplacement(
     }
 
     if (shouldConfirmAfterStroke(strokes, strokeIndex) && finalPreedit) {
-      confirmSyllable(trace, finalPreedit);
+      playEventPlan(
+        trace,
+        planReplacementText(
+          finalPreedit,
+          element.value,
+          "insertReplacementText",
+          element.value.length,
+          element.value,
+        ),
+      );
     }
   }
 
@@ -126,13 +124,7 @@ async function playStrokeSafariComposition(
     const value = stroke.valuesAfterSteps[i] ?? element.value;
     const caret = carets[i] ?? value.length - suffix.length;
 
-    playEventPlan(
-      trace,
-      planChromePreeditStep(preedit, value, caret, suffix, {
-        valueBefore: element.value,
-        maxLength: readMaxLength(element),
-      }),
-    );
+    playPreeditStep(trace, preedit, value, caret, suffix);
 
     const overflow = decideSafariOverflow({
       maxLength: limit,
@@ -203,7 +195,7 @@ async function playSafariDeferredBroken(
     const stroke = strokes[strokeIndex];
     if (!stroke) continue;
 
-    playEventPlan(trace, [{ kind: "compositionstart" }]);
+    playEventPlan(trace, planRestartSafariComposition());
     const firstStep = strokeIndex === startIndex ? startStep : 0;
 
     for (let step = firstStep; step < stroke.preeditSteps.length; step++) {
@@ -268,9 +260,15 @@ export async function composeHangulSafariComposition(
     const finalPreedit = stroke.preeditSteps[stroke.preeditSteps.length - 1] ?? "";
     const finalValue = stroke.valuesAfterSteps[stroke.valuesAfterSteps.length - 1] ?? element.value;
     if (shouldConfirmAfterStroke(strokes, index) && finalPreedit) {
-      commitSafariSyllable(trace, finalPreedit, finalValue);
+      playEventPlan(
+        trace,
+        planSafariSyllableCommit(finalPreedit, finalValue, {
+          valueBefore: element.value,
+          maxLength: readMaxLength(element),
+        }),
+      );
       if (index < strokes.length - 1) {
-        restartSafariComposition(trace);
+        playEventPlan(trace, planRestartSafariComposition());
       }
     }
   }

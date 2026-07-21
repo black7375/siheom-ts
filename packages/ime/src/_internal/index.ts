@@ -23,24 +23,8 @@ export {
   planSafariReplacementOverflow,
   planReplacementText,
 } from "./planMaxLength";
-export { applyPreedit } from "./applyPreedit";
-export { applyReplacementText, replacementInputType } from "./applyReplacementText";
 export {
-  commitBetweenPreeditSteps,
-  confirmAndEndComposition,
-  updateImeSessionForPreedit,
-} from "./confirmComposition";
-export {
-  commitSafariSyllable,
-  commitSafariSyllableCore,
-  commitSafariInsertFromComposition,
-  restartSafariComposition,
-} from "./commitSafariSyllable";
-export {
-  markPendingMaxLengthReject,
-  readMaxLength,
-  rejectChromeCompositionOverflow,
-  rejectSafariCompositionOverflow,
-  rejectSafariReplacementOverflow,
-  takePendingMaxLengthReject,
-} from "./maxLength";
+  replacementInputType,
+  type ReplacementInputType,
+} from "./replacementInputType";
+export { readMaxLength, takePendingMaxLengthReject } from "./maxLength";

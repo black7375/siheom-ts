@@ -1,18 +1,11 @@
 import type { EventPlanStep } from "./eventPlan";
-import type { ReplacementInputType } from "./applyReplacementText";
+import type { ReplacementInputType } from "./replacementInputType";
 
 function clampValue(value: string, limit: number): string {
   return value.slice(0, limit);
 }
 
-/** Pure: Chrome / Linux overflow reject with empty input data then compositionend. */
-export function planChromeCompositionOverflow(
-  preedit: string,
-  overflowValue: string,
-  maxLength: number,
-): EventPlanStep[] {
-  const clamped = clampValue(overflowValue, maxLength);
-
+function planOverflowPreeditPulse(preedit: string, overflowValue: string): EventPlanStep[] {
   return [
     { kind: "compositionupdate", data: preedit, value: overflowValue },
     {
@@ -24,6 +17,19 @@ export function planChromeCompositionOverflow(
         value: overflowValue,
       },
     },
+  ];
+}
+
+/** Pure: Chrome / Linux overflow reject with empty input data then compositionend. */
+export function planChromeCompositionOverflow(
+  preedit: string,
+  overflowValue: string,
+  maxLength: number,
+): EventPlanStep[] {
+  const clamped = clampValue(overflowValue, maxLength);
+
+  return [
+    ...planOverflowPreeditPulse(preedit, overflowValue),
     { kind: "setValue", value: clamped, caret: clamped.length },
     {
       kind: "input",
@@ -48,16 +54,7 @@ export function planSafariCompositionOverflow(
   const clamped = clampValue(overflowValue, maxLength);
 
   return [
-    { kind: "compositionupdate", data: preedit, value: overflowValue },
-    {
-      kind: "beforeinput",
-      fields: {
-        inputType: "insertCompositionText",
-        data: preedit,
-        isComposing: true,
-        value: overflowValue,
-      },
-    },
+    ...planOverflowPreeditPulse(preedit, overflowValue),
     {
       kind: "input",
       fields: {

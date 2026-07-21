@@ -19,12 +19,13 @@ import {
   planChromeBlurAbortTail,
   planChromeDeferredAbortTail,
   planChromePendingOverflowReject,
-  planChromePreeditStep,
   planChromeStrokeHead,
   planChromeStrokeKeyup,
   planEndComposition,
   planIsolatedJamo,
 } from "./planStroke";
+import { playPreeditStep } from "./playPreeditStep";
+import { settleAfterPreedit } from "./settle";
 
 export type { ComposedEventRecord } from "../_internal";
 
@@ -47,17 +48,6 @@ export type ComposeHangulOptions = {
   /** OS IME profile (defaults to linux-chrome-ibus-hangul). */
   profile?: string | ImeProfile;
 };
-
-async function settleAfterPreedit(kind: "microtask" | "macrotask") {
-  if (kind === "microtask") {
-    await Promise.resolve();
-    await Promise.resolve();
-    return;
-  }
-  await new Promise<void>((resolve) => {
-    setTimeout(resolve, 0);
-  });
-}
 
 type StrokeAbort = "aborted-blur" | "aborted-deferred" | "maxlength-reject" | "ok";
 
@@ -102,13 +92,7 @@ async function playStrokeRespectingBlur(
     const value = stroke.valuesAfterSteps[i] ?? element.value;
     const caret = carets[i] ?? value.length - suffix.length;
 
-    playEventPlan(
-      trace,
-      planChromePreeditStep(preedit, value, caret, suffix, {
-        valueBefore: element.value,
-        maxLength: readMaxLength(element),
-      }),
-    );
+    playPreeditStep(trace, preedit, value, caret, suffix);
     await settleAfterPreedit(settle);
 
     const writeback = deferredUpdateRace && consumeImeControlledWriteback(element);
