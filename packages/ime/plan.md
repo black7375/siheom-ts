@@ -71,3 +71,18 @@ IME-faithful `fill` / `type` that plug into siheom via `overrideSiheom`, startin
 - [x] `createHanjaActions({ resolveElement: "sync" })` types when the element is already present
 - [x] `createHanjaActions` typeHanja rejects non-input targets (e.g. contenteditable)
 - [x] `createHanjaActions` types Hanja into a textarea
+
+### Phase 7 — Android Chrome profile
+
+OS captures under `apps/react-example/.../fixtures/android-chrome/` (virtual keyboard: `key: "Unidentified"`, `code: ""`, often one composition run for a whole Hangul string; Enter is webkit-order).
+
+- [x] (structural) `ImeProfile.hangulCompositionBoundary`: `syllable` | `run`; existing builtins default to `syllable`
+- [ ] `HangulKeyEventKey` includes `unidentified`; `resolveProfile("android-chrome")` returns webkit Enter, unidentified keys, composition Hangul, replace Hanja, run boundary
+- [ ] Hangul keydown/keyup with `unidentified` emit `key: "Unidentified"`, `keyCode: 229`, `code: ""`
+- [ ] `composeHangul` with android-chrome for `"김태희"` matches android `continuous-hangul` critical fields (single run composition + Unidentified keys)
+- [ ] `composeEnter` during composition on android-chrome matches android `fixed-김-enter` critical order (compositionend → Enter 13 `isComposing: false`)
+- [ ] `createImeActions({ profile: "android-chrome" }).type("김태희")` matches android continuous-hangul critical fields
+- [ ] android maxlength host-clamp (fixed): overflow `insertCompositionText` keeps overflow `data` with clamped `value` (no Chrome empty-data + compositionend reject)
+- [ ] android delayed-update: `settle: "macrotask"` + deferred writeback reproduces broken 풀어쓰기 / fixed `김태희` against android fixtures
+- [ ] (N/A) arrow-edit-mid — android capture has no ArrowLeft (virtual keyboard mid-edit)
+- [ ] (N/A) hanja Alt+Enter — android uses candidate-tap replace; broken≈fixed on captures

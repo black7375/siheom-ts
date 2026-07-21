@@ -25,6 +25,7 @@ describe("IME profiles", () => {
       hangulKeyEventKey: "process",
       hangulComposeMode: "composition",
       hanjaConversion: "replace",
+      hangulCompositionBoundary: "syllable",
     });
     expect(resolveProfile("test-custom-ime").enterDuringComposition).toBe("chromium-duplicate");
     expect(getRegisteredProfileIds()).toContain("test-custom-ime");
@@ -59,6 +60,11 @@ describe("IME profiles", () => {
 
   it("defaults linux Hangul profile to replace Hanja conversion", () => {
     expect(resolveProfile("linux-chrome-ibus-hangul").hanjaConversion).toBe("replace");
+  });
+
+  it("defaults existing Hangul profiles to syllable composition boundary", () => {
+    expect(resolveProfile("linux-chrome-ibus-hangul").hangulCompositionBoundary).toBe("syllable");
+    expect(resolveProfile("macos-chrome-apple").hangulCompositionBoundary).toBe("syllable");
   });
 
   it("throws for unknown profile ids", () => {

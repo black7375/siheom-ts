@@ -7,6 +7,7 @@ export {
 export type {
   EnterDuringCompositionFacet,
   HangulComposeMode,
+  HangulCompositionBoundary,
   HangulKeyEventKey,
   HanjaConversionMode,
   ImeProfile,
