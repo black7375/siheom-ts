@@ -10,7 +10,15 @@
     "**/storybook-static/**",
     "**/.astro/**",
     "**/coverage/**",
-    "**/__screenshots__/**"
+    "**/__screenshots__/**",
+    "**/stories/headless/**",
+    "**/components/ariakit/**",
+    "**/components/ark-ui/**",
+    "**/components/radix/**",
+    "**/components/react-aria/**",
+    "**/components/ui/**",
+    "**/*.test.ts",
+    "**/*.test.tsx"
   ],
   "reporters": ["console"],
   "absolute": true,

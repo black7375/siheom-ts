@@ -30,7 +30,7 @@
     "storybook:react-native": "bun run --filter '@siheom/react-native-examples' storybook",
     "install:nose": "bash scripts/install-nose.sh",
     "dup:jscpd": "jscpd packages/core/src packages/react/src packages/ime/src packages/ime-cdp/src apps/react-example/test",
-    "dup:nose": "nose query -r packages/core/src -r packages/react/src -r packages/ime/src -r packages/ime-cdp/src -r apps/react-example/test top=20",
+    "dup:nose": "nose query -r packages/core/src -r packages/react/src -r packages/ime/src -r packages/ime-cdp/src -r apps/react-example/test top=20 --exclude '**/stories/headless/**' --exclude '**/components/ariakit/**' --exclude '**/components/ark-ui/**' --exclude '**/components/radix/**' --exclude '**/components/react-aria/**' --exclude '**/components/ui/**'",
     "dup": "bun run dup:jscpd && bun run dup:nose"
   },
   "devDependencies": {
