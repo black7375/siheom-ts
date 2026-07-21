@@ -7,3 +7,5 @@
 - [x] **H3** Minimal DOM fixture + `sourceMapHints[]` in JSON export
 - [x] Device: download JSON after `가나다`, review `firstDivergence` (i=7 stuck-ㄱ; i=3 timing only)
 - [x] Device H3: minimal HTML `가` OK → slate-react android-input-manager scope
+- [x] `bun patch` slate-react@0.126.0 — composition anchor (`patches/slate-react@0.126.0.patch`)
+- [ ] Device: patched Storybook → `가나다` not `ㄱ가나다`

@@ -25,6 +25,15 @@ Understand Slate + Android Hangul IME — **exploration, not app patches**. See
    - **2026-07-21 gate:** minimal HTML → `가` OK; SlateLogger → `ㄱ가나다`. Bug is slate-react
      Android path, not raw contenteditable + placeholder.
 
+## Local patch (device test)
+
+`patches/slate-react@0.126.0.patch` — composition anchor fix in `android-input-manager`.
+After `bun install`, Storybook SlateLogger should use patched slate-react.
+
+1. `bun run storybook` → SlateLogger → type `가나다` on AF Firefox.
+2. Expect **`가나다`** (not `ㄱ가나다`). JSON download optional.
+3. Vitest gate: `SlateLogger.ime.android-firefox-patch.test.tsx` (first syllable replay).
+
 ## Retired
 
 App fix modes and alt-a/b/c — see

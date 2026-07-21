@@ -10,10 +10,10 @@ import brokenGaGolden from "./fixtures/android-firefox/broken-가-placeholder.js
 import v3Golden from "./fixtures/android-firefox/mechanism-fix-v3-cumulative-preedit-가나다가나다.json";
 
 /**
- * Experiment A — broken Slate + golden replay fidelity.
- * If matchRate ≪ 1, Vitest replay is not a valid device emulator (fix tests lie).
+ * Experiment A — Slate + golden replay fidelity (with bun-patched slate-react).
+ * Patch improves first-syllable replay but matchRate still ≪ 1 — not a device gate.
  */
-describe("Experiment A: golden replay fidelity (broken Slate, no fix)", () => {
+describe("Experiment A: golden replay fidelity (patched slate-react)", () => {
   async function measureOnBrokenSlate(events: { type: string; value: string; data: string | null }[]) {
     const editorRef: { current: HTMLElement | null } = { current: null };
 
@@ -67,14 +67,14 @@ describe("Experiment A: golden replay fidelity (broken Slate, no fix)", () => {
             "type": "beforeinput",
           },
           {
-            "actual": "ㄱ가",
+            "actual": "가",
             "data": "가",
             "expected": "ㄱ",
             "index": 8,
             "type": "beforeinput",
           },
           {
-            "actual": "ㄱ가",
+            "actual": "가",
             "data": "가",
             "expected": "ㄱ",
             "index": 9,
@@ -111,8 +111,8 @@ describe("Experiment A: golden replay fidelity (broken Slate, no fix)", () => {
       {
         "firstMismatch": 3,
         "label": "v3-가나다가나다",
-        "matchRate": 0.042,
-        "matched": 5,
+        "matchRate": 0.1,
+        "matched": 12,
         "sample": [
           {
             "actual": "ㄱ",
@@ -122,17 +122,17 @@ describe("Experiment A: golden replay fidelity (broken Slate, no fix)", () => {
             "type": "beforeinput",
           },
           {
-            "actual": "ㄱㄱ",
-            "data": "ㄱ",
+            "actual": "ㄱ가",
+            "data": "가",
             "expected": "ㄱ",
-            "index": 6,
+            "index": 13,
             "type": "beforeinput",
           },
           {
-            "actual": "ㄱㄱ",
-            "data": "ㄱ",
-            "expected": "ㄱ",
-            "index": 7,
+            "actual": "ㄱ가",
+            "data": "가",
+            "expected": "가ㄱ",
+            "index": 14,
             "type": "input",
           },
         ],

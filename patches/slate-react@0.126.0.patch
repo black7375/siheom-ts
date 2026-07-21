@@ -1,0 +1,144 @@
+diff --git a/dist/index.es.js b/dist/index.es.js
+index 193ea6f4991a60c0fc996579d8d4a52e627725cf..ce7a6ae2f0e1731bf7ca7a93771f0e4bf2cbe933 100644
+--- a/dist/index.es.js
++++ b/dist/index.es.js
+@@ -120,6 +120,7 @@ function createAndroidInputManager(_ref) {
+   var actionTimeoutId = null;
+   var idCounter = 0;
+   var insertPositionHint = false;
++  var compositionAnchor = null;
+   var applyPendingSelection = () => {
+     var pendingSelection = EDITOR_TO_PENDING_SELECTION.get(editor);
+     EDITOR_TO_PENDING_SELECTION.delete(editor);
+@@ -248,11 +249,26 @@ function createAndroidInputManager(_ref) {
+     }
+     compositionEndTimeoutId = setTimeout(() => {
+       IS_COMPOSING.set(editor, false);
++      compositionAnchor = null;
+       flush();
+     }, RESOLVE_DELAY);
+   };
+   var handleCompositionStart = _event => {
+     IS_COMPOSING.set(editor, true);
++    if (editor.selection) {
++      compositionAnchor = _objectSpread$8({}, editor.selection.anchor);
++    } else {
++      var window = ReactEditor.getWindow(editor);
++      var domSelection = window.getSelection();
++      var slateRange = domSelection && domSelection.rangeCount > 0 ? ReactEditor.toSlateRange(editor, domSelection, {
++        exactMatch: false,
++        suppressThrow: true
++      }) : null;
++      compositionAnchor = slateRange ? _objectSpread$8({}, slateRange.anchor) : {
++        path: [0, 0],
++        offset: 0
++      };
++    }
+     if (compositionEndTimeoutId) {
+       clearTimeout(compositionEndTimeoutId);
+       compositionEndTimeoutId = null;
+@@ -603,6 +619,22 @@ function createAndroidInputManager(_ref) {
+               end: _end.offset,
+               text: _text
+             };
++            // COMPAT: Android Firefox Hangul sends cumulative insertCompositionText with a
++            // collapsed DOM selection after the jamo leaf; replace from composition start.
++            if (type === 'insertCompositionText' && IS_COMPOSING.get(editor) && compositionAnchor && Path.equals(compositionAnchor.path, _start.path)) {
++              var _leaf = Node.leaf(editor, _start.path);
++              var _pendingDiffs = EDITOR_TO_PENDING_DIFFS.get(editor);
++              var _pendingOnPath = _pendingDiffs === null || _pendingDiffs === void 0 ? void 0 : _pendingDiffs.find(change => Path.equals(change.path, _start.path));
++              var _effectiveText = _pendingOnPath ? applyStringDiff(_leaf.text, _pendingOnPath.diff) : _leaf.text;
++              var _composeEnd = Range.isCollapsed(targetRange) ? _effectiveText.length : _end.offset;
++              if (_composeEnd >= compositionAnchor.offset) {
++                _diff = {
++                  start: compositionAnchor.offset,
++                  end: Math.max(_composeEnd, _start.offset),
++                  text: _text
++                };
++              }
++            }
+             // COMPAT: Swiftkey has a weird bug where the target range of the 2nd word
+             // inserted after a mark placeholder is inserted with an anchor offset off by 1.
+             // So writing 'some text' will result in 'some ttext'. Luckily all 'normal' insert
+@@ -638,7 +670,7 @@ function createAndroidInputManager(_ref) {
+               if (currentSelection) {
+                 var newPoint = {
+                   path: _start.path,
+-                  offset: _start.offset + _text.length
++                  offset: _diff.start + _text.length
+                 };
+                 scheduleAction(() => {
+                   Transforms.select(editor, {
+diff --git a/dist/index.js b/dist/index.js
+index aa31a1a118a786fb141a20607e14deec55b4feb6..da283005fa211ad93142b3e6cb6d9b4d8fb6aeaf 100644
+--- a/dist/index.js
++++ b/dist/index.js
+@@ -247,6 +247,7 @@ function createAndroidInputManager(_ref) {
+   var actionTimeoutId = null;
+   var idCounter = 0;
+   var insertPositionHint = false;
++  var compositionAnchor = null;
+   var applyPendingSelection = function applyPendingSelection() {
+     var pendingSelection = slateDom.EDITOR_TO_PENDING_SELECTION.get(editor);
+     slateDom.EDITOR_TO_PENDING_SELECTION["delete"](editor);
+@@ -373,11 +374,26 @@ function createAndroidInputManager(_ref) {
+     }
+     compositionEndTimeoutId = setTimeout(function () {
+       slateDom.IS_COMPOSING.set(editor, false);
++      compositionAnchor = null;
+       flush();
+     }, RESOLVE_DELAY);
+   };
+   var handleCompositionStart = function handleCompositionStart(_event) {
+     slateDom.IS_COMPOSING.set(editor, true);
++    if (editor.selection) {
++      compositionAnchor = _objectSpread$8({}, editor.selection.anchor);
++    } else {
++      var window = ReactEditor.getWindow(editor);
++      var domSelection = window.getSelection();
++      var slateRange = domSelection && domSelection.rangeCount > 0 ? ReactEditor.toSlateRange(editor, domSelection, {
++        exactMatch: false,
++        suppressThrow: true
++      }) : null;
++      compositionAnchor = slateRange ? _objectSpread$8({}, slateRange.anchor) : {
++        path: [0, 0],
++        offset: 0
++      };
++    }
+     if (compositionEndTimeoutId) {
+       clearTimeout(compositionEndTimeoutId);
+       compositionEndTimeoutId = null;
+@@ -766,6 +782,24 @@ function createAndroidInputManager(_ref) {
+               end: _end.offset,
+               text: _text
+             };
++            // COMPAT: Android Firefox Hangul sends cumulative insertCompositionText with a
++            // collapsed DOM selection after the jamo leaf; replace from composition start.
++            if (type === 'insertCompositionText' && slateDom.IS_COMPOSING.get(editor) && compositionAnchor && slate.Path.equals(compositionAnchor.path, _start.path)) {
++              var _leaf = slate.Node.leaf(editor, _start.path);
++              var _pendingDiffs = slateDom.EDITOR_TO_PENDING_DIFFS.get(editor);
++              var _pendingOnPath = _pendingDiffs === null || _pendingDiffs === void 0 ? void 0 : _pendingDiffs.find(function (change) {
++                return slate.Path.equals(change.path, _start.path);
++              });
++              var _effectiveText = _pendingOnPath ? slateDom.applyStringDiff(_leaf.text, _pendingOnPath.diff) : _leaf.text;
++              var _composeEnd = slate.Range.isCollapsed(targetRange) ? _effectiveText.length : _end.offset;
++              if (_composeEnd >= compositionAnchor.offset) {
++                _diff = {
++                  start: compositionAnchor.offset,
++                  end: Math.max(_composeEnd, _start.offset),
++                  text: _text
++                };
++              }
++            }
+             // COMPAT: Swiftkey has a weird bug where the target range of the 2nd word
+             // inserted after a mark placeholder is inserted with an anchor offset off by 1.
+             // So writing 'some text' will result in 'some ttext'. Luckily all 'normal' insert
+@@ -801,7 +835,7 @@ function createAndroidInputManager(_ref) {
+               if (currentSelection) {
+                 var newPoint = {
+                   path: _start.path,
+-                  offset: _start.offset + _text.length
++                  offset: _diff.start + _text.length
+                 };
+                 scheduleAction(function () {
+                   slate.Transforms.select(editor, {

@@ -53,5 +53,8 @@
   "bugs": {
     "url": "https://github.com/twinstae/siheom-ts/issues"
   },
-  "author": "Taehee Kim <rabolution@gmail.com> (https://x.com/stelo_kim)"
+  "author": "Taehee Kim <rabolution@gmail.com> (https://x.com/stelo_kim)",
+  "patchedDependencies": {
+    "slate-react@0.126.0": "patches/slate-react@0.126.0.patch"
+  }
 }
