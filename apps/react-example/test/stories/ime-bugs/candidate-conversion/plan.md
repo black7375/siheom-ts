@@ -14,7 +14,7 @@
 - [x] `mode="fixed"`: `stripHangulBeforeHanja` only on Hanja **compositionend** (김金 → 金; never on Option+Enter start)
 - [x] Unit tests for strip helper + Chrome append replay
 - [x] `typeHanja` + fixed + macos-chrome-apple: first syllable yields stripped `金`
-- [ ] `typeHanja` + fixed + macos-chrome-apple: full name yields `金泰熙`
+- [x] `typeHanja` + fixed + macos-chrome-apple: full name yields `金泰熙`
 - [ ] `typeHanja` + broken + macos-chrome-apple: first syllable leaves `김金`
 - [ ] OS `macos-chrome-apple/broken-hanja-name.json` — re-capture
 - [ ] OS `macos-chrome-apple/fixed-hanja-name.json` — re-capture (expect final 金泰熙)
