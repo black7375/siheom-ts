@@ -66,12 +66,7 @@ describe("slatePlaceholderCompositionFix", () => {
 
   it("skips composing insert that would concat stale document + preedit", () => {
     expect(
-      shouldSkipStaleDocumentCompositionInsert(
-        "가나간간",
-        "가나",
-        "insertCompositionText",
-        true,
-      ),
+      shouldSkipStaleDocumentCompositionInsert("가나간간", "가나", "insertCompositionText", true),
     ).toBe(true);
   });
 

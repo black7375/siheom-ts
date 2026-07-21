@@ -28,7 +28,11 @@ describe("AF Slate composing process is clean (no flicker) — RED until the run
   it("each composing snapshot is the cumulative preedit, with no committed text prepended", async () => {
     const editorRef: { current: HTMLElement | null } = { current: null };
     render(
-      <SlateLogger captureTarget="slate-placeholder" editorRef={editorRef} captureExploration={false} />,
+      <SlateLogger
+        captureTarget="slate-placeholder"
+        editorRef={editorRef}
+        captureExploration={false}
+      />,
     );
     await waitFor(() => expect(editorRef.current).not.toBeNull());
 

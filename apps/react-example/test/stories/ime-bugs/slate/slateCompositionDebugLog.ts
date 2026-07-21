@@ -100,11 +100,7 @@ export function pushSlateFixDebugEntry(
   detail: Record<string, unknown>,
   snapshot?: Pick<
     SlateCompositionSnapshot,
-    | "slateText"
-    | "isComposingWeak"
-    | "isComposingReact"
-    | "pendingDiffCount"
-    | "committedHangul"
+    "slateText" | "isComposingWeak" | "isComposingReact" | "pendingDiffCount" | "committedHangul"
   >,
 ): void {
   log.entries.push({

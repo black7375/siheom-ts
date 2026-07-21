@@ -54,9 +54,7 @@ export type {
   FidelityStep,
   MeasureReplayFidelityOptions,
 } from "./replayGoldenEvents/measureReplayFidelity";
-export {
-  dualTraceFromImeCapture,
-} from "./dualTrace/dualTraceFromImeCapture";
+export { dualTraceFromImeCapture } from "./dualTrace/dualTraceFromImeCapture";
 export type { DualTrace, DualTraceStep, ImeTraceLike } from "./dualTrace/dualTraceFromImeCapture";
 export {
   markImeControlledWriteback,

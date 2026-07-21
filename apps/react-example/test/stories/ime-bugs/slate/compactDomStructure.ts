@@ -61,7 +61,9 @@ export function compactDomStructure(
 }
 
 /** Textarea / input — single-node summary. */
-export function compactControlStructure(control: HTMLTextAreaElement | HTMLInputElement | null): DomStructureNode[] {
+export function compactControlStructure(
+  control: HTMLTextAreaElement | HTMLInputElement | null,
+): DomStructureNode[] {
   if (!control) {
     return [];
   }

@@ -79,9 +79,7 @@ export async function replayGoldenEvents(
   events: ComposedEventRecord[],
   options: ReplayGoldenEventsOptions = {},
 ): Promise<ComposedEventRecord[]> {
-  const trace = isEditable(element)
-    ? new ImeTrace(element)
-    : new ContentEditableImeTrace(element);
+  const trace = isEditable(element) ? new ImeTrace(element) : new ContentEditableImeTrace(element);
   element.focus();
 
   for (const event of events) {

@@ -115,11 +115,7 @@ export function readSlateCompositionSnapshotModelOnly(
 export function compactSlateDebugSnapshot(
   snap: Pick<
     SlateCompositionSnapshot,
-    | "slateText"
-    | "isComposingWeak"
-    | "isComposingReact"
-    | "pendingDiffCount"
-    | "committedHangul"
+    "slateText" | "isComposingWeak" | "isComposingReact" | "pendingDiffCount" | "committedHangul"
   >,
 ): SlateDebugSnapshotCompact {
   return {
@@ -152,9 +148,7 @@ function readPlaceholderFlags(
   placeholderPresent: boolean;
   placeholderDisplay: string | null;
 } {
-  const placeholder = editable?.querySelector(
-    "[data-slate-placeholder]",
-  ) as HTMLElement | null;
+  const placeholder = editable?.querySelector("[data-slate-placeholder]") as HTMLElement | null;
 
   if (!placeholder) {
     return { placeholderPresent: false, placeholderDisplay: null };
@@ -182,9 +176,7 @@ export function readSlateCompositionSnapshot(
 
   return {
     slateText: stripInvisible(Node.string(editor)),
-    domText: passive
-      ? readDomTextPassive(editable)
-      : stripInvisible(readSlatePlainText(editable)),
+    domText: passive ? readDomTextPassive(editable) : stripInvisible(readSlatePlainText(editable)),
     domRaw: editable?.textContent ?? "",
     ...placeholder,
     selection: readSelection(editor),

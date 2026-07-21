@@ -62,7 +62,11 @@ function novelJamosAfterCommitted(committed: string, compositionData: string): s
   const trailChars = [...trailing];
   const committedChars = [...disassemble(committed)];
   let start = 0;
-  for (let overlap = Math.min(trailChars.length, committedChars.length); overlap >= 1; overlap -= 1) {
+  for (
+    let overlap = Math.min(trailChars.length, committedChars.length);
+    overlap >= 1;
+    overlap -= 1
+  ) {
     if (trailChars.slice(0, overlap).join("") === committedChars.slice(-overlap).join("")) {
       start = overlap;
       break;

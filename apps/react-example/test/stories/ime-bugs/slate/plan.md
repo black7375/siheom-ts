@@ -23,9 +23,9 @@ emulator that drives real Slate and lets it mediate.
       per stroke, Slate mediates (`SlateLogger.ime.closed-loop.test.tsx`)
 - [x] Continuous: emulator types `가나다` / `가나다가나다` into patched Slate → correct
       (open-loop replay exploded here)
-- [~] Faithfulness gate: unpatched Slate → orphan-`ㄱ` *family* (`ㄱ가…`), directionally like
-      device (`ㄱ`) but not exact — exact match needs browser writeback/flush desync model
-      (research-grade, see `docs/research/slate-closed-loop-emulator.md`)
+- [~] Faithfulness gate: unpatched Slate → orphan-`ㄱ` _family_ (`ㄱ가…`), directionally like
+  device (`ㄱ`) but not exact — exact match needs browser writeback/flush desync model
+  (research-grade, see `docs/research/slate-closed-loop-emulator.md`)
 - [ ] Model composition DOM writeback + pending-diff flush desync → unpatched emul == device `ㄱ`
 - [ ] Replace `android-firefox-slate-placeholder-*` golden-replay modes with closed-loop
 - [ ] Wire closed-loop as an `@siheom/ime` profile mode (`createImeActions({ profile })`)

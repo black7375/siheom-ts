@@ -25,10 +25,7 @@ describe("SlateLogger", () => {
   });
 
   it("shows capture target toggle (Slate vs plain control)", async () => {
-    await runSiheom(
-      given.render(<SlateLogger />),
-      assertions.visible(query.group("캡처 대상")),
-    );
+    await runSiheom(given.render(<SlateLogger />), assertions.visible(query.group("캡처 대상")));
   });
 
   it("shows reference textarea for H2 structural diff", async () => {

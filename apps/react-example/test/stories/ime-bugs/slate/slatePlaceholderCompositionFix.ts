@@ -7,7 +7,12 @@ import type { CSSProperties } from "react";
 import type { Editor } from "slate";
 import { Node } from "slate";
 import { ReactEditor } from "slate-react";
-import { EDITOR_TO_FORCE_RENDER, EDITOR_TO_PLACEHOLDER_ELEMENT, IS_ANDROID, IS_COMPOSING } from "slate-dom";
+import {
+  EDITOR_TO_FORCE_RENDER,
+  EDITOR_TO_PLACEHOLDER_ELEMENT,
+  IS_ANDROID,
+  IS_COMPOSING,
+} from "slate-dom";
 
 import { stripInvisible } from "./fixSlatePlaceholderHangulText";
 
@@ -283,7 +288,11 @@ export function shouldSkipFirefoxDeferredCompositionInput(
   }
 
   // Device: `가` → `가가`, `간` → `간간` on deferred commit after compositionend.
-  if (visible.startsWith(data) && visible.length > data.length && visible.length <= data.length * 2 + 2) {
+  if (
+    visible.startsWith(data) &&
+    visible.length > data.length &&
+    visible.length <= data.length * 2 + 2
+  ) {
     return true;
   }
 

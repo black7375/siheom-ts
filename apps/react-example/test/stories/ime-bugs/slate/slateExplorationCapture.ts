@@ -111,9 +111,7 @@ export type SlateExplorationLog = {
     slateEditable: HTMLElement | null;
     textareaRef: HTMLTextAreaElement | null;
   }): void;
-  toExport(options: {
-    events: ImeEventRecord[];
-  }): SlateExplorationExport;
+  toExport(options: { events: ImeEventRecord[] }): SlateExplorationExport;
 };
 
 export function buildSourceMapHints(events: ImeEventRecord[], limit = 20): SourceMapHint[] {
@@ -145,7 +143,12 @@ export function divergenceFlags(
   if (snap.slateText !== snap.domText) {
     flags.push("slateText≠domText");
   }
-  if (record.data && snap.domText && record.data !== snap.domText && !snap.domText.includes(record.data)) {
+  if (
+    record.data &&
+    snap.domText &&
+    record.data !== snap.domText &&
+    !snap.domText.includes(record.data)
+  ) {
     flags.push("data∉domText");
   }
   if (
@@ -240,7 +243,13 @@ export function createSlateExplorationLog(): SlateExplorationLog {
         !capturedFirstComposeInsert
       ) {
         capturedFirstComposeInsert = true;
-        maybeCaptureDomStructure(index, "first-insertCompositionText", record, slateEditable, textareaRef);
+        maybeCaptureDomStructure(
+          index,
+          "first-insertCompositionText",
+          record,
+          slateEditable,
+          textareaRef,
+        );
       }
 
       if (record.type === "compositionstart" && !capturedCompositionStart) {

@@ -36,9 +36,7 @@ export async function measureReplayFidelity(
   readDom: (element: HTMLElement) => string,
   options: MeasureReplayFidelityOptions = {},
 ): Promise<FidelityReport> {
-  const trace = isEditable(element)
-    ? new ImeTrace(element)
-    : new ContentEditableImeTrace(element);
+  const trace = isEditable(element) ? new ImeTrace(element) : new ContentEditableImeTrace(element);
   element.focus();
 
   const steps: FidelityStep[] = [];

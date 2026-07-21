@@ -10,7 +10,10 @@ import {
   COMMAND_PRIORITY_EDITOR,
 } from "lexical";
 
-import type { LexicalCompositionDebugEntry, LexicalCompositionDebugLog } from "./lexicalCompositionDebugLog";
+import type {
+  LexicalCompositionDebugEntry,
+  LexicalCompositionDebugLog,
+} from "./lexicalCompositionDebugLog";
 import { readLexicalCompositionSnapshot } from "./readLexicalCompositionSnapshot";
 
 const DOM_TYPES = [

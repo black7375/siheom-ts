@@ -38,12 +38,12 @@ describe("LexicalLogger AF fixed — composition debug trace", () => {
   it("dump trace while typing 가나다 (android-firefox-contenteditable-fixed)", async () => {
     const editorRef: { current: LexicalEditor | null } = { current: null };
     const debugLog = createLexicalCompositionDebugLog();
-    const { runSiheom, actions, given } = runWithLexicalIme("android-firefox-contenteditable-fixed");
+    const { runSiheom, actions, given } = runWithLexicalIme(
+      "android-firefox-contenteditable-fixed",
+    );
 
     await runSiheom(
-      given.render(
-        <LexicalLogger mode="fixed" editorRef={editorRef} debugLog={debugLog} />,
-      ),
+      given.render(<LexicalLogger mode="fixed" editorRef={editorRef} debugLog={debugLog} />),
       actions.type(query.textbox("Lexical editor"), "가나다"),
     );
 
@@ -55,9 +55,8 @@ describe("LexicalLogger AF fixed — composition debug trace", () => {
       console.log("\n--- Lexical composition debug trace ---\n" + dump + "\n--- end ---\n");
     }
 
-    expect(
-      text,
-      text === "가나다" ? undefined : `Lexical text mismatch.\n\n${dump}`,
-    ).toBe("가나다");
+    expect(text, text === "가나다" ? undefined : `Lexical text mismatch.\n\n${dump}`).toBe(
+      "가나다",
+    );
   });
 });

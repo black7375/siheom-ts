@@ -7,12 +7,12 @@ Understand Slate + Android Hangul IME — **exploration, not app patches**. See
 
 ## Tools
 
-| File | Role |
-| ---- | ---- |
+| File                              | Role                                             |
+| --------------------------------- | ------------------------------------------------ |
 | `readSlateCompositionSnapshot.ts` | Slate text, DOM text, composing flags, selection |
-| `slateExplorationCapture.ts` | H1 timeline, H2 domStructures, H3 sourceMapHints |
-| `slate-minimal-dom-fixture.html` | H3 static repro (open on AF device) |
-| `SlateLogger.tsx` | Upstream Slate + exploration JSON on download |
+| `slateExplorationCapture.ts`      | H1 timeline, H2 domStructures, H3 sourceMapHints |
+| `slate-minimal-dom-fixture.html`  | H3 static repro (open on AF device)              |
+| `SlateLogger.tsx`                 | Upstream Slate + exploration JSON on download    |
 
 ## Device capture
 

@@ -205,10 +205,7 @@ async function typeImeText(
     return;
   }
 
-  if (
-    profile.hangulComposeMode === "linux-chrome-slate-plain-control" &&
-    isEditable(element)
-  ) {
+  if (profile.hangulComposeMode === "linux-chrome-slate-plain-control" && isEditable(element)) {
     for (const step of planTypeImeSteps(text)) {
       if (step.kind === "hangul") {
         await composeHangul(element, step.text, {
@@ -223,10 +220,7 @@ async function typeImeText(
     return;
   }
 
-  if (
-    profile.hangulComposeMode === "linux-firefox-slate-plain-control" &&
-    isEditable(element)
-  ) {
+  if (profile.hangulComposeMode === "linux-firefox-slate-plain-control" && isEditable(element)) {
     for (const step of planTypeImeSteps(text)) {
       if (step.kind === "hangul") {
         await composeHangul(element, step.text, {
@@ -241,10 +235,7 @@ async function typeImeText(
     return;
   }
 
-  if (
-    profile.hangulComposeMode === "android-firefox-slate-plain-control" &&
-    isEditable(element)
-  ) {
+  if (profile.hangulComposeMode === "android-firefox-slate-plain-control" && isEditable(element)) {
     for (const step of planTypeImeSteps(text)) {
       if (step.kind === "hangul") {
         await composeHangul(element, step.text, {
@@ -259,10 +250,7 @@ async function typeImeText(
     return;
   }
 
-  if (
-    profile.hangulComposeMode === "android-chrome-slate-plain-control" &&
-    isEditable(element)
-  ) {
+  if (profile.hangulComposeMode === "android-chrome-slate-plain-control" && isEditable(element)) {
     for (const step of planTypeImeSteps(text)) {
       if (step.kind === "hangul") {
         await composeHangul(element, step.text, {

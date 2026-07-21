@@ -37,13 +37,19 @@ describe("slateCompositionDebugLog.toExport", () => {
     const editable = document.createElement("div");
 
     noteSlateFixAction(editor, "committed-preedit", { next: "가" });
-    pushSlateFixDebugEntry(log, "fixed", "committed-preedit", { next: "가" }, {
-      slateText: "",
-      isComposingWeak: true,
-      isComposingReact: false,
-      pendingDiffCount: 0,
-      committedHangul: "",
-    });
+    pushSlateFixDebugEntry(
+      log,
+      "fixed",
+      "committed-preedit",
+      { next: "가" },
+      {
+        slateText: "",
+        isComposingWeak: true,
+        isComposingReact: false,
+        pendingDiffCount: 0,
+        committedHangul: "",
+      },
+    );
 
     const exported = log.toExport(editor, { editable, imeEventCount: 42 });
 

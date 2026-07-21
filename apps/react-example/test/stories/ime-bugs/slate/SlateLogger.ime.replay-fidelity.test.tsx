@@ -14,11 +14,17 @@ import v3Golden from "./fixtures/android-firefox/mechanism-fix-v3-cumulative-pre
  * Patch improves first-syllable replay but matchRate still ≪ 1 — not a device gate.
  */
 describe("Experiment A: golden replay fidelity (patched slate-react)", () => {
-  async function measureOnBrokenSlate(events: { type: string; value: string; data: string | null }[]) {
+  async function measureOnBrokenSlate(
+    events: { type: string; value: string; data: string | null }[],
+  ) {
     const editorRef: { current: HTMLElement | null } = { current: null };
 
     render(
-      <SlateLogger captureTarget="slate-placeholder" editorRef={editorRef} captureExploration={false} />,
+      <SlateLogger
+        captureTarget="slate-placeholder"
+        editorRef={editorRef}
+        captureExploration={false}
+      />,
     );
 
     await waitFor(() => {

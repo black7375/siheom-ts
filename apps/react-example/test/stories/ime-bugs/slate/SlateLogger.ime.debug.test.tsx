@@ -50,7 +50,9 @@ describe("SlateLogger AF — exploration timeline", () => {
     expect(explorationLog.domStructures.length).toBeGreaterThan(0);
 
     const text = readSlatePlainText(editorRef.current);
-    const dump = explorationLog.timeline.map((row) => `${row.i}\t${row.type}\t${row.flags.join(",")}`).join("\n");
+    const dump = explorationLog.timeline
+      .map((row) => `${row.i}\t${row.type}\t${row.flags.join(",")}`)
+      .join("\n");
 
     // eslint-disable-next-line no-console
     console.log("\n--- exploration timeline ---\n" + dump + "\n--- end ---\n");

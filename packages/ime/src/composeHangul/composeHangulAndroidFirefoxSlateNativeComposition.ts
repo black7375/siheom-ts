@@ -73,7 +73,12 @@ export async function composeHangulAndroidFirefoxSlateNativeComposition(
 
   for (const intent of intents) {
     if (intent.kind === "start") {
-      trace.keydown({ key: "Process", code: "", keyCode: 229, isComposing: readEditableText(element) !== "" });
+      trace.keydown({
+        key: "Process",
+        code: "",
+        keyCode: 229,
+        isComposing: readEditableText(element) !== "",
+      });
       trace.compositionStart("");
       compositionRange = captureCompositionRange(element);
       continue;
@@ -81,7 +86,11 @@ export async function composeHangulAndroidFirefoxSlateNativeComposition(
 
     if (intent.kind === "update") {
       trace.compositionUpdate(intent.data);
-      trace.beforeInput({ inputType: "insertCompositionText", data: intent.data, isComposing: true });
+      trace.beforeInput({
+        inputType: "insertCompositionText",
+        data: intent.data,
+        isComposing: true,
+      });
       // Browser native paint: replace the composition region's contents with the cumulative
       // preedit. The region = wherever the editor's selection was at compositionstart, so a fix
       // that spans the committed syllable makes this a clean replace instead of an append.
@@ -100,7 +109,11 @@ export async function composeHangulAndroidFirefoxSlateNativeComposition(
         selection.removeAllRanges();
         selection.addRange(caret);
       }
-      visibleTimeline.push({ index: stepIndex, phase: "native-paint", value: readEditableText(element) });
+      visibleTimeline.push({
+        index: stepIndex,
+        phase: "native-paint",
+        value: readEditableText(element),
+      });
       trace.input({ inputType: "insertCompositionText", data: intent.data, isComposing: true });
       stepIndex++;
       continue;
@@ -109,7 +122,11 @@ export async function composeHangulAndroidFirefoxSlateNativeComposition(
     // commit — now let Slate reconcile the composition into its model.
     trace.compositionEnd(intent.data);
     await settleAfterPreedit("macrotask");
-    visibleTimeline.push({ index: stepIndex - 1, phase: "reconcile", value: readEditableText(element) });
+    visibleTimeline.push({
+      index: stepIndex - 1,
+      phase: "reconcile",
+      value: readEditableText(element),
+    });
     compositionRange = null;
   }
 

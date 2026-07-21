@@ -8,10 +8,7 @@ import { ImeCaptureShell } from "../../ime-logger/ImeCaptureShell";
 import { CaptureInstructions } from "../shared/imeBugLoggerChrome";
 import { CaptureTargetToolbar, type SlateCaptureTarget } from "./CaptureTargetToolbar";
 import { readSlateCompositionSnapshot } from "./readSlateCompositionSnapshot";
-import {
-  createSlateExplorationLog,
-  type SlateExplorationLog,
-} from "./slateExplorationCapture";
+import { createSlateExplorationLog, type SlateExplorationLog } from "./slateExplorationCapture";
 import { clearSlateFixDebugState } from "./slateFixDebugState";
 import { readSlatePatchProbe } from "./readSlatePatchProbe";
 import { useSlateExplorationCapture } from "./useSlateExplorationCapture";
@@ -123,8 +120,8 @@ export function SlateLogger({
             Focus <strong>Slate editor</strong> → type <code>가나다</code> → JSON 다운로드.
           </li>
           <li>
-            JSON includes <code>slateDebug.patch.patchActive</code> — must be{" "}
-            <strong>true</strong> (false = Storybook served stale slate-react; restart after{" "}
+            JSON includes <code>slateDebug.patch.patchActive</code> — must be <strong>true</strong>{" "}
+            (false = Storybook served stale slate-react; restart after{" "}
             <code>bun run storybook</code>).
           </li>
           <li>

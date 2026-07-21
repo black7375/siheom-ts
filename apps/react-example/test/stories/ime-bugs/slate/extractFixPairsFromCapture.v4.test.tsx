@@ -1,9 +1,6 @@
 import { describe, expect, it } from "vitest";
 
-import {
-  extractFixPairsFromCapture,
-  summarizeFixPairDrift,
-} from "./extractFixPairsFromCapture";
+import { extractFixPairsFromCapture, summarizeFixPairDrift } from "./extractFixPairsFromCapture";
 import v4Golden from "./fixtures/android-firefox/mechanism-fix-v4-still-explodes-가나다가나다.json";
 import { documentFromCommittedPreedit } from "./slatePlaceholderCompositionFix";
 

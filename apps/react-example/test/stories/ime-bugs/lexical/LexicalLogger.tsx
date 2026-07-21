@@ -56,7 +56,9 @@ export function LexicalLogger({ mode: modeProp, editorRef, debugLog }: LexicalLo
         >
           <li>Android Firefox + Gboard에서 Lexical 편집기를 탭해 포커스를 줍니다.</li>
           <li>「가나다」처럼 연속된 한글을 조합하면서 조합 중 끊김 여부를 확인합니다.</li>
-          <li>broken은 Lexical 기본(Firefox NBSP sentinel), fixed는 NBSP→ZWSP + AF v1 preedit 보정.</li>
+          <li>
+            broken은 Lexical 기본(Firefox NBSP sentinel), fixed는 NBSP→ZWSP + AF v1 preedit 보정.
+          </li>
           <li>이벤트 로그가 기록되면 JSON 복사 또는 다운로드로 트레이스를 저장합니다.</li>
         </CaptureInstructions>
       )}

@@ -42,7 +42,11 @@ describe("replayGoldenEvents", () => {
     ];
 
     const records = await replayGoldenEvents(input, golden);
-    expect(records.map((event) => event.type)).toEqual(["keydown", "compositionstart", "compositionupdate"]);
+    expect(records.map((event) => event.type)).toEqual([
+      "keydown",
+      "compositionstart",
+      "compositionupdate",
+    ]);
 
     input.remove();
   });

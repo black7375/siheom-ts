@@ -26,7 +26,10 @@ function createSlateGoldenReplay(profileId: string, golden: GoldenFile) {
     return replayGoldenEvents(element, golden.events);
   }
 
-  async function onContentEditable(element: HTMLElement, text: string): Promise<ComposedEventRecord[]> {
+  async function onContentEditable(
+    element: HTMLElement,
+    text: string,
+  ): Promise<ComposedEventRecord[]> {
     assertCapturedText(profileId, text);
     element.focus();
     return replayGoldenEvents(element, golden.events, { settle: "macrotask" });

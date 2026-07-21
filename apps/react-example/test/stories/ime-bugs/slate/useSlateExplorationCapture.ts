@@ -2,10 +2,7 @@ import { useCallback, useMemo, useRef } from "react";
 import type { Editor } from "slate";
 
 import type { ImeEventRecord } from "../../ime-logger/serializeImeEvent";
-import {
-  createSlateExplorationLog,
-  type SlateExplorationLog,
-} from "./slateExplorationCapture";
+import { createSlateExplorationLog, type SlateExplorationLog } from "./slateExplorationCapture";
 
 export function useSlateExplorationCapture({
   editor,

@@ -29,7 +29,11 @@ describe("bun patch slate-react: composition anchor (AF Hangul)", () => {
     const editorRef: { current: HTMLElement | null } = { current: null };
 
     render(
-      <SlateLogger captureTarget="slate-placeholder" editorRef={editorRef} captureExploration={false} />,
+      <SlateLogger
+        captureTarget="slate-placeholder"
+        editorRef={editorRef}
+        captureExploration={false}
+      />,
     );
 
     await waitFor(() => {
@@ -51,7 +55,9 @@ describe("bun patch slate-react: composition anchor (AF Hangul)", () => {
 
     if (readSlatePlainText(editorRef.current!) !== "가") {
       console.log(
-        report.steps.map((s) => `#${s.index} ${s.type} data=${s.data} → ${JSON.stringify(s.actual)}`),
+        report.steps.map(
+          (s) => `#${s.index} ${s.type} data=${s.data} → ${JSON.stringify(s.actual)}`,
+        ),
       );
     }
 

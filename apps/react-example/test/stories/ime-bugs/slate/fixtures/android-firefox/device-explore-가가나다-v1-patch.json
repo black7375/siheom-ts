@@ -438,15 +438,9 @@
           "isComposingReact": false,
           "pendingDiffCount": 0,
           "selection": {
-            "path": [
-              0,
-              0
-            ],
+            "path": [0, 0],
             "offset": 0,
-            "focusPath": [
-              0,
-              0
-            ],
+            "focusPath": [0, 0],
             "focusOffset": 0
           },
           "flags": []
@@ -465,15 +459,9 @@
           "isComposingReact": false,
           "pendingDiffCount": 0,
           "selection": {
-            "path": [
-              0,
-              0
-            ],
+            "path": [0, 0],
             "offset": 0,
-            "focusPath": [
-              0,
-              0
-            ],
+            "focusPath": [0, 0],
             "focusOffset": 0
           },
           "flags": []
@@ -492,15 +480,9 @@
           "isComposingReact": true,
           "pendingDiffCount": 0,
           "selection": {
-            "path": [
-              0,
-              0
-            ],
+            "path": [0, 0],
             "offset": 0,
-            "focusPath": [
-              0,
-              0
-            ],
+            "focusPath": [0, 0],
             "focusOffset": 0
           },
           "flags": []
@@ -519,20 +501,12 @@
           "isComposingReact": true,
           "pendingDiffCount": 0,
           "selection": {
-            "path": [
-              0,
-              0
-            ],
+            "path": [0, 0],
             "offset": 1,
-            "focusPath": [
-              0,
-              0
-            ],
+            "focusPath": [0, 0],
             "focusOffset": 1
           },
-          "flags": [
-            "event.value≠domText"
-          ]
+          "flags": ["event.value≠domText"]
         },
         {
           "i": 4,
@@ -548,15 +522,9 @@
           "isComposingReact": true,
           "pendingDiffCount": 0,
           "selection": {
-            "path": [
-              0,
-              0
-            ],
+            "path": [0, 0],
             "offset": 1,
-            "focusPath": [
-              0,
-              0
-            ],
+            "focusPath": [0, 0],
             "focusOffset": 1
           },
           "flags": []
@@ -575,15 +543,9 @@
           "isComposingReact": true,
           "pendingDiffCount": 0,
           "selection": {
-            "path": [
-              0,
-              0
-            ],
+            "path": [0, 0],
             "offset": 1,
-            "focusPath": [
-              0,
-              0
-            ],
+            "focusPath": [0, 0],
             "focusOffset": 1
           },
           "flags": []
@@ -602,15 +564,9 @@
           "isComposingReact": true,
           "pendingDiffCount": 0,
           "selection": {
-            "path": [
-              0,
-              0
-            ],
+            "path": [0, 0],
             "offset": 1,
-            "focusPath": [
-              0,
-              0
-            ],
+            "focusPath": [0, 0],
             "focusOffset": 1
           },
           "flags": []
@@ -629,21 +585,12 @@
           "isComposingReact": true,
           "pendingDiffCount": 0,
           "selection": {
-            "path": [
-              0,
-              0
-            ],
+            "path": [0, 0],
             "offset": 1,
-            "focusPath": [
-              0,
-              0
-            ],
+            "focusPath": [0, 0],
             "focusOffset": 1
           },
-          "flags": [
-            "data∉domText",
-            "stuck-ㄱ-while-data-가"
-          ]
+          "flags": ["data∉domText", "stuck-ㄱ-while-data-가"]
         },
         {
           "i": 8,
@@ -659,20 +606,12 @@
           "isComposingReact": true,
           "pendingDiffCount": 0,
           "selection": {
-            "path": [
-              0,
-              0
-            ],
+            "path": [0, 0],
             "offset": 1,
-            "focusPath": [
-              0,
-              0
-            ],
+            "focusPath": [0, 0],
             "focusOffset": 1
           },
-          "flags": [
-            "data∉domText"
-          ]
+          "flags": ["data∉domText"]
         },
         {
           "i": 9,
@@ -688,20 +627,12 @@
           "isComposingReact": true,
           "pendingDiffCount": 0,
           "selection": {
-            "path": [
-              0,
-              0
-            ],
+            "path": [0, 0],
             "offset": 1,
-            "focusPath": [
-              0,
-              0
-            ],
+            "focusPath": [0, 0],
             "focusOffset": 1
           },
-          "flags": [
-            "data∉domText"
-          ]
+          "flags": ["data∉domText"]
         },
         {
           "i": 10,
@@ -717,15 +648,9 @@
           "isComposingReact": true,
           "pendingDiffCount": 0,
           "selection": {
-            "path": [
-              0,
-              0
-            ],
+            "path": [0, 0],
             "offset": 1,
-            "focusPath": [
-              0,
-              0
-            ],
+            "focusPath": [0, 0],
             "focusOffset": 1
           },
           "flags": []
@@ -744,20 +669,12 @@
           "isComposingReact": true,
           "pendingDiffCount": 0,
           "selection": {
-            "path": [
-              0,
-              0
-            ],
+            "path": [0, 0],
             "offset": 1,
-            "focusPath": [
-              0,
-              0
-            ],
+            "focusPath": [0, 0],
             "focusOffset": 1
           },
-          "flags": [
-            "data∉domText"
-          ]
+          "flags": ["data∉domText"]
         },
         {
           "i": 12,
@@ -773,20 +690,12 @@
           "isComposingReact": true,
           "pendingDiffCount": 0,
           "selection": {
-            "path": [
-              0,
-              0
-            ],
+            "path": [0, 0],
             "offset": 1,
-            "focusPath": [
-              0,
-              0
-            ],
+            "focusPath": [0, 0],
             "focusOffset": 1
           },
-          "flags": [
-            "data∉domText"
-          ]
+          "flags": ["data∉domText"]
         },
         {
           "i": 13,
@@ -802,21 +711,12 @@
           "isComposingReact": true,
           "pendingDiffCount": 0,
           "selection": {
-            "path": [
-              0,
-              0
-            ],
+            "path": [0, 0],
             "offset": 1,
-            "focusPath": [
-              0,
-              0
-            ],
+            "focusPath": [0, 0],
             "focusOffset": 1
           },
-          "flags": [
-            "data∉domText",
-            "compositionend.data≠domText"
-          ]
+          "flags": ["data∉domText", "compositionend.data≠domText"]
         },
         {
           "i": 14,
@@ -832,15 +732,9 @@
           "isComposingReact": false,
           "pendingDiffCount": 0,
           "selection": {
-            "path": [
-              0,
-              0
-            ],
+            "path": [0, 0],
             "offset": 1,
-            "focusPath": [
-              0,
-              0
-            ],
+            "focusPath": [0, 0],
             "focusOffset": 1
           },
           "flags": []
@@ -859,15 +753,9 @@
           "isComposingReact": false,
           "pendingDiffCount": 0,
           "selection": {
-            "path": [
-              0,
-              0
-            ],
+            "path": [0, 0],
             "offset": 1,
-            "focusPath": [
-              0,
-              0
-            ],
+            "focusPath": [0, 0],
             "focusOffset": 1
           },
           "flags": []
@@ -886,15 +774,9 @@
           "isComposingReact": false,
           "pendingDiffCount": 0,
           "selection": {
-            "path": [
-              0,
-              0
-            ],
+            "path": [0, 0],
             "offset": 1,
-            "focusPath": [
-              0,
-              0
-            ],
+            "focusPath": [0, 0],
             "focusOffset": 1
           },
           "flags": []
@@ -913,20 +795,12 @@
           "isComposingReact": true,
           "pendingDiffCount": 0,
           "selection": {
-            "path": [
-              0,
-              0
-            ],
+            "path": [0, 0],
             "offset": 1,
-            "focusPath": [
-              0,
-              0
-            ],
+            "focusPath": [0, 0],
             "focusOffset": 1
           },
-          "flags": [
-            "data∉domText"
-          ]
+          "flags": ["data∉domText"]
         },
         {
           "i": 18,
@@ -942,20 +816,12 @@
           "isComposingReact": true,
           "pendingDiffCount": 0,
           "selection": {
-            "path": [
-              0,
-              0
-            ],
+            "path": [0, 0],
             "offset": 2,
-            "focusPath": [
-              0,
-              0
-            ],
+            "focusPath": [0, 0],
             "focusOffset": 2
           },
-          "flags": [
-            "event.value≠domText"
-          ]
+          "flags": ["event.value≠domText"]
         },
         {
           "i": 19,
@@ -971,15 +837,9 @@
           "isComposingReact": true,
           "pendingDiffCount": 0,
           "selection": {
-            "path": [
-              0,
-              0
-            ],
+            "path": [0, 0],
             "offset": 2,
-            "focusPath": [
-              0,
-              0
-            ],
+            "focusPath": [0, 0],
             "focusOffset": 2
           },
           "flags": []
@@ -998,15 +858,9 @@
           "isComposingReact": true,
           "pendingDiffCount": 0,
           "selection": {
-            "path": [
-              0,
-              0
-            ],
+            "path": [0, 0],
             "offset": 2,
-            "focusPath": [
-              0,
-              0
-            ],
+            "focusPath": [0, 0],
             "focusOffset": 2
           },
           "flags": []
@@ -1025,15 +879,9 @@
           "isComposingReact": true,
           "pendingDiffCount": 0,
           "selection": {
-            "path": [
-              0,
-              0
-            ],
+            "path": [0, 0],
             "offset": 2,
-            "focusPath": [
-              0,
-              0
-            ],
+            "focusPath": [0, 0],
             "focusOffset": 2
           },
           "flags": []
@@ -1052,20 +900,12 @@
           "isComposingReact": true,
           "pendingDiffCount": 0,
           "selection": {
-            "path": [
-              0,
-              0
-            ],
+            "path": [0, 0],
             "offset": 2,
-            "focusPath": [
-              0,
-              0
-            ],
+            "focusPath": [0, 0],
             "focusOffset": 2
           },
-          "flags": [
-            "data∉domText"
-          ]
+          "flags": ["data∉domText"]
         },
         {
           "i": 23,
@@ -1081,21 +921,12 @@
           "isComposingReact": true,
           "pendingDiffCount": 0,
           "selection": {
-            "path": [
-              0,
-              0
-            ],
+            "path": [0, 0],
             "offset": 3,
-            "focusPath": [
-              0,
-              0
-            ],
+            "focusPath": [0, 0],
             "focusOffset": 3
           },
-          "flags": [
-            "event.value≠domText",
-            "orphan-prefix-jamo?"
-          ]
+          "flags": ["event.value≠domText", "orphan-prefix-jamo?"]
         },
         {
           "i": 24,
@@ -1111,20 +942,12 @@
           "isComposingReact": true,
           "pendingDiffCount": 0,
           "selection": {
-            "path": [
-              0,
-              0
-            ],
+            "path": [0, 0],
             "offset": 3,
-            "focusPath": [
-              0,
-              0
-            ],
+            "focusPath": [0, 0],
             "focusOffset": 3
           },
-          "flags": [
-            "orphan-prefix-jamo?"
-          ]
+          "flags": ["orphan-prefix-jamo?"]
         },
         {
           "i": 25,
@@ -1140,15 +963,9 @@
           "isComposingReact": true,
           "pendingDiffCount": 0,
           "selection": {
-            "path": [
-              0,
-              0
-            ],
+            "path": [0, 0],
             "offset": 3,
-            "focusPath": [
-              0,
-              0
-            ],
+            "focusPath": [0, 0],
             "focusOffset": 3
           },
           "flags": []
@@ -1167,15 +984,9 @@
           "isComposingReact": true,
           "pendingDiffCount": 0,
           "selection": {
-            "path": [
-              0,
-              0
-            ],
+            "path": [0, 0],
             "offset": 3,
-            "focusPath": [
-              0,
-              0
-            ],
+            "focusPath": [0, 0],
             "focusOffset": 3
           },
           "flags": []
@@ -1194,20 +1005,12 @@
           "isComposingReact": true,
           "pendingDiffCount": 0,
           "selection": {
-            "path": [
-              0,
-              0
-            ],
+            "path": [0, 0],
             "offset": 3,
-            "focusPath": [
-              0,
-              0
-            ],
+            "focusPath": [0, 0],
             "focusOffset": 3
           },
-          "flags": [
-            "data∉domText"
-          ]
+          "flags": ["data∉domText"]
         },
         {
           "i": 28,
@@ -1223,21 +1026,12 @@
           "isComposingReact": true,
           "pendingDiffCount": 0,
           "selection": {
-            "path": [
-              0,
-              0
-            ],
+            "path": [0, 0],
             "offset": 3,
-            "focusPath": [
-              0,
-              0
-            ],
+            "focusPath": [0, 0],
             "focusOffset": 3
           },
-          "flags": [
-            "event.value≠domText",
-            "orphan-prefix-jamo?"
-          ]
+          "flags": ["event.value≠domText", "orphan-prefix-jamo?"]
         },
         {
           "i": 29,
@@ -1253,20 +1047,12 @@
           "isComposingReact": true,
           "pendingDiffCount": 0,
           "selection": {
-            "path": [
-              0,
-              0
-            ],
+            "path": [0, 0],
             "offset": 3,
-            "focusPath": [
-              0,
-              0
-            ],
+            "focusPath": [0, 0],
             "focusOffset": 3
           },
-          "flags": [
-            "orphan-prefix-jamo?"
-          ]
+          "flags": ["orphan-prefix-jamo?"]
         },
         {
           "i": 30,
@@ -1282,15 +1068,9 @@
           "isComposingReact": true,
           "pendingDiffCount": 0,
           "selection": {
-            "path": [
-              0,
-              0
-            ],
+            "path": [0, 0],
             "offset": 3,
-            "focusPath": [
-              0,
-              0
-            ],
+            "focusPath": [0, 0],
             "focusOffset": 3
           },
           "flags": []
@@ -1309,15 +1089,9 @@
           "isComposingReact": true,
           "pendingDiffCount": 0,
           "selection": {
-            "path": [
-              0,
-              0
-            ],
+            "path": [0, 0],
             "offset": 3,
-            "focusPath": [
-              0,
-              0
-            ],
+            "focusPath": [0, 0],
             "focusOffset": 3
           },
           "flags": []
@@ -1336,20 +1110,12 @@
           "isComposingReact": true,
           "pendingDiffCount": 0,
           "selection": {
-            "path": [
-              0,
-              0
-            ],
+            "path": [0, 0],
             "offset": 3,
-            "focusPath": [
-              0,
-              0
-            ],
+            "focusPath": [0, 0],
             "focusOffset": 3
           },
-          "flags": [
-            "data∉domText"
-          ]
+          "flags": ["data∉domText"]
         },
         {
           "i": 33,
@@ -1365,21 +1131,12 @@
           "isComposingReact": true,
           "pendingDiffCount": 0,
           "selection": {
-            "path": [
-              0,
-              0
-            ],
+            "path": [0, 0],
             "offset": 4,
-            "focusPath": [
-              0,
-              0
-            ],
+            "focusPath": [0, 0],
             "focusOffset": 4
           },
-          "flags": [
-            "event.value≠domText",
-            "orphan-prefix-jamo?"
-          ]
+          "flags": ["event.value≠domText", "orphan-prefix-jamo?"]
         },
         {
           "i": 34,
@@ -1395,20 +1152,12 @@
           "isComposingReact": true,
           "pendingDiffCount": 0,
           "selection": {
-            "path": [
-              0,
-              0
-            ],
+            "path": [0, 0],
             "offset": 4,
-            "focusPath": [
-              0,
-              0
-            ],
+            "focusPath": [0, 0],
             "focusOffset": 4
           },
-          "flags": [
-            "orphan-prefix-jamo?"
-          ]
+          "flags": ["orphan-prefix-jamo?"]
         },
         {
           "i": 35,
@@ -1424,15 +1173,9 @@
           "isComposingReact": true,
           "pendingDiffCount": 0,
           "selection": {
-            "path": [
-              0,
-              0
-            ],
+            "path": [0, 0],
             "offset": 4,
-            "focusPath": [
-              0,
-              0
-            ],
+            "focusPath": [0, 0],
             "focusOffset": 4
           },
           "flags": []
@@ -1451,20 +1194,12 @@
           "isComposingReact": true,
           "pendingDiffCount": 0,
           "selection": {
-            "path": [
-              0,
-              0
-            ],
+            "path": [0, 0],
             "offset": 4,
-            "focusPath": [
-              0,
-              0
-            ],
+            "focusPath": [0, 0],
             "focusOffset": 4
           },
-          "flags": [
-            "orphan-prefix-jamo?"
-          ]
+          "flags": ["orphan-prefix-jamo?"]
         },
         {
           "i": 37,
@@ -1480,20 +1215,12 @@
           "isComposingReact": true,
           "pendingDiffCount": 0,
           "selection": {
-            "path": [
-              0,
-              0
-            ],
+            "path": [0, 0],
             "offset": 4,
-            "focusPath": [
-              0,
-              0
-            ],
+            "focusPath": [0, 0],
             "focusOffset": 4
           },
-          "flags": [
-            "orphan-prefix-jamo?"
-          ]
+          "flags": ["orphan-prefix-jamo?"]
         },
         {
           "i": 38,
@@ -1509,21 +1236,12 @@
           "isComposingReact": true,
           "pendingDiffCount": 0,
           "selection": {
-            "path": [
-              0,
-              0
-            ],
+            "path": [0, 0],
             "offset": 4,
-            "focusPath": [
-              0,
-              0
-            ],
+            "focusPath": [0, 0],
             "focusOffset": 4
           },
-          "flags": [
-            "orphan-prefix-jamo?",
-            "compositionend.data≠domText"
-          ]
+          "flags": ["orphan-prefix-jamo?", "compositionend.data≠domText"]
         },
         {
           "i": 39,
@@ -1539,27 +1257,17 @@
           "isComposingReact": false,
           "pendingDiffCount": 0,
           "selection": {
-            "path": [
-              0,
-              0
-            ],
+            "path": [0, 0],
             "offset": 4,
-            "focusPath": [
-              0,
-              0
-            ],
+            "focusPath": [0, 0],
             "focusOffset": 4
           },
-          "flags": [
-            "orphan-prefix-jamo?"
-          ]
+          "flags": ["orphan-prefix-jamo?"]
         }
       ],
       "firstDivergence": {
         "i": 3,
-        "flags": [
-          "event.value≠domText"
-        ]
+        "flags": ["event.value≠domText"]
       },
       "domStructures": [
         {
@@ -1687,10 +1395,7 @@
           "type": "keydown",
           "inputType": null,
           "data": null,
-          "handlers": [
-            "Editable.onKeyDown",
-            "android-input-manager: handleKeyDown (229 → defer)"
-          ],
+          "handlers": ["Editable.onKeyDown", "android-input-manager: handleKeyDown (229 → defer)"],
           "notes": "AF Hangul often key=Process keyCode=229"
         },
         {
@@ -1721,10 +1426,7 @@
           "type": "beforeinput",
           "inputType": "insertCompositionText",
           "data": "ㄱ",
-          "handlers": [
-            "Editable.onBeforeInput",
-            "android-input-manager: handleDOMBeforeInput"
-          ],
+          "handlers": ["Editable.onBeforeInput", "android-input-manager: handleDOMBeforeInput"],
           "notes": "First insertCompositionText ㄱ — orphan jamo hypothesis"
         },
         {
@@ -1744,9 +1446,7 @@
           "type": "keyup",
           "inputType": null,
           "data": null,
-          "handlers": [
-            "Editable.onKeyUp"
-          ],
+          "handlers": ["Editable.onKeyUp"],
           "notes": ""
         },
         {
@@ -1754,10 +1454,7 @@
           "type": "keydown",
           "inputType": null,
           "data": null,
-          "handlers": [
-            "Editable.onKeyDown",
-            "android-input-manager: handleKeyDown (229 → defer)"
-          ],
+          "handlers": ["Editable.onKeyDown", "android-input-manager: handleKeyDown (229 → defer)"],
           "notes": "AF Hangul often key=Process keyCode=229"
         },
         {
@@ -1776,10 +1473,7 @@
           "type": "beforeinput",
           "inputType": "insertCompositionText",
           "data": "가",
-          "handlers": [
-            "Editable.onBeforeInput",
-            "android-input-manager: handleDOMBeforeInput"
-          ],
+          "handlers": ["Editable.onBeforeInput", "android-input-manager: handleDOMBeforeInput"],
           "notes": "First insertCompositionText ㄱ — orphan jamo hypothesis"
         },
         {
@@ -1799,9 +1493,7 @@
           "type": "keyup",
           "inputType": null,
           "data": null,
-          "handlers": [
-            "Editable.onKeyUp"
-          ],
+          "handlers": ["Editable.onKeyUp"],
           "notes": ""
         },
         {
@@ -1809,10 +1501,7 @@
           "type": "beforeinput",
           "inputType": "insertCompositionText",
           "data": "가",
-          "handlers": [
-            "Editable.onBeforeInput",
-            "android-input-manager: handleDOMBeforeInput"
-          ],
+          "handlers": ["Editable.onBeforeInput", "android-input-manager: handleDOMBeforeInput"],
           "notes": "First insertCompositionText ㄱ — orphan jamo hypothesis"
         },
         {
@@ -1856,10 +1545,7 @@
           "type": "keydown",
           "inputType": null,
           "data": null,
-          "handlers": [
-            "Editable.onKeyDown",
-            "android-input-manager: handleKeyDown (229 → defer)"
-          ],
+          "handlers": ["Editable.onKeyDown", "android-input-manager: handleKeyDown (229 → defer)"],
           "notes": "AF Hangul often key=Process keyCode=229"
         },
         {
@@ -1890,10 +1576,7 @@
           "type": "beforeinput",
           "inputType": "insertCompositionText",
           "data": "간",
-          "handlers": [
-            "Editable.onBeforeInput",
-            "android-input-manager: handleDOMBeforeInput"
-          ],
+          "handlers": ["Editable.onBeforeInput", "android-input-manager: handleDOMBeforeInput"],
           "notes": "First insertCompositionText ㄱ — orphan jamo hypothesis"
         },
         {

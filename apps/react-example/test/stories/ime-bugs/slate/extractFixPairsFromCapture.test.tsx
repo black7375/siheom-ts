@@ -1,9 +1,6 @@
 import { describe, expect, it } from "vitest";
 
-import {
-  extractFixPairsFromCapture,
-  summarizeFixPairDrift,
-} from "./extractFixPairsFromCapture";
+import { extractFixPairsFromCapture, summarizeFixPairDrift } from "./extractFixPairsFromCapture";
 import v3Golden from "./fixtures/android-firefox/mechanism-fix-v3-cumulative-preedit-가나다가나다.json";
 
 /**

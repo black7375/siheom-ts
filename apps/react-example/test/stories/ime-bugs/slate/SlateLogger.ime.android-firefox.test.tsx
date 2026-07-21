@@ -13,7 +13,11 @@ describe("SlateLogger + android-firefox (upstream capture)", () => {
     const editorRef: { current: HTMLElement | null } = { current: null };
 
     render(
-      <SlateLogger captureTarget="slate-placeholder" editorRef={editorRef} captureExploration={false} />,
+      <SlateLogger
+        captureTarget="slate-placeholder"
+        editorRef={editorRef}
+        captureExploration={false}
+      />,
     );
 
     await waitFor(() => {

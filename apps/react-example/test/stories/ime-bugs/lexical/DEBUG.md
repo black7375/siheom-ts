@@ -4,12 +4,12 @@ Lexical #6377 fix work needs visibility into **both** DOM events and Lexical's i
 
 ## Tools
 
-| File | Role |
-| ---- | ---- |
-| `readLexicalCompositionSnapshot.ts` | Reads `$getRoot()` text, DOM text, `editor.isComposing()`, `_inputState.compositionPhase` |
-| `lexicalCompositionDebugLog.ts` | Append-only log + `dump()` for test failure messages |
+| File                                | Role                                                                                                    |
+| ----------------------------------- | ------------------------------------------------------------------------------------------------------- |
+| `readLexicalCompositionSnapshot.ts` | Reads `$getRoot()` text, DOM text, `editor.isComposing()`, `_inputState.compositionPhase`               |
+| `lexicalCompositionDebugLog.ts`     | Append-only log + `dump()` for test failure messages                                                    |
 | `LexicalCompositionDebugPlugin.tsx` | Records DOM capture/bubble + `INPUT_COMMAND`, `CONTROLLED_TEXT_INSERTION_COMMAND`, composition commands |
-| `LexicalLogger.ime.debug.test.tsx` | AF fixed trace test; dumps log on mismatch |
+| `LexicalLogger.ime.debug.test.tsx`  | AF fixed trace test; dumps log on mismatch                                                              |
 
 ## Usage in tests
 
