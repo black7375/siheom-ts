@@ -47,10 +47,13 @@ describe("SlateLogger + linux-chrome-slate-placeholder-fixed IME", () => {
       actions.type(query.textbox("Slate editor"), "가"),
     );
 
-    await waitFor(() => {
-      expect(editorRef.current).not.toBeNull();
-      expect(readSlatePlainText(editorRef.current!)).toBe("가");
-    });
+    await waitFor(
+      () => {
+        expect(editorRef.current).not.toBeNull();
+        expect(readSlatePlainText(editorRef.current!)).toBe("가");
+      },
+      { timeout: 3000 },
+    );
   });
 
   it("fixed mode composes intact 가 with official placeholder", async () => {

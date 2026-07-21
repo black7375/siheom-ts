@@ -57,6 +57,9 @@ See `useSlatePlaceholderCompositionFixEditableProps.tsx` + `slatePlaceholderComp
 
 1. **Placeholder stays official** — `renderPlaceholder` hides via `display:none` while `IS_COMPOSING` (Android never flips React `isComposing`, so `showPlaceholder` stayed true).
 2. **No force-re-render during composition** — wrap `EDITOR_TO_FORCE_RENDER` (MutationObserver wipe / explosion).
-3. **`onDOMBeforeInput` (Android)** — document = `committed + IME preedit` on each composing insert (bypass Slate IM concat); skip deferred duplicate/explosion; dedupe `가가` after flush.
+3. **`onDOMBeforeInput` (Android)** — document = cumulative IME `data` when it already includes `committed` (AF sends `가나`, not just `나`); skip deferred duplicate/explosion; `documentAfterCompositionEnd` after flush.
 
-Emulator: AC/AF goldens + `mechanism-fix-still-explodes-가나다가나다.json` replay. **Device recapture** still required.
+Device v3 capture (`mechanism-fix-v3-cumulative-preedit-가나다가나다.json`): root bug was
+`committed + data` when `data='가나'` → `가가나`. Fix: `data.startsWith(committed)` → use `data`.
+
+Emulator replays v3 golden → `가나다가나다`. **Device recapture** to confirm.

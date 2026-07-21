@@ -14,6 +14,19 @@ type GuardedForceRender = (() => void) & {
 
 const JAMO = /^[\u3131-\u3163]+$/;
 const HANGUL_SYLLABLE = /^[\uAC00-\uD7A3]$/;
+const HANGUL_SYLLABLES = /^[\uAC00-\uD7A3]+$/;
+
+function isHangulSyllableString(text: string): boolean {
+  return text.length > 0 && [...text].every((char) => HANGUL_SYLLABLE.test(char));
+}
+
+function longestCommonPrefixLength(a: string, b: string): number {
+  let index = 0;
+  while (index < a.length && index < b.length && a[index] === b[index]) {
+    index += 1;
+  }
+  return index;
+}
 
 /** Slate Android IM flushes shortly after compositionend — keep guarding force-render. */
 const COMPOSITION_COOLDOWN_MS = 600;
@@ -44,6 +57,15 @@ function isInCompositionCooldown(editor: Editor): boolean {
 
 /** Document text during an active composition session (committed prefix + live preedit). */
 export function documentFromCommittedPreedit(committed: string, compositionData: string): string {
+  if (!compositionData) {
+    return committed;
+  }
+
+  // AF device: IME `data` is often cumulative preedit that already includes `committed`.
+  if (committed && compositionData.startsWith(committed)) {
+    return compositionData;
+  }
+
   if (JAMO.test(compositionData)) {
     if (compositionData.length === 1) {
       return committed + compositionData;
@@ -56,7 +78,67 @@ export function documentFromCommittedPreedit(committed: string, compositionData:
     return committed + syllable;
   }
 
+  if (isHangulSyllableString(compositionData)) {
+    if (longestCommonPrefixLength(committed, compositionData) >= 1) {
+      return compositionData;
+    }
+
+    // Explosion-scale `data` echoes the broken document — keep committed.
+    if (
+      committed &&
+      compositionData.includes(committed) &&
+      compositionData.length > committed.length + 6
+    ) {
+      return committed;
+    }
+
+    return compositionData;
+  }
+
   return committed + compositionData;
+}
+
+/** Normalize Slate text after compositionend flush (AF duplicates / cumulative endData). */
+export function documentAfterCompositionEnd(
+  committedBefore: string,
+  endData: string,
+  visible: string,
+): string {
+  const normalized = stripInvisible(visible);
+  if (!endData) {
+    return normalized;
+  }
+
+  if (committedBefore && endData.startsWith(committedBefore)) {
+    return endData;
+  }
+
+  const deduped = dedupeDoubledSyllableCommit(normalized, endData);
+  if (deduped) {
+    return deduped;
+  }
+
+  if (isHangulSyllableString(endData) && endData.length > 1) {
+    if (longestCommonPrefixLength(committedBefore, endData) >= 1) {
+      return endData;
+    }
+  }
+
+  const syllable = syllableFromCompositionData(endData);
+  if (syllable) {
+    if (committedBefore) {
+      const intended = committedBefore + syllable;
+      if (normalized === intended + syllable) {
+        return intended;
+      }
+    }
+
+    if (!committedBefore && normalized === syllable + syllable) {
+      return syllable;
+    }
+  }
+
+  return normalized;
 }
 
 /**

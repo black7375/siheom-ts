@@ -4,6 +4,7 @@ import { describe, expect, it } from "vitest";
 
 import {
   dedupeDoubledSyllableCommit,
+  documentAfterCompositionEnd,
   shouldSkipDuplicateCompositionInsert,
   shouldSkipFirefoxDeferredCompositionInput,
   shouldSkipStaleDocumentCompositionInsert,
@@ -23,6 +24,19 @@ describe("slatePlaceholderCompositionFix", () => {
     expect(documentFromCommittedPreedit("", "가")).toBe("가");
     expect(documentFromCommittedPreedit("가", "ㄴ")).toBe("가ㄴ");
     expect(documentFromCommittedPreedit("가", "나")).toBe("가나");
+  });
+
+  it("uses cumulative AF preedit when data already includes committed (device v3 capture)", () => {
+    expect(documentFromCommittedPreedit("가", "가나")).toBe("가나");
+    expect(documentFromCommittedPreedit("가간", "가나")).toBe("가나");
+    expect(documentFromCommittedPreedit("가나", "가나다")).toBe("가나다");
+    expect(documentFromCommittedPreedit("가가나", "가나")).toBe("가나");
+  });
+
+  it("normalizes document after compositionend flush (AF device)", () => {
+    expect(documentAfterCompositionEnd("", "가", "가가")).toBe("가");
+    expect(documentAfterCompositionEnd("가", "가나", "가가나가나")).toBe("가나");
+    expect(documentAfterCompositionEnd("가나", "가나다", "가가나가낟가나다가나다")).toBe("가나다");
   });
 
   it("dedupes doubled syllable after compositionend flush", () => {

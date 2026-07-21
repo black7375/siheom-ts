@@ -6,7 +6,7 @@ import { IS_ANDROID } from "slate-dom";
 
 import {
   attachSlatePlaceholderCompositionFix,
-  dedupeDoubledSyllableCommit,
+  documentAfterCompositionEnd,
   documentFromCommittedPreedit,
   hideOfficialPlaceholderElement,
   noteCompositionEndForGuard,
@@ -142,13 +142,11 @@ export function useSlatePlaceholderCompositionFixEditableProps({
 
       window.setTimeout(() => {
         const endData = compositionEndDataRef.current;
-        let visible = readSlateVisibleText(editor);
-        const beforeDedupe = visible;
-        const deduped = dedupeDoubledSyllableCommit(visible, endData);
-        if (deduped) {
-          replaceSlateEditorPlainText(editor, deduped);
-          visible = deduped;
-          noteFix("dedupe-after-flush", { endData, before: beforeDedupe, after: deduped });
+        const before = readSlateVisibleText(editor);
+        let visible = documentAfterCompositionEnd(committedHangulRef.current, endData ?? "", before);
+        if (visible !== before) {
+          replaceSlateEditorPlainText(editor, visible);
+          noteFix("normalize-after-flush", { endData, before, after: visible });
         }
         committedHangulRef.current = visible;
         setSlateFixCommittedHangul(editor, visible);

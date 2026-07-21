@@ -15,6 +15,7 @@ import { defaultGivens, reactEffects } from "@siheom/react";
 import { SlateLogger } from "./SlateLogger";
 import { readSlatePlainText } from "./readSlatePlainText";
 import deviceExplosionGolden from "./fixtures/android-firefox/mechanism-fix-still-explodes-가나다가나다.json";
+import deviceV3Golden from "./fixtures/android-firefox/mechanism-fix-v3-cumulative-preedit-가나다가나다.json";
 
 function runWithSlateIme(profile: "android-firefox-slate-placeholder-broken") {
   return overrideSiheom(
@@ -76,6 +77,34 @@ describe("SlateLogger + android-firefox-slate-placeholder-fixed IME", () => {
         expect(text).not.toContain("가나간간");
         expect(text).not.toMatch(/(.+)\1\1/);
         expect(text.length).toBeLessThanOrEqual(6);
+      },
+      { timeout: 3000 },
+    );
+  });
+
+  it("fixed mode replays AF v3 cumulative-preedit capture as 가나다가나다", async () => {
+    const editorRef: { current: HTMLElement | null } = { current: null };
+
+    render(
+      <SlateLogger
+        mode="fixed"
+        captureTarget="slate-placeholder"
+        editorRef={editorRef}
+        captureSlateDebug={false}
+      />,
+    );
+
+    await waitFor(() => {
+      expect(editorRef.current).not.toBeNull();
+    });
+
+    await replayGoldenEvents(editorRef.current!, deviceV3Golden.events, {
+      settle: "macrotask",
+    });
+
+    await waitFor(
+      () => {
+        expect(readSlatePlainText(editorRef.current!)).toBe("가나다가나다");
       },
       { timeout: 3000 },
     );
