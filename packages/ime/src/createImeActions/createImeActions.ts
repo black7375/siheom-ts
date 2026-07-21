@@ -5,8 +5,8 @@ import { composeArrowLeft } from "../composeArrowLeft";
 import { composeBackspace } from "../composeBackspace";
 import { composeEnter } from "../composeEnter";
 import { composeHangul, type ComposeHangulOptions } from "../composeHangul";
+import { planTypeImeSteps } from "../planTypeImeSteps";
 import { resolveProfile, type ImeProfile } from "../profiles";
-import { segmentTypeText } from "../segmentTypeText";
 import { isEditable, withPresentElement } from "../withPresentElement";
 
 export type CreateImeActionsOptions = {
@@ -66,21 +66,15 @@ async function typeImeText(
     return;
   }
 
-  const segments = segmentTypeText(text);
-  for (let index = 0; index < segments.length; index++) {
-    const segment = segments[index];
-    if (!segment) continue;
-    const next = segments[index + 1];
-
-    if (segment.kind === "hangul") {
-      const leaveOpen = next?.kind === "keys" && /\{(Backspace|ArrowLeft|Enter)\}/i.test(next.text);
-      await composeHangul(element, segment.text, {
-        commitFinal: !leaveOpen,
+  for (const step of planTypeImeSteps(text)) {
+    if (step.kind === "hangul") {
+      await composeHangul(element, step.text, {
+        commitFinal: step.commitFinal,
         profile,
         ...composeOptions,
       });
     } else {
-      await typeKeySegment(user, element, segment.text, profile);
+      await typeKeySegment(user, element, step.text, profile);
     }
   }
 }
