@@ -24,6 +24,10 @@ export type UseImeEventCaptureOptions<T extends HTMLElement = HTMLElement> = {
   listenerDeps?: unknown[];
   /** Customize clearing the input node; default clears `.value` or `textContent`. */
   clearField?: (input: T | null) => void;
+  /** Merged into downloaded/copied JSON (e.g. Slate debug trace). */
+  traceExtra?: () => Record<string, unknown>;
+  /** Called after each logged DOM event (same listener as IME trace — no extra bindings). */
+  onEventRecorded?: (event: Event, record: ImeEventRecord) => void;
 };
 
 function defaultClearField(input: HTMLElement | null) {
@@ -41,6 +45,8 @@ export function useImeEventCapture<T extends HTMLElement = HTMLElement>({
   attachment = "effect",
   listenerDeps = [],
   clearField = defaultClearField as (input: T | null) => void,
+  traceExtra,
+  onEventRecorded,
 }: UseImeEventCaptureOptions<T>) {
   const { os, browser, ime, setOs, setBrowser, setIme } = useImeLoggerMeta();
   const [events, setEvents] = useState<ImeEventRecord[]>([]);
@@ -48,13 +54,17 @@ export function useImeEventCapture<T extends HTMLElement = HTMLElement>({
   const [status, setStatus] = useState("");
   const inputRef = useRef<T>(null);
   const listenersCleanupRef = useRef<(() => void) | null>(null);
+  const onEventRecordedRef = useRef(onEventRecorded);
+  onEventRecordedRef.current = onEventRecorded;
 
   const profileId = useMemo(() => profileIdFromMeta(os, browser, ime), [os, browser, ime]);
 
   const appendEvent = useCallback((event: Event) => {
     const value = readEditableValue(event.target);
     setFieldValue(value);
-    setEvents((prev) => [...prev, serializeImeEvent(event, value)]);
+    const record = serializeImeEvent(event, value);
+    setEvents((prev) => [...prev, record]);
+    onEventRecordedRef.current?.(event, record);
   }, []);
 
   const bindListeners = useCallback(
@@ -91,7 +101,7 @@ export function useImeEventCapture<T extends HTMLElement = HTMLElement>({
   }, [attachment, bindListeners, ...listenerDeps]);
 
   const buildTrace = useCallback((): ImeTrace => {
-    return buildImeTrace({
+    const base = buildImeTrace({
       os,
       browser,
       ime,
@@ -100,7 +110,9 @@ export function useImeEventCapture<T extends HTMLElement = HTMLElement>({
       scenarioId,
       source: "os-ime",
     });
-  }, [os, browser, ime, events, scenarioId]);
+    const extra = traceExtra?.();
+    return extra ? { ...base, ...extra } : base;
+  }, [os, browser, ime, events, scenarioId, traceExtra]);
 
   const clear = useCallback(() => {
     setEvents([]);

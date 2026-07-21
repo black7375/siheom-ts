@@ -28,6 +28,9 @@ export type ImeCaptureShellProps<T extends HTMLElement = HTMLElement> = {
   emptyLogMessage?: string;
   /** Replace default `scenarioId: …` segment. */
   scenarioLabel?: ReactNode;
+  /** Merged into downloaded/copied JSON (e.g. Slate debug trace). */
+  traceExtra?: UseImeEventCaptureOptions<T>["traceExtra"];
+  onEventRecorded?: UseImeEventCaptureOptions<T>["onEventRecorded"];
 };
 
 /**
@@ -47,6 +50,8 @@ export function ImeCaptureShell<T extends HTMLElement = HTMLElement>({
   profileExtra,
   emptyLogMessage = "아직 이벤트가 없습니다. 시나리오를 고른 뒤 IME로 타이핑하세요.",
   scenarioLabel,
+  traceExtra,
+  onEventRecorded,
 }: ImeCaptureShellProps<T>) {
   const capture = useImeEventCapture<T>({
     scenarioId,
@@ -54,6 +59,8 @@ export function ImeCaptureShell<T extends HTMLElement = HTMLElement>({
     attachment,
     listenerDeps,
     clearField,
+    traceExtra,
+    onEventRecorded,
   });
 
   const {

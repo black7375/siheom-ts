@@ -54,7 +54,12 @@ describe("SlateLogger + android-firefox-slate-placeholder-fixed IME", () => {
     const editorRef: { current: HTMLElement | null } = { current: null };
 
     render(
-      <SlateLogger mode="fixed" captureTarget="slate-placeholder" editorRef={editorRef} />,
+      <SlateLogger
+        mode="fixed"
+        captureTarget="slate-placeholder"
+        editorRef={editorRef}
+        captureSlateDebug={false}
+      />,
     );
 
     await waitFor(() => {

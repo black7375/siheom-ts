@@ -23,6 +23,8 @@ export type ImeTraceMeta = {
 export type ImeTrace = ImeTraceMeta & {
   profileId: string;
   events: ImeEventRecord[];
+  /** Slate DOM/model trace from SlateLogger (device debugging). */
+  slateDebug?: unknown;
 };
 
 export function profileIdFromMeta(os: string, browser: string, ime: string): string {
