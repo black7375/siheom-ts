@@ -76,6 +76,24 @@ slate-react's cumulative-preedit handling, not the browser.)
 
 Characterization test: `SlateLogger.device-v2-process.test.tsx` locks the known-bad process.
 
+## Fix landed — v3 composition-range extension (2026-07-22)
+
+`patches/slate-react@0.126.0.patch` (`composition-anchor-v3`) extends
+`handleCompositionStart`: it walks back over the contiguous committed Hangul immediately before
+the caret, moves `compositionAnchor` to that word start, and spans the DOM selection over the
+word (`setBaseAndExtent`). So when the OS IME re-sends the cumulative preedit, native
+composition **replaces** the word instead of appending after it — the `가가나` native paint
+never happens.
+
+Validated by the composition-range-aware native emulator: `SlateLogger.ime.process-fix.test.tsx`
+went from RED (native paints `ㄱ,가,가간,가가나,가나가나ㄷ,가나가나다`) to GREEN (native paints
+`ㄱ,가,간,가나,가나ㄷ,가나다` = the cumulative preedit, no duplication). Final still `가나다`;
+full slate suite green; closed-loop `가나다가나다` still correct.
+
+**Still open:** device recapture with v3 to confirm the composing process is clean on the real
+device (the guarantee's empirical closure), and a generative Hangul-IME intent model to replace
+the capture-derived intents.
+
 ## The fix direction — closed-loop IME emulator (decision 2026-07-21)
 
 Instead of replaying a fixed log, model the IME as a **state machine that drives the mounted

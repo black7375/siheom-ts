@@ -1,7 +1,7 @@
 import * as SlateReact from "slate-react";
 
 /** Set in `patches/slate-react@0.126.0.patch` — absent if Storybook/Vite served stale bundle. */
-export const EXPECTED_SLATE_ANDROID_HANGUL_PATCH_ID = "composition-anchor-v2";
+export const EXPECTED_SLATE_ANDROID_HANGUL_PATCH_ID = "composition-anchor-v3";
 
 export function readSlatePatchProbe(): {
   expectedPatchId: string;

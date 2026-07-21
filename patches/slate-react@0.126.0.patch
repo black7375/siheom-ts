@@ -1,12 +1,12 @@
 diff --git a/dist/index.es.js b/dist/index.es.js
-index 193ea6f4991a60c0fc996579d8d4a52e627725cf..82f2e59a17ab77519cff5acac7366a1c26b78f05 100644
+index 193ea6f..ba88ed5 100644
 --- a/dist/index.es.js
 +++ b/dist/index.es.js
 @@ -108,6 +108,7 @@ var FLUSH_DELAY = 200;
  var debug = function debug() {};
  // Type guard to check if a value is a DataTransfer
  var isDataTransfer = value => (value === null || value === void 0 ? void 0 : value.constructor.name) === 'DataTransfer';
-+var SLATE_ANDROID_HANGUL_PATCH_ID = 'composition-anchor-v2';
++var SLATE_ANDROID_HANGUL_PATCH_ID = 'composition-anchor-v3';
  function createAndroidInputManager(_ref) {
    var {
      editor,
@@ -40,7 +40,7 @@ index 193ea6f4991a60c0fc996579d8d4a52e627725cf..82f2e59a17ab77519cff5acac7366a1c
    var applyPendingSelection = () => {
      var pendingSelection = EDITOR_TO_PENDING_SELECTION.get(editor);
      EDITOR_TO_PENDING_SELECTION.delete(editor);
-@@ -246,13 +270,38 @@ function createAndroidInputManager(_ref) {
+@@ -246,13 +270,79 @@ function createAndroidInputManager(_ref) {
      if (compositionEndTimeoutId) {
        clearTimeout(compositionEndTimeoutId);
      }
@@ -76,10 +76,51 @@ index 193ea6f4991a60c0fc996579d8d4a52e627725cf..82f2e59a17ab77519cff5acac7366a1c
 +        offset: 0
 +      };
 +    }
++    // COMPAT: Android Firefox Hangul re-composes the whole current word with a cumulative
++    // preedit. Extend the composition over the contiguous committed Hangul before the caret and
++    // span the DOM selection, so native composition REPLACES the word instead of appending after
++    // it (removes the 가가나 flicker). (composition-anchor-v3)
++    if (compositionAnchor && Editor.hasPath(editor, compositionAnchor.path)) {
++      var hangulLeaf = Node.leaf(editor, compositionAnchor.path);
++      var hangulText = hangulLeaf.text;
++      var hangulEnd = compositionAnchor.offset;
++      var hangulStart = hangulEnd;
++      var isHangulChar = ch => {
++        if (!ch) return false;
++        var code = ch.charCodeAt(0);
++        return code >= 0xac00 && code <= 0xd7a3 || code >= 0x3130 && code <= 0x318f;
++      };
++      while (hangulStart > 0 && isHangulChar(hangulText[hangulStart - 1])) {
++        hangulStart--;
++      }
++      if (hangulStart < hangulEnd) {
++        compositionAnchor = {
++          path: compositionAnchor.path,
++          offset: hangulStart
++        };
++        try {
++          var hangulWindow = ReactEditor.getWindow(editor);
++          var hangulSelection = hangulWindow.getSelection();
++          if (hangulSelection) {
++            var hangulStartPoint = ReactEditor.toDOMPoint(editor, {
++              path: compositionAnchor.path,
++              offset: hangulStart
++            });
++            var hangulEndPoint = ReactEditor.toDOMPoint(editor, {
++              path: compositionAnchor.path,
++              offset: hangulEnd
++            });
++            hangulSelection.setBaseAndExtent(hangulStartPoint[0], hangulStartPoint[1], hangulEndPoint[0], hangulEndPoint[1]);
++          }
++        } catch (_hangulError) {
++          // toDOMPoint can throw mid-reconcile; the model diff still replaces from the anchor.
++        }
++      }
++    }
      if (compositionEndTimeoutId) {
        clearTimeout(compositionEndTimeoutId);
        compositionEndTimeoutId = null;
-@@ -603,6 +652,14 @@ function createAndroidInputManager(_ref) {
+@@ -603,6 +693,14 @@ function createAndroidInputManager(_ref) {
                end: _end.offset,
                text: _text
              };
@@ -94,7 +135,7 @@ index 193ea6f4991a60c0fc996579d8d4a52e627725cf..82f2e59a17ab77519cff5acac7366a1c
              // COMPAT: Swiftkey has a weird bug where the target range of the 2nd word
              // inserted after a mark placeholder is inserted with an anchor offset off by 1.
              // So writing 'some text' will result in 'some ttext'. Luckily all 'normal' insert
-@@ -638,7 +695,7 @@ function createAndroidInputManager(_ref) {
+@@ -638,7 +736,7 @@ function createAndroidInputManager(_ref) {
                if (currentSelection) {
                  var newPoint = {
                    path: _start.path,
@@ -103,7 +144,7 @@ index 193ea6f4991a60c0fc996579d8d4a52e627725cf..82f2e59a17ab77519cff5acac7366a1c
                  };
                  scheduleAction(() => {
                    Transforms.select(editor, {
-@@ -4112,5 +4169,5 @@ var withReact = function withReact(editor) {
+@@ -4112,5 +4210,5 @@ var withReact = function withReact(editor) {
    return e;
  };
  
@@ -111,14 +152,14 @@ index 193ea6f4991a60c0fc996579d8d4a52e627725cf..82f2e59a17ab77519cff5acac7366a1c
 +export { DefaultElement, DefaultLeaf, DefaultPlaceholder, DefaultText, Editable, ReactEditor, SLATE_ANDROID_HANGUL_PATCH_ID, Slate, defaultScrollSelectionIntoView, useComposing, useEditor, useElement, useElementIf, useFocused, useReadOnly, useSelected, useSlate, useSlateSelection, useSlateSelector, useSlateStatic, useSlateWithV, withReact };
  //# sourceMappingURL=index.es.js.map
 diff --git a/dist/index.js b/dist/index.js
-index aa31a1a118a786fb141a20607e14deec55b4feb6..74ae64921f600b1305b385302fb97d96c616400d 100644
+index aa31a1a..2c26c71 100644
 --- a/dist/index.js
 +++ b/dist/index.js
 @@ -237,6 +237,7 @@ var debug = function debug() {};
  var isDataTransfer = function isDataTransfer(value) {
    return (value === null || value === void 0 ? void 0 : value.constructor.name) === 'DataTransfer';
  };
-+var SLATE_ANDROID_HANGUL_PATCH_ID = 'composition-anchor-v2';
++var SLATE_ANDROID_HANGUL_PATCH_ID = 'composition-anchor-v3';
  function createAndroidInputManager(_ref) {
    var editor = _ref.editor,
      scheduleOnDOMSelectionChange = _ref.scheduleOnDOMSelectionChange,
@@ -154,7 +195,7 @@ index aa31a1a118a786fb141a20607e14deec55b4feb6..74ae64921f600b1305b385302fb97d96
    var applyPendingSelection = function applyPendingSelection() {
      var pendingSelection = slateDom.EDITOR_TO_PENDING_SELECTION.get(editor);
      slateDom.EDITOR_TO_PENDING_SELECTION["delete"](editor);
-@@ -371,13 +397,38 @@ function createAndroidInputManager(_ref) {
+@@ -371,13 +397,79 @@ function createAndroidInputManager(_ref) {
      if (compositionEndTimeoutId) {
        clearTimeout(compositionEndTimeoutId);
      }
@@ -190,10 +231,51 @@ index aa31a1a118a786fb141a20607e14deec55b4feb6..74ae64921f600b1305b385302fb97d96
 +        offset: 0
 +      };
 +    }
++    // COMPAT: Android Firefox Hangul re-composes the whole current word with a cumulative
++    // preedit. Extend the composition over the contiguous committed Hangul before the caret and
++    // span the DOM selection, so native composition REPLACES the word instead of appending after
++    // it (removes the 가가나 flicker). (composition-anchor-v3)
++    if (compositionAnchor && slate.Editor.hasPath(editor, compositionAnchor.path)) {
++      var hangulLeaf = slate.Node.leaf(editor, compositionAnchor.path);
++      var hangulText = hangulLeaf.text;
++      var hangulEnd = compositionAnchor.offset;
++      var hangulStart = hangulEnd;
++      var isHangulChar = function isHangulChar(ch) {
++        if (!ch) return false;
++        var code = ch.charCodeAt(0);
++        return code >= 0xac00 && code <= 0xd7a3 || code >= 0x3130 && code <= 0x318f;
++      };
++      while (hangulStart > 0 && isHangulChar(hangulText[hangulStart - 1])) {
++        hangulStart--;
++      }
++      if (hangulStart < hangulEnd) {
++        compositionAnchor = {
++          path: compositionAnchor.path,
++          offset: hangulStart
++        };
++        try {
++          var hangulWindow = ReactEditor.getWindow(editor);
++          var hangulSelection = hangulWindow.getSelection();
++          if (hangulSelection) {
++            var hangulStartPoint = ReactEditor.toDOMPoint(editor, {
++              path: compositionAnchor.path,
++              offset: hangulStart
++            });
++            var hangulEndPoint = ReactEditor.toDOMPoint(editor, {
++              path: compositionAnchor.path,
++              offset: hangulEnd
++            });
++            hangulSelection.setBaseAndExtent(hangulStartPoint[0], hangulStartPoint[1], hangulEndPoint[0], hangulEndPoint[1]);
++          }
++        } catch (_hangulError) {
++          // toDOMPoint can throw mid-reconcile; the model diff still replaces from the anchor.
++        }
++      }
++    }
      if (compositionEndTimeoutId) {
        clearTimeout(compositionEndTimeoutId);
        compositionEndTimeoutId = null;
-@@ -766,6 +817,14 @@ function createAndroidInputManager(_ref) {
+@@ -766,6 +858,14 @@ function createAndroidInputManager(_ref) {
                end: _end.offset,
                text: _text
              };
@@ -208,7 +290,7 @@ index aa31a1a118a786fb141a20607e14deec55b4feb6..74ae64921f600b1305b385302fb97d96
              // COMPAT: Swiftkey has a weird bug where the target range of the 2nd word
              // inserted after a mark placeholder is inserted with an anchor offset off by 1.
              // So writing 'some text' will result in 'some ttext'. Luckily all 'normal' insert
-@@ -801,7 +860,7 @@ function createAndroidInputManager(_ref) {
+@@ -801,7 +901,7 @@ function createAndroidInputManager(_ref) {
                if (currentSelection) {
                  var newPoint = {
                    path: _start.path,
@@ -217,7 +299,7 @@ index aa31a1a118a786fb141a20607e14deec55b4feb6..74ae64921f600b1305b385302fb97d96
                  };
                  scheduleAction(function () {
                    slate.Transforms.select(editor, {
-@@ -4584,6 +4643,7 @@ exports.DefaultPlaceholder = DefaultPlaceholder;
+@@ -4584,6 +4684,7 @@ exports.DefaultPlaceholder = DefaultPlaceholder;
  exports.DefaultText = DefaultText;
  exports.Editable = Editable;
  exports.ReactEditor = ReactEditor;

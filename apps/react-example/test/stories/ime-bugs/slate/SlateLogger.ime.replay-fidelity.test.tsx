@@ -111,8 +111,8 @@ describe("Experiment A: golden replay fidelity (patched slate-react)", () => {
       {
         "firstMismatch": 3,
         "label": "v3-가나다가나다",
-        "matchRate": 0.1,
-        "matched": 12,
+        "matchRate": 0.125,
+        "matched": 15,
         "sample": [
           {
             "actual": "ㄱ",
@@ -122,14 +122,14 @@ describe("Experiment A: golden replay fidelity (patched slate-react)", () => {
             "type": "beforeinput",
           },
           {
-            "actual": "ㄱ가",
+            "actual": "가",
             "data": "가",
             "expected": "ㄱ",
             "index": 13,
             "type": "beforeinput",
           },
           {
-            "actual": "ㄱ가",
+            "actual": "가",
             "data": "가",
             "expected": "가ㄱ",
             "index": 14,

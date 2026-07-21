@@ -41,10 +41,14 @@ the bug. See `docs/research/slate-closed-loop-emulator.md` (Correction section).
 - [x] Faithful flicker repro: `composeHangulAndroidFirefoxSlateNativeComposition` performs the
       native DOM writeback (committed + cumulative preedit) so real Slate exhibits the device
       flicker `가가나`/`가나가나ㄷ` then reconciles (`SlateLogger.ime.native-flicker.test.tsx`)
-- [ ] Make native writeback **composition-range-aware** (replace the composition range Slate
-      selects, not blind-append) so the fix is testable — needed before a valid RED-for-fix
-- [ ] RED-for-fix: assert native paints never duplicate (all prefixes of `가나다`) — fails now
-- [ ] Real fix (v3): `androidInputManager` keeps the Android run as **one composition** (no
-      per-syllable commit) so the cumulative preedit replaces cleanly → no `가가나`; validate on
-      device recapture
+- [x] Make native writeback **composition-range-aware** (replace the composition range Slate
+      selects, not blind-append) so the fix is testable
+- [x] RED-for-fix: `SlateLogger.ime.process-fix.test.tsx` — each composing snapshot must equal
+      the cumulative preedit, never committed+preedit
+- [x] Fix (v3 patch): `handleCompositionStart` extends the composition over the contiguous
+      committed Hangul before the caret and spans the DOM selection, so native composition
+      **replaces** the word instead of appending → no `가가나`. RED now green; final still 가나다;
+      full slate suite green. (`patches/slate-react@0.126.0.patch`, `composition-anchor-v3`)
+- [ ] Device: recapture on Android Firefox with v3 → confirm composing process is clean (no
+      flicker), not just the final value
 - [ ] Generative intents: replace device-capture intents with a Hangul-IME model
