@@ -67,6 +67,16 @@ describe("IME profiles", () => {
     expect(resolveProfile("macos-chrome-apple").hangulCompositionBoundary).toBe("syllable");
   });
 
+  it("resolves android-chrome with webkit Enter, unidentified keys, and run boundary", () => {
+    expect(resolveProfile("android-chrome")).toMatchObject({
+      enterDuringComposition: "webkit",
+      hangulKeyEventKey: "unidentified",
+      hangulComposeMode: "composition",
+      hanjaConversion: "replace",
+      hangulCompositionBoundary: "run",
+    });
+  });
+
   it("throws for unknown profile ids", () => {
     expect(() => resolveProfile("not-a-real-profile")).toThrow(/Unknown IME profile/);
   });

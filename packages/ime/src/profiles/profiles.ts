@@ -9,7 +9,7 @@ export type EnterDuringCompositionFacet =
   | "chromium-apple";
 
 /** Hangul keydown/keyup `key` field during composition (OS capture differs). */
-export type HangulKeyEventKey = "process" | "jamo";
+export type HangulKeyEventKey = "process" | "jamo" | "unidentified";
 
 /** How Hangul keystrokes are applied to the field. */
 export type HangulComposeMode =
@@ -131,6 +131,16 @@ function registerBuiltins() {
     hangulKeyEventKey: "process",
     hangulComposeMode: "composition",
     hanjaConversion: "replace",
+  });
+  // Android Chrome Gboard: Unidentified/229 keys, one composition run for a Hangul string,
+  // Enter after compositionend (webkit order). OS captures in ime-*/fixtures/android-chrome/.
+  registerProfile({
+    id: "android-chrome",
+    enterDuringComposition: "webkit",
+    hangulKeyEventKey: "unidentified",
+    hangulComposeMode: "composition",
+    hanjaConversion: "replace",
+    hangulCompositionBoundary: "run",
   });
 }
 

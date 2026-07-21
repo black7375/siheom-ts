@@ -77,7 +77,7 @@ IME-faithful `fill` / `type` that plug into siheom via `overrideSiheom`, startin
 OS captures under `apps/react-example/.../fixtures/android-chrome/` (virtual keyboard: `key: "Unidentified"`, `code: ""`, often one composition run for a whole Hangul string; Enter is webkit-order).
 
 - [x] (structural) `ImeProfile.hangulCompositionBoundary`: `syllable` | `run`; existing builtins default to `syllable`
-- [ ] `HangulKeyEventKey` includes `unidentified`; `resolveProfile("android-chrome")` returns webkit Enter, unidentified keys, composition Hangul, replace Hanja, run boundary
+- [x] `HangulKeyEventKey` includes `unidentified`; `resolveProfile("android-chrome")` returns webkit Enter, unidentified keys, composition Hangul, replace Hanja, run boundary
 - [ ] Hangul keydown/keyup with `unidentified` emit `key: "Unidentified"`, `keyCode: 229`, `code: ""`
 - [ ] `composeHangul` with android-chrome for `"김태희"` matches android `continuous-hangul` critical fields (single run composition + Unidentified keys)
 - [ ] `composeEnter` during composition on android-chrome matches android `fixed-김-enter` critical order (compositionend → Enter 13 `isComposing: false`)
