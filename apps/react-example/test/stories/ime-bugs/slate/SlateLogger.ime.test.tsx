@@ -17,8 +17,11 @@ function runWithSlateIme(
   profile:
     | "android-chrome-slate-placeholder-broken"
     | "android-chrome-slate-plain-control"
-    | "android-firefox-slate-placeholder-broken"
-    | "android-firefox-slate-plain-control",
+    | "android-firefox-slate-plain-control"
+    | "linux-chrome-slate-placeholder-fixed"
+    | "linux-firefox-slate-placeholder-fixed"
+    | "linux-chrome-slate-plain-control"
+    | "linux-firefox-slate-plain-control",
 ) {
   return overrideSiheom(
     {
@@ -88,6 +91,44 @@ describe("SlateLogger + android-firefox-slate-plain-control IME", () => {
     await waitFor(() => {
       expect(editorRef.current).not.toBeNull();
       expect((editorRef.current as HTMLTextAreaElement).value).toBe("가");
+    });
+  });
+});
+
+describe("SlateLogger + linux-chrome-slate-placeholder-fixed IME", () => {
+  it("typing 가 composes intact 가 in Slate with placeholder", async () => {
+    const editorRef: { current: HTMLElement | null } = { current: null };
+    const { runSiheom, actions, given } = runWithSlateIme("linux-chrome-slate-placeholder-fixed");
+
+    await runSiheom(
+      given.render(
+        <SlateLogger captureTarget="slate-placeholder" editorRef={editorRef} />,
+      ),
+      actions.type(query.textbox("Slate editor"), "가"),
+    );
+
+    await waitFor(() => {
+      expect(editorRef.current).not.toBeNull();
+      expect(readSlatePlainText(editorRef.current!)).toBe("가");
+    });
+  });
+});
+
+describe("SlateLogger + linux-firefox-slate-placeholder-fixed IME", () => {
+  it("typing 가 composes intact 가 in Slate with placeholder", async () => {
+    const editorRef: { current: HTMLElement | null } = { current: null };
+    const { runSiheom, actions, given } = runWithSlateIme("linux-firefox-slate-placeholder-fixed");
+
+    await runSiheom(
+      given.render(
+        <SlateLogger captureTarget="slate-placeholder" editorRef={editorRef} />,
+      ),
+      actions.type(query.textbox("Slate editor"), "가"),
+    );
+
+    await waitFor(() => {
+      expect(editorRef.current).not.toBeNull();
+      expect(readSlatePlainText(editorRef.current!)).toBe("가");
     });
   });
 });

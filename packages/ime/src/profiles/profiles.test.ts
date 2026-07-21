@@ -105,6 +105,34 @@ describe("IME profiles", () => {
     });
   });
 
+  it("resolves linux-chrome-slate-placeholder-fixed with golden replay compose mode", () => {
+    expect(resolveProfile("linux-chrome-slate-placeholder-fixed")).toMatchObject({
+      hangulComposeMode: "linux-chrome-slate-placeholder-fixed",
+      hangulKeyEventKey: "process",
+    });
+  });
+
+  it("resolves linux-chrome-slate-plain-control with golden replay compose mode", () => {
+    expect(resolveProfile("linux-chrome-slate-plain-control")).toMatchObject({
+      hangulComposeMode: "linux-chrome-slate-plain-control",
+      hangulKeyEventKey: "process",
+    });
+  });
+
+  it("resolves linux-firefox-slate-placeholder-fixed with golden replay compose mode", () => {
+    expect(resolveProfile("linux-firefox-slate-placeholder-fixed")).toMatchObject({
+      hangulComposeMode: "linux-firefox-slate-placeholder-fixed",
+      hangulKeyEventKey: "process",
+    });
+  });
+
+  it("resolves linux-firefox-slate-plain-control with golden replay compose mode", () => {
+    expect(resolveProfile("linux-firefox-slate-plain-control")).toMatchObject({
+      hangulComposeMode: "linux-firefox-slate-plain-control",
+      hangulKeyEventKey: "process",
+    });
+  });
+
   it("throws for unknown profile ids", () => {
     expect(() => resolveProfile("not-a-real-profile")).toThrow(/Unknown IME profile/);
   });

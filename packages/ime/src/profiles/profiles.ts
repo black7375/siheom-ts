@@ -32,7 +32,13 @@ export type HangulComposeMode =
   /** AF Slate + placeholder — value stuck at ㄱ while preedit says 가 */
   | "android-firefox-slate-placeholder-broken"
   /** AF plain textarea control baseline */
-  | "android-firefox-slate-plain-control";
+  | "android-firefox-slate-plain-control"
+  /** Desktop Linux Chrome — Slate #5989 does not reproduce; placeholder → 가 */
+  | "linux-chrome-slate-placeholder-fixed"
+  | "linux-chrome-slate-plain-control"
+  /** Desktop Linux Firefox — Slate placeholder → 가 (deferred input) */
+  | "linux-firefox-slate-placeholder-fixed"
+  | "linux-firefox-slate-plain-control";
 
 /**
  * How Hangul→Hanja candidate conversion applies the chosen Hanja to the field.
@@ -205,6 +211,34 @@ function registerBuiltins() {
     enterDuringComposition: "webkit",
     hangulKeyEventKey: "process",
     hangulComposeMode: "android-firefox-slate-plain-control",
+    hanjaConversion: "replace",
+  });
+  registerSyllableProfile({
+    id: "linux-chrome-slate-placeholder-fixed",
+    enterDuringComposition: "webkit",
+    hangulKeyEventKey: "process",
+    hangulComposeMode: "linux-chrome-slate-placeholder-fixed",
+    hanjaConversion: "replace",
+  });
+  registerSyllableProfile({
+    id: "linux-chrome-slate-plain-control",
+    enterDuringComposition: "webkit",
+    hangulKeyEventKey: "process",
+    hangulComposeMode: "linux-chrome-slate-plain-control",
+    hanjaConversion: "replace",
+  });
+  registerSyllableProfile({
+    id: "linux-firefox-slate-placeholder-fixed",
+    enterDuringComposition: "webkit",
+    hangulKeyEventKey: "process",
+    hangulComposeMode: "linux-firefox-slate-placeholder-fixed",
+    hanjaConversion: "replace",
+  });
+  registerSyllableProfile({
+    id: "linux-firefox-slate-plain-control",
+    enterDuringComposition: "webkit",
+    hangulKeyEventKey: "process",
+    hangulComposeMode: "linux-firefox-slate-plain-control",
     hanjaConversion: "replace",
   });
 }

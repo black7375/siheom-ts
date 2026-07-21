@@ -11,6 +11,14 @@ import slateBrokenGolden from "../../fixtures/android-chrome-slate-placeholder-b
 import slatePlainGolden from "../../fixtures/android-chrome-slate-plain-control/first-hangul-가.json";
 import afSlateBrokenGolden from "../../fixtures/android-firefox-slate-placeholder-broken/first-hangul-가.json";
 import afSlatePlainGolden from "../../fixtures/android-firefox-slate-plain-control/first-hangul-가.json";
+import lcSlatePhGolden from "../../fixtures/linux-chrome-slate-placeholder-fixed/first-hangul-가.json";
+import lcSlatePlGolden from "../../fixtures/linux-chrome-slate-plain-control/first-hangul-가.json";
+import lfSlatePhGolden from "../../fixtures/linux-firefox-slate-placeholder-fixed/first-hangul-가.json";
+import lfSlatePlGolden from "../../fixtures/linux-firefox-slate-plain-control/first-hangul-가.json";
+
+function visibleHangul(text: string): string {
+  return text.replace(/[\uFEFF\u200B]/g, "");
+}
 import { attachImeRecorder } from "../attachImeRecorder";
 import { composeEnter } from "../composeEnter";
 import { resolveProfile } from "../profiles";
@@ -240,6 +248,102 @@ describe("composeHangul", () => {
 
     expect(input.value).toBe("가");
     expect(toCriticalEvents(events)).toEqual(goldenCritical(afSlatePlainGolden.events));
+
+    input.remove();
+  });
+
+  it("linux-chrome-slate-placeholder-fixed: 가 yields intact 가", async () => {
+    const input = document.createElement("input");
+    document.body.append(input);
+
+    await composeHangul(input, "가", { profile: "linux-chrome-slate-placeholder-fixed" });
+
+    expect(visibleHangul(input.value)).toBe("가");
+    input.remove();
+  });
+
+  it("matches linux-chrome-slate-placeholder-fixed golden critical fields for 가", async () => {
+    const input = document.createElement("input");
+    document.body.append(input);
+
+    const events = await composeHangul(input, "가", {
+      profile: "linux-chrome-slate-placeholder-fixed",
+    });
+
+    expect(visibleHangul(input.value)).toBe("가");
+    expect(toCriticalEvents(events)).toEqual(goldenCritical(lcSlatePhGolden.events));
+
+    input.remove();
+  });
+
+  it("linux-chrome-slate-plain-control: 가 yields intact 가", async () => {
+    const input = document.createElement("input");
+    document.body.append(input);
+
+    await composeHangul(input, "가", { profile: "linux-chrome-slate-plain-control" });
+
+    expect(input.value).toBe("가");
+    input.remove();
+  });
+
+  it("matches linux-chrome-slate-plain-control golden critical fields for 가", async () => {
+    const input = document.createElement("input");
+    document.body.append(input);
+
+    const events = await composeHangul(input, "가", {
+      profile: "linux-chrome-slate-plain-control",
+    });
+
+    expect(input.value).toBe("가");
+    expect(toCriticalEvents(events)).toEqual(goldenCritical(lcSlatePlGolden.events));
+
+    input.remove();
+  });
+
+  it("linux-firefox-slate-placeholder-fixed: 가 yields intact 가", async () => {
+    const input = document.createElement("input");
+    document.body.append(input);
+
+    await composeHangul(input, "가", { profile: "linux-firefox-slate-placeholder-fixed" });
+
+    expect(input.value).toBe("가");
+    input.remove();
+  });
+
+  it("matches linux-firefox-slate-placeholder-fixed golden critical fields for 가", async () => {
+    const input = document.createElement("input");
+    document.body.append(input);
+
+    const events = await composeHangul(input, "가", {
+      profile: "linux-firefox-slate-placeholder-fixed",
+    });
+
+    expect(input.value).toBe("가");
+    expect(toCriticalEvents(events)).toEqual(goldenCritical(lfSlatePhGolden.events));
+
+    input.remove();
+  });
+
+  it("linux-firefox-slate-plain-control: 가 yields intact 가", async () => {
+    const input = document.createElement("input");
+    document.body.append(input);
+
+    await composeHangul(input, "가", { profile: "linux-firefox-slate-plain-control" });
+
+    expect(input.value).toBe("가");
+    input.remove();
+  });
+
+  it("matches linux-firefox-slate-plain-control golden critical fields for 가", async () => {
+    const input = document.createElement("input");
+    document.body.append(input);
+
+    const events = await composeHangul(input, "가", {
+      profile: "linux-firefox-slate-plain-control",
+    });
+
+    expect(input.value).toBe("가");
+    expect(toCriticalEvents(events)).toEqual(goldenCritical(lfSlatePlGolden.events));
 
     input.remove();
   });

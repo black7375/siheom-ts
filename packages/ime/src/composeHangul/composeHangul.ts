@@ -21,6 +21,12 @@ import { composeHangulAndroidChromeSlatePlainControl } from "./composeHangulAndr
 import { composeHangulAndroidFirefoxSlatePlaceholderBroken } from "./composeHangulAndroidFirefoxSlatePlaceholderBroken";
 import { composeHangulAndroidFirefoxSlatePlainControl } from "./composeHangulAndroidFirefoxSlatePlainControl";
 import {
+  composeHangulLinuxChromeSlatePlaceholderFixed,
+  composeHangulLinuxChromeSlatePlainControl,
+  composeHangulLinuxFirefoxSlatePlaceholderFixed,
+  composeHangulLinuxFirefoxSlatePlainControl,
+} from "./composeHangulLinuxSlateGolden";
+import {
   decideStrokeStepOutcome,
   planBoundaryCommitAfterStep,
   planChromeBlurAbortTail,
@@ -221,6 +227,26 @@ export async function composeHangul(
   if (profile.hangulComposeMode === "android-firefox-slate-plain-control") {
     element.focus();
     return composeHangulAndroidFirefoxSlatePlainControl(element, text);
+  }
+
+  if (profile.hangulComposeMode === "linux-chrome-slate-placeholder-fixed") {
+    element.focus();
+    return composeHangulLinuxChromeSlatePlaceholderFixed(element, text);
+  }
+
+  if (profile.hangulComposeMode === "linux-chrome-slate-plain-control") {
+    element.focus();
+    return composeHangulLinuxChromeSlatePlainControl(element, text);
+  }
+
+  if (profile.hangulComposeMode === "linux-firefox-slate-placeholder-fixed") {
+    element.focus();
+    return composeHangulLinuxFirefoxSlatePlaceholderFixed(element, text);
+  }
+
+  if (profile.hangulComposeMode === "linux-firefox-slate-plain-control") {
+    element.focus();
+    return composeHangulLinuxFirefoxSlatePlainControl(element, text);
   }
 
   const blurred = { current: false };

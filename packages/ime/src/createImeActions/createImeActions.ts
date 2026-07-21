@@ -9,7 +9,10 @@ import { composeHangulContentEditableFirefoxBrokenOn } from "../composeHangul/co
 import { composeHangulContentEditableFirefoxFixedOn } from "../composeHangul/composeHangulContentEditableFirefoxFixed";
 import { composeHangulContentEditableAndroidFirefoxFixedOn } from "../composeHangul/composeHangulContentEditableAndroidFirefoxFixed";
 import { composeHangulAndroidChromeSlatePlaceholderBrokenOn } from "../composeHangul/composeHangulAndroidChromeSlatePlaceholderBroken";
-import { composeHangulAndroidFirefoxSlatePlaceholderBrokenOn } from "../composeHangul/composeHangulAndroidFirefoxSlatePlaceholderBroken";
+import {
+  composeHangulLinuxChromeSlatePlaceholderFixedOn,
+  composeHangulLinuxFirefoxSlatePlaceholderFixedOn,
+} from "../composeHangul/composeHangulLinuxSlateGolden";
 import { planTypeImeSteps } from "../planTypeImeSteps";
 import { resolveProfile, type ImeProfile } from "../profiles";
 import { isContentEditableComposeTarget } from "../_internal/editableElement";
@@ -147,6 +150,74 @@ async function typeImeText(
         await typeKeySegment(user, element, step.text, profile);
       } else {
         await user.type(element, step.text);
+      }
+    }
+    return;
+  }
+
+  if (
+    profile.hangulComposeMode === "linux-chrome-slate-placeholder-fixed" &&
+    isContentEditableComposeTarget(element)
+  ) {
+    for (const step of planTypeImeSteps(text)) {
+      if (step.kind === "hangul") {
+        await composeHangulLinuxChromeSlatePlaceholderFixedOn(element, step.text);
+      } else if (isEditable(element)) {
+        await typeKeySegment(user, element, step.text, profile);
+      } else {
+        await user.type(element, step.text);
+      }
+    }
+    return;
+  }
+
+  if (
+    profile.hangulComposeMode === "linux-firefox-slate-placeholder-fixed" &&
+    isContentEditableComposeTarget(element)
+  ) {
+    for (const step of planTypeImeSteps(text)) {
+      if (step.kind === "hangul") {
+        await composeHangulLinuxFirefoxSlatePlaceholderFixedOn(element, step.text);
+      } else if (isEditable(element)) {
+        await typeKeySegment(user, element, step.text, profile);
+      } else {
+        await user.type(element, step.text);
+      }
+    }
+    return;
+  }
+
+  if (
+    profile.hangulComposeMode === "linux-chrome-slate-plain-control" &&
+    isEditable(element)
+  ) {
+    for (const step of planTypeImeSteps(text)) {
+      if (step.kind === "hangul") {
+        await composeHangul(element, step.text, {
+          commitFinal: step.commitFinal,
+          profile,
+          ...composeOptions,
+        });
+      } else {
+        await typeKeySegment(user, element, step.text, profile);
+      }
+    }
+    return;
+  }
+
+  if (
+    profile.hangulComposeMode === "linux-firefox-slate-plain-control" &&
+    isEditable(element)
+  ) {
+    for (const step of planTypeImeSteps(text)) {
+      if (step.kind === "hangul") {
+        await composeHangul(element, step.text, {
+          commitFinal: step.commitFinal,
+          profile,
+          ...composeOptions,
+        });
+      } else {
+        await typeKeySegment(user, element, step.text, profile);
       }
     }
     return;

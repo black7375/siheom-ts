@@ -4,6 +4,8 @@
 | ------------------ | ------- | ------- |
 | `android-chrome/`  | Chrome  | Slate #5989 jamo-split on placeholder |
 | `android-firefox/` | Firefox | Slate placeholder stuck-at-ㄱ; plain OK |
+| `linux-chrome/`    | Chrome  | Desktop baseline — placeholder **works** |
+| `linux-firefox/`   | Firefox | Desktop baseline — placeholder **works** |
 
 ## Android Chrome
 
@@ -33,3 +35,15 @@ Profile: `android-firefox-slate-placeholder-broken` / `-plain-control`
 | Emulator Slate mount (Chromium) | ✅ repro | ❌ events replay; Slate composes `가` — **device-only** |
 
 Storybook: **IME / Slate**.
+
+## Linux Chrome / Firefox (desktop baseline)
+
+| File | Visible | Notes |
+| ---- | ------- | ----- |
+| `fixed-가-placeholder.json` | `가` | normal `ㄱ→가` composition; Chrome placeholder may include ZWSP |
+| `fixed-가-plain-control.json` | `가` | second session after clear |
+
+Profile: `linux-chrome-slate-placeholder-fixed` / `-plain-control`, `linux-firefox-slate-*`
+
+**Cross-platform:** Android Chrome/Firefox show Slate #5989 breakage on placeholder; **Linux desktop does not** — both Chrome and Firefox compose `가` correctly on Slate with placeholder. Firefox still emits deferred `input` after `compositionend` (same family as AF), but Slate DOM updates correctly on Linux.
+
