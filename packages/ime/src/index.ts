@@ -9,6 +9,8 @@ export { composeArrowLeft } from "./composeArrowLeft";
 export { composeEnter } from "./composeEnter";
 export { segmentTypeText } from "./segmentTypeText";
 export type { TypeSegment } from "./segmentTypeText";
+export { planTypeImeSteps } from "./planTypeImeSteps";
+export type { TypeImeStep } from "./planTypeImeSteps";
 export { isEditable, withPresentElement } from "./withPresentElement";
 export type { ResolveElementMode } from "./withPresentElement";
 export { createImeActions } from "./createImeActions";
