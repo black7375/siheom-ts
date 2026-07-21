@@ -1,6 +1,5 @@
-import { waitFor } from "@testing-library/dom";
 import { userEvent, type UserEvent } from "@testing-library/user-event";
-import { getElement, type ActionStepDefinitionDict, type Locator } from "@siheom/core";
+import { type ActionStepDefinitionDict, type Locator } from "@siheom/core";
 
 import { composeArrowLeft } from "../composeArrowLeft";
 import { composeBackspace } from "../composeBackspace";
@@ -8,6 +7,7 @@ import { composeEnter } from "../composeEnter";
 import { composeHangul, type ComposeHangulOptions } from "../composeHangul";
 import { resolveProfile, type ImeProfile } from "../profiles";
 import { segmentTypeText } from "../segmentTypeText";
+import { isEditable, withPresentElement } from "../withPresentElement";
 
 export type CreateImeActionsOptions = {
   user?: UserEvent;
@@ -18,16 +18,6 @@ export type CreateImeActionsOptions = {
   settle?: ComposeHangulOptions["settle"];
   deferredUpdateRace?: ComposeHangulOptions["deferredUpdateRace"];
 };
-
-function isEditable(element: HTMLElement): element is HTMLInputElement | HTMLTextAreaElement {
-  return element instanceof HTMLInputElement || element instanceof HTMLTextAreaElement;
-}
-
-function assertInDocument(element: HTMLElement): void {
-  if (!element.isConnected) {
-    throw new Error("Expected locator target to resolve to an element in the document");
-  }
-}
 
 async function typeKeySegment(
   user: UserEvent,
@@ -108,30 +98,15 @@ export function createImeActions(options: CreateImeActionsOptions = {}) {
     deferredUpdateRace: options.deferredUpdateRace,
   };
 
-  async function withPresentElement(target: Locator, run: (element: HTMLElement) => Promise<void>) {
-    if (resolveElement === "sync") {
-      const element = getElement(target, true);
-      assertInDocument(element);
-      await run(element);
-      return;
-    }
-
-    await waitFor(async () => {
-      const element = getElement(target, true);
-      assertInDocument(element);
-      await run(element);
-    });
-  }
-
   return {
     fill: async (target: Locator, text: string) =>
-      withPresentElement(target, async (element) => {
+      withPresentElement(target, resolveElement, async (element) => {
         await user.click(element);
         await user.clear(element);
         await typeImeText(user, element, text, profile, composeOptions);
       }),
     type: async (target: Locator, text: string) =>
-      withPresentElement(target, async (element) => {
+      withPresentElement(target, resolveElement, async (element) => {
         await user.click(element);
         await typeImeText(user, element, text, profile, composeOptions);
       }),
