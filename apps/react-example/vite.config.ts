@@ -30,6 +30,7 @@ export default defineConfig({
 		alias: {
 			"@showcase/tanstack-link": tanstackLinkStub,
 			"@siheom/ime-cdp": path.resolve(dirname, "../../packages/ime-cdp/src/index.ts"),
+			"@siheom/ime/hanja": path.resolve(dirname, "../../packages/ime/src/hanja.ts"),
 			"@siheom/ime": path.resolve(dirname, "../../packages/ime/src/index.ts"),
 		},
 		setupFiles: "./test/setupTests.ts",
