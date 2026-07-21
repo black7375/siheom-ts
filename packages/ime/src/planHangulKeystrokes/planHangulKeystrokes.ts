@@ -57,7 +57,7 @@ function pushBoundaryStroke(
   });
 }
 
-function pushRunStroke(
+function pushSingleStepStroke(
   strokes: HangulKeyStroke[],
   meta: { code: string; key: string },
   jamo: string,
@@ -152,7 +152,7 @@ export function planHangulKeystrokes(
       if (boundary === "run") {
         runBase += strippedText;
         const preedit = runBase + nextPreedit;
-        pushRunStroke(strokes, meta, jamo, preedit, committed + preedit, composing);
+        pushSingleStepStroke(strokes, meta, jamo, preedit, committed + preedit, composing);
         composing = true;
         continue;
       }
@@ -177,7 +177,7 @@ export function planHangulKeystrokes(
       current = grown;
       const preedit = runBase + syllableText(current);
       const value = committed + preedit;
-      pushRunStroke(strokes, meta, jamo, preedit, value, composing);
+      pushSingleStepStroke(strokes, meta, jamo, preedit, value, composing);
       composing = true;
       continue;
     }
@@ -190,7 +190,7 @@ export function planHangulKeystrokes(
         runBase += oldText;
         current = { choseong: jamo };
         const preedit = runBase + jamo;
-        pushRunStroke(strokes, meta, jamo, preedit, committed + preedit, composing);
+        pushSingleStepStroke(strokes, meta, jamo, preedit, committed + preedit, composing);
         composing = true;
         continue;
       }
