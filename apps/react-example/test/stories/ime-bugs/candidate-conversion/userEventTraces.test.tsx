@@ -9,17 +9,17 @@ describe("candidate-conversion user-event capture fixtures", () => {
   it.each(CAPTURE_SCENARIOS)(
     "records $id the way @testing-library/user-event fires events",
     async (scenario) => {
-      const textarea = document.createElement("textarea");
-      textarea.setAttribute("aria-label", "fixture-textarea");
-      document.body.append(textarea);
+      const input = document.createElement("input");
+      input.setAttribute("aria-label", "fixture-input");
+      document.body.append(input);
 
       const user = userEvent.setup();
-      const events = await recordInputEvents(textarea, async () => {
-        await user.click(textarea);
+      const events = await recordInputEvents(input, async () => {
+        await user.click(input);
         await user.keyboard(scenario.userEventScript);
       });
 
-      expect(textarea.value).toBe(scenario.expectedValue);
+      expect(input.value).toBe(scenario.expectedValue);
 
       const trace = buildImeTrace({
         os: "synthetic",
@@ -35,7 +35,7 @@ describe("candidate-conversion user-event capture fixtures", () => {
         `./fixtures/user-event/${scenario.id}.json`,
       );
 
-      textarea.remove();
+      input.remove();
     },
   );
 });

@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useMemo, useRef, useState } from "react";
 
 import { Button } from "@/components/ui/button";
 
@@ -11,24 +11,28 @@ import {
   type ImeEventRecord,
 } from "../../ime-logger/serializeImeEvent";
 import { useImeLoggerMeta } from "../../ime-logger/useImeLoggerMeta";
-import { ChatMessageField, type ChatMessageFieldProps } from "./ChatMessageField";
+import { HanjaAutocompleteField, type HanjaAutocompleteFieldProps } from "./HanjaAutocompleteField";
 import { CAPTURE_SCENARIOS } from "./scenarios";
 
+const SCENARIO_ID_BY_MODE = {
+  broken: "hanja-name-broken",
+  fixed: "hanja-name-fixed",
+} as const;
+
 /**
- * Capture shell for conversion-type IME (candidate window).
- * OS golden traces feed a future @siheom/ime conversion layer — not Hangul composition.
+ * Capture shell: Hanja conversion (Option+Enter) vs autocomplete combobox key conflicts.
  */
-export function ChatMessageFieldLogger() {
-  const [mode, setMode] = useState<NonNullable<ChatMessageFieldProps["mode"]>>("broken");
-  const [scenarioId, setScenarioId] = useState<string>(CAPTURE_SCENARIOS[0].id);
+export function HanjaAutocompleteFieldLogger() {
+  const [mode, setMode] = useState<NonNullable<HanjaAutocompleteFieldProps["mode"]>>("broken");
   const { os, browser, ime, setOs, setBrowser, setIme } = useImeLoggerMeta();
   const [events, setEvents] = useState<ImeEventRecord[]>([]);
   const [fieldValue, setFieldValue] = useState("");
   const [status, setStatus] = useState("");
-  const inputRef = useRef<HTMLTextAreaElement>(null);
+  const inputRef = useRef<HTMLInputElement>(null);
+  const listenersCleanupRef = useRef<(() => void) | null>(null);
 
   const profileId = useMemo(() => profileIdFromMeta(os, browser, ime), [os, browser, ime]);
-  const captureScenarioId = `${scenarioId}-${mode}`;
+  const scenario = CAPTURE_SCENARIOS[0];
 
   const appendEvent = useCallback((event: Event) => {
     const value = readEditableValue(event.target);
@@ -36,23 +40,33 @@ export function ChatMessageFieldLogger() {
     setEvents((prev) => [...prev, serializeImeEvent(event, value)]);
   }, []);
 
-  useEffect(() => {
-    const node = inputRef.current;
-    if (!node) return;
-    for (const type of LOGGED_EVENT_TYPES) {
-      node.addEventListener(type, appendEvent);
-    }
-    return () => {
+  const attachInputRef = useCallback(
+    (node: HTMLInputElement | null) => {
+      listenersCleanupRef.current?.();
+      listenersCleanupRef.current = null;
+      inputRef.current = node;
+      if (!node) return;
+
       for (const type of LOGGED_EVENT_TYPES) {
-        node.removeEventListener(type, appendEvent);
+        node.addEventListener(type, appendEvent);
       }
-    };
-  }, [appendEvent, mode]);
+      listenersCleanupRef.current = () => {
+        for (const type of LOGGED_EVENT_TYPES) {
+          node.removeEventListener(type, appendEvent);
+        }
+      };
+    },
+    [appendEvent],
+  );
 
   const clear = () => {
     setEvents([]);
     setFieldValue("");
     setStatus("");
+    if (inputRef.current) {
+      inputRef.current.value = "";
+      inputRef.current.dispatchEvent(new Event("input", { bubbles: true }));
+    }
     queueMicrotask(() => inputRef.current?.focus());
   };
 
@@ -63,60 +77,39 @@ export function ChatMessageFieldLogger() {
       ime,
       events,
       capturedAt: new Date().toISOString(),
-      scenarioId: captureScenarioId,
+      scenarioId: SCENARIO_ID_BY_MODE[mode],
       source: "os-ime",
     });
 
   return (
     <div className="mx-auto flex max-w-3xl flex-col gap-6 p-4 text-foreground">
       <header className="flex flex-col gap-2">
-        <h1 className="text-xl font-semibold">Candidate conversion — chat Enter (IME bug)</h1>
+        <h1 className="text-xl font-semibold">Hanja autocomplete conflict (IME bug)</h1>
         <p className="text-sm text-muted-foreground">
-          후보-변환형 IME(Pinyin, 일본어, 한자)에서 Enter는 후보 확정 또는 preedit 원문 입력용입니다.
-          채팅 UI가 <code className="rounded bg-muted px-1">!isComposing</code> Enter를 전송으로 처리하면
-          CJK 입력이 깨집니다. Hangul 조합형과 이벤트 시퀀스가 겹치지만, 후보 창 단계가 더 깁니다.
+          macOS 한자 변환(Option+Enter) 후보 탐색은 방향키·숫자·Enter를 씁니다. 자동완성 combobox가{" "}
+          <code className="rounded bg-muted px-1">isComposing</code> /{" "}
+          <code className="rounded bg-muted px-1">keyCode 229</code>를 무시하고 같은 키를 처리하면
+          「김」→「金」 같은 한 글자씩 변환이 깨집니다. focus-steal과 달리 blur가 아니라{" "}
+          <strong>키 충돌</strong>입니다.
         </p>
       </header>
 
       <section
         className="rounded-lg border border-border bg-muted/30 p-3 text-sm"
-        aria-label="캡처 시나리오"
+        aria-label="캡처 지시"
       >
-        <p className="mb-2 font-medium">시나리오 선택</p>
-        <div className="flex flex-col gap-2" role="radiogroup" aria-label="변환 시나리오">
-          {CAPTURE_SCENARIOS.map((scenario) => (
-            <label key={scenario.id} className="flex cursor-pointer items-start gap-2">
-              <input
-                type="radio"
-                name="conversion-scenario"
-                className="mt-1"
-                checked={scenarioId === scenario.id}
-                onChange={() => {
-                  setScenarioId(scenario.id);
-                  clear();
-                }}
-              />
-              <span>
-                <span className="font-medium">{scenario.title}</span>
-                <ol className="mt-1 list-decimal space-y-0.5 pl-5 text-muted-foreground">
-                  {scenario.steps.map((step) => (
-                    <li key={step}>{step}</li>
-                  ))}
-                </ol>
-                {scenario.reference ? (
-                  <a
-                    href={scenario.reference}
-                    className="mt-1 inline-block text-xs text-primary underline"
-                    target="_blank"
-                    rel="noreferrer"
-                  >
-                    참고 사례
-                  </a>
-                ) : null}
-              </span>
-            </label>
+        <p className="mb-1 font-medium">{scenario.title}</p>
+        <ol className="list-decimal space-y-1 pl-5 text-muted-foreground">
+          {scenario.steps.map((step) => (
+            <li key={step}>{step}</li>
           ))}
-        </div>
+        </ol>
+        <p className="mt-3 flex flex-wrap gap-2">
+          <span>현재 입력:</span>
+          <span role="status" aria-label="현재 입력값" className="font-mono text-xs">
+            {fieldValue || "(비어 있음)"}
+          </span>
+        </p>
       </section>
 
       <div className="flex flex-wrap gap-2" role="group" aria-label="모드">
@@ -176,17 +169,13 @@ export function ChatMessageFieldLogger() {
       <p className="text-sm">
         profileId: <code className="rounded bg-muted px-1.5 py-0.5">{profileId}</code>
         {" · "}
-        scenario: <code className="rounded bg-muted px-1.5 py-0.5">{scenarioId}</code>
-        {" · "}
-        capture: <code className="rounded bg-muted px-1.5 py-0.5">{captureScenarioId}</code>
-        {" · "}
         mode: <code className="rounded bg-muted px-1.5 py-0.5">{mode}</code>
       </p>
 
-      <ChatMessageField
-        key={`${mode}-${scenarioId}`}
+      <HanjaAutocompleteField
+        key={mode}
         mode={mode}
-        inputRef={inputRef}
+        inputRef={attachInputRef}
         onValueChange={setFieldValue}
       />
 
@@ -211,7 +200,7 @@ export function ChatMessageFieldLogger() {
             const url = URL.createObjectURL(blob);
             const anchor = document.createElement("a");
             anchor.href = url;
-            anchor.download = `${profileId}-${mode}-${scenarioId}-${Date.now()}.json`;
+            anchor.download = `${profileId}-${mode}-hanja-name-${Date.now()}.json`;
             anchor.click();
             URL.revokeObjectURL(url);
             setStatus("JSON 파일을 다운로드했습니다.");
@@ -230,14 +219,12 @@ export function ChatMessageFieldLogger() {
         </p>
       ) : null}
 
-      <p className="text-sm text-muted-foreground">
-        현재 입력: <span className="font-mono">{fieldValue || "(비어 있음)"}</span>
-      </p>
-
       <section className="flex flex-col gap-2" aria-label="이벤트 로그">
         <h2 className="text-sm font-medium">Events ({events.length})</h2>
-        <pre className="max-h-[28rem] overflow-auto rounded-lg border border-border bg-muted/40 p-3 text-xs">
-          {events.length === 0 ? "아직 이벤트가 없습니다." : formatImeTraceJson(buildTrace())}
+        <pre className="max-h-[28rem] overflow-auto rounded-lg border border-border bg-muted/40 p-3 text-xs leading-relaxed">
+          {events.length === 0
+            ? "아직 이벤트가 없습니다. broken 모드에서 한자 변환 입력을 시도해 보세요."
+            : formatImeTraceJson(buildTrace())}
         </pre>
       </section>
     </div>

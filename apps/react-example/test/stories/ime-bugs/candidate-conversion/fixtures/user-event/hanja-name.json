@@ -4,12 +4,12 @@
   "browser": "chromium",
   "ime": "user-event",
   "capturedAt": "1970-01-01T00:00:00.000Z",
-  "scenarioId": "japanese-romaji",
+  "scenarioId": "hanja-name",
   "source": "user-event",
   "events": [
     {
       "type": "keydown",
-      "key": "日",
+      "key": "金",
       "code": "Unknown",
       "keyCode": 0,
       "isComposing": false,
@@ -19,7 +19,7 @@
     },
     {
       "type": "keypress",
-      "key": "日",
+      "key": "金",
       "code": "Unknown",
       "keyCode": 0,
       "isComposing": false,
@@ -34,7 +34,7 @@
       "keyCode": null,
       "isComposing": false,
       "inputType": "insertText",
-      "data": "日",
+      "data": "金",
       "value": ""
     },
     {
@@ -44,38 +44,38 @@
       "keyCode": null,
       "isComposing": false,
       "inputType": "insertText",
-      "data": "日",
-      "value": "日"
+      "data": "金",
+      "value": "金"
     },
     {
       "type": "keyup",
-      "key": "日",
+      "key": "金",
       "code": "Unknown",
       "keyCode": 0,
       "isComposing": false,
       "inputType": null,
       "data": null,
-      "value": "日"
+      "value": "金"
     },
     {
       "type": "keydown",
-      "key": "本",
+      "key": "泰",
       "code": "Unknown",
       "keyCode": 0,
       "isComposing": false,
       "inputType": null,
       "data": null,
-      "value": "日"
+      "value": "金"
     },
     {
       "type": "keypress",
-      "key": "本",
+      "key": "泰",
       "code": "Unknown",
       "keyCode": 0,
       "isComposing": false,
       "inputType": null,
       "data": null,
-      "value": "日"
+      "value": "金"
     },
     {
       "type": "beforeinput",
@@ -84,8 +84,8 @@
       "keyCode": null,
       "isComposing": false,
       "inputType": "insertText",
-      "data": "本",
-      "value": "日"
+      "data": "泰",
+      "value": "金"
     },
     {
       "type": "input",
@@ -94,38 +94,38 @@
       "keyCode": null,
       "isComposing": false,
       "inputType": "insertText",
-      "data": "本",
-      "value": "日本"
+      "data": "泰",
+      "value": "金泰"
     },
     {
       "type": "keyup",
-      "key": "本",
+      "key": "泰",
       "code": "Unknown",
       "keyCode": 0,
       "isComposing": false,
       "inputType": null,
       "data": null,
-      "value": "日本"
+      "value": "金泰"
     },
     {
       "type": "keydown",
-      "key": "語",
+      "key": "熙",
       "code": "Unknown",
       "keyCode": 0,
       "isComposing": false,
       "inputType": null,
       "data": null,
-      "value": "日本"
+      "value": "金泰"
     },
     {
       "type": "keypress",
-      "key": "語",
+      "key": "熙",
       "code": "Unknown",
       "keyCode": 0,
       "isComposing": false,
       "inputType": null,
       "data": null,
-      "value": "日本"
+      "value": "金泰"
     },
     {
       "type": "beforeinput",
@@ -134,8 +134,8 @@
       "keyCode": null,
       "isComposing": false,
       "inputType": "insertText",
-      "data": "語",
-      "value": "日本"
+      "data": "熙",
+      "value": "金泰"
     },
     {
       "type": "input",
@@ -144,18 +144,18 @@
       "keyCode": null,
       "isComposing": false,
       "inputType": "insertText",
-      "data": "語",
-      "value": "日本語"
+      "data": "熙",
+      "value": "金泰熙"
     },
     {
       "type": "keyup",
-      "key": "語",
+      "key": "熙",
       "code": "Unknown",
       "keyCode": 0,
       "isComposing": false,
       "inputType": null,
       "data": null,
-      "value": "日本語"
+      "value": "金泰熙"
     }
   ]
 }

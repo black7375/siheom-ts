@@ -1,12 +1,12 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 
-import { ChatMessageFieldLogger } from "./ChatMessageFieldLogger";
+import { HanjaAutocompleteFieldLogger } from "./HanjaAutocompleteFieldLogger";
 
 const meta = {
-  title: "IME/Candidate Conversion Chat",
-  component: ChatMessageFieldLogger,
+  title: "IME/Hanja Autocomplete Conflict",
+  component: HanjaAutocompleteFieldLogger,
   parameters: { layout: "fullscreen" },
-} satisfies Meta<typeof ChatMessageFieldLogger>;
+} satisfies Meta<typeof HanjaAutocompleteFieldLogger>;
 
 export default meta;
 type Story = StoryObj<typeof meta>;
