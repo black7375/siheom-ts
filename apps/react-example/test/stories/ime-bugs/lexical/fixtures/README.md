@@ -2,17 +2,17 @@
 
 | Directory          | Meaning                                                       |
 | ------------------ | ------------------------------------------------------------- |
-| `android-firefox/` | Android Firefox + Lexical contenteditable (broken jamo split) |
+| `android-firefox/` | Android Firefox + Lexical contenteditable                     |
 | `linux-firefox/`   | Linux Firefox + Lexical (syllables commit correctly)          |
 | `linux-chrome/`    | Linux Chrome + Lexical (syllables commit correctly)           |
 
 | File                 | Notes                                                                                      |
 | -------------------- | ------------------------------------------------------------------------------------------ |
-| `broken-가나다.json` | AF: `가나다` → `ㄱㅏ나다` — premature `compositionend` after first jamo, no syllable merge |
-| `fixed-가나다.json`  | LF/LC: `가나다` intact with syllable-boundary `compositionend` → `compositionstart`        |
+| `broken-가나다.json` | AF pre-fix: `가나다` → `ㄱㅏ나다` — premature `compositionend` after first jamo            |
+| `fixed-가나다.json`  | AF post-fix plugin: visible `ㅏ나다` (first `ㄱ` lost); LF/LC reference in `linux-firefox/` |
 
-Storybook: **IME / Lexical**. Scenario id: `lexical-af-continuous-hangul`.
+Storybook: **IME / Lexical**. Scenario id: `lexical-af-continuous-hangul` (broken) / `lexical-af-continuous-hangul-fixed` (fixed).
 
-Emulator: `android-firefox-contenteditable-broken` / `linux-firefox-contenteditable-fixed` profiles in `@siheom/ime`; see `LexicalLogger.ime.test.tsx`.
+Emulator: `android-firefox-contenteditable-broken` / `linux-firefox-contenteditable-fixed` profiles in `@siheom/ime`; device golden replay via `replayGoldenEvents` in `LexicalLogger.ime.test.tsx`.
 
 Related: [Lexical #6377](https://github.com/facebook/lexical/issues/6377), `docs/research/lexical-android-firefox-composition.md`.

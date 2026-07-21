@@ -5,7 +5,6 @@ import {
   createDefaultActions,
   createDefaultAssertions,
   defaultEffects,
-  getElement,
   overrideSiheom,
   query,
 } from "@siheom/core";
@@ -60,16 +59,17 @@ describe("LexicalLogger + android-firefox-contenteditable-broken IME", () => {
 });
 
 describe("LexicalLogger + linux-firefox-contenteditable-fixed IME", () => {
-  it("fixed mode: emulator critical events match golden on contenteditable", async () => {
-    await render(<LexicalLogger mode="fixed" />);
-    const editor = getElement(query.textbox("Lexical editor"), true);
-    editor.focus();
+  it("linux-firefox-contenteditable-fixed emulator critical events match golden on plain contenteditable", async () => {
+    const editor = document.createElement("div");
+    editor.contentEditable = "true";
+    document.body.append(editor);
 
     const events = await composeHangulContentEditableFirefoxFixedOn(editor, "가나다", {
       profile: resolveProfile("linux-firefox-contenteditable-fixed"),
     });
 
     expect(toCriticalEvents(events)).toEqual(goldenCritical(fixedGolden.events));
+    editor.remove();
   });
 
   it("fixed mode + linux-firefox-contenteditable-fixed: typing 가나다 composes intact 가나다 in Lexical", async () => {
@@ -88,5 +88,5 @@ describe("LexicalLogger + linux-firefox-contenteditable-fixed IME", () => {
   });
 });
 
-// Post-fix Android Firefox should emit LF-like events (capture fixed-가나다.json on device).
-// Pre-fix AF broken golden jamo in composition `data` cannot be repaired by the Lexical plugin alone.
+// AF post-fix device golden: fixtures/android-firefox/fixed-가나다.json (visible ㅏ나다 on v1 fix).
+// Replay regression test after v2 fix plugin lands.

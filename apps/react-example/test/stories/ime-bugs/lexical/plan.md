@@ -33,4 +33,5 @@
 
 - [x] Vitest UA shim (`lexicalAndroidFirefoxEnv`) so Lexical `IS_FIREFOX` matches emulator event order
 - [x] `LexicalLogger.ime.test`: fixed mode + `linux-firefox-contenteditable-fixed` → editor text `가나다`
-- [ ] Real device: Android Firefox fixed mode → capture `android-firefox/fixed-가나다.json` (post-fix golden)
+- [x] Real device: Android Firefox fixed mode → capture `android-firefox/fixed-가나다.json` (partial: visible `ㅏ나다`, first `ㄱ` lost)
+- [ ] `LexicalLogger.ime.test`: replay AF `fixed-가나다.json` golden → editor text `가나다`

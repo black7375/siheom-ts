@@ -32,6 +32,8 @@ export type {
 export { attachImeRecorder } from "./attachImeRecorder";
 export { goldenCritical, fromFirstCompositionStart } from "./goldenCritical";
 export { toCriticalEvents } from "./toCriticalEvents";
+export { replayGoldenEvents } from "./replayGoldenEvents";
+export type { ReplayGoldenEventsOptions } from "./replayGoldenEvents";
 export {
   markImeControlledWriteback,
   consumeImeControlledWriteback,
