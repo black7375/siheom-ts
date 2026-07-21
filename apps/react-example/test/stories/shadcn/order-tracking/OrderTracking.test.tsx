@@ -4,6 +4,13 @@ import { assertions, given, query, runSiheom } from "@siheom/react";
 import { OrderTracking } from "./OrderTracking.tsx";
 
 describe("OrderTracking", () => {
+  it("초기 접근성 스냅샷", async () => {
+    await runSiheom(
+      given.render(<OrderTracking />),
+      assertions.a11ySnapshot(query.region("주문 추적"), "order-tracking-initial.snap"),
+    );
+  });
+
   it("주문 추적 화면을 볼 수 있다", async () => {
     await runSiheom(
       given.render(<OrderTracking />),

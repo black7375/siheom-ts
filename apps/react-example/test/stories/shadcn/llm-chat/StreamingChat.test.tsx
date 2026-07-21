@@ -14,6 +14,13 @@ function setup(options?: { streamChunks?: readonly string[] }) {
 }
 
 describe("StreamingChat", () => {
+  it("초기 접근성 스냅샷", async () => {
+    await runSiheom(
+      setup(),
+      assertions.a11ySnapshot(query.region("LLM 채팅"), "llm-chat-initial.snap"),
+    );
+  });
+
   it("스트리밍 응답이 partial 텍스트부터 완성문까지 쌓인다", async () => {
     await runSiheom(
       setup({ streamChunks: STREAM_CHUNKS }),

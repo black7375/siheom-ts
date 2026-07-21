@@ -1,0 +1,18 @@
+region: "지표 대시보드"
+  heading: "지표 대시보드"
+    - properties: [level=2]
+  tablist: "지표 탭"
+    tab: "매출"
+      - states: [selected=true]
+      - relations:
+        controls: "지표 대시보드"
+    tab: "방문자"
+      - states: [selected=false]
+  tabpanel: "지표 대시보드"
+    - relations:
+      labelledby: "지표 대시보드"
+    region: "매출 차트"
+      "주간 매출"
+      "최근 5일 매출 추이"
+      status: "총 매출"
+        "₩1,200,000"

@@ -30,7 +30,7 @@ function AppShellContent() {
   const title = pageTitle(pathname);
 
   return (
-    <>
+    <div role="region" aria-label="앱 셸">
       <Sidebar collapsible="none">
         <SidebarContent>
           <nav aria-label="앱 메뉴">
@@ -85,7 +85,7 @@ function AppShellContent() {
           />
         </Routes>
       </SidebarInset>
-    </>
+    </div>
   );
 }
 

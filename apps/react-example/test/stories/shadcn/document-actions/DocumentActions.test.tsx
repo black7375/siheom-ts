@@ -4,6 +4,13 @@ import { actions, assertions, given, query, runSiheom } from "../runSiheom";
 import { DocumentActions } from "./DocumentActions.tsx";
 
 describe("DocumentActions", () => {
+  it("초기 접근성 스냅샷", async () => {
+    await runSiheom(
+      given.render(<DocumentActions />),
+      assertions.a11ySnapshot(query.region("문서 목록"), "document-actions-initial.snap"),
+    );
+  });
+
   it("더보기 메뉴에서 문서를 복사할 수 있다", async () => {
     await runSiheom(
       given.render(<DocumentActions />),

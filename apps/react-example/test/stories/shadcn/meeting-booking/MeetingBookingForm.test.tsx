@@ -9,6 +9,13 @@ function setup() {
 }
 
 describe("MeetingBookingForm", () => {
+  it("초기 접근성 스냅샷", async () => {
+    await runSiheom(
+      setup(),
+      assertions.a11ySnapshot(query.region("미팅 예약"), "meeting-booking-initial.snap"),
+    );
+  });
+
   it("미팅 날짜 선택기에서 달력을 열 수 있다", async () => {
     await runSiheom(
       setup(),

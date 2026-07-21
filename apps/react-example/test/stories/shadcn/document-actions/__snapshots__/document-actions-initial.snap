@@ -1,0 +1,7 @@
+region: "문서 목록"
+  article: "기획서"
+    "기획서"
+    "2026년 1분기 제품 기획 문서"
+    button: "기획서 더보기"
+      - states: [expanded=false]
+      - properties: [haspopup="menu"]

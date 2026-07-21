@@ -24,7 +24,7 @@ export function CountdownApp({ durationMinutes = 25 }: { durationMinutes?: numbe
   }, [running]);
 
   return (
-    <div>
+    <div role="region" aria-label="카운트다운">
       <div role="timer" aria-label="남은 시간">
         {formatSeconds(remainingSeconds(state))}
       </div>

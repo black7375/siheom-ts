@@ -4,6 +4,13 @@ import { actions, assertions, given, query, runSiheom } from "../runSiheom.tsx";
 import { CommandMenuApp } from "./CommandMenuApp.tsx";
 
 describe("CommandMenuApp", () => {
+  it("초기 접근성 스냅샷", async () => {
+    await runSiheom(
+      given.render(<CommandMenuApp />),
+      assertions.a11ySnapshot(query.region("빠른 실행 데모"), "command-menu-initial.snap"),
+    );
+  });
+
   it("빠른 실행에서 명령을 검색하고 선택할 수 있다", async () => {
     await runSiheom(
       given.render(<CommandMenuApp />),

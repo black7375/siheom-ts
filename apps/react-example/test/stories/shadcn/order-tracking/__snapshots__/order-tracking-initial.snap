@@ -1,0 +1,21 @@
+region: "주문 추적"
+  heading: "주문 추적"
+    - properties: [level=2]
+  region: "주문 정보"
+    "ORD-2024-001"
+    "무선 이어폰"
+  region: "주문 배송"
+    list:
+      listitem: "주문 접수"
+        "주문 접수"
+        "2024년 3월 10일 14:20"
+      listitem: "배송 준비"
+        "배송 준비"
+        "2024년 3월 10일 18:00"
+      listitem: "배송 중"
+        - states: [current=step]
+        "배송 중"
+        "2024년 3월 11일 09:30"
+      listitem: "배달 완료"
+        "배달 완료"
+        "도착 예정: 2024년 3월 11일"

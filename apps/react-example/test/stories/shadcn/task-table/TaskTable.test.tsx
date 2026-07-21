@@ -4,6 +4,13 @@ import { actions, assertions, given, query, runSiheom } from "@siheom/react";
 import { TaskTable } from "./TaskTable.tsx";
 
 describe("TaskTable", () => {
+  it("초기 접근성 스냅샷", async () => {
+    await runSiheom(
+      given.render(<TaskTable />),
+      assertions.a11ySnapshot(query.region("할 일 관리"), "task-table-initial.snap"),
+    );
+  });
+
   it("첫 페이지에 할 일 목록과 상태 배지가 보인다", async () => {
     await runSiheom(
       given.render(<TaskTable />),

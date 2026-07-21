@@ -1,0 +1,17 @@
+region: "설정"
+  heading: "설정"
+    - properties: [level=2]
+  tablist: "설정 탭"
+    tab: "일반"
+      - states: [selected=true]
+      - relations:
+        controls: "설정"
+    tab: "알림"
+      - states: [selected=false]
+  tabpanel: "설정"
+    - relations:
+      labelledby: "설정"
+    group:
+      "다크 모드"
+      switch: "다크 모드"
+        - states: [checked=false]

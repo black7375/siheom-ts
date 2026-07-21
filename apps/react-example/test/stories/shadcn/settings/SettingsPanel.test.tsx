@@ -4,6 +4,13 @@ import { actions, assertions, given, query, runSiheom } from "@siheom/react";
 import { SettingsPanel } from "./SettingsPanel.tsx";
 
 describe("SettingsPanel", () => {
+  it("초기 접근성 스냅샷", async () => {
+    await runSiheom(
+      given.render(<SettingsPanel />),
+      assertions.a11ySnapshot(query.region("설정"), "settings-initial.snap"),
+    );
+  });
+
   it("일반 탭이 선택되어 있고 일반 설정이 보인다", async () => {
     await runSiheom(
       given.render(<SettingsPanel />),

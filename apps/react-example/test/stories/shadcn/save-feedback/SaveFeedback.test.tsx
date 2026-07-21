@@ -4,6 +4,13 @@ import { actions, assertions, given, query, runSiheom } from "@siheom/react";
 import { SaveFeedback } from "./SaveFeedback.tsx";
 
 describe("SaveFeedback", () => {
+  it("초기 접근성 스냅샷", async () => {
+    await runSiheom(
+      given.render(<SaveFeedback />),
+      assertions.a11ySnapshot(query.region("저장 피드백"), "save-feedback-initial.snap"),
+    );
+  });
+
   it("저장 버튼을 누르면 토스트 피드백이 보인다", async () => {
     await runSiheom(
       given.render(<SaveFeedback />),

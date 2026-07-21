@@ -1,0 +1,5 @@
+region: "카운트다운"
+  timer: "남은 시간"
+    "25:00"
+  button: "시작"
+  button: "리셋"

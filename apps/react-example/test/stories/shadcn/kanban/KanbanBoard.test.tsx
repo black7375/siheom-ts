@@ -4,6 +4,13 @@ import { actions, assertions, given, query, runSiheom } from "@siheom/react";
 import { KanbanBoard } from "./KanbanBoard.tsx";
 
 describe("KanbanBoard", () => {
+  it("초기 접근성 스냅샷", async () => {
+    await runSiheom(
+      given.render(<KanbanBoard />),
+      assertions.a11ySnapshot(query.region("칸반"), "kanban-initial.snap"),
+    );
+  });
+
   it("카드를 다른 열로 드래그하면 해당 열에 표시된다", async () => {
     await runSiheom(
       given.render(<KanbanBoard />),

@@ -1,0 +1,7 @@
+region: "빠른 실행 데모"
+  button: "빠른 실행"
+    "빠른 실행"
+  heading: "빠른 실행"
+    - properties: [level=2]
+  paragraph:
+    "실행할 명령을 검색합니다"

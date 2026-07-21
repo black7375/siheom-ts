@@ -11,6 +11,13 @@ import {
 import { CountdownApp } from "./CountdownApp";
 
 describe("CountdownApp", () => {
+  it("초기 접근성 스냅샷", async () => {
+    await runSiheom(
+      given.render(<CountdownApp durationMinutes={25} />),
+      assertions.a11ySnapshot(query.region("카운트다운"), "countdown-initial.snap"),
+    );
+  });
+
   it("시작 후 1초가 지나면 24:59가 표시된다", async () => {
     await runSiheom(
       withFakeTimers(

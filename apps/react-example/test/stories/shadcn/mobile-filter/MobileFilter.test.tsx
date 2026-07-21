@@ -4,6 +4,13 @@ import { actions, assertions, given, query, runSiheom } from "@siheom/react";
 import { MobileFilter } from "./MobileFilter.tsx";
 
 describe("MobileFilter", () => {
+  it("초기 접근성 스냅샷", async () => {
+    await runSiheom(
+      given.render(<MobileFilter />),
+      assertions.a11ySnapshot(query.region("모바일 필터"), "mobile-filter-initial.snap"),
+    );
+  });
+
   it("모바일에서 필터 시트를 열고 필터를 선택할 수 있다", async () => {
     await runSiheom(
       given.render(<MobileFilter />),

@@ -4,6 +4,13 @@ import { actions, assertions, given, query, runSiheom } from "@siheom/react";
 import { TeamInviteForm } from "./TeamInviteForm.tsx";
 
 describe("TeamInviteForm", () => {
+  it("초기 접근성 스냅샷", async () => {
+    await runSiheom(
+      given.render(<TeamInviteForm onInvite={async () => {}} />),
+      assertions.a11ySnapshot(query.region("팀원 초대"), "team-invite-initial.snap"),
+    );
+  });
+
   it("역할과 팀원을 선택하고 초대할 수 있다", async () => {
     let result: unknown = null;
 

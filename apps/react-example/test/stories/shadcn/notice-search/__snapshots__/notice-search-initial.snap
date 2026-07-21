@@ -1,0 +1,22 @@
+region: "공지 검색"
+  heading: "공지 검색"
+    - properties: [level=2]
+  group:
+    "공지 검색"
+    textbox: "공지 검색" [value=""]
+  list:
+    listitem: "서버 점검 안내"
+      paragraph:
+        "서버 점검 안내"
+      paragraph:
+        "3월 15일 새벽 2시부터 4시까지 점검합니다."
+    listitem: "연말 휴무 공지"
+      paragraph:
+        "연말 휴무 공지"
+      paragraph:
+        "12월 30일부터 1월 2일까지 휴무입니다."
+    listitem: "신규 기능 출시"
+      paragraph:
+        "신규 기능 출시"
+      paragraph:
+        "팀 초대 기능이 추가되었습니다."

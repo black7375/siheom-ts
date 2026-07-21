@@ -1,0 +1,11 @@
+region: "미팅 예약"
+  heading: "미팅 예약"
+    - properties: [level=2]
+  form: "미팅 예약"
+    - relations:
+      labelledby: "미팅 예약"
+    button: "미팅 날짜"
+      - states: [expanded=false]
+      - properties: [haspopup="dialog"]
+      "날짜 선택"
+    button: "예약하기"
