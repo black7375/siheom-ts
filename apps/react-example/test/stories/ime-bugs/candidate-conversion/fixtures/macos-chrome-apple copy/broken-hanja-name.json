@@ -1,0 +1,10 @@
+{
+  "profileId": "macos-chrome-apple",
+  "os": "macos",
+  "browser": "chrome",
+  "ime": "apple",
+  "capturedAt": "",
+  "scenarioId": "hanja-name-broken",
+  "source": "os-ime",
+  "events": []
+}

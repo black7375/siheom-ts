@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 
 import { Label } from "@/components/ui/label";
 import { cn } from "@/lib/utils";
@@ -10,13 +10,29 @@ const DEFAULT_SUGGESTIONS = ["김태희", "김철수", "金泰熙", "金秀賢",
 
 export const HANJA_NAME_TARGET = "金泰熙";
 
+const HANGUL_SYLLABLE = /^[\uAC00-\uD7A3]+$/;
+const HANJA = /^[\u4E00-\u9FFF]+$/;
+
+/**
+ * macOS Chrome Hanja conversion commits Hangul then starts a new composition that
+ * *appends* Hanja (김 → 김金) because Chromium ignores IME replacementRange.
+ * Strip the just-committed Hangul that sits immediately before the Hanja.
+ */
+export function stripHangulBeforeHanja(
+  value: string,
+  lastHangul: string,
+  hanja: string,
+): string | null {
+  if (!HANGUL_SYLLABLE.test(lastHangul) || !HANJA.test(hanja)) return null;
+  if (!value.endsWith(lastHangul + hanja)) return null;
+  return value.slice(0, -lastHangul.length - hanja.length) + hanja;
+}
+
 export type HanjaAutocompleteFieldProps = {
   /**
-   * `broken` — Arrow/Enter/number keys always move or pick combobox options (no `isComposing` guard).
-   * Syncs React state on every `input` (re-renders during composition can disturb Hanja replacement).
-   * `fixed` — never setState while IME is composing (detect via InputEvent.isComposing / 229 /
-   * composition* — compositionstart alone is unreliable on some Apple Chrome paths). Defer
-   * combobox keys the same way so macOS Hanja can replace the syllable (김→金) instead of appending.
+   * `broken` — combobox steals Arrow/Enter/digit during IME; no Hangul-append correction.
+   * `fixed` — defer combobox keys while composing, and correct macOS Chrome’s 김金 append
+   * by removing the Hangul left behind when Hanja composition commits (or first appears).
    */
   mode?: "broken" | "fixed";
   suggestions?: string[];
@@ -25,20 +41,6 @@ export type HanjaAutocompleteFieldProps = {
   onValueChange?: (value: string) => void;
 };
 
-function isImeComposingEvent(event: Event): boolean {
-  if (event.type === "compositionstart" || event.type === "compositionupdate") return true;
-  if (event.type === "compositionend") return false;
-  if ("isComposing" in event && (event as InputEvent | KeyboardEvent).isComposing) return true;
-  if (event instanceof KeyboardEvent && event.keyCode === 229) return true;
-  if (
-    event instanceof InputEvent &&
-    (event.inputType === "insertCompositionText" || event.inputType === "deleteCompositionText")
-  ) {
-    return true;
-  }
-  return false;
-}
-
 export function HanjaAutocompleteField({
   mode = "broken",
   suggestions = DEFAULT_SUGGESTIONS,
@@ -46,7 +48,6 @@ export function HanjaAutocompleteField({
   inputRef,
   onValueChange,
 }: HanjaAutocompleteFieldProps) {
-  /** Committed string for combobox filtering — lags DOM during IME in fixed mode. */
   const [query, setQuery] = useState("");
   const [highlightIndex, setHighlightIndex] = useState(0);
   const [pickCount, setPickCount] = useState(0);
@@ -54,8 +55,9 @@ export function HanjaAutocompleteField({
   const localInputRef = useRef<HTMLInputElement>(null);
   const modeRef = useRef(mode);
   const isComposingRef = useRef(false);
+  /** Last Hangul syllable committed via compositionend — candidate for Chrome append strip. */
+  const lastHangulCommitRef = useRef<string | null>(null);
   const onValueChangeRef = useRef(onValueChange);
-  const settleTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const inputId = "hanja-autocomplete-input";
 
   const filtered = useMemo(() => {
@@ -78,84 +80,63 @@ export function HanjaAutocompleteField({
     setHighlightIndex(0);
   }, [filtered.length, query]);
 
-  const setInputRef = useCallback(
-    (element: HTMLInputElement | null) => {
-      localInputRef.current = element;
-      assignRef(inputRef, element);
-    },
-    [inputRef],
-  );
-
   useEffect(() => {
     const node = localInputRef.current;
     if (!node) return;
 
-    const clearSettle = () => {
-      if (settleTimerRef.current !== null) {
-        clearTimeout(settleTimerRef.current);
-        settleTimerRef.current = null;
-      }
-    };
-
-    const syncCommitted = (next: string) => {
+    const syncQuery = (next: string) => {
       setQuery(next);
       onValueChangeRef.current?.(next);
     };
 
-    /** Defer React sync so a Hangul compositionend → Hanja compositionstart pair stays silent. */
-    const scheduleSettle = (next: string) => {
-      clearSettle();
-      settleTimerRef.current = setTimeout(() => {
-        settleTimerRef.current = null;
-        if (isComposingRef.current) return;
-        syncCommitted(next);
-      }, 0);
+    /** Apply 김金 → 金 correction; returns corrected value or null if no change. */
+    const tryStripAppendedHangul = (value: string, hanja: string): string | null => {
+      if (modeRef.current !== "fixed") return null;
+      const hangul = lastHangulCommitRef.current;
+      if (!hangul) return null;
+      return stripHangulBeforeHanja(value, hangul, hanja);
     };
 
     const pickSuggestion = (index: number) => {
       const item = filteredRef.current[index];
       if (!item) return;
-      clearSettle();
-      isComposingRef.current = false;
+      lastHangulCommitRef.current = null;
       node.value = item;
-      syncCommitted(item);
+      syncQuery(item);
       setPickCount((count) => count + 1);
       setLastPicked(item);
     };
 
-    const shouldDeferToIme = (event: KeyboardEvent) => {
-      if (modeRef.current !== "fixed") return false;
-      return (
-        isComposingRef.current ||
-        event.isComposing ||
-        event.keyCode === 229 ||
-        event.altKey
-      );
-    };
+    const shouldDeferToIme = (event: KeyboardEvent) =>
+      modeRef.current === "fixed" &&
+      (isComposingRef.current || event.isComposing || event.keyCode === 229 || event.altKey);
 
     const onCompositionStart = () => {
       isComposingRef.current = true;
-      clearSettle();
     };
 
-    const onCompositionUpdate = () => {
-      isComposingRef.current = true;
-      clearSettle();
-    };
-
-    const onCompositionEnd = (event: Event) => {
+    const onCompositionEnd = (event: CompositionEvent) => {
       isComposingRef.current = false;
-      if (modeRef.current === "fixed") {
-        scheduleSettle((event.target as HTMLInputElement).value);
-        return;
+      const data = event.data ?? "";
+      let value = node.value;
+
+      const stripped = tryStripAppendedHangul(value, data);
+      if (stripped !== null) {
+        node.value = stripped;
+        value = stripped;
+        lastHangulCommitRef.current = null;
+      } else if (HANGUL_SYLLABLE.test(data)) {
+        lastHangulCommitRef.current = data;
+      } else {
+        lastHangulCommitRef.current = null;
       }
-      syncCommitted((event.target as HTMLInputElement).value);
+
+      syncQuery(value);
     };
 
     const onKeyDown = (event: KeyboardEvent) => {
-      if (isImeComposingEvent(event)) {
+      if (event.isComposing || event.keyCode === 229) {
         isComposingRef.current = true;
-        clearSettle();
       }
       if (shouldDeferToIme(event)) return;
 
@@ -182,60 +163,40 @@ export function HanjaAutocompleteField({
       }
     };
 
-    const onKeyUp = (event: KeyboardEvent) => {
-      if (modeRef.current !== "fixed") return;
-      // Some Apple Chrome paths omit compositionend; isComposing:false ends the session.
-      if (!event.isComposing && event.keyCode !== 229 && isComposingRef.current) {
-        isComposingRef.current = false;
-        scheduleSettle(node.value);
-      }
-    };
-
-    const onBeforeInput = (event: Event) => {
-      if (isImeComposingEvent(event)) {
-        isComposingRef.current = true;
-        clearSettle();
-      }
-    };
-
     const onInput = (event: Event) => {
-      const next = (event.target as HTMLInputElement).value;
-      const composing = isImeComposingEvent(event) || isComposingRef.current;
+      const inputEvent = event as InputEvent;
+      const composing =
+        isComposingRef.current ||
+        inputEvent.isComposing ||
+        inputEvent.inputType === "insertCompositionText";
 
       if (composing) {
         isComposingRef.current = true;
-        clearSettle();
-      }
-
-      if (modeRef.current === "fixed" && composing) {
-        return;
-      }
-
-      if (modeRef.current === "fixed") {
-        isComposingRef.current = false;
-        scheduleSettle(next);
+        // Early correct while browsing Hanja candidates (김金… → 金…), so the field
+        // matches IME intent before compositionend.
+        const data = inputEvent.data ?? "";
+        const stripped = tryStripAppendedHangul(node.value, data);
+        if (stripped !== null) {
+          node.value = stripped;
+          // Keep caret at end; composition may continue on the Hanja glyph.
+          const end = stripped.length;
+          node.setSelectionRange(end, end);
+        }
         return;
       }
 
       isComposingRef.current = false;
-      syncCommitted(next);
+      syncQuery(node.value);
     };
 
     node.addEventListener("compositionstart", onCompositionStart);
-    node.addEventListener("compositionupdate", onCompositionUpdate);
     node.addEventListener("compositionend", onCompositionEnd);
     node.addEventListener("keydown", onKeyDown);
-    node.addEventListener("keyup", onKeyUp);
-    node.addEventListener("beforeinput", onBeforeInput);
     node.addEventListener("input", onInput);
     return () => {
-      clearSettle();
       node.removeEventListener("compositionstart", onCompositionStart);
-      node.removeEventListener("compositionupdate", onCompositionUpdate);
       node.removeEventListener("compositionend", onCompositionEnd);
       node.removeEventListener("keydown", onKeyDown);
-      node.removeEventListener("keyup", onKeyUp);
-      node.removeEventListener("beforeinput", onBeforeInput);
       node.removeEventListener("input", onInput);
     };
   }, []);
@@ -244,9 +205,11 @@ export function HanjaAutocompleteField({
     <div className="flex flex-col gap-2">
       <div className="flex flex-col gap-1.5">
         <Label htmlFor={inputId}>{label}</Label>
-        {/* Native input: avoid Base UI re-render side effects on IME composition range. */}
         <input
-          ref={setInputRef}
+          ref={(element) => {
+            localInputRef.current = element;
+            assignRef(inputRef, element);
+          }}
           id={inputId}
           className={cn(
             "h-8 w-full min-w-0 rounded-lg border border-input bg-transparent px-2.5 py-1 text-base",
@@ -306,10 +269,9 @@ export function HanjaAutocompleteField({
               )}
               onMouseDown={(event) => event.preventDefault()}
               onClick={() => {
-                if (mode === "fixed" && isComposingRef.current) return;
                 const node = localInputRef.current;
                 if (!node) return;
-                isComposingRef.current = false;
+                lastHangulCommitRef.current = null;
                 node.value = item;
                 setQuery(item);
                 onValueChange?.(item);
