@@ -38,7 +38,13 @@ syllable boundary. v2 only corrects the committed value at `compositionend` — 
 the bug. See `docs/research/slate-closed-loop-emulator.md` (Correction section).
 
 - [x] Characterization: `SlateLogger.device-v2-process.test.tsx` locks known-bad process
-- [ ] Real fix: `androidInputManager` shows cumulative preedit as a **replace** of the running
-      composition (`가나`) during composition, not append-then-correct at `compositionend`
-- [ ] Emulation must reproduce the flicker (`가가나`, `가나가나ㄷ`) to be device-faithful, then
-      go green only when the composing process is clean end-to-end
+- [x] Faithful flicker repro: `composeHangulAndroidFirefoxSlateNativeComposition` performs the
+      native DOM writeback (committed + cumulative preedit) so real Slate exhibits the device
+      flicker `가가나`/`가나가나ㄷ` then reconciles (`SlateLogger.ime.native-flicker.test.tsx`)
+- [ ] Make native writeback **composition-range-aware** (replace the composition range Slate
+      selects, not blind-append) so the fix is testable — needed before a valid RED-for-fix
+- [ ] RED-for-fix: assert native paints never duplicate (all prefixes of `가나다`) — fails now
+- [ ] Real fix (v3): `androidInputManager` keeps the Android run as **one composition** (no
+      per-syllable commit) so the cumulative preedit replaces cleanly → no `가가나`; validate on
+      device recapture
+- [ ] Generative intents: replace device-capture intents with a Hangul-IME model
