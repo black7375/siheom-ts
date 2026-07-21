@@ -20,6 +20,12 @@ async function startComposing(input: HTMLInputElement, value: string) {
   });
 }
 
+async function flushSettle() {
+  await act(async () => {
+    await new Promise((resolve) => setTimeout(resolve, 0));
+  });
+}
+
 describe("HanjaAutocompleteField", () => {
   it("broken 모드: 조합 중 ArrowDown이 combobox 하이라이트를 움직인다", async () => {
     await runSiheom(given.render(<HanjaAutocompleteField mode="broken" />));
@@ -129,8 +135,31 @@ describe("HanjaAutocompleteField", () => {
     await act(async () => {
       input.dispatchEvent(new CompositionEvent("compositionend", { bubbles: true, data: "김" }));
     });
+    await flushSettle();
 
     expect(document.querySelector('[aria-label="combobox query"]')?.textContent).toBe("김");
+  });
+
+  it("fixed 모드: compositionstart 없이 isComposing input만 와도 query를 갱신하지 않는다", async () => {
+    await runSiheom(given.render(<HanjaAutocompleteField mode="fixed" />));
+
+    const input = document.getElementById("hanja-autocomplete-input") as HTMLInputElement;
+    input.focus();
+
+    // Apple Chrome sometimes omits compositionstart — rely on InputEvent.isComposing
+    await act(async () => {
+      input.value = "김";
+      input.dispatchEvent(
+        new InputEvent("input", {
+          bubbles: true,
+          inputType: "insertCompositionText",
+          isComposing: true,
+          data: "김",
+        }),
+      );
+    });
+
+    expect(document.querySelector('[aria-label="combobox query"]')?.textContent).toBe("(empty)");
   });
 
   it("fixed 모드: Option+Enter(altKey) 동안 combobox 키를 처리하지 않는다", async () => {

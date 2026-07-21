@@ -11,8 +11,10 @@ macOS에서 **한자 변환(Option+Enter)** 후보 탐색 키(방향키, 숫자,
 ## Behaviors
 
 - [x] `mode="broken"`: Arrow/Enter/digit keys move or pick combobox without `isComposing` guard
-- [x] `mode="fixed"`: defer combobox keyboard handling while `isComposing` / `keyCode === 229` / `altKey`
-- [x] `mode="fixed"`: sync combobox query only between composition sessions (avoids 김→김金 append)
+- [x] `mode="fixed"`: defer combobox keyboard handling while composing / 229 / `altKey`
+- [x] `mode="fixed"`: detect composing via InputEvent.isComposing (compositionstart alone is unreliable)
+- [x] `mode="fixed"`: no React setState while composing; settle query after composition ends
+- [x] Logger buffers events during composition (sync setState mid-IME caused 김金 append)
 - [x] Storybook logger with callback-ref event capture (broken mode logging works)
 - [x] `user-event/hanja-name.json` via `userEventTraces.test.tsx`
 - [ ] OS `macos-chrome-apple/broken-hanja-name.json` — manual capture

@@ -19,8 +19,23 @@ const SCENARIO_ID_BY_MODE = {
   fixed: "hanja-name-fixed",
 } as const;
 
+function eventLooksComposing(event: Event): boolean {
+  if (event.type === "compositionstart" || event.type === "compositionupdate") return true;
+  if (event.type === "compositionend") return false;
+  if ("isComposing" in event && Boolean((event as KeyboardEvent).isComposing)) return true;
+  if (event instanceof KeyboardEvent && event.keyCode === 229) return true;
+  if (
+    event instanceof InputEvent &&
+    (event.inputType === "insertCompositionText" || event.inputType === "deleteCompositionText")
+  ) {
+    return true;
+  }
+  return false;
+}
+
 /**
  * Capture shell: Hanja conversion (Option+Enter) vs autocomplete combobox key conflicts.
+ * Event UI state is buffered during composition — sync setState mid-IME breaks 김→金 replacement.
  */
 export function HanjaAutocompleteFieldLogger() {
   const [mode, setMode] = useState<NonNullable<HanjaAutocompleteFieldProps["mode"]>>("broken");
@@ -30,15 +45,69 @@ export function HanjaAutocompleteFieldLogger() {
   const [status, setStatus] = useState("");
   const inputRef = useRef<HTMLInputElement>(null);
   const listenersCleanupRef = useRef<(() => void) | null>(null);
+  const eventsRef = useRef<ImeEventRecord[]>([]);
+  const composingRef = useRef(false);
+  const flushTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const profileId = useMemo(() => profileIdFromMeta(os, browser, ime), [os, browser, ime]);
   const scenario = CAPTURE_SCENARIOS[0];
 
-  const appendEvent = useCallback((event: Event) => {
-    const value = readEditableValue(event.target);
+  const flushToReact = useCallback((value: string) => {
+    setEvents([...eventsRef.current]);
     setFieldValue(value);
-    setEvents((prev) => [...prev, serializeImeEvent(event, value)]);
   }, []);
+
+  const scheduleFlush = useCallback(
+    (value: string) => {
+      if (flushTimerRef.current !== null) clearTimeout(flushTimerRef.current);
+      flushTimerRef.current = setTimeout(() => {
+        flushTimerRef.current = null;
+        if (composingRef.current) return;
+        flushToReact(value);
+      }, 0);
+    },
+    [flushToReact],
+  );
+
+  const appendEvent = useCallback(
+    (event: Event) => {
+      const value = readEditableValue(event.target);
+      eventsRef.current = [...eventsRef.current, serializeImeEvent(event, value)];
+
+      if (event.type === "compositionstart" || eventLooksComposing(event)) {
+        composingRef.current = true;
+        if (flushTimerRef.current !== null) {
+          clearTimeout(flushTimerRef.current);
+          flushTimerRef.current = null;
+        }
+      }
+
+      if (event.type === "compositionend") {
+        composingRef.current = false;
+        scheduleFlush(value);
+        return;
+      }
+
+      if (
+        composingRef.current &&
+        "isComposing" in event &&
+        (event as KeyboardEvent).isComposing === false &&
+        !(event instanceof KeyboardEvent && event.keyCode === 229)
+      ) {
+        composingRef.current = false;
+        scheduleFlush(value);
+        return;
+      }
+
+      if (composingRef.current) {
+        // Buffer only — React re-render mid-IME appends 金 after 김 instead of replacing.
+        return;
+      }
+
+      flushToReact(value);
+    },
+    [flushToReact, scheduleFlush],
+  );
 
   const attachInputRef = useCallback(
     (node: HTMLInputElement | null) => {
@@ -60,6 +129,10 @@ export function HanjaAutocompleteFieldLogger() {
   );
 
   const clear = () => {
+    if (flushTimerRef.current !== null) clearTimeout(flushTimerRef.current);
+    flushTimerRef.current = null;
+    composingRef.current = false;
+    eventsRef.current = [];
     setEvents([]);
     setFieldValue("");
     setStatus("");
@@ -75,7 +148,7 @@ export function HanjaAutocompleteFieldLogger() {
       os,
       browser,
       ime,
-      events,
+      events: eventsRef.current.length > events.length ? eventsRef.current : events,
       capturedAt: new Date().toISOString(),
       scenarioId: SCENARIO_ID_BY_MODE[mode],
       source: "os-ime",
@@ -86,11 +159,9 @@ export function HanjaAutocompleteFieldLogger() {
       <header className="flex flex-col gap-2">
         <h1 className="text-xl font-semibold">Hanja autocomplete conflict (IME bug)</h1>
         <p className="text-sm text-muted-foreground">
-          macOS 한자 변환(Option+Enter) 후보 탐색은 방향키·숫자·Enter를 씁니다. 자동완성 combobox가{" "}
-          <code className="rounded bg-muted px-1">isComposing</code> /{" "}
-          <code className="rounded bg-muted px-1">keyCode 229</code> /{" "}
-          <code className="rounded bg-muted px-1">altKey</code>를 무시하거나 조합 중 React query를
-          갱신하면 「김」→「김金」처럼 한자 대체가 깨집니다.
+          macOS 한자 변환(Option+Enter)은 composition 범위 위에서 「김」을 「金」으로{" "}
+          <em>대체</em>합니다. 조합 중 React setState(로거·combobox query)가 나가면 범위가 깨져{" "}
+          「김金」처럼 붙습니다. fixed 모드와 이 로거는 조합이 끝날 때까지 UI state를 버퍼링합니다.
         </p>
       </header>
 
@@ -108,6 +179,9 @@ export function HanjaAutocompleteFieldLogger() {
           <span>현재 입력:</span>
           <span role="status" aria-label="현재 입력값" className="font-mono text-xs">
             {fieldValue || "(비어 있음)"}
+          </span>
+          <span className="text-xs text-muted-foreground">
+            (조합 중에는 이벤트가 버퍼링되어 로그가 잠시 멈출 수 있습니다)
           </span>
         </p>
       </section>
@@ -176,25 +250,30 @@ export function HanjaAutocompleteFieldLogger() {
         key={mode}
         mode={mode}
         inputRef={attachInputRef}
-        onValueChange={setFieldValue}
+        onValueChange={(value) => {
+          // Field may call this after settle; keep display in sync without dropping buffered events.
+          setFieldValue(value);
+        }}
       />
 
       <div className="flex flex-wrap gap-2">
         <Button
           type="button"
           onClick={async () => {
+            flushToReact(inputRef.current?.value ?? fieldValue);
             await navigator.clipboard.writeText(formatImeTraceJson(buildTrace()));
             setStatus("클립보드에 복사했습니다.");
           }}
-          disabled={events.length === 0}
+          disabled={eventsRef.current.length === 0 && events.length === 0}
         >
           JSON 복사
         </Button>
         <Button
           type="button"
           variant="outline"
-          disabled={events.length === 0}
+          disabled={eventsRef.current.length === 0 && events.length === 0}
           onClick={() => {
+            flushToReact(inputRef.current?.value ?? fieldValue);
             const json = formatImeTraceJson(buildTrace());
             const blob = new Blob([json], { type: "application/json" });
             const url = URL.createObjectURL(blob);
@@ -220,10 +299,13 @@ export function HanjaAutocompleteFieldLogger() {
       ) : null}
 
       <section className="flex flex-col gap-2" aria-label="이벤트 로그">
-        <h2 className="text-sm font-medium">Events ({events.length})</h2>
+        <h2 className="text-sm font-medium">
+          Events ({eventsRef.current.length > events.length ? eventsRef.current.length : events.length}
+          )
+        </h2>
         <pre className="max-h-[28rem] overflow-auto rounded-lg border border-border bg-muted/40 p-3 text-xs leading-relaxed">
-          {events.length === 0
-            ? "아직 이벤트가 없습니다. broken 모드에서 한자 변환 입력을 시도해 보세요."
+          {events.length === 0 && eventsRef.current.length === 0
+            ? "아직 이벤트가 없습니다. fixed 모드에서 한자 변환을 시도해 보세요."
             : formatImeTraceJson(buildTrace())}
         </pre>
       </section>

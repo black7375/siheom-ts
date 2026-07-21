@@ -1,6 +1,5 @@
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 
-import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { cn } from "@/lib/utils";
 
@@ -15,8 +14,9 @@ export type HanjaAutocompleteFieldProps = {
   /**
    * `broken` — Arrow/Enter/number keys always move or pick combobox options (no `isComposing` guard).
    * Syncs React state on every `input` (re-renders during composition can disturb Hanja replacement).
-   * `fixed` — defer combobox keys while composing / 229 / Option; sync React state only between
-   * composition sessions so macOS Hanja conversion can replace the syllable instead of appending.
+   * `fixed` — never setState while IME is composing (detect via InputEvent.isComposing / 229 /
+   * composition* — compositionstart alone is unreliable on some Apple Chrome paths). Defer
+   * combobox keys the same way so macOS Hanja can replace the syllable (김→金) instead of appending.
    */
   mode?: "broken" | "fixed";
   suggestions?: string[];
@@ -24,6 +24,20 @@ export type HanjaAutocompleteFieldProps = {
   inputRef?: React.Ref<HTMLInputElement>;
   onValueChange?: (value: string) => void;
 };
+
+function isImeComposingEvent(event: Event): boolean {
+  if (event.type === "compositionstart" || event.type === "compositionupdate") return true;
+  if (event.type === "compositionend") return false;
+  if ("isComposing" in event && (event as InputEvent | KeyboardEvent).isComposing) return true;
+  if (event instanceof KeyboardEvent && event.keyCode === 229) return true;
+  if (
+    event instanceof InputEvent &&
+    (event.inputType === "insertCompositionText" || event.inputType === "deleteCompositionText")
+  ) {
+    return true;
+  }
+  return false;
+}
 
 export function HanjaAutocompleteField({
   mode = "broken",
@@ -37,11 +51,11 @@ export function HanjaAutocompleteField({
   const [highlightIndex, setHighlightIndex] = useState(0);
   const [pickCount, setPickCount] = useState(0);
   const [lastPicked, setLastPicked] = useState<string | null>(null);
-  const [isComposing, setIsComposing] = useState(false);
   const localInputRef = useRef<HTMLInputElement>(null);
   const modeRef = useRef(mode);
   const isComposingRef = useRef(false);
   const onValueChangeRef = useRef(onValueChange);
+  const settleTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const inputId = "hanja-autocomplete-input";
 
   const filtered = useMemo(() => {
@@ -56,28 +70,53 @@ export function HanjaAutocompleteField({
   const highlightRef = useRef(clampedHighlight);
 
   modeRef.current = mode;
-  isComposingRef.current = isComposing;
   onValueChangeRef.current = onValueChange;
   filteredRef.current = filtered;
   highlightRef.current = clampedHighlight;
 
   useEffect(() => {
-    if (mode === "fixed" && isComposing) return;
     setHighlightIndex(0);
-  }, [filtered.length, query, mode, isComposing]);
+  }, [filtered.length, query]);
+
+  const setInputRef = useCallback(
+    (element: HTMLInputElement | null) => {
+      localInputRef.current = element;
+      assignRef(inputRef, element);
+    },
+    [inputRef],
+  );
 
   useEffect(() => {
     const node = localInputRef.current;
     if (!node) return;
+
+    const clearSettle = () => {
+      if (settleTimerRef.current !== null) {
+        clearTimeout(settleTimerRef.current);
+        settleTimerRef.current = null;
+      }
+    };
 
     const syncCommitted = (next: string) => {
       setQuery(next);
       onValueChangeRef.current?.(next);
     };
 
+    /** Defer React sync so a Hangul compositionend → Hanja compositionstart pair stays silent. */
+    const scheduleSettle = (next: string) => {
+      clearSettle();
+      settleTimerRef.current = setTimeout(() => {
+        settleTimerRef.current = null;
+        if (isComposingRef.current) return;
+        syncCommitted(next);
+      }, 0);
+    };
+
     const pickSuggestion = (index: number) => {
       const item = filteredRef.current[index];
       if (!item) return;
+      clearSettle();
+      isComposingRef.current = false;
       node.value = item;
       syncCommitted(item);
       setPickCount((count) => count + 1);
@@ -96,16 +135,28 @@ export function HanjaAutocompleteField({
 
     const onCompositionStart = () => {
       isComposingRef.current = true;
-      setIsComposing(true);
+      clearSettle();
+    };
+
+    const onCompositionUpdate = () => {
+      isComposingRef.current = true;
+      clearSettle();
     };
 
     const onCompositionEnd = (event: Event) => {
       isComposingRef.current = false;
-      setIsComposing(false);
+      if (modeRef.current === "fixed") {
+        scheduleSettle((event.target as HTMLInputElement).value);
+        return;
+      }
       syncCommitted((event.target as HTMLInputElement).value);
     };
 
     const onKeyDown = (event: KeyboardEvent) => {
+      if (isImeComposingEvent(event)) {
+        isComposingRef.current = true;
+        clearSettle();
+      }
       if (shouldDeferToIme(event)) return;
 
       const items = filteredRef.current;
@@ -131,46 +182,79 @@ export function HanjaAutocompleteField({
       }
     };
 
+    const onKeyUp = (event: KeyboardEvent) => {
+      if (modeRef.current !== "fixed") return;
+      // Some Apple Chrome paths omit compositionend; isComposing:false ends the session.
+      if (!event.isComposing && event.keyCode !== 229 && isComposingRef.current) {
+        isComposingRef.current = false;
+        scheduleSettle(node.value);
+      }
+    };
+
+    const onBeforeInput = (event: Event) => {
+      if (isImeComposingEvent(event)) {
+        isComposingRef.current = true;
+        clearSettle();
+      }
+    };
+
     const onInput = (event: Event) => {
       const next = (event.target as HTMLInputElement).value;
-      if (modeRef.current === "fixed" && isComposingRef.current) {
+      const composing = isImeComposingEvent(event) || isComposingRef.current;
+
+      if (composing) {
+        isComposingRef.current = true;
+        clearSettle();
+      }
+
+      if (modeRef.current === "fixed" && composing) {
         return;
       }
+
+      if (modeRef.current === "fixed") {
+        isComposingRef.current = false;
+        scheduleSettle(next);
+        return;
+      }
+
+      isComposingRef.current = false;
       syncCommitted(next);
     };
 
     node.addEventListener("compositionstart", onCompositionStart);
+    node.addEventListener("compositionupdate", onCompositionUpdate);
     node.addEventListener("compositionend", onCompositionEnd);
     node.addEventListener("keydown", onKeyDown);
+    node.addEventListener("keyup", onKeyUp);
+    node.addEventListener("beforeinput", onBeforeInput);
     node.addEventListener("input", onInput);
     return () => {
+      clearSettle();
       node.removeEventListener("compositionstart", onCompositionStart);
+      node.removeEventListener("compositionupdate", onCompositionUpdate);
       node.removeEventListener("compositionend", onCompositionEnd);
       node.removeEventListener("keydown", onKeyDown);
+      node.removeEventListener("keyup", onKeyUp);
+      node.removeEventListener("beforeinput", onBeforeInput);
       node.removeEventListener("input", onInput);
     };
   }, []);
-
-  const showComboboxHighlight = mode === "broken" || !isComposing;
 
   return (
     <div className="flex flex-col gap-2">
       <div className="flex flex-col gap-1.5">
         <Label htmlFor={inputId}>{label}</Label>
-        <Input
-          ref={(element) => {
-            localInputRef.current = element;
-            assignRef(inputRef, element);
-          }}
+        {/* Native input: avoid Base UI re-render side effects on IME composition range. */}
+        <input
+          ref={setInputRef}
           id={inputId}
+          className={cn(
+            "h-8 w-full min-w-0 rounded-lg border border-input bg-transparent px-2.5 py-1 text-base",
+            "outline-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50",
+          )}
           aria-autocomplete="list"
           aria-controls="hanja-autocomplete-listbox"
-          aria-expanded={filtered.length > 0 && showComboboxHighlight}
-          aria-activedescendant={
-            showComboboxHighlight && filtered[clampedHighlight]
-              ? `hanja-autocomplete-option-${filtered[clampedHighlight]}`
-              : undefined
-          }
+          aria-expanded={filtered.length > 0}
           defaultValue=""
           placeholder="김태희 → 金泰熙 (한 글자씩 한자 변환)"
           autoComplete="off"
@@ -200,12 +284,6 @@ export function HanjaAutocompleteField({
             </span>
           </>
         ) : null}
-        {mode === "fixed" && isComposing ? (
-          <>
-            {" · "}
-            <span className="text-xs">조합 중 — query/combobox 키 보류</span>
-          </>
-        ) : null}
       </p>
 
       <ul
@@ -220,17 +298,18 @@ export function HanjaAutocompleteField({
               id={`hanja-autocomplete-option-${item}`}
               type="button"
               role="option"
-              aria-selected={showComboboxHighlight && index === clampedHighlight}
+              aria-selected={index === clampedHighlight}
               tabIndex={-1}
               className={cn(
                 "flex w-full rounded-md px-2.5 py-1.5 text-left text-sm outline-none",
-                showComboboxHighlight && index === clampedHighlight && "bg-muted/80",
+                index === clampedHighlight && "bg-muted/80",
               )}
               onMouseDown={(event) => event.preventDefault()}
               onClick={() => {
                 if (mode === "fixed" && isComposingRef.current) return;
                 const node = localInputRef.current;
                 if (!node) return;
+                isComposingRef.current = false;
                 node.value = item;
                 setQuery(item);
                 onValueChange?.(item);
