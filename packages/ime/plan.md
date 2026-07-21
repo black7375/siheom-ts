@@ -84,5 +84,5 @@ OS captures under `apps/react-example/.../fixtures/android-chrome/` (virtual key
 - [x] `createImeActions({ profile: "android-chrome" }).type("김태희")` matches android continuous-hangul critical fields
 - [x] android maxlength host-clamp (fixed): overflow `insertCompositionText` keeps overflow `data` with clamped `value` (no Chrome empty-data + compositionend reject)
 - [x] android delayed-update: `settle: "macrotask"` + deferred writeback reproduces broken 풀어쓰기 / fixed `김태희` against android fixtures
-- [ ] (N/A) arrow-edit-mid — android capture has no ArrowLeft (virtual keyboard mid-edit)
-- [ ] (N/A) hanja Alt+Enter — android uses candidate-tap replace; broken≈fixed on captures
+- [x] (N/A) arrow-edit-mid — android capture has no ArrowLeft (virtual keyboard mid-edit via caret/tap; do not expect `{ArrowLeft}` scripts to match)
+- [x] (N/A) hanja Alt+Enter — android uses candidate-tap replace; broken≈fixed on captures (no Alt+Enter `composeHanjaConversion` path)

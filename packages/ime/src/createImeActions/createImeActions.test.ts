@@ -32,10 +32,7 @@ function setupLabeledInput(onInput?: (input: HTMLInputElement) => void) {
   return input;
 }
 
-function setup(
-  onInput?: (input: HTMLInputElement) => void,
-  imeOptions?: CreateImeActionsOptions,
-) {
+function setup(onInput?: (input: HTMLInputElement) => void, imeOptions?: CreateImeActionsOptions) {
   const recorderRef: { current: ImeRecorder | undefined } = { current: undefined };
 
   const { runSiheom, actions, assertions, given } = overrideSiheom(

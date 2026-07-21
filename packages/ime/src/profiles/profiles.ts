@@ -74,9 +74,7 @@ export function getRegisteredProfileIds(): string[] {
   return [...registry.keys()];
 }
 
-function registerSyllableProfile(
-  profile: Omit<ImeProfile, "hangulCompositionBoundary">,
-): void {
+function registerSyllableProfile(profile: Omit<ImeProfile, "hangulCompositionBoundary">): void {
   registerProfile({ ...profile, hangulCompositionBoundary: "syllable" });
 }
 
@@ -134,6 +132,8 @@ function registerBuiltins() {
   });
   // Android Chrome Gboard: Unidentified/229 keys, one composition run for a Hangul string,
   // Enter after compositionend (webkit order). OS captures in ime-*/fixtures/android-chrome/.
+  // N/A (not modeled): ArrowLeft mid-edit (virtual keyboard has no arrows — capture uses
+  // caret/tap edits); Alt+Enter Hanja (candidate-tap replace; broken≈fixed on captures).
   registerProfile({
     id: "android-chrome",
     enterDuringComposition: "webkit",
