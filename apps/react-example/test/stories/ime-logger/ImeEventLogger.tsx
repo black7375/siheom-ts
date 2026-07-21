@@ -1,103 +1,41 @@
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useState } from "react";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 
-import { LOGGED_EVENT_TYPES, readEditableValue } from "./recordInputEvents";
 import { CAPTURE_SCENARIOS, getCaptureScenario, type CaptureScenario } from "./scenarios";
-import {
-  buildImeTrace,
-  formatImeTraceJson,
-  profileIdFromMeta,
-  serializeImeEvent,
-  type ImeEventRecord,
-} from "./serializeImeEvent";
-import { useImeLoggerMeta } from "./useImeLoggerMeta";
+import { formatImeTraceJson } from "./serializeImeEvent";
+import { useImeEventCapture } from "./useImeEventCapture";
 
 const DEFAULT_SCENARIO = CAPTURE_SCENARIOS[0] as CaptureScenario;
 
 export function ImeEventLogger() {
-  const { os, browser, ime, setOs, setBrowser, setIme } = useImeLoggerMeta();
   const [scenarioId, setScenarioId] = useState(DEFAULT_SCENARIO.id);
-  const [events, setEvents] = useState<ImeEventRecord[]>([]);
-  const [fieldValue, setFieldValue] = useState("");
-  const [status, setStatus] = useState("");
-  const inputRef = useRef<HTMLInputElement>(null);
-
   const scenario = getCaptureScenario(scenarioId) ?? DEFAULT_SCENARIO;
 
-  const profileId = useMemo(() => profileIdFromMeta(os, browser, ime), [os, browser, ime]);
-
-  const clearFieldAndLog = useCallback(() => {
-    setEvents([]);
-    setFieldValue("");
-    setStatus("");
-    if (inputRef.current) {
-      inputRef.current.value = "";
-    }
-  }, []);
+  const {
+    events,
+    fieldValue,
+    setFieldValue,
+    status,
+    os,
+    browser,
+    ime,
+    setOs,
+    setBrowser,
+    setIme,
+    profileId,
+    inputRef,
+    clear,
+    copyJson,
+    downloadJson,
+    buildTrace,
+  } = useImeEventCapture({ scenarioId });
 
   const selectScenario = (next: CaptureScenario) => {
     setScenarioId(next.id);
-    clearFieldAndLog();
-    queueMicrotask(() => inputRef.current?.focus());
-  };
-
-  const appendEvent = useCallback((event: Event) => {
-    const value = readEditableValue(event.target);
-    setFieldValue(value);
-    setEvents((prev) => [...prev, serializeImeEvent(event, value)]);
-  }, []);
-
-  useEffect(() => {
-    const node = inputRef.current;
-    if (!node) return;
-
-    for (const type of LOGGED_EVENT_TYPES) {
-      node.addEventListener(type, appendEvent);
-    }
-
-    return () => {
-      for (const type of LOGGED_EVENT_TYPES) {
-        node.removeEventListener(type, appendEvent);
-      }
-    };
-  }, [appendEvent]);
-
-  const buildTrace = useCallback(() => {
-    return buildImeTrace({
-      os,
-      browser,
-      ime,
-      events,
-      capturedAt: new Date().toISOString(),
-      scenarioId: scenario.id,
-      source: "os-ime",
-    });
-  }, [os, browser, ime, events, scenario.id]);
-
-  const handleCopy = async () => {
-    const json = formatImeTraceJson(buildTrace());
-    await navigator.clipboard.writeText(json);
-    setStatus("클립보드에 복사했습니다.");
-  };
-
-  const handleDownload = () => {
-    const json = formatImeTraceJson(buildTrace());
-    const blob = new Blob([json], { type: "application/json" });
-    const url = URL.createObjectURL(blob);
-    const anchor = document.createElement("a");
-    anchor.href = url;
-    anchor.download = `${profileId || "ime-trace"}-${scenario.id}-${Date.now()}.json`;
-    anchor.click();
-    URL.revokeObjectURL(url);
-    setStatus("JSON 파일을 다운로드했습니다.");
-  };
-
-  const handleClear = () => {
-    clearFieldAndLog();
-    inputRef.current?.focus();
+    clear();
   };
 
   const valueMatches = fieldValue === scenario.expectedValue;
@@ -216,18 +154,18 @@ export function ImeEventLogger() {
       </div>
 
       <div className="flex flex-wrap gap-2">
-        <Button type="button" onClick={handleCopy} disabled={events.length === 0}>
+        <Button type="button" onClick={copyJson} disabled={events.length === 0}>
           JSON 복사
         </Button>
         <Button
           type="button"
           variant="outline"
-          onClick={handleDownload}
+          onClick={downloadJson}
           disabled={events.length === 0}
         >
           JSON 다운로드
         </Button>
-        <Button type="button" variant="ghost" onClick={handleClear}>
+        <Button type="button" variant="ghost" onClick={clear}>
           지우기
         </Button>
       </div>
