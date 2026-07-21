@@ -16,8 +16,6 @@
 - [x] `typeHanja` + fixed + macos-chrome-apple: first syllable yields stripped `金`
 - [x] `typeHanja` + fixed + macos-chrome-apple: full name yields `金泰熙`
 - [x] `typeHanja` + broken + macos-chrome-apple: combobox steals conversion Enter (`마지막 combobox 선택` visible)
-- [ ] OS `macos-chrome-apple/broken-hanja-name.json` — re-capture
-- [ ] OS `macos-chrome-apple/fixed-hanja-name.json` — re-capture (expect final 金泰熙)
 
 ## Why 김金 happens (browser)
 

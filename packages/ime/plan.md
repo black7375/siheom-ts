@@ -71,5 +71,3 @@ IME-faithful `fill` / `type` that plug into siheom via `overrideSiheom`, startin
 - [x] `createHanjaActions({ resolveElement: "sync" })` types when the element is already present
 - [x] `createHanjaActions` typeHanja rejects non-input targets (e.g. contenteditable)
 - [x] `createHanjaActions` types Hanja into a textarea
-- [ ] `createHanjaActions` sync path throws when locator resolves to a disconnected element
-
