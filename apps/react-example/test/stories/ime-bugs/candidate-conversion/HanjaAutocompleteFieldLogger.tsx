@@ -88,9 +88,9 @@ export function HanjaAutocompleteFieldLogger() {
         <p className="text-sm text-muted-foreground">
           macOS 한자 변환(Option+Enter) 후보 탐색은 방향키·숫자·Enter를 씁니다. 자동완성 combobox가{" "}
           <code className="rounded bg-muted px-1">isComposing</code> /{" "}
-          <code className="rounded bg-muted px-1">keyCode 229</code>를 무시하고 같은 키를 처리하면
-          「김」→「金」 같은 한 글자씩 변환이 깨집니다. focus-steal과 달리 blur가 아니라{" "}
-          <strong>키 충돌</strong>입니다.
+          <code className="rounded bg-muted px-1">keyCode 229</code> /{" "}
+          <code className="rounded bg-muted px-1">altKey</code>를 무시하거나 조합 중 React query를
+          갱신하면 「김」→「김金」처럼 한자 대체가 깨집니다.
         </p>
       </header>
 
