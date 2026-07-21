@@ -18,7 +18,9 @@ export type HangulComposeMode =
   /** insertText / insertReplacementText without composition (Safari Apple) */
   | "replacement"
   /** composition with input before keydown (Safari Apple delayed-update fixed) */
-  | "safari-composition";
+  | "safari-composition"
+  /** Lexical on Android Firefox: premature end after first jamo, then jamo-chain preedit */
+  | "lexical-android-firefox";
 
 /**
  * How Hangul→Hanja candidate conversion applies the chosen Hanja to the field.
@@ -116,6 +118,13 @@ function registerBuiltins() {
     enterDuringComposition: "chromium",
     hangulKeyEventKey: "process",
     hangulComposeMode: "composition",
+    hanjaConversion: "replace",
+  });
+  registerProfile({
+    id: "android-firefox-lexical",
+    enterDuringComposition: "webkit",
+    hangulKeyEventKey: "process",
+    hangulComposeMode: "lexical-android-firefox",
     hanjaConversion: "replace",
   });
 }

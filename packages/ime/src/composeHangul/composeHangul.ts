@@ -13,6 +13,7 @@ import {
   composeHangulSafariComposition,
   composeHangulSafariReplacement,
 } from "./composeHangulSafari";
+import { composeHangulLexicalAndroidFirefox } from "./composeHangulLexicalAndroidFirefox";
 import {
   decideStrokeStepOutcome,
   planBoundaryCommitAfterStep,
@@ -176,6 +177,11 @@ export async function composeHangul(
     return composeHangulSafariReplacement(element, strokes, suffix, profile, {
       settle,
     });
+  }
+
+  if (profile.hangulComposeMode === "lexical-android-firefox") {
+    element.focus();
+    return composeHangulLexicalAndroidFirefox(element, text, { commitFinal });
   }
 
   const blurred = { current: false };

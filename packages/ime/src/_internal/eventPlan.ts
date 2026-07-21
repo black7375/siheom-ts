@@ -1,6 +1,7 @@
 import type { KeyEventFields } from "./events";
 import { setInputValue } from "./events";
-import type { InputEventFields, ImeTrace } from "./imeTrace";
+import type { InputEventFields, ImeTraceEmitter } from "./imeTrace";
+import { ImeTrace } from "./imeTrace";
 import { clearImeSession, getImeSession, setImeSession, type ImeComposeSession } from "./session";
 
 export type EventPlanStep =
@@ -16,9 +17,9 @@ export type EventPlanStep =
   | { kind: "clearSession" }
   | { kind: "markPendingMaxLengthReject"; preedit: string; overflowValue: string };
 
-/** Execute a pure event plan against the imperative ImeTrace shell. */
-export function playEventPlan(trace: ImeTrace, steps: EventPlanStep[]): void {
-  const { element } = trace;
+/** Execute a pure event plan against an IME trace shell. */
+export function playEventPlan(trace: ImeTraceEmitter, steps: EventPlanStep[]): void {
+  const inputElement = trace instanceof ImeTrace ? trace.element : null;
 
   for (const step of steps) {
     switch (step.kind) {
@@ -44,18 +45,25 @@ export function playEventPlan(trace: ImeTrace, steps: EventPlanStep[]): void {
         trace.input(step.fields);
         break;
       case "setValue":
-        setInputValue(element, step.value, step.caret);
+        if (inputElement) {
+          setInputValue(inputElement, step.value, step.caret);
+        }
         break;
       case "setSession":
-        setImeSession(element, step.session);
+        if (inputElement) {
+          setImeSession(inputElement, step.session);
+        }
         break;
       case "clearSession":
-        clearImeSession(element);
+        if (inputElement) {
+          clearImeSession(inputElement);
+        }
         break;
       case "markPendingMaxLengthReject": {
-        const session = getImeSession(element);
+        if (!inputElement) break;
+        const session = getImeSession(inputElement);
         if (!session) break;
-        setImeSession(element, {
+        setImeSession(inputElement, {
           ...session,
           pendingMaxLengthReject: {
             preedit: step.preedit,

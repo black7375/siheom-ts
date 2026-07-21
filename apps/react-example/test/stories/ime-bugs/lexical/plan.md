@@ -6,9 +6,17 @@
 
 ## Behaviors
 
+### Capture story (phase 1)
+
 - [x] `LexicalLogger`가 렌더링되고 contenteditable 영역이 accessible name을 가진다
 - [x] Storybook에 `IME/Lexical` Capture story가 등록된다
 - [x] IME 이벤트가 로그에 기록된다 (phase1: user-event 픽스처로 검증)
 - [x] 트레이스 JSON을 복사/다운로드할 수 있다 (`ImeCaptureShell` 기본 동작)
 - [x] AF 캡처용 안내 문구가 표시된다
 
+### Fixtures + emulator (phase 2)
+
+- [x] OS 캡처 JSON이 `fixtures/`에 정리된다 (`broken-가나다` / `fixed-가나다`)
+- [x] `@siheom/ime` `android-firefox-lexical` 프로필이 등록된다
+- [x] `composeHangul`이 AF Lexical broken golden critical events와 일치한다 (`가나다` → jamo split)
+- [x] `LexicalLogger.ime.test`: `android-firefox-lexical` 프로필로 `가나다` 입력 시 정상 조합(`가나다`)이 되지 않는다

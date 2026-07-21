@@ -21,9 +21,6 @@ describe("LexicalLogger", () => {
   });
 
   it("shows capture instructions for Android Firefox", async () => {
-    await runSiheom(
-      given.render(<LexicalLogger />),
-      assertions.visible(query.region("캡처 지시")),
-    );
+    await runSiheom(given.render(<LexicalLogger />), assertions.visible(query.region("캡처 지시")));
   });
 });

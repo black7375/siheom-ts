@@ -5,8 +5,10 @@ import { composeArrowLeft } from "../composeArrowLeft";
 import { composeBackspace } from "../composeBackspace";
 import { composeEnter } from "../composeEnter";
 import { composeHangul, type ComposeHangulOptions } from "../composeHangul";
+import { composeHangulLexicalAndroidFirefoxOn } from "../composeHangul/composeHangulLexicalAndroidFirefox";
 import { planTypeImeSteps } from "../planTypeImeSteps";
 import { resolveProfile, type ImeProfile } from "../profiles";
+import { isLexicalComposeTarget } from "../_internal/editableElement";
 import { isEditable, withPresentElement } from "../withPresentElement";
 
 export type CreateImeActionsOptions = {
@@ -61,6 +63,21 @@ async function typeImeText(
   profile: ImeProfile,
   composeOptions: Pick<ComposeHangulOptions, "settle" | "deferredUpdateRace">,
 ): Promise<void> {
+  if (profile.hangulComposeMode === "lexical-android-firefox" && isLexicalComposeTarget(element)) {
+    for (const step of planTypeImeSteps(text)) {
+      if (step.kind === "hangul") {
+        await composeHangulLexicalAndroidFirefoxOn(element, step.text, {
+          commitFinal: step.commitFinal,
+        });
+      } else if (isEditable(element)) {
+        await typeKeySegment(user, element, step.text, profile);
+      } else {
+        await user.type(element, step.text);
+      }
+    }
+    return;
+  }
+
   if (!isEditable(element)) {
     await user.type(element, text);
     return;

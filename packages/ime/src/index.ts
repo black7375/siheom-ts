@@ -12,7 +12,7 @@ export type { TypeSegment } from "./segmentTypeText";
 export { planTypeImeSteps } from "./planTypeImeSteps";
 export type { TypeImeStep } from "./planTypeImeSteps";
 export { isEditable, withPresentElement } from "./withPresentElement";
-export type { ResolveElementMode } from "./withPresentElement";
+export { isLexicalComposeTarget, readEditableText } from "./_internal/editableElement";
 export { createImeActions } from "./createImeActions";
 export type { CreateImeActionsOptions, ImeActions } from "./createImeActions";
 export {

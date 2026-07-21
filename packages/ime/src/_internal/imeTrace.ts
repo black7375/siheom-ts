@@ -135,3 +135,15 @@ export class ImeTrace {
     );
   }
 }
+
+export type ImeTraceEmitter = Pick<
+  ImeTrace,
+  | "records"
+  | "keydown"
+  | "keyup"
+  | "compositionStart"
+  | "compositionUpdate"
+  | "compositionEnd"
+  | "beforeInput"
+  | "input"
+>;

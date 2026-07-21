@@ -64,4 +64,12 @@ describe("IME profiles", () => {
   it("throws for unknown profile ids", () => {
     expect(() => resolveProfile("not-a-real-profile")).toThrow(/Unknown IME profile/);
   });
+
+  it("resolves android-firefox-lexical with lexical-android-firefox compose mode", () => {
+    expect(resolveProfile("android-firefox-lexical")).toMatchObject({
+      id: "android-firefox-lexical",
+      hangulComposeMode: "lexical-android-firefox",
+      hangulKeyEventKey: "process",
+    });
+  });
 });
