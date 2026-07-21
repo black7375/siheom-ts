@@ -2,7 +2,7 @@
 
 The same data rendered two ways — list and grid — switched with a Toggle Group. The test confirms the previous view's `region` fully disappears when the view changes.
 
-Source: `apps/react-example/test/stories/shadcn/view-switcher/ViewSwitcher.tsx`, `ViewSwitcher.test.tsx`.
+Source: [`apps/react-example/test/stories/shadcn/view-switcher/ViewSwitcher.tsx`](https://github.com/twinstae/siheom-ts/blob/main/apps/react-example/test/stories/shadcn/view-switcher/ViewSwitcher.tsx), [`ViewSwitcher.test.tsx`](https://github.com/twinstae/siheom-ts/blob/main/apps/react-example/test/stories/shadcn/view-switcher/ViewSwitcher.test.tsx).
 
 ## UI
 

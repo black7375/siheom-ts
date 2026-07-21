@@ -2,7 +2,7 @@
 
 이메일·비밀번호·체크박스가 있는 가입 폼입니다. 검증 에러(`errormessage`), fill/click 흐름, region 단위 접근성 스냅샷을 보여줍니다.
 
-소스: `apps/react-example/test/stories/SignUpForm.tsx`, `SignUpForm.test.tsx`.
+소스: [`apps/react-example/test/stories/SignUpForm.tsx`](https://github.com/twinstae/siheom-ts/blob/main/apps/react-example/test/stories/SignUpForm.tsx), [`SignUpForm.test.tsx`](https://github.com/twinstae/siheom-ts/blob/main/apps/react-example/test/stories/SignUpForm.test.tsx).
 
 ## UI
 

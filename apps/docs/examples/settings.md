@@ -2,7 +2,7 @@
 
 탭으로 일반/알림 설정을 나누고, `Switch`로 다크 모드를 토글하고, `RadioGroup`으로 알림 빈도를 고르는 설정 패널입니다. 탭을 전환하면 다른 탭의 컨트롤은 완전히 숨겨진다는 것을 `assertions.not.visible`로 확인합니다.
 
-소스: `apps/react-example/test/stories/shadcn/settings/SettingsPanel.tsx`, `SettingsPanel.test.tsx`.
+소스: [`apps/react-example/test/stories/shadcn/settings/SettingsPanel.tsx`](https://github.com/twinstae/siheom-ts/blob/main/apps/react-example/test/stories/shadcn/settings/SettingsPanel.tsx), [`SettingsPanel.test.tsx`](https://github.com/twinstae/siheom-ts/blob/main/apps/react-example/test/stories/shadcn/settings/SettingsPanel.test.tsx).
 
 ## UI
 

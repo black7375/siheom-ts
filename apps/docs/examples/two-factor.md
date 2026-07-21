@@ -2,7 +2,7 @@
 
 6자리 인증 코드를 입력하고 확인하는 폼입니다. 여러 개의 슬롯으로 나뉘어 보이는 Input OTP도 접근성 트리에서는 하나의 `textbox`입니다.
 
-소스: `apps/react-example/test/stories/shadcn/two-factor/TwoFactorForm.tsx`, `TwoFactorForm.test.tsx`.
+소스: [`apps/react-example/test/stories/shadcn/two-factor/TwoFactorForm.tsx`](https://github.com/twinstae/siheom-ts/blob/main/apps/react-example/test/stories/shadcn/two-factor/TwoFactorForm.tsx), [`TwoFactorForm.test.tsx`](https://github.com/twinstae/siheom-ts/blob/main/apps/react-example/test/stories/shadcn/two-factor/TwoFactorForm.test.tsx).
 
 ## UI
 

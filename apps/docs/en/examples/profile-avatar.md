@@ -2,7 +2,7 @@
 
 Uploading a file drives a Progress bar upward until it completes and swaps in the avatar image. `actions.upload` combines with `withFakeTimers`/`effect.elapsed` to control the time an actual `setInterval` takes to run.
 
-Source: `apps/react-example/test/stories/shadcn/profile-avatar/ProfileAvatar.tsx`, `ProfileAvatar.test.tsx`.
+Source: [`apps/react-example/test/stories/shadcn/profile-avatar/ProfileAvatar.tsx`](https://github.com/twinstae/siheom-ts/blob/main/apps/react-example/test/stories/shadcn/profile-avatar/ProfileAvatar.tsx), [`ProfileAvatar.test.tsx`](https://github.com/twinstae/siheom-ts/blob/main/apps/react-example/test/stories/shadcn/profile-avatar/ProfileAvatar.test.tsx).
 
 ## UI
 

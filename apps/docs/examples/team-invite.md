@@ -2,7 +2,7 @@
 
 역할은 Select로, 팀원은 검색 가능한 Combobox로 고른 뒤 초대하는 폼입니다. Select와 Combobox 모두 "값을 고르면 트리거/입력에 반영된다"는 패턴은 같지만, 여는 방법과 필터링 여부가 다릅니다.
 
-소스: `apps/react-example/test/stories/shadcn/team-invite/TeamInviteForm.tsx`, `TeamInviteForm.test.tsx`.
+소스: [`apps/react-example/test/stories/shadcn/team-invite/TeamInviteForm.tsx`](https://github.com/twinstae/siheom-ts/blob/main/apps/react-example/test/stories/shadcn/team-invite/TeamInviteForm.tsx), [`TeamInviteForm.test.tsx`](https://github.com/twinstae/siheom-ts/blob/main/apps/react-example/test/stories/shadcn/team-invite/TeamInviteForm.test.tsx).
 
 ## UI
 

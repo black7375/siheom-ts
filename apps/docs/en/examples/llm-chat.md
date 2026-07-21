@@ -2,7 +2,7 @@
 
 A chat UI where sending a message streams the assistant's reply in chunks. Instead of a real API, the test injects a fake API it can drive directly, checking three distinct states: waiting, streaming, and complete.
 
-Source: `apps/react-example/test/stories/shadcn/llm-chat/StreamingChat.tsx`, `StreamingChat.test.tsx`, `fake-llm-api.ts`.
+Source: [`apps/react-example/test/stories/shadcn/llm-chat/StreamingChat.tsx`](https://github.com/twinstae/siheom-ts/blob/main/apps/react-example/test/stories/shadcn/llm-chat/StreamingChat.tsx), [`StreamingChat.test.tsx`](https://github.com/twinstae/siheom-ts/blob/main/apps/react-example/test/stories/shadcn/llm-chat/StreamingChat.test.tsx), [`fake-llm-api.ts`](https://github.com/twinstae/siheom-ts/blob/main/apps/react-example/test/stories/shadcn/llm-chat/fake-llm-api.ts).
 
 ## UI
 

@@ -2,7 +2,7 @@
 
 결제 실패를 알리는 Alert를 확인 버튼으로 닫는, 가장 단순한 형태의 알림 예제입니다. `role="alert"`가 사라지는 것으로 "닫힘"을 검증합니다.
 
-소스: `apps/react-example/test/stories/shadcn/billing-alert/BillingAlert.tsx`, `BillingAlert.test.tsx`.
+소스: [`apps/react-example/test/stories/shadcn/billing-alert/BillingAlert.tsx`](https://github.com/twinstae/siheom-ts/blob/main/apps/react-example/test/stories/shadcn/billing-alert/BillingAlert.tsx), [`BillingAlert.test.tsx`](https://github.com/twinstae/siheom-ts/blob/main/apps/react-example/test/stories/shadcn/billing-alert/BillingAlert.test.tsx).
 
 ## UI
 

@@ -2,7 +2,7 @@
 
 A sign-up form with email, password, and checkboxes. Demonstrates validation errors (`errormessage`), fill/click flows, and region-level accessibility snapshots.
 
-Source: `apps/react-example/test/stories/SignUpForm.tsx`, `SignUpForm.test.tsx`.
+Source: [`apps/react-example/test/stories/SignUpForm.tsx`](https://github.com/twinstae/siheom-ts/blob/main/apps/react-example/test/stories/SignUpForm.tsx), [`SignUpForm.test.tsx`](https://github.com/twinstae/siheom-ts/blob/main/apps/react-example/test/stories/SignUpForm.test.tsx).
 
 ## UI
 

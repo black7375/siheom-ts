@@ -2,7 +2,7 @@
 
 Each document card exposes the same actions (copy, rename, delete) through a "more" button (Dropdown Menu) and a right-click (Context Menu). `query.within` scopes clicks to items inside whichever menu is open.
 
-Source: `apps/react-example/test/stories/shadcn/document-actions/DocumentActions.tsx`, `DocumentActions.test.tsx`.
+Source: [`apps/react-example/test/stories/shadcn/document-actions/DocumentActions.tsx`](https://github.com/twinstae/siheom-ts/blob/main/apps/react-example/test/stories/shadcn/document-actions/DocumentActions.tsx), [`DocumentActions.test.tsx`](https://github.com/twinstae/siheom-ts/blob/main/apps/react-example/test/stories/shadcn/document-actions/DocumentActions.test.tsx).
 
 ## UI
 

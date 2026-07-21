@@ -2,7 +2,7 @@
 
 카드를 다른 열로 드래그하면 그 열로 옮겨지는 칸반 보드입니다. `actions.dragAndDrop`으로 실제 `dragstart`/`drop` 이벤트 흐름을 시뮬레이션합니다.
 
-소스: `apps/react-example/test/stories/shadcn/kanban/KanbanBoard.tsx`, `KanbanBoard.test.tsx`.
+소스: [`apps/react-example/test/stories/shadcn/kanban/KanbanBoard.tsx`](https://github.com/twinstae/siheom-ts/blob/main/apps/react-example/test/stories/shadcn/kanban/KanbanBoard.tsx), [`KanbanBoard.test.tsx`](https://github.com/twinstae/siheom-ts/blob/main/apps/react-example/test/stories/shadcn/kanban/KanbanBoard.test.tsx).
 
 ## UI
 

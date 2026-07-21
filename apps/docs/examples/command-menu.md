@@ -2,7 +2,7 @@
 
 버튼으로 여는 command palette입니다. 다이얼로그 안 콤보박스에 검색어를 입력해 옵션을 필터링하고, 선택하면 다이얼로그가 닫히면서 결과가 표시됩니다.
 
-소스: `apps/react-example/test/stories/shadcn/command-menu/CommandMenuApp.tsx`, `CommandMenuApp.test.tsx`.
+소스: [`apps/react-example/test/stories/shadcn/command-menu/CommandMenuApp.tsx`](https://github.com/twinstae/siheom-ts/blob/main/apps/react-example/test/stories/shadcn/command-menu/CommandMenuApp.tsx), [`CommandMenuApp.test.tsx`](https://github.com/twinstae/siheom-ts/blob/main/apps/react-example/test/stories/shadcn/command-menu/CommandMenuApp.test.tsx).
 
 ## UI
 

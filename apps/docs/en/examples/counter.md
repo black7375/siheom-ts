@@ -2,7 +2,7 @@
 
 Counter is a single button whose label increments by 1 on each click. Use it to learn click, visible, and a11ySnapshot in the smallest possible test.
 
-Source: `apps/react-example/test/stories/Counter.tsx`, `Counter.test.tsx`.
+Source: [`apps/react-example/test/stories/Counter.tsx`](https://github.com/twinstae/siheom-ts/blob/main/apps/react-example/test/stories/Counter.tsx), [`Counter.test.tsx`](https://github.com/twinstae/siheom-ts/blob/main/apps/react-example/test/stories/Counter.test.tsx).
 
 ## UI
 

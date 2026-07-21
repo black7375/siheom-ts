@@ -2,7 +2,7 @@
 
 포모도로 스타일 카운트다운입니다. `startTime`과 `now`로 경과를 유도하고, 시험은 `withFakeTimers` + `effect.elapsed`로 시간을 점프합니다.
 
-소스: `apps/react-example/test/stories/countdown/`.
+소스: [`apps/react-example/test/stories/countdown/`](https://github.com/twinstae/siheom-ts/tree/main/apps/react-example/test/stories/countdown).
 
 ## UI 접근성
 

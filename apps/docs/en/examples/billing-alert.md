@@ -2,7 +2,7 @@
 
 The simplest possible alert example: a payment-failure Alert dismissed by a confirm button. The test verifies "dismissed" by checking the `role="alert"` element disappears.
 
-Source: `apps/react-example/test/stories/shadcn/billing-alert/BillingAlert.tsx`, `BillingAlert.test.tsx`.
+Source: [`apps/react-example/test/stories/shadcn/billing-alert/BillingAlert.tsx`](https://github.com/twinstae/siheom-ts/blob/main/apps/react-example/test/stories/shadcn/billing-alert/BillingAlert.tsx), [`BillingAlert.test.tsx`](https://github.com/twinstae/siheom-ts/blob/main/apps/react-example/test/stories/shadcn/billing-alert/BillingAlert.test.tsx).
 
 ## UI
 

@@ -2,7 +2,7 @@
 
 A form that picks a role via Select and a team member via a searchable Combobox before submitting an invite. Both follow "pick a value, it shows up in the trigger/input," but differ in how they open and whether they filter.
 
-Source: `apps/react-example/test/stories/shadcn/team-invite/TeamInviteForm.tsx`, `TeamInviteForm.test.tsx`.
+Source: [`apps/react-example/test/stories/shadcn/team-invite/TeamInviteForm.tsx`](https://github.com/twinstae/siheom-ts/blob/main/apps/react-example/test/stories/shadcn/team-invite/TeamInviteForm.tsx), [`TeamInviteForm.test.tsx`](https://github.com/twinstae/siheom-ts/blob/main/apps/react-example/test/stories/shadcn/team-invite/TeamInviteForm.test.tsx).
 
 ## UI
 

@@ -2,7 +2,7 @@
 
 숫자가 적힌 버튼 하나를 클릭할 때마다 값이 1씩 올라가는 Counter입니다. 가장 작은 siheom 시험으로 click·visible·a11ySnapshot을 익힐 수 있습니다.
 
-소스: `apps/react-example/test/stories/Counter.tsx`, `Counter.test.tsx`.
+소스: [`apps/react-example/test/stories/Counter.tsx`](https://github.com/twinstae/siheom-ts/blob/main/apps/react-example/test/stories/Counter.tsx), [`Counter.test.tsx`](https://github.com/twinstae/siheom-ts/blob/main/apps/react-example/test/stories/Counter.test.tsx).
 
 ## UI
 

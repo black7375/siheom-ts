@@ -2,7 +2,7 @@
 
 A settings panel that splits general/notification settings across tabs, toggles dark mode with a `Switch`, and picks notification frequency with a `RadioGroup`. `assertions.not.visible` confirms that the other tab's controls are fully hidden when a tab is inactive.
 
-Source: `apps/react-example/test/stories/shadcn/settings/SettingsPanel.tsx`, `SettingsPanel.test.tsx`.
+Source: [`apps/react-example/test/stories/shadcn/settings/SettingsPanel.tsx`](https://github.com/twinstae/siheom-ts/blob/main/apps/react-example/test/stories/shadcn/settings/SettingsPanel.tsx), [`SettingsPanel.test.tsx`](https://github.com/twinstae/siheom-ts/blob/main/apps/react-example/test/stories/shadcn/settings/SettingsPanel.test.tsx).
 
 ## UI
 

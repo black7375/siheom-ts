@@ -2,7 +2,7 @@
 
 파일을 업로드하면 진행률(Progress)이 올라가다가, 완료되면 아바타 이미지로 바뀌는 예제입니다. `actions.upload`와 `withFakeTimers`/`effect.elapsed`를 함께 써서, 실제 `setInterval`이 흐르는 시간을 제어합니다.
 
-소스: `apps/react-example/test/stories/shadcn/profile-avatar/ProfileAvatar.tsx`, `ProfileAvatar.test.tsx`.
+소스: [`apps/react-example/test/stories/shadcn/profile-avatar/ProfileAvatar.tsx`](https://github.com/twinstae/siheom-ts/blob/main/apps/react-example/test/stories/shadcn/profile-avatar/ProfileAvatar.tsx), [`ProfileAvatar.test.tsx`](https://github.com/twinstae/siheom-ts/blob/main/apps/react-example/test/stories/shadcn/profile-avatar/ProfileAvatar.test.tsx).
 
 ## UI
 

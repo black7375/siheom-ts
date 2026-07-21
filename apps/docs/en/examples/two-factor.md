@@ -2,7 +2,7 @@
 
 A form that fills in a 6-digit verification code and confirms it. Even though Input OTP visually splits into slots, it's a single `textbox` in the accessibility tree.
 
-Source: `apps/react-example/test/stories/shadcn/two-factor/TwoFactorForm.tsx`, `TwoFactorForm.test.tsx`.
+Source: [`apps/react-example/test/stories/shadcn/two-factor/TwoFactorForm.tsx`](https://github.com/twinstae/siheom-ts/blob/main/apps/react-example/test/stories/shadcn/two-factor/TwoFactorForm.tsx), [`TwoFactorForm.test.tsx`](https://github.com/twinstae/siheom-ts/blob/main/apps/react-example/test/stories/shadcn/two-factor/TwoFactorForm.test.tsx).
 
 ## UI
 

@@ -2,7 +2,7 @@
 
 A command palette opened from a button. Typing into the combobox inside the dialog filters options; picking one closes the dialog and shows the result.
 
-Source: `apps/react-example/test/stories/shadcn/command-menu/CommandMenuApp.tsx`, `CommandMenuApp.test.tsx`.
+Source: [`apps/react-example/test/stories/shadcn/command-menu/CommandMenuApp.tsx`](https://github.com/twinstae/siheom-ts/blob/main/apps/react-example/test/stories/shadcn/command-menu/CommandMenuApp.tsx), [`CommandMenuApp.test.tsx`](https://github.com/twinstae/siheom-ts/blob/main/apps/react-example/test/stories/shadcn/command-menu/CommandMenuApp.test.tsx).
 
 ## UI
 

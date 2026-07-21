@@ -2,7 +2,7 @@
 
 행마다 상태 배지가 있는 테이블과, 페이지를 넘기는 Pagination을 함께 시험합니다. `assertions.current`로 "지금 몇 페이지인가"를 `aria-current`로 확인합니다.
 
-소스: `apps/react-example/test/stories/shadcn/task-table/TaskTable.tsx`, `TaskTable.test.tsx`.
+소스: [`apps/react-example/test/stories/shadcn/task-table/TaskTable.tsx`](https://github.com/twinstae/siheom-ts/blob/main/apps/react-example/test/stories/shadcn/task-table/TaskTable.tsx), [`TaskTable.test.tsx`](https://github.com/twinstae/siheom-ts/blob/main/apps/react-example/test/stories/shadcn/task-table/TaskTable.test.tsx).
 
 ## UI
 

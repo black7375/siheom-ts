@@ -2,7 +2,7 @@
 
 문서 카드마다 더보기 버튼(Dropdown Menu)과 우클릭(Context Menu)으로 같은 동작(복사·이름 변경·삭제)에 접근할 수 있는 예제입니다. `query.within`으로 열려 있는 메뉴 안의 항목만 골라 클릭합니다.
 
-소스: `apps/react-example/test/stories/shadcn/document-actions/DocumentActions.tsx`, `DocumentActions.test.tsx`.
+소스: [`apps/react-example/test/stories/shadcn/document-actions/DocumentActions.tsx`](https://github.com/twinstae/siheom-ts/blob/main/apps/react-example/test/stories/shadcn/document-actions/DocumentActions.tsx), [`DocumentActions.test.tsx`](https://github.com/twinstae/siheom-ts/blob/main/apps/react-example/test/stories/shadcn/document-actions/DocumentActions.test.tsx).
 
 ## UI
 

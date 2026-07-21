@@ -2,7 +2,7 @@
 
 주문 배송 단계를 타임라인으로 보여주는 예제입니다. 현재 진행 중인 단계를 `aria-current="step"`으로 표시하고, 나머지 단계는 아니라는 것까지 함께 확인합니다.
 
-소스: `apps/react-example/test/stories/shadcn/order-tracking/OrderTracking.tsx`, `OrderTracking.test.tsx`.
+소스: [`apps/react-example/test/stories/shadcn/order-tracking/OrderTracking.tsx`](https://github.com/twinstae/siheom-ts/blob/main/apps/react-example/test/stories/shadcn/order-tracking/OrderTracking.tsx), [`OrderTracking.test.tsx`](https://github.com/twinstae/siheom-ts/blob/main/apps/react-example/test/stories/shadcn/order-tracking/OrderTracking.test.tsx).
 
 ## UI
 

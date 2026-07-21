@@ -2,7 +2,7 @@
 
 Typing a search term filters a list; no matches show an empty state. Pairing `assertions.visible` with `assertions.not.visible` confirms "has results" and "no results" are mutually exclusive.
 
-Source: `apps/react-example/test/stories/shadcn/notice-search/NoticeSearch.tsx`, `NoticeSearch.test.tsx`.
+Source: [`apps/react-example/test/stories/shadcn/notice-search/NoticeSearch.tsx`](https://github.com/twinstae/siheom-ts/blob/main/apps/react-example/test/stories/shadcn/notice-search/NoticeSearch.tsx), [`NoticeSearch.test.tsx`](https://github.com/twinstae/siheom-ts/blob/main/apps/react-example/test/stories/shadcn/notice-search/NoticeSearch.test.tsx).
 
 ## UI
 

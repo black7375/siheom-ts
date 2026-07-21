@@ -2,7 +2,7 @@
 
 메시지를 보내면 어시스턴트 응답이 청크 단위로 스트리밍되는 채팅 UI입니다. 실제 API 대신 테스트가 직접 스트림 진행을 통제할 수 있는 fake API를 주입해서, "응답 대기 중 → 스트리밍 중 → 완성" 세 상태를 각각 확인합니다.
 
-소스: `apps/react-example/test/stories/shadcn/llm-chat/StreamingChat.tsx`, `StreamingChat.test.tsx`, `fake-llm-api.ts`.
+소스: [`apps/react-example/test/stories/shadcn/llm-chat/StreamingChat.tsx`](https://github.com/twinstae/siheom-ts/blob/main/apps/react-example/test/stories/shadcn/llm-chat/StreamingChat.tsx), [`StreamingChat.test.tsx`](https://github.com/twinstae/siheom-ts/blob/main/apps/react-example/test/stories/shadcn/llm-chat/StreamingChat.test.tsx), [`fake-llm-api.ts`](https://github.com/twinstae/siheom-ts/blob/main/apps/react-example/test/stories/shadcn/llm-chat/fake-llm-api.ts).
 
 ## UI
 

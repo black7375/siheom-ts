@@ -2,7 +2,7 @@
 
 검색어를 입력하면 목록이 필터링되고, 일치하는 결과가 없으면 Empty 상태가 나타나는 예제입니다. `assertions.visible`과 `assertions.not.visible`을 짝지어 "결과 있음"과 "결과 없음"이 서로 배타적임을 확인합니다.
 
-소스: `apps/react-example/test/stories/shadcn/notice-search/NoticeSearch.tsx`, `NoticeSearch.test.tsx`.
+소스: [`apps/react-example/test/stories/shadcn/notice-search/NoticeSearch.tsx`](https://github.com/twinstae/siheom-ts/blob/main/apps/react-example/test/stories/shadcn/notice-search/NoticeSearch.tsx), [`NoticeSearch.test.tsx`](https://github.com/twinstae/siheom-ts/blob/main/apps/react-example/test/stories/shadcn/notice-search/NoticeSearch.test.tsx).
 
 ## UI
 

@@ -2,7 +2,7 @@
 
 버튼을 누르면 [sonner](https://sonner.emilkowal.ski/) 토스트로 저장 결과를 알리는, siheom에서 가장 짧은 예제 중 하나입니다. 토스트 라이브러리가 만드는 accessible name을 있는 그대로 검증합니다.
 
-소스: `apps/react-example/test/stories/shadcn/save-feedback/SaveFeedback.tsx`, `SaveFeedback.test.tsx`.
+소스: [`apps/react-example/test/stories/shadcn/save-feedback/SaveFeedback.tsx`](https://github.com/twinstae/siheom-ts/blob/main/apps/react-example/test/stories/shadcn/save-feedback/SaveFeedback.tsx), [`SaveFeedback.test.tsx`](https://github.com/twinstae/siheom-ts/blob/main/apps/react-example/test/stories/shadcn/save-feedback/SaveFeedback.test.tsx).
 
 ## UI
 

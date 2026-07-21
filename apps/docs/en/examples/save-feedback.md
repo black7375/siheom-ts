@@ -2,7 +2,7 @@
 
 One of the shortest siheom examples: a button click announces a save result via a [sonner](https://sonner.emilkowal.ski/) toast. The test checks the accessible name exactly as the toast library produces it.
 
-Source: `apps/react-example/test/stories/shadcn/save-feedback/SaveFeedback.tsx`, `SaveFeedback.test.tsx`.
+Source: [`apps/react-example/test/stories/shadcn/save-feedback/SaveFeedback.tsx`](https://github.com/twinstae/siheom-ts/blob/main/apps/react-example/test/stories/shadcn/save-feedback/SaveFeedback.tsx), [`SaveFeedback.test.tsx`](https://github.com/twinstae/siheom-ts/blob/main/apps/react-example/test/stories/shadcn/save-feedback/SaveFeedback.test.tsx).
 
 ## UI
 

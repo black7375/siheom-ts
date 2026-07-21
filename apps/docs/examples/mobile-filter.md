@@ -2,7 +2,7 @@
 
 모바일 화면에서 버튼으로 Sheet(바텀시트)를 열고, 옵션을 고르면 시트가 닫히며 선택값이 반영되는 예제입니다. Sheet는 `dialog` role로 노출됩니다.
 
-소스: `apps/react-example/test/stories/shadcn/mobile-filter/MobileFilter.tsx`, `MobileFilter.test.tsx`.
+소스: [`apps/react-example/test/stories/shadcn/mobile-filter/MobileFilter.tsx`](https://github.com/twinstae/siheom-ts/blob/main/apps/react-example/test/stories/shadcn/mobile-filter/MobileFilter.tsx), [`MobileFilter.test.tsx`](https://github.com/twinstae/siheom-ts/blob/main/apps/react-example/test/stories/shadcn/mobile-filter/MobileFilter.test.tsx).
 
 ## UI
 

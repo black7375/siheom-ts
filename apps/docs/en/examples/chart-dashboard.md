@@ -2,7 +2,7 @@
 
 A dashboard that switches between revenue and visitor charts via tabs. Even for a chart drawn with a visualization library like `recharts`, this shows that testing the summary text and container landmarks below the chart is enough for a meaningful check.
 
-Source: `apps/react-example/test/stories/shadcn/chart-dashboard/ChartDashboard.tsx`, `ChartDashboard.test.tsx`.
+Source: [`apps/react-example/test/stories/shadcn/chart-dashboard/ChartDashboard.tsx`](https://github.com/twinstae/siheom-ts/blob/main/apps/react-example/test/stories/shadcn/chart-dashboard/ChartDashboard.tsx), [`ChartDashboard.test.tsx`](https://github.com/twinstae/siheom-ts/blob/main/apps/react-example/test/stories/shadcn/chart-dashboard/ChartDashboard.test.tsx).
 
 ## UI
 

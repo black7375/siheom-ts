@@ -2,7 +2,7 @@
 
 A kanban board where dragging a card into another column moves it there. `actions.dragAndDrop` simulates the real `dragstart`/`drop` event sequence.
 
-Source: `apps/react-example/test/stories/shadcn/kanban/KanbanBoard.tsx`, `KanbanBoard.test.tsx`.
+Source: [`apps/react-example/test/stories/shadcn/kanban/KanbanBoard.tsx`](https://github.com/twinstae/siheom-ts/blob/main/apps/react-example/test/stories/shadcn/kanban/KanbanBoard.tsx), [`KanbanBoard.test.tsx`](https://github.com/twinstae/siheom-ts/blob/main/apps/react-example/test/stories/shadcn/kanban/KanbanBoard.test.tsx).
 
 ## UI
 

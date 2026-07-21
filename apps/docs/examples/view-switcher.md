@@ -2,7 +2,7 @@
 
 같은 데이터를 목록/그리드 두 가지 방식으로 보여주고, Toggle Group으로 전환하는 예제입니다. 뷰가 바뀌면 이전 뷰의 `region`은 완전히 사라진다는 것을 확인합니다.
 
-소스: `apps/react-example/test/stories/shadcn/view-switcher/ViewSwitcher.tsx`, `ViewSwitcher.test.tsx`.
+소스: [`apps/react-example/test/stories/shadcn/view-switcher/ViewSwitcher.tsx`](https://github.com/twinstae/siheom-ts/blob/main/apps/react-example/test/stories/shadcn/view-switcher/ViewSwitcher.tsx), [`ViewSwitcher.test.tsx`](https://github.com/twinstae/siheom-ts/blob/main/apps/react-example/test/stories/shadcn/view-switcher/ViewSwitcher.test.tsx).
 
 ## UI
 

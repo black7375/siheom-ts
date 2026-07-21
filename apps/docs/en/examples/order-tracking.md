@@ -2,7 +2,7 @@
 
 Shipping steps rendered as a timeline. The current step is marked with `aria-current="step"`, and the test confirms the other steps are not marked current at the same time.
 
-Source: `apps/react-example/test/stories/shadcn/order-tracking/OrderTracking.tsx`, `OrderTracking.test.tsx`.
+Source: [`apps/react-example/test/stories/shadcn/order-tracking/OrderTracking.tsx`](https://github.com/twinstae/siheom-ts/blob/main/apps/react-example/test/stories/shadcn/order-tracking/OrderTracking.tsx), [`OrderTracking.test.tsx`](https://github.com/twinstae/siheom-ts/blob/main/apps/react-example/test/stories/shadcn/order-tracking/OrderTracking.test.tsx).
 
 ## UI
 

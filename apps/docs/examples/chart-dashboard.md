@@ -2,7 +2,7 @@
 
 탭으로 매출/방문자 차트를 전환하는 대시보드입니다. `recharts` 같은 시각화 라이브러리 위에 그려진 차트라도, 시험은 차트 아래의 요약 텍스트와 컨테이너 landmark만으로 충분히 의미 있는 검증을 할 수 있다는 것을 보여줍니다.
 
-소스: `apps/react-example/test/stories/shadcn/chart-dashboard/ChartDashboard.tsx`, `ChartDashboard.test.tsx`.
+소스: [`apps/react-example/test/stories/shadcn/chart-dashboard/ChartDashboard.tsx`](https://github.com/twinstae/siheom-ts/blob/main/apps/react-example/test/stories/shadcn/chart-dashboard/ChartDashboard.tsx), [`ChartDashboard.test.tsx`](https://github.com/twinstae/siheom-ts/blob/main/apps/react-example/test/stories/shadcn/chart-dashboard/ChartDashboard.test.tsx).
 
 ## UI
 

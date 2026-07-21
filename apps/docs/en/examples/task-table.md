@@ -2,7 +2,7 @@
 
 A table with a status badge per row, paired with Pagination. `assertions.current` checks "which page is active" through `aria-current`.
 
-Source: `apps/react-example/test/stories/shadcn/task-table/TaskTable.tsx`, `TaskTable.test.tsx`.
+Source: [`apps/react-example/test/stories/shadcn/task-table/TaskTable.tsx`](https://github.com/twinstae/siheom-ts/blob/main/apps/react-example/test/stories/shadcn/task-table/TaskTable.tsx), [`TaskTable.test.tsx`](https://github.com/twinstae/siheom-ts/blob/main/apps/react-example/test/stories/shadcn/task-table/TaskTable.test.tsx).
 
 ## UI
 

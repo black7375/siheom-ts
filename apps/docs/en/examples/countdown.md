@@ -2,7 +2,7 @@
 
 A pomodoro-style countdown. Elapsed time is derived from `startTime` and `now`. Tests jump time with `withFakeTimers` + `effect.elapsed`.
 
-Source: `apps/react-example/test/stories/countdown/`.
+Source: [`apps/react-example/test/stories/countdown/`](https://github.com/twinstae/siheom-ts/tree/main/apps/react-example/test/stories/countdown).
 
 ## Accessibility surface
 

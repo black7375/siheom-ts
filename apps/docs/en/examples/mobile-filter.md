@@ -2,7 +2,7 @@
 
 On a mobile layout, a button opens a Sheet (bottom sheet); picking an option closes the sheet and updates the selected value. A Sheet exposes as a `dialog` role.
 
-Source: `apps/react-example/test/stories/shadcn/mobile-filter/MobileFilter.tsx`, `MobileFilter.test.tsx`.
+Source: [`apps/react-example/test/stories/shadcn/mobile-filter/MobileFilter.tsx`](https://github.com/twinstae/siheom-ts/blob/main/apps/react-example/test/stories/shadcn/mobile-filter/MobileFilter.tsx), [`MobileFilter.test.tsx`](https://github.com/twinstae/siheom-ts/blob/main/apps/react-example/test/stories/shadcn/mobile-filter/MobileFilter.test.tsx).
 
 ## UI
 

@@ -2,7 +2,7 @@
 
 A composite example where several components move together: navigating via the Sidebar menu updates both the Breadcrumb and the main content. Like [Routing](/en/examples/routing), it tests a router through `MemoryRouter`.
 
-Source: `apps/react-example/test/stories/shadcn/app-shell/AppShell.tsx`, `AppShell.test.tsx`.
+Source: [`apps/react-example/test/stories/shadcn/app-shell/AppShell.tsx`](https://github.com/twinstae/siheom-ts/blob/main/apps/react-example/test/stories/shadcn/app-shell/AppShell.tsx), [`AppShell.test.tsx`](https://github.com/twinstae/siheom-ts/blob/main/apps/react-example/test/stories/shadcn/app-shell/AppShell.test.tsx).
 
 ## UI
 

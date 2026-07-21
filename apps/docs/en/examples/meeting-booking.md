@@ -2,7 +2,7 @@
 
 A form where picking a date from a Calendar inside a Popover updates the trigger button before confirming a booking. `query.within` scopes date buttons to inside the calendar region.
 
-Source: `apps/react-example/test/stories/shadcn/meeting-booking/MeetingBookingForm.tsx`, `MeetingBookingForm.test.tsx`.
+Source: [`apps/react-example/test/stories/shadcn/meeting-booking/MeetingBookingForm.tsx`](https://github.com/twinstae/siheom-ts/blob/main/apps/react-example/test/stories/shadcn/meeting-booking/MeetingBookingForm.tsx), [`MeetingBookingForm.test.tsx`](https://github.com/twinstae/siheom-ts/blob/main/apps/react-example/test/stories/shadcn/meeting-booking/MeetingBookingForm.test.tsx).
 
 ## UI
 

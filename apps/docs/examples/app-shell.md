@@ -2,7 +2,7 @@
 
 Sidebar 메뉴로 라우트를 이동하면 Breadcrumb과 본문이 함께 갱신되는, 여러 컴포넌트가 함께 맞물려 동작하는 복합 예제입니다. [Routing](/examples/routing)처럼 `MemoryRouter`로 라우터를 시험합니다.
 
-소스: `apps/react-example/test/stories/shadcn/app-shell/AppShell.tsx`, `AppShell.test.tsx`.
+소스: [`apps/react-example/test/stories/shadcn/app-shell/AppShell.tsx`](https://github.com/twinstae/siheom-ts/blob/main/apps/react-example/test/stories/shadcn/app-shell/AppShell.tsx), [`AppShell.test.tsx`](https://github.com/twinstae/siheom-ts/blob/main/apps/react-example/test/stories/shadcn/app-shell/AppShell.test.tsx).
 
 ## UI
 

@@ -2,7 +2,7 @@
 
 Popover 안에 열리는 Calendar에서 날짜를 골라 트리거 버튼에 반영하고, 예약을 확정하는 폼입니다. `query.within`으로 달력 영역 안의 날짜 버튼만 지정합니다.
 
-소스: `apps/react-example/test/stories/shadcn/meeting-booking/MeetingBookingForm.tsx`, `MeetingBookingForm.test.tsx`.
+소스: [`apps/react-example/test/stories/shadcn/meeting-booking/MeetingBookingForm.tsx`](https://github.com/twinstae/siheom-ts/blob/main/apps/react-example/test/stories/shadcn/meeting-booking/MeetingBookingForm.tsx), [`MeetingBookingForm.test.tsx`](https://github.com/twinstae/siheom-ts/blob/main/apps/react-example/test/stories/shadcn/meeting-booking/MeetingBookingForm.test.tsx).
 
 ## UI
 
