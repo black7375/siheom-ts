@@ -1,8 +1,16 @@
 diff --git a/dist/index.es.js b/dist/index.es.js
-index 193ea6f4991a60c0fc996579d8d4a52e627725cf..ce7a6ae2f0e1731bf7ca7a93771f0e4bf2cbe933 100644
+index 193ea6f4991a60c0fc996579d8d4a52e627725cf..896ae5ddad1105d5aafa8571837a8c143c5b0f96 100644
 --- a/dist/index.es.js
 +++ b/dist/index.es.js
-@@ -120,6 +120,7 @@ function createAndroidInputManager(_ref) {
+@@ -108,6 +108,7 @@ var FLUSH_DELAY = 200;
+ var debug = function debug() {};
+ // Type guard to check if a value is a DataTransfer
+ var isDataTransfer = value => (value === null || value === void 0 ? void 0 : value.constructor.name) === 'DataTransfer';
++var SLATE_ANDROID_HANGUL_PATCH_ID = 'composition-anchor-v1';
+ function createAndroidInputManager(_ref) {
+   var {
+     editor,
+@@ -120,6 +121,7 @@ function createAndroidInputManager(_ref) {
    var actionTimeoutId = null;
    var idCounter = 0;
    var insertPositionHint = false;
@@ -10,8 +18,27 @@ index 193ea6f4991a60c0fc996579d8d4a52e627725cf..ce7a6ae2f0e1731bf7ca7a93771f0e4b
    var applyPendingSelection = () => {
      var pendingSelection = EDITOR_TO_PENDING_SELECTION.get(editor);
      EDITOR_TO_PENDING_SELECTION.delete(editor);
-@@ -248,11 +249,26 @@ function createAndroidInputManager(_ref) {
+@@ -246,13 +248,45 @@ function createAndroidInputManager(_ref) {
+     if (compositionEndTimeoutId) {
+       clearTimeout(compositionEndTimeoutId);
      }
++    var endData = _event.data;
++    if (endData && compositionAnchor && Editor.hasPath(editor, compositionAnchor.path)) {
++      var path = compositionAnchor.path;
++      var leaf = Node.leaf(editor, path);
++      var composeEnd = leaf.text.length;
++      if (composeEnd >= compositionAnchor.offset) {
++        var segment = leaf.text.slice(compositionAnchor.offset, composeEnd);
++        if (segment !== endData) {
++          storeDiff(path, {
++            start: compositionAnchor.offset,
++            end: composeEnd,
++            text: endData
++          });
++          flush();
++        }
++      }
++    }
      compositionEndTimeoutId = setTimeout(() => {
        IS_COMPOSING.set(editor, false);
 +      compositionAnchor = null;
@@ -37,7 +64,7 @@ index 193ea6f4991a60c0fc996579d8d4a52e627725cf..ce7a6ae2f0e1731bf7ca7a93771f0e4b
      if (compositionEndTimeoutId) {
        clearTimeout(compositionEndTimeoutId);
        compositionEndTimeoutId = null;
-@@ -603,6 +619,22 @@ function createAndroidInputManager(_ref) {
+@@ -603,6 +637,22 @@ function createAndroidInputManager(_ref) {
                end: _end.offset,
                text: _text
              };
@@ -60,7 +87,7 @@ index 193ea6f4991a60c0fc996579d8d4a52e627725cf..ce7a6ae2f0e1731bf7ca7a93771f0e4b
              // COMPAT: Swiftkey has a weird bug where the target range of the 2nd word
              // inserted after a mark placeholder is inserted with an anchor offset off by 1.
              // So writing 'some text' will result in 'some ttext'. Luckily all 'normal' insert
-@@ -638,7 +670,7 @@ function createAndroidInputManager(_ref) {
+@@ -638,7 +688,7 @@ function createAndroidInputManager(_ref) {
                if (currentSelection) {
                  var newPoint = {
                    path: _start.path,
@@ -69,11 +96,26 @@ index 193ea6f4991a60c0fc996579d8d4a52e627725cf..ce7a6ae2f0e1731bf7ca7a93771f0e4b
                  };
                  scheduleAction(() => {
                    Transforms.select(editor, {
+@@ -4112,5 +4162,5 @@ var withReact = function withReact(editor) {
+   return e;
+ };
+ 
+-export { DefaultElement, DefaultLeaf, DefaultPlaceholder, DefaultText, Editable, ReactEditor, Slate, defaultScrollSelectionIntoView, useComposing, useEditor, useElement, useElementIf, useFocused, useReadOnly, useSelected, useSlate, useSlateSelection, useSlateSelector, useSlateStatic, useSlateWithV, withReact };
++export { DefaultElement, DefaultLeaf, DefaultPlaceholder, DefaultText, Editable, ReactEditor, SLATE_ANDROID_HANGUL_PATCH_ID, Slate, defaultScrollSelectionIntoView, useComposing, useEditor, useElement, useElementIf, useFocused, useReadOnly, useSelected, useSlate, useSlateSelection, useSlateSelector, useSlateStatic, useSlateWithV, withReact };
+ //# sourceMappingURL=index.es.js.map
 diff --git a/dist/index.js b/dist/index.js
-index aa31a1a118a786fb141a20607e14deec55b4feb6..da283005fa211ad93142b3e6cb6d9b4d8fb6aeaf 100644
+index aa31a1a118a786fb141a20607e14deec55b4feb6..c756ef515af522d368b8248ffa5ba0650d23a31d 100644
 --- a/dist/index.js
 +++ b/dist/index.js
-@@ -247,6 +247,7 @@ function createAndroidInputManager(_ref) {
+@@ -237,6 +237,7 @@ var debug = function debug() {};
+ var isDataTransfer = function isDataTransfer(value) {
+   return (value === null || value === void 0 ? void 0 : value.constructor.name) === 'DataTransfer';
+ };
++var SLATE_ANDROID_HANGUL_PATCH_ID = 'composition-anchor-v1';
+ function createAndroidInputManager(_ref) {
+   var editor = _ref.editor,
+     scheduleOnDOMSelectionChange = _ref.scheduleOnDOMSelectionChange,
+@@ -247,6 +248,7 @@ function createAndroidInputManager(_ref) {
    var actionTimeoutId = null;
    var idCounter = 0;
    var insertPositionHint = false;
@@ -81,8 +123,27 @@ index aa31a1a118a786fb141a20607e14deec55b4feb6..da283005fa211ad93142b3e6cb6d9b4d
    var applyPendingSelection = function applyPendingSelection() {
      var pendingSelection = slateDom.EDITOR_TO_PENDING_SELECTION.get(editor);
      slateDom.EDITOR_TO_PENDING_SELECTION["delete"](editor);
-@@ -373,11 +374,26 @@ function createAndroidInputManager(_ref) {
+@@ -371,13 +373,45 @@ function createAndroidInputManager(_ref) {
+     if (compositionEndTimeoutId) {
+       clearTimeout(compositionEndTimeoutId);
      }
++    var endData = _event.data;
++    if (endData && compositionAnchor && slate.Editor.hasPath(editor, compositionAnchor.path)) {
++      var path = compositionAnchor.path;
++      var leaf = slate.Node.leaf(editor, path);
++      var composeEnd = leaf.text.length;
++      if (composeEnd >= compositionAnchor.offset) {
++        var segment = leaf.text.slice(compositionAnchor.offset, composeEnd);
++        if (segment !== endData) {
++          storeDiff(path, {
++            start: compositionAnchor.offset,
++            end: composeEnd,
++            text: endData
++          });
++          flush();
++        }
++      }
++    }
      compositionEndTimeoutId = setTimeout(function () {
        slateDom.IS_COMPOSING.set(editor, false);
 +      compositionAnchor = null;
@@ -108,7 +169,7 @@ index aa31a1a118a786fb141a20607e14deec55b4feb6..da283005fa211ad93142b3e6cb6d9b4d
      if (compositionEndTimeoutId) {
        clearTimeout(compositionEndTimeoutId);
        compositionEndTimeoutId = null;
-@@ -766,6 +782,24 @@ function createAndroidInputManager(_ref) {
+@@ -766,6 +800,24 @@ function createAndroidInputManager(_ref) {
                end: _end.offset,
                text: _text
              };
@@ -133,7 +194,7 @@ index aa31a1a118a786fb141a20607e14deec55b4feb6..da283005fa211ad93142b3e6cb6d9b4d
              // COMPAT: Swiftkey has a weird bug where the target range of the 2nd word
              // inserted after a mark placeholder is inserted with an anchor offset off by 1.
              // So writing 'some text' will result in 'some ttext'. Luckily all 'normal' insert
-@@ -801,7 +835,7 @@ function createAndroidInputManager(_ref) {
+@@ -801,7 +853,7 @@ function createAndroidInputManager(_ref) {
                if (currentSelection) {
                  var newPoint = {
                    path: _start.path,
@@ -142,3 +203,11 @@ index aa31a1a118a786fb141a20607e14deec55b4feb6..da283005fa211ad93142b3e6cb6d9b4d
                  };
                  scheduleAction(function () {
                    slate.Transforms.select(editor, {
+@@ -4584,6 +4636,7 @@ exports.DefaultPlaceholder = DefaultPlaceholder;
+ exports.DefaultText = DefaultText;
+ exports.Editable = Editable;
+ exports.ReactEditor = ReactEditor;
++exports.SLATE_ANDROID_HANGUL_PATCH_ID = SLATE_ANDROID_HANGUL_PATCH_ID;
+ exports.Slate = Slate;
+ exports.defaultScrollSelectionIntoView = defaultScrollSelectionIntoView;
+ exports.useComposing = useComposing;

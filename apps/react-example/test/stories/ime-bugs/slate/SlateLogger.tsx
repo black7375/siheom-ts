@@ -13,6 +13,7 @@ import {
   type SlateExplorationLog,
 } from "./slateExplorationCapture";
 import { clearSlateFixDebugState } from "./slateFixDebugState";
+import { readSlatePatchProbe } from "./readSlatePatchProbe";
 import { useSlateExplorationCapture } from "./useSlateExplorationCapture";
 
 const EMPTY_VALUE: Descendant[] = [{ type: "paragraph", children: [{ text: "" }] }];
@@ -90,6 +91,7 @@ export function SlateLogger({
 
               return {
                 slateDebug: {
+                  patch: readSlatePatchProbe(),
                   imeEventCount: events.length,
                   final: final
                     ? {
@@ -119,6 +121,11 @@ export function SlateLogger({
         >
           <li>
             Focus <strong>Slate editor</strong> → type <code>가나다</code> → JSON 다운로드.
+          </li>
+          <li>
+            JSON includes <code>slateDebug.patch.patchActive</code> — must be{" "}
+            <strong>true</strong> (false = Storybook served stale slate-react; restart after{" "}
+            <code>bun run storybook</code>).
           </li>
           <li>
             JSON includes <code>slateDebug.exploration.timeline</code> (H1),{" "}

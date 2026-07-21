@@ -7,6 +7,7 @@ import { measureReplayFidelity } from "@siheom/ime";
 import { SlateLogger } from "./SlateLogger";
 import { readSlatePlainText } from "./readSlatePlainText";
 import exploreGa from "./fixtures/android-firefox/device-explore-ㄱ가나다.json";
+import { EXPECTED_SLATE_ANDROID_HANGUL_PATCH_ID, readSlatePatchProbe } from "./readSlatePatchProbe";
 
 /** First syllable events from AF device capture — orphan ㄱ repro. */
 const FIRST_GA_EVENTS = exploreGa.events.slice(0, 15);
@@ -15,6 +16,14 @@ const FIRST_GA_EVENTS = exploreGa.events.slice(0, 15);
 const FIRST_WORD_EVENTS = exploreGa.events.slice(0, 40);
 
 describe("bun patch slate-react: composition anchor (AF Hangul)", () => {
+  it("loads patched slate-react in bundle", () => {
+    expect(readSlatePatchProbe()).toEqual({
+      expectedPatchId: EXPECTED_SLATE_ANDROID_HANGUL_PATCH_ID,
+      loadedPatchId: EXPECTED_SLATE_ANDROID_HANGUL_PATCH_ID,
+      patchActive: true,
+    });
+  });
+
   async function replay(events: typeof exploreGa.events) {
     const editorRef: { current: HTMLElement | null } = { current: null };
 
