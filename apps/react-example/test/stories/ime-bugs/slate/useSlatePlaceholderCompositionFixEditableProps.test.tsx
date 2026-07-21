@@ -21,6 +21,19 @@ describe("useSlatePlaceholderCompositionFixEditableProps fixLevel", () => {
     expect(result.current.renderPlaceholder).toBeTypeOf("function");
   });
 
+  it("end-only includes skip-input handler but not preedit drive", () => {
+    const editor = withReact(createEditor());
+    const { result } = renderHook(() =>
+      useSlatePlaceholderCompositionFixEditableProps({
+        editor,
+        editable: null,
+        fixLevel: "end-only",
+      }),
+    );
+
+    expect(result.current.onDOMBeforeInput).toBeTypeOf("function");
+  });
+
   it("full includes onDOMBeforeInput", () => {
     const editor = withReact(createEditor());
     const { result } = renderHook(() =>

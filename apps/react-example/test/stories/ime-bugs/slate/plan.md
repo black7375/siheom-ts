@@ -37,4 +37,5 @@
 - [x] Research notes: `docs/research/slate-placeholder-hangul-mechanism.md`
 - [x] Story always uses Slate `placeholder={…}`; broken / minimal / fixed modes
 - [x] `minimal` mode: placeholder hide + force-render guard only (no preedit drive)
-- [ ] Device: compare broken / minimal / fixed on AF → intact Hangul, no explosion
+- [x] `end-only` mode: compositionend orphan-ㄱ strip; no select-reset on non-empty doc
+- [ ] Device: `end-only` on AF → `가나다가나다` intact (recapture)

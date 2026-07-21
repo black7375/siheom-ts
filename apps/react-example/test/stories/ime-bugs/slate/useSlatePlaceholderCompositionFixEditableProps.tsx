@@ -14,6 +14,7 @@ import {
   readSlateVisibleText,
   shouldSkipDuplicateCompositionInsert,
   shouldSkipFirefoxDeferredCompositionInput,
+  stripOrphanLeadingJamoOnCompositionEnd,
 } from "./slatePlaceholderCompositionFix";
 import { readSlatePlainText } from "./readSlatePlainText";
 import { readSlateCompositionSnapshotModelOnly } from "./readSlateCompositionSnapshot";
@@ -28,14 +29,14 @@ import {
 
 const ANDROID_IM_FLUSH_MS = 400;
 
-export type SlatePlaceholderFixLevel = "minimal" | "full";
+export type SlatePlaceholderFixLevel = "minimal" | "end-only" | "full";
 
 export type UseSlatePlaceholderCompositionFixOptions = {
   editor: Editor | undefined;
   editable: HTMLElement | null;
   debugLog?: SlateCompositionDebugLog;
   debugLabel?: string;
-  /** minimal = placeholder hide + force-render guard only; full = + preedit drive */
+  /** minimal = guard; end-only = + compositionend orphan jamo strip; full = + preedit drive */
   fixLevel?: SlatePlaceholderFixLevel;
 };
 
@@ -50,6 +51,8 @@ export function useSlatePlaceholderCompositionFixEditableProps({
   fixLevel = "full",
 }: UseSlatePlaceholderCompositionFixOptions) {
   const drivePreedit = fixLevel === "full";
+  const stripOnEnd = fixLevel === "end-only";
+  const skipDeferredOnly = fixLevel === "end-only";
   const committedHangulRef = useRef("");
   const compositionEndDataRef = useRef<string | null>(null);
 
@@ -122,9 +125,13 @@ export function useSlatePlaceholderCompositionFixEditableProps({
       return;
     }
     hideOfficialPlaceholderElement(editor);
-    const start = SlateEditor.start(editor, []);
-    Transforms.select(editor, start);
-    noteFix("composition-start", { committed: committedHangulRef.current });
+    const visible = readSlateVisibleText(editor);
+    // Device: re-selecting document start on 2nd+ composition wipes DOM (minimal/fixed explosion).
+    if (!visible) {
+      const start = SlateEditor.start(editor, []);
+      Transforms.select(editor, start);
+    }
+    noteFix("composition-start", { committed: committedHangulRef.current, visible });
   }, [editor, noteFix]);
 
   const syncCommittedFromEditor = useCallback(() => {
@@ -136,6 +143,40 @@ export function useSlatePlaceholderCompositionFixEditableProps({
     setSlateFixCommittedHangul(editor, visible);
   }, [editor]);
 
+  const flushAfterCompositionEnd = useCallback(
+    (endData: string, mode: "end-only" | "full") => {
+      if (!editor) {
+        return;
+      }
+
+      window.setTimeout(() => {
+        const before = readSlateVisibleText(editor);
+        let after = before;
+
+        if (mode === "end-only") {
+          after = stripOrphanLeadingJamoOnCompositionEnd(before, endData) ?? before;
+          if (after !== before) {
+            replaceSlateEditorPlainText(editor, after);
+            noteFix("strip-orphan-jamo", { endData, before, after });
+          }
+        } else {
+          after = documentAfterCompositionEnd(committedHangulRef.current, endData, before);
+          if (after !== before) {
+            replaceSlateEditorPlainText(editor, after);
+            noteFix("normalize-after-flush", { endData, before, after });
+          }
+        }
+
+        committedHangulRef.current = after;
+        setSlateFixCommittedHangul(editor, after);
+        if (mode === "full") {
+          noteFix("committed-sync", { committed: after, endData });
+        }
+      }, ANDROID_IM_FLUSH_MS);
+    },
+    [editor, noteFix],
+  );
+
   const onCompositionEnd = useCallback(
     (event: React.CompositionEvent) => {
       if (!editor) {
@@ -143,34 +184,29 @@ export function useSlatePlaceholderCompositionFixEditableProps({
       }
 
       noteCompositionEndForGuard(editor);
+      const endData = event.data ?? "";
 
-      if (!drivePreedit) {
-        noteFix("composition-end-minimal", { data: event.data });
+      if (stripOnEnd) {
+        noteFix("composition-end-end-only", { data: endData });
+        flushAfterCompositionEnd(endData, "end-only");
         return;
       }
 
-      compositionEndDataRef.current = event.data;
-      noteFix("composition-end", { data: event.data, committedBefore: committedHangulRef.current });
+      if (!drivePreedit) {
+        noteFix("composition-end-minimal", { data: endData });
+        return;
+      }
 
-      window.setTimeout(() => {
-        const endData = compositionEndDataRef.current;
-        const before = readSlateVisibleText(editor);
-        let visible = documentAfterCompositionEnd(committedHangulRef.current, endData ?? "", before);
-        if (visible !== before) {
-          replaceSlateEditorPlainText(editor, visible);
-          noteFix("normalize-after-flush", { endData, before, after: visible });
-        }
-        committedHangulRef.current = visible;
-        setSlateFixCommittedHangul(editor, visible);
-        noteFix("committed-sync", { committed: visible, endData });
-      }, ANDROID_IM_FLUSH_MS);
+      compositionEndDataRef.current = endData;
+      noteFix("composition-end", { data: endData, committedBefore: committedHangulRef.current });
+      flushAfterCompositionEnd(endData, "full");
     },
-    [drivePreedit, editor, noteFix],
+    [drivePreedit, editor, flushAfterCompositionEnd, noteFix, stripOnEnd],
   );
 
   const onDOMBeforeInput = useCallback(
     (event: InputEvent) => {
-      if (!editor || !drivePreedit) {
+      if (!editor || (!drivePreedit && !skipDeferredOnly)) {
         return;
       }
 
@@ -181,16 +217,24 @@ export function useSlatePlaceholderCompositionFixEditableProps({
         shouldSkipDuplicateCompositionInsert(domText, event.data, event.inputType) ||
         shouldSkipFirefoxDeferredCompositionInput(slateText, event.data, event.isComposing)
       ) {
-        noteFix("skip-input", {
-          reason: "duplicate-or-deferred",
-          inputType: event.inputType,
-          data: event.data,
-          isComposing: event.isComposing,
-          domText,
-          slateText,
-          committed: committedHangulRef.current,
-        }, true);
+        noteFix(
+          "skip-input",
+          {
+            reason: "duplicate-or-deferred",
+            inputType: event.inputType,
+            data: event.data,
+            isComposing: event.isComposing,
+            domText,
+            slateText,
+            committed: committedHangulRef.current,
+          },
+          true,
+        );
         event.preventDefault();
+        return;
+      }
+
+      if (!drivePreedit) {
         return;
       }
 
@@ -201,13 +245,17 @@ export function useSlatePlaceholderCompositionFixEditableProps({
         event.data
       ) {
         const next = documentFromCommittedPreedit(committedHangulRef.current, event.data);
-        noteFix("committed-preedit", {
-          committed: committedHangulRef.current,
-          data: event.data,
-          next,
-          domText,
-          slateText,
-        }, true);
+        noteFix(
+          "committed-preedit",
+          {
+            committed: committedHangulRef.current,
+            data: event.data,
+            next,
+            domText,
+            slateText,
+          },
+          true,
+        );
         replaceSlateEditorPlainText(editor, next);
         event.preventDefault();
         return;
@@ -220,16 +268,20 @@ export function useSlatePlaceholderCompositionFixEditableProps({
         event.data
       ) {
         syncCommittedFromEditor();
-        noteFix("skip-deferred-sync", {
-          data: event.data,
-          committed: committedHangulRef.current,
-          domText,
-          slateText,
-        }, true);
+        noteFix(
+          "skip-deferred-sync",
+          {
+            data: event.data,
+            committed: committedHangulRef.current,
+            domText,
+            slateText,
+          },
+          true,
+        );
         event.preventDefault();
       }
     },
-    [drivePreedit, editable, editor, noteFix, syncCommittedFromEditor],
+    [drivePreedit, editable, editor, noteFix, skipDeferredOnly, syncCommittedFromEditor],
   );
 
   return useMemo(() => {
@@ -248,12 +300,20 @@ export function useSlatePlaceholderCompositionFixEditableProps({
       onCompositionEnd,
     };
 
-    if (drivePreedit) {
+    if (drivePreedit || skipDeferredOnly) {
       props.onDOMBeforeInput = onDOMBeforeInput;
     }
 
     return props;
-  }, [drivePreedit, editor, onCompositionEnd, onCompositionStart, onDOMBeforeInput, renderPlaceholder]);
+  }, [
+    drivePreedit,
+    editor,
+    onCompositionEnd,
+    onCompositionStart,
+    onDOMBeforeInput,
+    renderPlaceholder,
+    skipDeferredOnly,
+  ]);
 }
 
 export function clearSlatePlaceholderCompositionFixDebug(editor: Editor): void {

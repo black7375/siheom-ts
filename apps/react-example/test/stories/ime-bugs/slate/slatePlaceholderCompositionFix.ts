@@ -13,6 +13,7 @@ type GuardedForceRender = (() => void) & {
 };
 
 const JAMO = /^[\u3131-\u3163]+$/;
+const SINGLE_JAMO = /^[\u3131-\u3163]$/;
 const HANGUL_SYLLABLE = /^[\uAC00-\uD7A3]$/;
 const HANGUL_SYLLABLES = /^[\uAC00-\uD7A3]+$/;
 
@@ -96,6 +97,34 @@ export function documentFromCommittedPreedit(committed: string, compositionData:
   }
 
   return committed + compositionData;
+}
+
+/**
+ * AF broken device: DOM keeps one stuck choseong while IME `compositionend.data` is clean syllables.
+ * `ㄱ가나다` + `가나다` → `가나다`; continuous `ㄱ가나다가나다` + `가나다가나다` → `가나다가나다`.
+ */
+export function stripOrphanLeadingJamoOnCompositionEnd(
+  visible: string,
+  endData: string,
+): string | null {
+  const normalized = stripInvisible(visible);
+  if (!endData || !normalized || !HANGUL_SYLLABLES.test(endData)) {
+    return null;
+  }
+
+  if (normalized.length === 1 && SINGLE_JAMO.test(normalized)) {
+    return endData;
+  }
+
+  if (
+    normalized.length === endData.length + 1 &&
+    SINGLE_JAMO.test(normalized[0] ?? "") &&
+    normalized.slice(1) === endData
+  ) {
+    return endData;
+  }
+
+  return null;
 }
 
 /** Normalize Slate text after compositionend flush (AF duplicates / cumulative endData). */

@@ -8,6 +8,7 @@ import {
   shouldSkipDuplicateCompositionInsert,
   shouldSkipFirefoxDeferredCompositionInput,
   shouldSkipStaleDocumentCompositionInsert,
+  stripOrphanLeadingJamoOnCompositionEnd,
   syllableFromCompositionData,
   documentFromCommittedPreedit,
 } from "./slatePlaceholderCompositionFix";
@@ -72,5 +73,19 @@ describe("slatePlaceholderCompositionFix", () => {
         true,
       ),
     ).toBe(true);
+  });
+
+  it("strips one orphan leading jamo on compositionend (AF broken device)", () => {
+    expect(stripOrphanLeadingJamoOnCompositionEnd("ㄱ", "가")).toBe("가");
+    expect(stripOrphanLeadingJamoOnCompositionEnd("ㄱ가나다", "가나다")).toBe("가나다");
+    expect(stripOrphanLeadingJamoOnCompositionEnd("ㄱ가나다가나다", "가나다가나다")).toBe(
+      "가나다가나다",
+    );
+  });
+
+  it("does not strip when endData has jamo or visible already matches", () => {
+    expect(stripOrphanLeadingJamoOnCompositionEnd("가나다", "가나다")).toBeNull();
+    expect(stripOrphanLeadingJamoOnCompositionEnd("간ㅏ다간ㅏㄷ", "간ㅏ다")).toBeNull();
+    expect(stripOrphanLeadingJamoOnCompositionEnd("ㄱ가나다", "가")).toBeNull();
   });
 });

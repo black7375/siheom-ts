@@ -56,7 +56,8 @@ Slate `androidInputManager` comments (0.126):
 | Mode | Behavior |
 | ---- | -------- |
 | `broken` | Upstream Slate, no patch |
-| `minimal` | Placeholder hide + force-render guard only (no preedit drive) |
+| `minimal` | Placeholder hide + force-render guard only |
+| `end-only` | Minimal + strip orphan leading jamo on `compositionend` only; no preedit drive; no re-select on 2nd+ compose |
 | `fixed` | Minimal + `onDOMBeforeInput` cumulative preedit + composition-end normalize |
 
 See `useSlatePlaceholderCompositionFixEditableProps.tsx` + `slatePlaceholderCompositionFix.ts`.
@@ -74,7 +75,8 @@ Fixtures: `device-tri-mode-broken-가나다.json`, `device-tri-mode-minimal-가�
 | Mode | Final `slateText` | Sessions typed | Verdict |
 | ---- | ----------------- | -------------- | ------- |
 | **broken** | `ㄱ가나다` | 1× `가나다` | Almost readable — one stuck leading `ㄱ` |
-| **minimal** | `간ㅏ다간ㅏㄷ간ㅏ간ㄱ` | 2× (2nd explodes) | Guard alone does not help session 2+ |
+| **broken** (continuous) | `ㄱ가나다가나다` | 1 session `가나다가나다` | Still clean except leading `ㄱ` — see `device-broken-가나다가나다-continuous.json` |
+| **minimal** | `간ㅏ다간ㅏㄷ간ㅏ간ㄱ` | 2× (2nd explodes) | Guard + **compositionstart select** wiped DOM between sessions |
 | **fixed** | `가ㅏㄷ가ㅏㅏ` | 3× (patch fights IME) | Different garbage; preedit drive makes it worse |
 
 **Session 1 (all modes identical in `events[]`):**
@@ -90,4 +92,4 @@ Fixtures: `device-tri-mode-broken-가나다.json`, `device-tri-mode-minimal-가�
 - **minimal** has no `committed-preedit` — explosion is **not** caused by preedit drive; it is Slate+AF reconciliation after the first word.
 - **fixed** `replaceSlateEditorPlainText` + skip-input reshuffles DOM mid-compose → shorter but still wrong (`가ㅏㄷ가ㅏㅏ`).
 
-**Implication:** Fixing the stuck first `ㄱ` (composition range / placeholder leaf) is the right target. Driving document text during compose or after corrupt state amplifies damage. Next experiment: broken + **only** strip leading orphan jamo on `compositionend` (no during-compose rewrite)?
+**Implication:** The single-word bug is orphan leading `ㄱ`. Broken **continuous** typing (`가나다가나다` in one flow) stays readable. Explosion in minimal/fixed tri-mode was largely **patch-induced** (`Transforms.select` at document start on 2nd `compositionstart` → DOM wipe). **end-only** strips `ㄱ` on `compositionend` without during-compose rewrite.

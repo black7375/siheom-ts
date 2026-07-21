@@ -9,7 +9,7 @@ export function SlateModeToolbar({
   mode: SlateLoggerMode;
   onModeChange: (mode: SlateLoggerMode) => void;
 }) {
-  const modes: SlateLoggerMode[] = ["broken", "minimal", "fixed"];
+  const modes: SlateLoggerMode[] = ["broken", "minimal", "end-only", "fixed"];
 
   return (
     <div className="flex flex-wrap gap-2" role="group" aria-label="Slate fix 모드">

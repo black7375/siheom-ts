@@ -25,7 +25,7 @@ const SCENARIO_IDS: Record<SlateCaptureTarget, string> = {
   "plain-control": "slate-ac-plain-control",
 };
 
-export type SlateLoggerMode = "broken" | "minimal" | "fixed";
+export type SlateLoggerMode = "broken" | "minimal" | "end-only" | "fixed";
 
 function scenarioIdForMode(mode: SlateLoggerMode, target: SlateCaptureTarget): string {
   if (target === "plain-control") {
@@ -36,6 +36,9 @@ function scenarioIdForMode(mode: SlateLoggerMode, target: SlateCaptureTarget): s
   }
   if (mode === "minimal") {
     return "slate-ac-first-hangul-placeholder-minimal";
+  }
+  if (mode === "end-only") {
+    return "slate-ac-first-hangul-placeholder-end-only";
   }
   return SCENARIO_IDS["slate-placeholder"];
 }
@@ -73,7 +76,12 @@ export function SlateLogger({
   const debugLog = debugLogProp ?? internalDebugLog;
 
   const useFix = effectiveTarget === "slate-placeholder" && effectiveMode !== "broken";
-  const fixLevel = effectiveMode === "minimal" ? "minimal" : "full";
+  const fixLevel =
+    effectiveMode === "minimal"
+      ? "minimal"
+      : effectiveMode === "end-only"
+        ? "end-only"
+        : "full";
   const fixEditableProps = useSlatePlaceholderCompositionFixEditableProps({
     editor: useFix ? editor : undefined,
     editable: slateEditable,
@@ -85,7 +93,7 @@ export function SlateLogger({
   return (
     <ImeCaptureShell
       title="Slate placeholder Hangul first syllable"
-      description="Android Slate #5989 — broken / minimal(guard only) / fixed(full). JSON: events + slateDebug.fixTrace."
+      description="Android Slate #5989 — broken / minimal / end-only / fixed. JSON: events + slateDebug.fixTrace."
       scenarioId={scenarioIdForMode(effectiveMode, effectiveTarget)}
       listenerDeps={[effectiveTarget, effectiveMode]}
       traceExtra={
@@ -123,8 +131,9 @@ export function SlateLogger({
           }
         >
           <li>
-            <strong>broken</strong> — upstream. <strong>minimal</strong> — placeholder hide +
-            force-render guard. <strong>fixed</strong> — + preedit drive.
+            <strong>broken</strong> — upstream. <strong>minimal</strong> — guard.{" "}
+            <strong>end-only</strong> — + strip orphan ㄱ on compositionend.{" "}
+            <strong>fixed</strong> — + preedit drive.
           </li>
           <li>
             Device compare: Clear → 각 모드로 <code>가나다</code> → JSON 저장 (파일명에 scenarioId
