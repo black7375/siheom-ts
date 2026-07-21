@@ -12,46 +12,7 @@ import {
 } from "../../ime-logger/serializeImeEvent";
 import { useImeLoggerMeta } from "../../ime-logger/useImeLoggerMeta";
 import { ChatMessageField, type ChatMessageFieldProps } from "./ChatMessageField";
-
-const CONVERSION_CAPTURE_SCENARIOS = [
-  {
-    id: "pinyin-raw-enter",
-    title: "중국어 Pinyin — 후보 없이 원문 확정",
-    steps: [
-      "중국어 IME(예: Pinyin)를 켠 채 영문 hello를 입력합니다.",
-      "후보 창이 뜨면 Enter로 후보를 고르지 않고 버퍼 원문을 확정합니다.",
-      "broken이면 메시지가 전송되고, fixed면 send 0이어야 합니다.",
-    ],
-    reference: "https://meta.discourse.org/t/ime-composition-enter-key-triggers-message-send-instead-of-confirming-input/385840",
-  },
-  {
-    id: "pinyin-candidate-enter",
-    title: "중국어 Pinyin — 후보 선택 확정",
-    steps: [
-      "nihao 등을 입력해 후보(你好 등)를 띄웁니다.",
-      "숫자키나 화살표로 후보를 고른 뒤 Enter로 확정합니다.",
-      "확정 Enter가 send로 가지 않는지 확인합니다.",
-    ],
-  },
-  {
-    id: "japanese-romaji",
-    title: "일본어 — 로마자 → 한자 후보",
-    steps: [
-      "일본어 IME로 nihongo 등을 입력해 日本語 후보를 띄웁니다.",
-      "Enter로 후보를 확정합니다.",
-      "확정 전 send가 발생하면 재현 성공(broken)입니다.",
-    ],
-  },
-  {
-    id: "korean-hanja",
-    title: "한글 → 한자 변환",
-    steps: [
-      "한글을 입력한 뒤 한자 변환(한/영 키 등)으로 후보 창을 띄웁니다.",
-      "Enter 또는 숫자키로 한자를 확정합니다.",
-      "확정 키가 send로 가지 않는지 확인합니다.",
-    ],
-  },
-] as const;
+import { CAPTURE_SCENARIOS } from "./scenarios";
 
 /**
  * Capture shell for conversion-type IME (candidate window).
@@ -59,7 +20,7 @@ const CONVERSION_CAPTURE_SCENARIOS = [
  */
 export function ChatMessageFieldLogger() {
   const [mode, setMode] = useState<NonNullable<ChatMessageFieldProps["mode"]>>("broken");
-  const [scenarioId, setScenarioId] = useState<string>(CONVERSION_CAPTURE_SCENARIOS[0].id);
+  const [scenarioId, setScenarioId] = useState<string>(CAPTURE_SCENARIOS[0].id);
   const { os, browser, ime, setOs, setBrowser, setIme } = useImeLoggerMeta();
   const [events, setEvents] = useState<ImeEventRecord[]>([]);
   const [fieldValue, setFieldValue] = useState("");
@@ -67,8 +28,7 @@ export function ChatMessageFieldLogger() {
   const inputRef = useRef<HTMLTextAreaElement>(null);
 
   const profileId = useMemo(() => profileIdFromMeta(os, browser, ime), [os, browser, ime]);
-  const fullScenarioId = `candidate-conversion-${scenarioId}-${mode}`;
-  const activeScenario = CONVERSION_CAPTURE_SCENARIOS.find((s) => s.id === scenarioId);
+  const activeScenario = CAPTURE_SCENARIOS.find((s) => s.id === scenarioId);
 
   const appendEvent = useCallback((event: Event) => {
     const value = readEditableValue(event.target);
@@ -103,7 +63,7 @@ export function ChatMessageFieldLogger() {
       ime,
       events,
       capturedAt: new Date().toISOString(),
-      scenarioId: fullScenarioId,
+      scenarioId,
       source: "os-ime",
     });
 
@@ -124,7 +84,7 @@ export function ChatMessageFieldLogger() {
       >
         <p className="mb-2 font-medium">시나리오 선택</p>
         <div className="flex flex-col gap-2" role="radiogroup" aria-label="변환 시나리오">
-          {CONVERSION_CAPTURE_SCENARIOS.map((scenario) => (
+          {CAPTURE_SCENARIOS.map((scenario) => (
             <label key={scenario.id} className="flex cursor-pointer items-start gap-2">
               <input
                 type="radio"
@@ -143,7 +103,7 @@ export function ChatMessageFieldLogger() {
                     <li key={step}>{step}</li>
                   ))}
                 </ol>
-                {"reference" in scenario && scenario.reference ? (
+                {scenario.reference ? (
                   <a
                     href={scenario.reference}
                     className="mt-1 inline-block text-xs text-primary underline"
@@ -244,7 +204,7 @@ export function ChatMessageFieldLogger() {
             const url = URL.createObjectURL(blob);
             const anchor = document.createElement("a");
             anchor.href = url;
-            anchor.download = `${profileId}-${fullScenarioId}-${Date.now()}.json`;
+            anchor.download = `${profileId}-${scenarioId}-${Date.now()}.json`;
             anchor.click();
             URL.revokeObjectURL(url);
             setStatus("JSON 파일을 다운로드했습니다.");

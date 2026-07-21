@@ -23,7 +23,8 @@ Issue #14 taxonomy **#2 Conversion (candidates)** — see `docs/research/ime-bro
 - [x] `mode="fixed"`: swallows next Enter after `compositionend` (+ `keyCode === 229` guard)
 - [x] `ChatMessageFieldLogger` — 4 capture scenarios (Pinyin raw/candidate, Japanese, Hanja)
 - [x] Unit tests for broken/fixed with synthetic compositionend + delayed Enter
-- [ ] OS golden fixtures under `fixtures/` (manual Storybook capture)
+- [x] `user-event/` fixtures via `userEventTraces.test.tsx` (Vitest snapshot — not hand-written)
+- [ ] OS golden fixtures under `fixtures/<profile>/` (empty shells — paste Storybook captures)
 - [ ] `@siheom/ime` conversion emulator (future)
 - [ ] Space / Arrow shortcut collision scenarios (future)
 
@@ -77,4 +78,4 @@ Reporter notes: on google.com search, first candidate may need number key `1` in
 3. **japanese-romaji** — `nihongo` → 日本語 + Enter
 4. **korean-hanja** — Hangul → Hanja conversion + Enter
 
-Save JSON to `fixtures/{profileId}/` per `fixtures/README.md`.
+Save JSON to `fixtures/<profile-dir>/` per `fixtures/README.md` (replace empty `events: []` shells).

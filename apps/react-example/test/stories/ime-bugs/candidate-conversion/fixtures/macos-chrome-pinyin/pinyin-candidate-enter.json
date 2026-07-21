@@ -1,0 +1,10 @@
+{
+  "profileId": "macos-chrome-pinyin",
+  "os": "macos",
+  "browser": "chrome",
+  "ime": "pinyin",
+  "capturedAt": "",
+  "scenarioId": "pinyin-candidate-enter",
+  "source": "os-ime",
+  "events": []
+}
