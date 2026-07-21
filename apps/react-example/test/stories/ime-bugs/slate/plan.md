@@ -29,3 +29,11 @@
 - [x] `@siheom/ime` `linux-*-slate-placeholder-fixed` / `-plain-control` profiles (golden replay)
 - [x] `composeHangul.test`: placeholder + plain control → `가` (Android와 달리 깨지지 않음)
 - [x] `SlateLogger.ime.test`: Linux Chrome/Firefox placeholder Slate editor = `가`
+
+### Fix plugin (phase 4)
+
+- [x] `fixSlatePlaceholderHangulText`: AC jamo dup `ㄱㄱㅏ` + AF stuck `ㄱ` + trailing `가ㄱㅏ` → `가`
+- [x] `SlatePlaceholderHangulFixPlugin` + `SlateLogger` broken/fixed ModeToolbar
+- [x] `SlateLogger.ime.test`: fixed + `android-chrome-slate-placeholder-broken` → `가`
+- [x] `SlateLogger.ime.test`: fixed mode Linux placeholder baseline 회귀 없음
+- [ ] Real device: Android Firefox fixed mode capture (emulator Slate mount fidelity gap)

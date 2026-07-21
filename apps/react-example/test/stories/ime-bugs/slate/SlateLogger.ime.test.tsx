@@ -17,6 +17,7 @@ function runWithSlateIme(
   profile:
     | "android-chrome-slate-placeholder-broken"
     | "android-chrome-slate-plain-control"
+    | "android-firefox-slate-placeholder-broken"
     | "android-firefox-slate-plain-control"
     | "linux-chrome-slate-placeholder-fixed"
     | "linux-firefox-slate-placeholder-fixed"
@@ -45,7 +46,7 @@ describe("SlateLogger + android-chrome-slate-placeholder-broken IME", () => {
 
     await runSiheom(
       given.render(
-        <SlateLogger captureTarget="slate-placeholder" editorRef={editorRef} />,
+        <SlateLogger mode="broken" captureTarget="slate-placeholder" editorRef={editorRef} />,
       ),
       actions.type(query.textbox("Slate editor"), "가"),
     );
@@ -53,6 +54,25 @@ describe("SlateLogger + android-chrome-slate-placeholder-broken IME", () => {
     await waitFor(() => {
       expect(editorRef.current).not.toBeNull();
       expect(readSlatePlainText(editorRef.current!)).not.toBe("가");
+    });
+  });
+
+  it("fixed mode: typing 가 composes intact 가 in Slate with placeholder", async () => {
+    const editorRef: { current: HTMLElement | null } = { current: null };
+    const { runSiheom, actions, given } = runWithSlateIme(
+      "android-chrome-slate-placeholder-broken",
+    );
+
+    await runSiheom(
+      given.render(
+        <SlateLogger mode="fixed" captureTarget="slate-placeholder" editorRef={editorRef} />,
+      ),
+      actions.type(query.textbox("Slate editor"), "가"),
+    );
+
+    await waitFor(() => {
+      expect(editorRef.current).not.toBeNull();
+      expect(readSlatePlainText(editorRef.current!)).toBe("가");
     });
   });
 });
@@ -103,6 +123,23 @@ describe("SlateLogger + linux-chrome-slate-placeholder-fixed IME", () => {
     await runSiheom(
       given.render(
         <SlateLogger captureTarget="slate-placeholder" editorRef={editorRef} />,
+      ),
+      actions.type(query.textbox("Slate editor"), "가"),
+    );
+
+    await waitFor(() => {
+      expect(editorRef.current).not.toBeNull();
+      expect(readSlatePlainText(editorRef.current!)).toBe("가");
+    });
+  });
+
+  it("fixed mode does not regress linux-chrome placeholder 가", async () => {
+    const editorRef: { current: HTMLElement | null } = { current: null };
+    const { runSiheom, actions, given } = runWithSlateIme("linux-chrome-slate-placeholder-fixed");
+
+    await runSiheom(
+      given.render(
+        <SlateLogger mode="fixed" captureTarget="slate-placeholder" editorRef={editorRef} />,
       ),
       actions.type(query.textbox("Slate editor"), "가"),
     );

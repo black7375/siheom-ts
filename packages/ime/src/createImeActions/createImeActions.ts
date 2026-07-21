@@ -9,6 +9,7 @@ import { composeHangulContentEditableFirefoxBrokenOn } from "../composeHangul/co
 import { composeHangulContentEditableFirefoxFixedOn } from "../composeHangul/composeHangulContentEditableFirefoxFixed";
 import { composeHangulContentEditableAndroidFirefoxFixedOn } from "../composeHangul/composeHangulContentEditableAndroidFirefoxFixed";
 import { composeHangulAndroidChromeSlatePlaceholderBrokenOn } from "../composeHangul/composeHangulAndroidChromeSlatePlaceholderBroken";
+import { composeHangulAndroidFirefoxSlatePlaceholderBrokenOn } from "../composeHangul/composeHangulAndroidFirefoxSlatePlaceholderBroken";
 import {
   composeHangulLinuxChromeSlatePlaceholderFixedOn,
   composeHangulLinuxFirefoxSlatePlaceholderFixedOn,

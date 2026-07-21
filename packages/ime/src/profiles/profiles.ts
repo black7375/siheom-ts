@@ -162,21 +162,21 @@ function registerBuiltins() {
     hanjaConversion: "replace",
     hangulCompositionBoundary: "run",
   });
-  registerProfile({
+  registerSyllableProfile({
     id: "android-firefox-contenteditable-broken",
     enterDuringComposition: "webkit",
     hangulKeyEventKey: "process",
     hangulComposeMode: "contenteditable-firefox-broken",
     hanjaConversion: "replace",
   });
-  registerProfile({
+  registerSyllableProfile({
     id: "linux-firefox-contenteditable-fixed",
     enterDuringComposition: "webkit",
     hangulKeyEventKey: "process",
     hangulComposeMode: "contenteditable-firefox-fixed",
     hanjaConversion: "replace",
   });
-  registerProfile({
+  registerSyllableProfile({
     id: "android-firefox-contenteditable-fixed",
     enterDuringComposition: "webkit",
     hangulKeyEventKey: "process",
@@ -205,6 +205,7 @@ function registerBuiltins() {
     hangulKeyEventKey: "process",
     hangulComposeMode: "android-firefox-slate-placeholder-broken",
     hanjaConversion: "replace",
+    hangulCompositionBoundary: "run",
   });
   registerProfile({
     id: "android-firefox-slate-plain-control",
@@ -212,6 +213,7 @@ function registerBuiltins() {
     hangulKeyEventKey: "process",
     hangulComposeMode: "android-firefox-slate-plain-control",
     hanjaConversion: "replace",
+    hangulCompositionBoundary: "run",
   });
   registerSyllableProfile({
     id: "linux-chrome-slate-placeholder-fixed",
