@@ -7,11 +7,17 @@ import "./slate-custom-types";
 import { ImeCaptureShell } from "../../ime-logger/ImeCaptureShell";
 import { CaptureInstructions } from "../shared/imeBugLoggerChrome";
 import { CaptureTargetToolbar, type SlateCaptureTarget } from "./CaptureTargetToolbar";
+import { SlateFixModeToolbar } from "./SlateFixModeToolbar";
 import {
   createSlateCompositionDebugLog,
   type SlateCompositionDebugLog,
 } from "./slateCompositionDebugLog";
+import {
+  scenarioIdForFixMode,
+  type SlateLoggerFixMode,
+} from "./slatePlaceholderAlternatives";
 import { clearSlateFixDebugState } from "./slateFixDebugState";
+import { useSlatePlaceholderAlternativeEditableProps } from "./useSlatePlaceholderAlternativeEditableProps";
 
 const EMPTY_VALUE: Descendant[] = [{ type: "paragraph", children: [{ text: "" }] }];
 const PLACEHOLDER_TEXT = "여기에 입력…";
@@ -21,44 +27,76 @@ const SCENARIO_IDS: Record<SlateCaptureTarget, string> = {
   "plain-control": "slate-ac-plain-control",
 };
 
+export type { SlateLoggerFixMode };
+
 export type SlateLoggerProps = {
+  fixMode?: SlateLoggerFixMode;
   captureTarget?: SlateCaptureTarget;
   editorRef?: MutableRefObject<HTMLElement | null>;
-  /** Override auto device debug log (slate-placeholder only). */
   debugLog?: SlateCompositionDebugLog;
-  /** Set false to omit slateDebug from downloaded JSON. */
   captureSlateDebug?: boolean;
 };
 
+function scenarioId(fixMode: SlateLoggerFixMode, target: SlateCaptureTarget): string {
+  if (target === "plain-control") {
+    return SCENARIO_IDS["plain-control"];
+  }
+  return scenarioIdForFixMode(fixMode);
+}
+
 export function SlateLogger({
+  fixMode: fixModeProp,
   captureTarget: captureTargetProp,
   editorRef,
   debugLog: debugLogProp,
   captureSlateDebug = true,
 }: SlateLoggerProps = {}) {
+  const [fixMode, setFixMode] = useState<SlateLoggerFixMode>(fixModeProp ?? "broken");
+  const effectiveFixMode = fixModeProp ?? fixMode;
   const [captureTarget, setCaptureTarget] = useState<SlateCaptureTarget>("slate-placeholder");
   const effectiveTarget = captureTargetProp ?? captureTarget;
   const [, setValue] = useState<Descendant[]>(EMPTY_VALUE);
   const [slateEditable, setSlateEditable] = useState<HTMLElement | null>(null);
-  const editor = useMemo(() => withReact(createEditor()), [effectiveTarget]);
+  const editor = useMemo(
+    () => withReact(createEditor()),
+    [effectiveTarget, effectiveFixMode],
+  );
 
-  const slateDebugEnabled = effectiveTarget === "slate-placeholder" && captureSlateDebug;
+  const slateDebugEnabled =
+    effectiveTarget === "slate-placeholder" && captureSlateDebug && effectiveFixMode !== "broken";
   const internalDebugLog = useMemo(
     () => (slateDebugEnabled ? createSlateCompositionDebugLog() : null),
-    [slateDebugEnabled, effectiveTarget],
+    [slateDebugEnabled, effectiveTarget, effectiveFixMode],
   );
   const debugLog = debugLogProp ?? internalDebugLog;
+
+  const useAlternative =
+    effectiveTarget === "slate-placeholder" && effectiveFixMode !== "broken";
+  const alternativeProps = useSlatePlaceholderAlternativeEditableProps({
+    editor: useAlternative ? editor : undefined,
+    mode: useAlternative ? effectiveFixMode : "alt-c",
+    debugLog: useAlternative ? (debugLog ?? undefined) : undefined,
+    debugLabel: effectiveFixMode,
+  });
+
+  const passiveDebug =
+    effectiveTarget === "slate-placeholder" && captureSlateDebug && !useAlternative;
+  const passiveDebugLog = useMemo(
+    () => (passiveDebug ? createSlateCompositionDebugLog() : null),
+    [passiveDebug, effectiveTarget],
+  );
+  const exportDebugLog = debugLogProp ?? (useAlternative ? debugLog : passiveDebugLog);
 
   return (
     <ImeCaptureShell
       title="Slate placeholder Hangul first syllable"
-      description="Android Slate #5989 — upstream Slate + official placeholder. JSON: events + slateDebug.final."
-      scenarioId={SCENARIO_IDS[effectiveTarget]}
-      listenerDeps={[effectiveTarget]}
+      description="Android Slate #5989 — broken / alt-a / alt-b / alt-c. JSON: events + slateDebug."
+      scenarioId={scenarioId(effectiveFixMode, effectiveTarget)}
+      listenerDeps={[effectiveTarget, effectiveFixMode]}
       traceExtra={
-        slateDebugEnabled && debugLog
+        exportDebugLog
           ? ({ events }) => ({
-              slateDebug: debugLog.toExport(editor, {
+              slateDebug: exportDebugLog.toExport(editor, {
                 editable: slateEditable,
                 imeEventCount: events.length,
               }),
@@ -74,24 +112,27 @@ export function SlateLogger({
           node.textContent = "";
         }
         clearSlateFixDebugState(editor);
-        debugLog?.clear();
+        exportDebugLog?.clear();
       }}
       beforeField={() => (
         <CaptureInstructions
           footer={
             captureTargetProp === undefined ? (
-              <div className="mt-3">
+              <div className="mt-3 space-y-3">
                 <CaptureTargetToolbar target={captureTarget} onTargetChange={setCaptureTarget} />
+                {effectiveTarget === "slate-placeholder" && fixModeProp === undefined ? (
+                  <SlateFixModeToolbar mode={fixMode} onModeChange={setFixMode} />
+                ) : null}
               </div>
             ) : null
           }
         >
           <li>
-            Upstream Slate + official <code>placeholder</code>. Fix alternatives:{" "}
-            <code>docs/research/slate-placeholder-fix-alternatives.md</code>
+            <strong>broken</strong> upstream · <strong>alt-a</strong> composition anchor ·{" "}
+            <strong>alt-b</strong> force-render guard · <strong>alt-c</strong> A+B (upstream-style)
           </li>
           <li>
-            Device: Clear → focus → type repro (e.g. <code>가나다가나다</code>) → JSON 다운로드.
+            Device: Clear → each mode → <code>가나다가나다</code> → JSON (scenarioId suffix).
           </li>
         </CaptureInstructions>
       )}
@@ -109,7 +150,12 @@ export function SlateLogger({
             aria-label="Plain control input"
           />
         ) : (
-          <Slate editor={editor} initialValue={EMPTY_VALUE} onValueChange={setValue}>
+          <Slate
+            key={`${effectiveTarget}-${effectiveFixMode}`}
+            editor={editor}
+            initialValue={EMPTY_VALUE}
+            onValueChange={setValue}
+          >
             <Editable
               ref={(node) => {
                 attachInputRef(node);
@@ -122,6 +168,7 @@ export function SlateLogger({
               aria-label="Slate editor"
               role="textbox"
               placeholder={PLACEHOLDER_TEXT}
+              {...alternativeProps}
             />
           </Slate>
         )

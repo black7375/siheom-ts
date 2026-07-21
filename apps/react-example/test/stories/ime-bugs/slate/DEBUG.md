@@ -14,8 +14,8 @@ and fix direction
 | ---- | ---- |
 | `readSlateCompositionSnapshot.ts` | Slate text, DOM text, `IS_COMPOSING` weak-map vs React, pending diffs, selection |
 | `slateCompositionDebugLog.ts` | `toExport()` for device JSON (`final` passive read) |
-| `SlateLogger.tsx` | IME capture shell — **upstream Slate only** (no app fix modes) |
-| `slatePlaceholderCompositionFix.ts` | **Research only** — retired patch pure functions for fixture drift tests |
+| `SlateLogger.tsx` | IME capture — modes: **broken**, **alt-a**, **alt-b**, **alt-c** |
+| `useSlatePlaceholderAlternativeEditableProps.tsx` | A/B/C Editable wiring (no text rewrite) |
 
 ## Side effects (why capture is deferred)
 
@@ -31,9 +31,8 @@ Invasive reads (`cloneNode`, `getComputedStyle`, sync `Node.string`) break Slate
 
 ## Device capture (Android Firefox)
 
-1. Open Storybook / dev build → **SlateLogger** (`slate-placeholder`).
-2. **Clear** → focus editor → type repro (e.g. `가나다가나다`).
-3. **JSON 다운로드** — `scenarioId`: `slate-ac-first-hangul-placeholder`.
+1. Open **SlateLogger** → compare **broken / alt-a / alt-b / alt-c** (Clear between runs).
+2. **Clear** → type repro (e.g. `가나다가나다`) → JSON (`scenarioId` suffix: `…-alt-a`, etc.).
 
 ### What to look for in captures
 

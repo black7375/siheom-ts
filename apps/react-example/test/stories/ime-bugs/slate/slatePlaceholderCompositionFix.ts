@@ -1,6 +1,6 @@
 /**
- * Research-only helpers from retired app-layer patch experiments.
- * Not wired to SlateLogger — see docs/research/slate-placeholder-fix-alternatives.md.
+ * Shared helpers for Slate #5989 natural alternatives and retired experiments.
+ * @see docs/research/slate-placeholder-fix-alternatives.md
  */
 import { assemble } from "es-hangul";
 import type { CSSProperties } from "react";

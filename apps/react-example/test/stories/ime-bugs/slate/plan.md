@@ -37,4 +37,5 @@
 - [x] Research notes: `docs/research/slate-placeholder-hangul-mechanism.md`
 - [x] Device tri-mode experiment — broken best; app patch modes removed
 - [x] Fix alternatives: `docs/research/slate-placeholder-fix-alternatives.md`
-- [ ] Alternative A/B/C — one at a time (TDD + device gate)
+- [x] Alternative A/B/C Story modes (`alt-a`, `alt-b`, `alt-c`) + broken baseline
+- [ ] Device: compare alt-a / alt-b / alt-c on AF → `가나다가나다` intact
