@@ -51,24 +51,16 @@ Slate `androidInputManager` comments (0.126):
 4. Chrome #5989 first-syllable jamo split may share (2)+(3); AF stuck-`ㄱ` +
    explosion may be (1)+(4).
 
-## Fix in Story (three modes)
+## App-layer patches (retired 2026-07-21)
 
-| Mode | Behavior |
-| ---- | -------- |
-| `broken` | Upstream Slate, no patch |
-| `minimal` | Placeholder hide + force-render guard only |
-| `end-only` | Minimal + strip orphan leading jamo on `compositionend` only; no preedit drive; no re-select on 2nd+ compose |
-| `fixed` | Minimal + `onDOMBeforeInput` cumulative preedit + composition-end normalize |
+`minimal`, `end-only`, and `fixed` Story modes were removed. Device evidence:
 
-See `useSlatePlaceholderCompositionFixEditableProps.tsx` + `slatePlaceholderCompositionFix.ts`.
+- **Broken continuous** `가나다가나다` → `ㄱ가나다가나다` (only orphan `ㄱ`).
+- App patches caused DOM wipe / explosion or post-hoc rewrite UX.
 
-1. **Placeholder stays official** — `renderPlaceholder` hides via `display:none` while `IS_COMPOSING` (Android never flips React `isComposing`, so `showPlaceholder` stayed true).
-2. **No force-re-render during composition** — wrap `EDITOR_TO_FORCE_RENDER` (MutationObserver wipe / explosion).
-3. **`onDOMBeforeInput` (full fixed only, Android)** — document = cumulative IME `data` when it already includes `committed`; skip deferred duplicate/explosion; `documentAfterCompositionEnd` after flush.
+See [`slate-placeholder-fix-alternatives.md`](./slate-placeholder-fix-alternatives.md) for next steps.
 
-Device v4 (`mechanism-fix-v4-still-explodes-가나다가나다.json`): fix-pair drift **0%** — pure function matches device `next`, but driving DOM each step still explodes.
-
-### Device tri-mode compare (2026-07-21, same device session)
+### Device tri-mode compare (2026-07-21)
 
 Fixtures: `device-tri-mode-broken-가나다.json`, `device-tri-mode-minimal-가나다x2.json`, `device-tri-mode-fixed-가나다x3.json`.
 
@@ -92,4 +84,4 @@ Fixtures: `device-tri-mode-broken-가나다.json`, `device-tri-mode-minimal-가�
 - **minimal** has no `committed-preedit` — explosion is **not** caused by preedit drive; it is Slate+AF reconciliation after the first word.
 - **fixed** `replaceSlateEditorPlainText` + skip-input reshuffles DOM mid-compose → shorter but still wrong (`가ㅏㄷ가ㅏㅏ`).
 
-**Implication:** The single-word bug is orphan leading `ㄱ`. Broken **continuous** typing (`가나다가나다` in one flow) stays readable. Explosion in minimal/fixed tri-mode was largely **patch-induced** (`Transforms.select` at document start on 2nd `compositionstart` → DOM wipe). **end-only** strips `ㄱ` on `compositionend` without during-compose rewrite.
+**Implication:** Orphan leading `ㄱ` is the real bug. Broken continuous typing works. App patches made things worse.

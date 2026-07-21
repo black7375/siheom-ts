@@ -28,11 +28,10 @@ function runWithSlateIme(profile: "android-firefox-slate-placeholder-fixed") {
 }
 
 /**
- * Diagnostic test — dumps Slate DOM trace (AF continuous golden has no Slate
- * mount fidelity under Chromium Vitest). Run:
- *   cd apps/react-example && bun run test SlateLogger.ime.debug.test.tsx
+ * Diagnostic test — dumps passive slateDebug at download shape.
+ * Run: cd apps/react-example && bun run test SlateLogger.ime.debug.test.tsx
  */
-describe("SlateLogger AF fixed — composition debug trace", () => {
+describe("SlateLogger AF — composition debug export", () => {
   it("dump trace while typing 가나다 (android-firefox-slate-placeholder-fixed)", async () => {
     const editorRef: { current: HTMLElement | null } = { current: null };
     const debugLog = createSlateCompositionDebugLog();
@@ -43,7 +42,6 @@ describe("SlateLogger AF fixed — composition debug trace", () => {
     await runSiheom(
       given.render(
         <SlateLogger
-          mode="fixed"
           captureTarget="slate-placeholder"
           editorRef={editorRef}
           debugLog={debugLog}
@@ -59,7 +57,6 @@ describe("SlateLogger AF fixed — composition debug trace", () => {
     console.log("\n--- Slate composition debug trace ---\n" + dump + "\n--- end ---\n");
 
     expect(editorRef.current).not.toBeNull();
-    // Emulator gap: DOM stays ZWSP/empty. Device validation is separate.
     expect(text, `Unexpected intact 가나다 under Vitest.\n\n${dump}`).not.toBe("가나다");
   });
 });

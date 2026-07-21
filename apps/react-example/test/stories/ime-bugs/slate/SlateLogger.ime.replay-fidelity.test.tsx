@@ -18,12 +18,7 @@ describe("Experiment A: golden replay fidelity (broken Slate, no fix)", () => {
     const editorRef: { current: HTMLElement | null } = { current: null };
 
     render(
-      <SlateLogger
-        mode="broken"
-        captureTarget="slate-placeholder"
-        editorRef={editorRef}
-        captureSlateDebug={false}
-      />,
+      <SlateLogger captureTarget="slate-placeholder" editorRef={editorRef} captureSlateDebug={false} />,
     );
 
     await waitFor(() => {

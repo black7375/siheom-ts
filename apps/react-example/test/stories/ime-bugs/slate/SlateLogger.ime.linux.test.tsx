@@ -41,9 +41,7 @@ describe("SlateLogger + linux-chrome-slate-placeholder-fixed IME", () => {
     const { runSiheom, actions, given } = runWithSlateIme("linux-chrome-slate-placeholder-fixed");
 
     await runSiheom(
-      given.render(
-        <SlateLogger mode="broken" captureTarget="slate-placeholder" editorRef={editorRef} />,
-      ),
+      given.render(<SlateLogger captureTarget="slate-placeholder" editorRef={editorRef} />),
       actions.type(query.textbox("Slate editor"), "가"),
     );
 
@@ -55,23 +53,6 @@ describe("SlateLogger + linux-chrome-slate-placeholder-fixed IME", () => {
       { timeout: 3000 },
     );
   });
-
-  it("fixed mode composes intact 가 with official placeholder", async () => {
-    const editorRef: { current: HTMLElement | null } = { current: null };
-    const { runSiheom, actions, given } = runWithSlateIme("linux-chrome-slate-placeholder-fixed");
-
-    await runSiheom(
-      given.render(
-        <SlateLogger mode="fixed" captureTarget="slate-placeholder" editorRef={editorRef} />,
-      ),
-      actions.type(query.textbox("Slate editor"), "가"),
-    );
-
-    await waitFor(() => {
-      expect(editorRef.current).not.toBeNull();
-      expect(readSlatePlainText(editorRef.current!)).toBe("가");
-    });
-  });
 });
 
 describe("SlateLogger + linux-firefox-slate-placeholder-fixed IME", () => {
@@ -80,9 +61,7 @@ describe("SlateLogger + linux-firefox-slate-placeholder-fixed IME", () => {
     const { runSiheom, actions, given } = runWithSlateIme("linux-firefox-slate-placeholder-fixed");
 
     await runSiheom(
-      given.render(
-        <SlateLogger captureTarget="slate-placeholder" editorRef={editorRef} />,
-      ),
+      given.render(<SlateLogger captureTarget="slate-placeholder" editorRef={editorRef} />),
       actions.type(query.textbox("Slate editor"), "가"),
     );
 

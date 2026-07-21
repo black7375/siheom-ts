@@ -35,7 +35,6 @@
 - [x] Reject post-hoc rewrite (flicker capture)
 - [x] Reject decorative overlay (still explodes; not a real fix) — `decorative-still-explodes-가나다가나다.json`
 - [x] Research notes: `docs/research/slate-placeholder-hangul-mechanism.md`
-- [x] Story always uses Slate `placeholder={…}`; broken / minimal / fixed modes
-- [x] `minimal` mode: placeholder hide + force-render guard only (no preedit drive)
-- [x] `end-only` mode: compositionend orphan-ㄱ strip; no select-reset on non-empty doc
-- [ ] Device: `end-only` on AF → `가나다가나다` intact (recapture)
+- [x] Device tri-mode experiment — broken best; app patch modes removed
+- [x] Fix alternatives: `docs/research/slate-placeholder-fix-alternatives.md`
+- [ ] Alternative A/B/C — one at a time (TDD + device gate)

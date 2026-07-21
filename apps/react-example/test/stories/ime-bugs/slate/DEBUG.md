@@ -4,16 +4,18 @@
 
 Understand Slate + Android Hangul IME well enough to keep the **official**
 `placeholder` prop working. See
-[`docs/research/slate-placeholder-hangul-mechanism.md`](../../../../../../docs/research/slate-placeholder-hangul-mechanism.md).
+[`docs/research/slate-placeholder-hangul-mechanism.md`](../../../../../../docs/research/slate-placeholder-hangul-mechanism.md)
+and fix direction
+[`docs/research/slate-placeholder-fix-alternatives.md`](../../../../../../docs/research/slate-placeholder-fix-alternatives.md).
 
 ## Tools
 
 | File | Role |
 | ---- | ---- |
-| `readSlateCompositionSnapshot.ts` | Slate text, DOM text, `IS_COMPOSING` weak-map vs React, pending diffs, selection, fix state |
-| `slateFixDebugState.ts` | Per-editor `committedHangul` + fix action history |
-| `slateCompositionDebugLog.ts` | `dump()`, `toExport()` for device JSON |
-| `SlateLogger.tsx` | IME capture + fix-plugin rows → `slateDebug` in downloaded JSON |
+| `readSlateCompositionSnapshot.ts` | Slate text, DOM text, `IS_COMPOSING` weak-map vs React, pending diffs, selection |
+| `slateCompositionDebugLog.ts` | `toExport()` for device JSON (`final` passive read) |
+| `SlateLogger.tsx` | IME capture shell — **upstream Slate only** (no app fix modes) |
+| `slatePlaceholderCompositionFix.ts` | **Research only** — retired patch pure functions for fixture drift tests |
 
 ## Side effects (why capture is deferred)
 
@@ -24,61 +26,33 @@ Invasive reads (`cloneNode`, `getComputedStyle`, sync `Node.string`) break Slate
 
 | Field | Contents |
 | ----- | -------- |
-| `events[]` | DOM IME trace (only copy) |
-| `slateDebug.fixTrace[]` | Fix-plugin steps (`composition-start`, `committed-preedit` in full fixed only, …) |
+| `events[]` | DOM IME trace |
 | `slateDebug.final` | Passive Slate+DOM read at JSON download |
-| ~~`slateDebug.entries`~~ | Removed — duplicated every `events[]` row |
 
 ## Device capture (Android Firefox)
 
 1. Open Storybook / dev build → **SlateLogger** (`slate-placeholder`).
-2. Compare **broken → minimal → fixed** in one session (Clear between runs).
-3. Meta: OS=`android`, Browser=`firefox`, IME=`hangul` (or leave as detected).
-4. **Clear** → focus editor → type repro (e.g. `가나다` or `가나다가나다`).
-5. **JSON 다운로드** — scenarioId suffix: `…-placeholder` (broken), `…-minimal`, `…-fixed`.
-   - `events[]` — DOM IME trace
-   - `slateDebug.fixTrace[]` — patch steps (`action`, `detail`, compact `snap`); minimal has no `committed-preedit`
-   - `slateDebug.final` — passive Slate+DOM at download
-   - `slateDebug.summary` — last slate text, committed, step count
+2. **Clear** → focus editor → type repro (e.g. `가나다가나다`).
+3. **JSON 다운로드** — `scenarioId`: `slate-ac-first-hangul-placeholder`.
 
 ### What to look for in captures
 
 | Signal | Meaning |
 | ------ | ------- |
-| `fixTrace[].detail.domText !== detail.slateText` | Model vs DOM diverged at patch decision |
-| `snap.isComposingWeak=true`, `snap.isComposingReact=false` | Android placeholder bug path |
+| `final.slateText` vs `events[].value` at end | Model vs DOM at download |
 | `final.placeholderDisplay !== "none"` after typing | Placeholder still visible |
-| `snap.pendingDiffCount > 0` at `composition-end` | Android IM flush race |
-| missing `committed-preedit` / only `committed-sync` | Patch not driving document during compose |
+| Stuck leading `ㄱ` with correct `compositionend.data` | AF #5989 orphan jamo |
 
 Save to `fixtures/android-firefox/` with descriptive name.
 
-## Rejected “fixes”
+## Rejected app-layer patches (2026-07-21)
 
-1. **Post-hoc rewrite** — `rejected-rewrite-flicker-가나다.json` (flicker).
-2. **Decorative placeholder (drop official API)** — `decorative-still-explodes-가나다가나다.json`
-   (still explodes; placeholder not visible). Not a fix.
-
-## Mechanism clue (decorative AF capture)
-
-```
-ㄱ → "" (wiped)
-가 → "" (wiped)
-ㄱ stuck + data 가→가나다 → visible ㄱ가나다
-then data = whole document + next jamo → value doubles (explosion)
-```
-
-## Fixed mode (`useSlatePlaceholderCompositionFixEditableProps`)
-
-Keeps official `placeholder={…}`. Patches Slate Android IM interaction:
-
-| Patch | Targets |
-| ----- | ------- |
-| `renderPlaceholder` + imperative hide | Android never sets React `isComposing` → placeholder stayed visible ([`editable.tsx`](https://github.com/ianstormtaylor/slate/blob/main/packages/slate-react/src/components/editable.tsx)) |
-| `EDITOR_TO_FORCE_RENDER` guard while composing | AF wipe / explosion ([`android-input-manager.ts`](https://github.com/ianstormtaylor/slate/blob/main/packages/slate-react/src/hooks/android-input-manager/android-input-manager.ts) `handleDomMutations`) |
-| `onDOMBeforeInput` | duplicate jamo skip, deferred FF insert skip, committed+preedit model |
-
-Vitest: `slateAndroidChromeEnv.ts` / `slateAndroidFirefoxEnv.ts` patch UA before `slate-react` init.
+| Patch | Evidence |
+| ----- | -------- |
+| Post-hoc rewrite | `rejected-rewrite-flicker-가나다.json` |
+| Decorative placeholder | `decorative-still-explodes-가나다가나다.json` |
+| Preedit drive (`minimal` / `fixed`) | `device-tri-mode-*`, v4 fixture |
+| End-only orphan strip | `device end-only` — correct final text, awkward UX |
 
 ## Run
 
