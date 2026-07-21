@@ -148,7 +148,7 @@ describe("Experiment A: golden replay fidelity (broken Slate, no fix)", () => {
     expect(report.matchRate).toBeLessThan(1);
   });
 
-  it("oracle writeback on plain div reaches 100% (golden self-consistency)", async () => {
+  it("golden writeback on plain div reaches 100% (golden self-consistency)", async () => {
     const div = document.createElement("div");
     div.contentEditable = "true";
     document.body.append(div);
@@ -157,7 +157,7 @@ describe("Experiment A: golden replay fidelity (broken Slate, no fix)", () => {
       div,
       brokenGaGolden.events as Parameters<typeof measureReplayFidelity>[1],
       readSlatePlainText,
-      { settle: "macrotask", writeback: "oracle" },
+      { settle: "macrotask", writeback: "golden" },
     );
 
     expect(report.matchRate).toBe(1);

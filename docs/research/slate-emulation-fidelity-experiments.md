@@ -19,7 +19,7 @@ Fix tests replay device golden JSON in Chromium + UA spoof and pass, but **real 
 
 **Conclusion:** Events-only contenteditable replay is **not** a device emulator. Longer captures diverge more (4% for 120 steps).
 
-Oracle writeback (force DOM = golden `value` after each step) → **100%** on plain div. Golden is self-consistent; gap is **Slate+Chromium not reproducing device DOM from events alone**.
+**Golden writeback** (`writeback: "golden"` on `replayGoldenEvents`) → **100%** on plain div. Golden is self-consistent; gap is **Slate+Chromium not reproducing device DOM from events alone**.
 
 ## Experiment B — dual trace
 
@@ -27,9 +27,9 @@ Oracle writeback (force DOM = golden `value` after each step) → **100%** on pl
 
 **Tool:** `dualTraceFromImeCapture()` — maps `events[].value` → `expectedDom`
 
-Oracle replay satisfies dual trace on plain div (100%). Use dual trace for:
+Golden writeback satisfies dual trace on plain div (100%). Use dual trace for:
 
-- Fidelity benchmarks (events-only vs oracle gap)
+- Fidelity benchmarks (events-only vs golden-writeback gap)
 - Future: step assertions without conflating event log with DOM oracle
 
 ## Experiment C — fix-pair extraction
@@ -46,6 +46,6 @@ Run: `bun run vitest run extractFixPairsFromCapture.test.tsx`
 
 ## What to do next
 
-1. **Stop using fixed-mode golden replay as device gate** until events-only broken fidelity ≥ threshold (e.g. 90%) or CI uses real AF.
-2. **Improve emulation** (optional paths): DOM writeback for `<input>` only; Slate-specific IM simulator; Firefox Android in CI.
-3. **Fix development:** iterate on Experiment C pairs + device capture, not replay pass alone.
+1. ~~**Stop using fixed-mode golden replay as device gate**~~ — replaced with fidelity assertions (`matchRate < 0.2`).
+2. **Golden writeback** — `replayGoldenEvents({ writeback: "golden" })` for plain CE upper bound; Slate stays events-only.
+3. **Fix development:** iterate on Experiment C pairs + device capture (`mechanism-fix-v4-…json`), not replay pass alone.

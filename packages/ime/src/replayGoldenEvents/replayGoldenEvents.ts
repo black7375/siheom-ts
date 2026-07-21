@@ -6,9 +6,14 @@ import type { ImeTraceEmitter, InputEventFields } from "../_internal/imeTrace";
 import { ImeTrace } from "../_internal/imeTrace";
 import { isEditable } from "../withPresentElement";
 import { settleAfterPreedit } from "../composeHangul/settle";
+import {
+  applyGoldenDomWriteback,
+  stripGoldenText,
+  type GoldenWritebackMode,
+} from "./goldenDomWriteback";
 
 function stripZwsp(text: string): string {
-  return text.replace(/\u200b/g, "");
+  return stripGoldenText(text);
 }
 
 function toKeyFields(event: ComposedEventRecord): KeyEventFields {
@@ -64,6 +69,8 @@ export function playGoldenEvent(trace: ImeTraceEmitter, event: ComposedEventReco
 export type ReplayGoldenEventsOptions = {
   /** Wait a macrotask between events (contenteditable / Lexical). */
   settle?: "macrotask";
+  /** After each event, set DOM to golden `value` (plain CE / input; not Slate-safe). */
+  writeback?: GoldenWritebackMode;
 };
 
 /** Replay OS-captured golden events verbatim (contenteditable or input). */
@@ -85,6 +92,9 @@ export async function replayGoldenEvents(
     }
     if (options.settle === "macrotask" && trace instanceof ContentEditableImeTrace) {
       await settleAfterPreedit("macrotask");
+    }
+    if (options.writeback === "golden" && event.value != null) {
+      applyGoldenDomWriteback(element, event.value);
     }
   }
 

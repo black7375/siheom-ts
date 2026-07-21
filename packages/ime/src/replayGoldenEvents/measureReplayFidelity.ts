@@ -4,11 +4,10 @@ import { setInputValue } from "../_internal/events";
 import { ImeTrace } from "../_internal/imeTrace";
 import { isEditable } from "../withPresentElement";
 import { settleAfterPreedit } from "../composeHangul/settle";
+import { applyGoldenDomWriteback, stripGoldenText } from "./goldenDomWriteback";
 import { playGoldenEvent, type ReplayGoldenEventsOptions } from "./replayGoldenEvents";
 
-function stripZwsp(text: string): string {
-  return text.replace(/\u200b/g, "");
-}
+export type MeasureReplayFidelityOptions = ReplayGoldenEventsOptions;
 
 export type FidelityStep = {
   index: number;
@@ -26,22 +25,6 @@ export type FidelityReport = {
   firstMismatchIndex: number | null;
   steps: FidelityStep[];
 };
-
-export type MeasureReplayFidelityOptions = ReplayGoldenEventsOptions & {
-  /**
-   * `oracle` — after each event, force DOM to golden `value` (upper bound; not Slate-safe).
-   * `none` — events only (default).
-   */
-  writeback?: "none" | "oracle";
-};
-
-function applyOracleWriteback(element: HTMLElement, expected: string): void {
-  if (isEditable(element)) {
-    setInputValue(element, expected, expected.length);
-    return;
-  }
-  element.textContent = expected;
-}
 
 /**
  * Replay golden events step-by-step and compare DOM to each event's captured `value`.
@@ -66,7 +49,7 @@ export async function measureReplayFidelity(
     playGoldenEvent(trace, event);
 
     if (trace instanceof ImeTrace && event.type === "input" && event.value != null) {
-      const visible = stripZwsp(event.value);
+      const visible = stripGoldenText(event.value);
       setInputValue(trace.element, visible, visible.length);
     }
 
@@ -74,12 +57,12 @@ export async function measureReplayFidelity(
       await settleAfterPreedit("macrotask");
     }
 
-    const expected = stripZwsp(event.value ?? "");
-    if (writeback === "oracle") {
-      applyOracleWriteback(element, expected);
+    const expected = stripGoldenText(event.value ?? "");
+    if (writeback === "golden") {
+      applyGoldenDomWriteback(element, expected);
     }
 
-    const actual = stripZwsp(readDom(element));
+    const actual = stripGoldenText(readDom(element));
     steps.push({
       index,
       type: event.type,

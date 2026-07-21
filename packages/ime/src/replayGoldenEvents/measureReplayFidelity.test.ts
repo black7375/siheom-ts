@@ -4,7 +4,7 @@ import type { ComposedEventRecord } from "../_internal/types";
 import { measureReplayFidelity } from "./measureReplayFidelity";
 
 describe("measureReplayFidelity", () => {
-  it("oracle writeback matches golden values on plain contenteditable", async () => {
+  it("golden writeback matches golden values on plain contenteditable", async () => {
     const div = document.createElement("div");
     div.contentEditable = "true";
     document.body.append(div);
@@ -43,7 +43,7 @@ describe("measureReplayFidelity", () => {
     ];
 
     const report = await measureReplayFidelity(div, events, (el) => el.textContent ?? "", {
-      writeback: "oracle",
+      writeback: "golden",
       settle: "macrotask",
     });
 

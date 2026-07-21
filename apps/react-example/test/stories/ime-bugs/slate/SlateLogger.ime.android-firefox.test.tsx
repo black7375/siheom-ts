@@ -9,13 +9,13 @@ import {
   overrideSiheom,
   query,
 } from "@siheom/core";
-import { createImeActions, replayGoldenEvents } from "@siheom/ime";
+import { createImeActions, measureReplayFidelity } from "@siheom/ime";
 import { defaultGivens, reactEffects } from "@siheom/react";
 
 import { SlateLogger } from "./SlateLogger";
 import { readSlatePlainText } from "./readSlatePlainText";
-import deviceExplosionGolden from "./fixtures/android-firefox/mechanism-fix-still-explodes-가나다가나다.json";
-import deviceV3Golden from "./fixtures/android-firefox/mechanism-fix-v3-cumulative-preedit-가나다가나다.json";
+import v3Golden from "./fixtures/android-firefox/mechanism-fix-v3-cumulative-preedit-가나다가나다.json";
+import v4Golden from "./fixtures/android-firefox/mechanism-fix-v4-still-explodes-가나다가나다.json";
 
 function runWithSlateIme(profile: "android-firefox-slate-placeholder-broken") {
   return overrideSiheom(
@@ -51,7 +51,7 @@ describe("SlateLogger + android-firefox-slate-placeholder-fixed IME", () => {
     });
   });
 
-  it("fixed mode replays AF device explosion golden without document concat", async () => {
+  it("fixed mode events-only replay fidelity stays low (not a device gate)", async () => {
     const editorRef: { current: HTMLElement | null } = { current: null };
 
     render(
@@ -67,46 +67,49 @@ describe("SlateLogger + android-firefox-slate-placeholder-fixed IME", () => {
       expect(editorRef.current).not.toBeNull();
     });
 
-    await replayGoldenEvents(editorRef.current!, deviceExplosionGolden.events, {
-      settle: "macrotask",
-    });
-
-    await waitFor(
-      () => {
-        const text = readSlatePlainText(editorRef.current!);
-        expect(text).not.toContain("가나간간");
-        expect(text).not.toMatch(/(.+)\1\1/);
-        expect(text.length).toBeLessThanOrEqual(6);
-      },
-      { timeout: 3000 },
+    const report = await measureReplayFidelity(
+      editorRef.current!,
+      v4Golden.events,
+      readSlatePlainText,
+      { settle: "macrotask" },
     );
+
+    expect(report.matchRate).toBeLessThan(0.2);
+  });
+});
+
+describe("Experiment 1: golden writeback on plain contenteditable", () => {
+  it("events-only plain CE stays low-fidelity on v3 capture", async () => {
+    const div = document.createElement("div");
+    div.contentEditable = "true";
+    document.body.append(div);
+
+    const report = await measureReplayFidelity(
+      div,
+      v3Golden.events,
+      readSlatePlainText,
+      { settle: "macrotask" },
+    );
+
+    expect(report.matchRate).toBeLessThan(0.2);
+    div.remove();
   });
 
-  it("fixed mode replays AF v3 cumulative-preedit capture as 가나다가나다", async () => {
-    const editorRef: { current: HTMLElement | null } = { current: null };
+  it("golden writeback plain CE reaches 100% on v3 and v4 captures", async () => {
+    for (const golden of [v3Golden, v4Golden]) {
+      const div = document.createElement("div");
+      div.contentEditable = "true";
+      document.body.append(div);
 
-    render(
-      <SlateLogger
-        mode="fixed"
-        captureTarget="slate-placeholder"
-        editorRef={editorRef}
-        captureSlateDebug={false}
-      />,
-    );
+      const report = await measureReplayFidelity(
+        div,
+        golden.events,
+        readSlatePlainText,
+        { settle: "macrotask", writeback: "golden" },
+      );
 
-    await waitFor(() => {
-      expect(editorRef.current).not.toBeNull();
-    });
-
-    await replayGoldenEvents(editorRef.current!, deviceV3Golden.events, {
-      settle: "macrotask",
-    });
-
-    await waitFor(
-      () => {
-        expect(readSlatePlainText(editorRef.current!)).toBe("가나다가나다");
-      },
-      { timeout: 3000 },
-    );
+      expect(report.matchRate).toBe(1);
+      div.remove();
+    }
   });
 });

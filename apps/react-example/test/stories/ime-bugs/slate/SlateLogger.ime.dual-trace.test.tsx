@@ -25,7 +25,7 @@ describe("Experiment B: dual-trace oracle vs events-only", () => {
       div,
       dual.steps.map((step) => step.event),
       readSlatePlainText,
-      { settle: "macrotask", writeback: "oracle" },
+      { settle: "macrotask", writeback: "golden" },
     );
 
     expect(report.matchRate).toBe(1);
