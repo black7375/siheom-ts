@@ -1,17 +1,10 @@
 import { planHangulKeystrokes, withSuffix, type HangulKeyStroke } from "../planHangulKeystrokes";
 import {
-  applyPreedit,
-  clearImeSession,
-  commitBetweenPreeditSteps,
-  hangulKeydownFields,
-  hangulKeyupFields,
   ImeTrace,
-  keyForJamo,
+  playEventPlan,
   readMaxLength,
-  rejectChromeCompositionOverflow,
   setImeSession,
   takePendingMaxLengthReject,
-  updateImeSessionForPreedit,
   type ComposedEventRecord,
 } from "../_internal";
 import { consumeImeControlledWriteback } from "../markImeControlledWriteback";
@@ -20,6 +13,18 @@ import {
   composeHangulSafariComposition,
   composeHangulSafariReplacement,
 } from "./composeHangulSafari";
+import {
+  decideStrokeStepOutcome,
+  planBoundaryCommitAfterStep,
+  planChromeBlurAbortTail,
+  planChromeDeferredAbortTail,
+  planChromePendingOverflowReject,
+  planChromePreeditStep,
+  planChromeStrokeHead,
+  planChromeStrokeKeyup,
+  planEndComposition,
+  planIsolatedJamo,
+} from "./planStroke";
 
 export type { ComposedEventRecord } from "../_internal";
 
@@ -43,28 +48,15 @@ export type ComposeHangulOptions = {
   profile?: string | ImeProfile;
 };
 
-async function flushMicrotasks() {
-  await Promise.resolve();
-  await Promise.resolve();
-}
-
-async function flushMacrotask() {
+async function settleAfterPreedit(kind: "microtask" | "macrotask") {
+  if (kind === "microtask") {
+    await Promise.resolve();
+    await Promise.resolve();
+    return;
+  }
   await new Promise<void>((resolve) => {
     setTimeout(resolve, 0);
   });
-}
-
-async function settleAfterPreedit(kind: "microtask" | "macrotask") {
-  if (kind === "microtask") {
-    await flushMicrotasks();
-    return;
-  }
-  await flushMacrotask();
-}
-
-function endComposition(trace: ImeTrace, data: string) {
-  trace.compositionEnd(data);
-  clearImeSession(trace.element);
 }
 
 type StrokeAbort = "aborted-blur" | "aborted-deferred" | "maxlength-reject" | "ok";
@@ -78,52 +70,17 @@ async function playRemainingIsolated(
   profile: ImeProfile,
 ) {
   for (const jamo of remaining) {
-    await playIsolatedJamo(trace, jamo, suffix, settle, { commit }, profile);
+    const { element } = trace;
+    const committed = element.value.slice(0, element.value.length - suffix.length);
+    playEventPlan(
+      trace,
+      planIsolatedJamo(jamo, committed, suffix, profile, commit, {
+        valueBefore: element.value,
+        maxLength: readMaxLength(element),
+      }),
+    );
+    await settleAfterPreedit(settle);
   }
-}
-
-/** One jamo as its own composition session (after focus-steal / deferred abort). */
-async function playIsolatedJamo(
-  trace: ImeTrace,
-  jamo: string,
-  suffix: string,
-  settle: "microtask" | "macrotask",
-  options: { commit: boolean },
-  profile: ImeProfile,
-) {
-  const { element } = trace;
-  const meta = keyForJamo(jamo);
-  const stroke = { jamo, code: meta.code, key: meta.key };
-  const committed = element.value.slice(0, element.value.length - suffix.length);
-  const value = committed + jamo + suffix;
-  const caret = committed.length + jamo.length;
-
-  trace.keydown({
-    ...hangulKeydownFields(profile, stroke),
-    isComposing: false,
-  });
-
-  trace.compositionStart();
-
-  setImeSession(element, {
-    composing: true,
-    committed,
-    preedit: jamo,
-    suffix,
-  });
-
-  applyPreedit(trace, jamo, value, caret);
-  await settleAfterPreedit(settle);
-
-  if (options.commit) {
-    endComposition(trace, jamo);
-  } else {
-    clearImeSession(element);
-  }
-
-  trace.keyup({
-    ...hangulKeyupFields(profile, stroke, false),
-  });
 }
 
 async function playStrokeRespectingBlur(
@@ -138,57 +95,58 @@ async function playStrokeRespectingBlur(
   const { element } = trace;
   const carets = stroke.valuesAfterSteps.map((value) => value.length - suffix.length);
 
-  trace.keydown({
-    ...hangulKeydownFields(profile, stroke),
-    isComposing: stroke.keydownIsComposing,
-  });
-
-  if (stroke.compositionStart) {
-    trace.compositionStart();
-  }
+  playEventPlan(trace, planChromeStrokeHead(stroke, profile));
 
   for (let i = 0; i < stroke.preeditSteps.length; i++) {
     const preedit = stroke.preeditSteps[i] ?? "";
     const value = stroke.valuesAfterSteps[i] ?? element.value;
     const caret = carets[i] ?? value.length - suffix.length;
 
-    updateImeSessionForPreedit(element, preedit, value, caret, suffix);
-
-    applyPreedit(trace, preedit, value, caret);
+    playEventPlan(
+      trace,
+      planChromePreeditStep(preedit, value, caret, suffix, {
+        valueBefore: element.value,
+        maxLength: readMaxLength(element),
+      }),
+    );
     await settleAfterPreedit(settle);
 
     const writeback = deferredUpdateRace && consumeImeControlledWriteback(element);
-    const clobbered = element.value !== value;
+    const outcome = decideStrokeStepOutcome({
+      plannedValue: value,
+      domValue: element.value,
+      blurred: blurred.current,
+      writeback: Boolean(writeback),
+    });
 
-    if (writeback || clobbered) {
-      clearImeSession(element);
-      trace.keyup({
-        ...hangulKeyupFields(profile, stroke, false),
-      });
+    if (outcome === "aborted-deferred") {
+      playEventPlan(trace, planChromeDeferredAbortTail(stroke, profile));
       return "aborted-deferred";
     }
 
-    if (blurred.current) {
+    if (outcome === "aborted-blur") {
       blurred.current = false;
-      endComposition(trace, preedit);
-      trace.keyup({
-        ...hangulKeyupFields(profile, stroke, false),
-      });
+      playEventPlan(trace, planChromeBlurAbortTail(stroke, profile, preedit));
       return "aborted-blur";
     }
 
-    commitBetweenPreeditSteps(trace, stroke, value, i);
+    playEventPlan(trace, planBoundaryCommitAfterStep(stroke, value, i));
   }
 
-  trace.keyup({
-    ...hangulKeyupFields(profile, stroke, true),
-  });
+  playEventPlan(trace, planChromeStrokeKeyup(stroke, profile));
 
   const pendingReject = takePendingMaxLengthReject(element);
   if (pendingReject) {
     const limit = readMaxLength(element);
     if (limit !== null && element.value.length > limit) {
-      rejectChromeCompositionOverflow(trace, pendingReject.preedit, pendingReject.overflowValue);
+      playEventPlan(
+        trace,
+        planChromePendingOverflowReject(
+          pendingReject.preedit,
+          pendingReject.overflowValue,
+          limit,
+        ),
+      );
     }
     return "maxlength-reject";
   }
@@ -300,7 +258,7 @@ export async function composeHangul(
     );
 
     if (commitFinal) {
-      endComposition(trace, finalPreedit);
+      playEventPlan(trace, planEndComposition(finalPreedit));
     } else {
       setImeSession(element, {
         composing: true,

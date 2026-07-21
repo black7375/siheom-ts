@@ -1,25 +1,31 @@
 import type { HangulKeyStroke } from "../planHangulKeystrokes";
 import {
-  applyPreedit,
   applyReplacementText,
   clearImeSession,
   commitSafariSyllable,
-  commitSafariSyllableCore,
   hangulKeydownFields,
   hangulKeyupFields,
   ImeTrace,
+  playEventPlan,
   readMaxLength,
-  rejectSafariCompositionOverflow,
-  rejectSafariReplacementOverflow,
   replacementInputType,
   restartSafariComposition,
-  updateImeSessionForPreedit,
   type ComposedEventRecord,
 } from "../_internal";
 import { consumeImeControlledWriteback } from "../markImeControlledWriteback";
 import type { ImeProfile } from "../profiles";
 
 import type { ComposeHangulOptions } from "./composeHangul";
+import {
+  decideSafariOverflow,
+  decideStrokeStepOutcome,
+  planChromePreeditStep,
+  planSafariBoundaryCommit,
+  planSafariDeferredBrokenStep,
+  planSafariOverflowReject,
+  planSafariStrokeCompositionStart,
+  planSafariStrokeKeys,
+} from "./planStroke";
 
 function shouldConfirmAfterStroke(strokes: HangulKeyStroke[], index: number): boolean {
   const next = strokes[index + 1];
@@ -73,13 +79,19 @@ export async function composeHangulSafariReplacement(
         caret,
       );
 
-      trace.keydown({
-        ...hangulKeydownFields(profile, stroke),
-        isComposing: false,
-      });
-      trace.keyup({
-        ...hangulKeyupFields(profile, stroke, false),
-      });
+      playEventPlan(trace, [
+        {
+          kind: "keydown",
+          fields: {
+            ...hangulKeydownFields(profile, stroke),
+            isComposing: false,
+          },
+        },
+        {
+          kind: "keyup",
+          fields: { ...hangulKeyupFields(profile, stroke, false) },
+        },
+      ]);
 
       await settleAfterPreedit(settle ?? "microtask");
     }
@@ -107,57 +119,51 @@ async function playStrokeSafariComposition(
   const carets = stroke.valuesAfterSteps.map((value) => value.length - suffix.length);
   const limit = readMaxLength(element);
 
-  if (stroke.compositionStart) {
-    trace.compositionStart();
-  }
+  playEventPlan(trace, planSafariStrokeCompositionStart(stroke));
 
   for (let i = 0; i < stroke.preeditSteps.length; i++) {
     const preedit = stroke.preeditSteps[i] ?? "";
     const value = stroke.valuesAfterSteps[i] ?? element.value;
     const caret = carets[i] ?? value.length - suffix.length;
 
-    updateImeSessionForPreedit(element, preedit, value, caret, suffix);
-    applyPreedit(trace, preedit, value, caret);
+    playEventPlan(
+      trace,
+      planChromePreeditStep(preedit, value, caret, suffix, {
+        valueBefore: element.value,
+        maxLength: readMaxLength(element),
+      }),
+    );
 
-    if (limit !== null && value.length > limit) {
-      // Overflow keystroke: Safari fires the keydown, then either the host
-      // clamped the DOM (fixed UI) or the overflow stays until reject (broken).
-      const clamped = value.slice(0, limit);
-      const hostClamped = element.value === clamped;
+    const overflow = decideSafariOverflow({
+      maxLength: limit,
+      plannedValue: value,
+      domValue: element.value,
+    });
 
-      trace.keydown({
-        ...hangulKeydownFields(profile, stroke),
-        isComposing: !hostClamped,
-      });
-      trace.keyup({
-        ...hangulKeyupFields(profile, stroke, !hostClamped),
-      });
-
-      if (hostClamped) {
-        // Composition died with the clamp: restart, echo the preedit, then empty insertText.
-        trace.compositionStart();
-        applyPreedit(trace, preedit, clamped, clamped.length);
-        rejectSafariReplacementOverflow(trace);
-      } else {
-        rejectSafariCompositionOverflow(trace, preedit, value);
-      }
-      clearImeSession(element);
+    if (overflow) {
+      playEventPlan(
+        trace,
+        planSafariOverflowReject(
+          stroke,
+          profile,
+          preedit,
+          value,
+          limit!,
+          overflow.hostClamped,
+          overflow.clamped,
+          {
+            valueBefore: element.value,
+            maxLength: limit,
+          },
+        ),
+      );
       return { status: "maxlength-reject" };
     }
 
-    if (i === 0 && stroke.commitAfterFirstStep !== undefined) {
-      commitSafariSyllableCore(trace, stroke.commitAfterFirstStep, element.value);
-      trace.compositionStart();
-    }
+    playEventPlan(trace, planSafariBoundaryCommit(stroke, element.value, i));
   }
 
-  trace.keydown({
-    ...hangulKeydownFields(profile, stroke),
-    isComposing: true,
-  });
-  trace.keyup({
-    ...hangulKeyupFields(profile, stroke, true),
-  });
+  playEventPlan(trace, planSafariStrokeKeys(stroke, profile));
 
   await settleAfterPreedit(settle);
   if (deferredUpdateRace) {
@@ -166,9 +172,14 @@ async function playStrokeSafariComposition(
 
   const lastValue = stroke.valuesAfterSteps[stroke.valuesAfterSteps.length - 1] ?? element.value;
   const writeback = deferredUpdateRace && consumeImeControlledWriteback(element);
-  const clobbered = element.value !== lastValue;
+  const outcome = decideStrokeStepOutcome({
+    plannedValue: lastValue,
+    domValue: element.value,
+    blurred: false,
+    writeback: Boolean(writeback),
+  });
 
-  if (writeback || clobbered) {
+  if (outcome === "aborted-deferred") {
     clearImeSession(element);
     return { status: "aborted-deferred", step: stroke.preeditSteps.length - 1 };
   }
@@ -192,7 +203,7 @@ async function playSafariDeferredBroken(
     const stroke = strokes[strokeIndex];
     if (!stroke) continue;
 
-    trace.compositionStart();
+    playEventPlan(trace, [{ kind: "compositionstart" }]);
     const firstStep = strokeIndex === startIndex ? startStep : 0;
 
     for (let step = firstStep; step < stroke.preeditSteps.length; step++) {
@@ -202,14 +213,13 @@ async function playSafariDeferredBroken(
       }
       const appended = element.value + preedit;
       const value = appended + suffix;
-      applyPreedit(trace, preedit, value, appended.length);
-      trace.keydown({
-        ...hangulKeydownFields(profile, stroke),
-        isComposing: false,
-      });
-      trace.keyup({
-        ...hangulKeyupFields(profile, stroke, false),
-      });
+      playEventPlan(
+        trace,
+        planSafariDeferredBrokenStep(stroke, profile, preedit, value, appended.length, {
+          valueBefore: element.value,
+          maxLength: readMaxLength(element),
+        }),
+      );
       await settleAfterPreedit(settle);
     }
   }
