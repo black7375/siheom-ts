@@ -1,6 +1,6 @@
 export { hangulValueProgression } from "./hangulValueProgression";
 export { hangulJamos } from "./hangulJamos";
-export { planHangulKeystrokes } from "./planHangulKeystrokes";
+export { planHangulKeystrokes, withSuffix } from "./planHangulKeystrokes";
 export type { HangulKeyStroke } from "./planHangulKeystrokes";
 export { composeHangul } from "./composeHangul";
 export type { ComposedEventRecord, ComposeHangulOptions } from "./composeHangul";

@@ -1,4 +1,4 @@
-import { planHangulKeystrokes, type HangulKeyStroke } from "../planHangulKeystrokes";
+import { planHangulKeystrokes, withSuffix, type HangulKeyStroke } from "../planHangulKeystrokes";
 import {
   applyPreedit,
   clearImeSession,
@@ -253,12 +253,13 @@ export async function composeHangul(
   element.addEventListener("blur", onBlur);
   element.focus();
 
+  const strokesWithSuffix = withSuffix(strokes, suffix);
+
   try {
-    for (let index = 0; index < strokes.length; index++) {
-      const stroke = strokes[index];
+    for (let index = 0; index < strokesWithSuffix.length; index++) {
+      const stroke = strokesWithSuffix[index];
       if (!stroke) continue;
 
-      stroke.valuesAfterSteps = stroke.valuesAfterSteps.map((value) => value + suffix);
       const result = await playStrokeRespectingBlur(
         trace,
         stroke,
@@ -270,7 +271,7 @@ export async function composeHangul(
       );
 
       if (result === "aborted-blur" || result === "aborted-deferred") {
-        const remaining = strokes.slice(index + 1).map((s) => s.jamo);
+        const remaining = strokesWithSuffix.slice(index + 1).map((s) => s.jamo);
         await playRemainingIsolated(
           trace,
           remaining,
@@ -287,11 +288,11 @@ export async function composeHangul(
       }
     }
 
-    if (strokes.length === 0) {
+    if (strokesWithSuffix.length === 0) {
       return trace.records;
     }
 
-    const last = strokes[strokes.length - 1];
+    const last = strokesWithSuffix[strokesWithSuffix.length - 1];
     const finalPreedit = last?.preeditSteps[last.preeditSteps.length - 1] ?? "";
     const committed = element.value.slice(
       0,
