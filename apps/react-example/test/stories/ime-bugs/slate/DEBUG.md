@@ -1,59 +1,49 @@
 # Slate composition debugging
 
-Slate #5989 fix work needs visibility into DOM IME events and whether the
-**built-in placeholder leaf** is present (`[data-slate-placeholder]`).
+## Goal
+
+Understand Slate + Android Hangul IME well enough to keep the **official**
+`placeholder` prop working. See
+[`docs/research/slate-placeholder-hangul-mechanism.md`](../../../../../../docs/research/slate-placeholder-hangul-mechanism.md).
 
 ## Tools
 
 | File | Role |
 | ---- | ---- |
-| `readSlateCompositionSnapshot.ts` | Slate `Node.string`, DOM text (sans placeholder) |
-| `slateCompositionDebugLog.ts` | Append-only log + `dump()` for test failure messages |
-| `SlateCompositionDebugPlugin.tsx` | Records DOM capture/bubble |
-| `SlateLogger.ime.debug.test.tsx` | Diagnostic dump on mismatch |
-| `SlateDecorativePlaceholder.tsx` | **Current fixed-mode approach** — overlay outside contenteditable |
+| `readSlateCompositionSnapshot.ts` | Slate text, DOM text, placeholder flags |
+| `slateCompositionDebugLog.ts` | `dump()` for failures |
+| `SlateCompositionDebugPlugin.tsx` | DOM capture/bubble |
+| `SlateLogger.ime.debug.test.tsx` | Trace dump helper |
 
-## Current fix (preventive)
+## Rejected “fixes”
 
-`mode="fixed"` does **not** pass Slate's `placeholder` prop. It renders
-`SlateDecorativePlaceholder` (pointer-events: none overlay) so Hangul IME never
-composes next to a non-contenteditable leaf inside the editor.
+1. **Post-hoc rewrite** — `rejected-rewrite-flicker-가나다.json` (flicker).
+2. **Decorative placeholder (drop official API)** — `decorative-still-explodes-가나다가나다.json`
+   (still explodes; placeholder not visible). Not a fix.
 
-Broken mode keeps Slate's built-in placeholder to reproduce #5989.
+## Mechanism clue (decorative AF capture)
 
-## Rejected approach — post-hoc text rewrite
+```
+ㄱ → "" (wiped)
+가 → "" (wiped)
+ㄱ stuck + data 가→가나다 → visible ㄱ가나다
+then data = whole document + next jamo → value doubles (explosion)
+```
 
-Rewriting Slate document text from `compositionupdate` / `compositionend`
-(`fixSlatePlaceholderHangulText` + former fix plugin) **fights the IME**:
+## Fixed mode (`useSlatePlaceholderCompositionFixEditableProps`)
 
-Device capture `fixtures/android-firefox/rejected-rewrite-flicker-가나다.json`
-(fixed mode + rewrite, 2026-07-21):
+Keeps official `placeholder={…}`. Patches Slate Android IM interaction:
 
-| t | visible `value` |
-| - | --------------- |
-| … | `가` |
-| … | `가가ㄴ` (dup) |
-| … | `가ㄴ` (rewrite shrink — **flicker**) |
-| … | `가ㄴ가가ㄴㅏ` |
-| … | `가가ㄴㅏ` (rewrite again) |
-| … | … |
-| end | `가가ㄴㅏㄷ가가ㄴㅏㄷㅏ` (still wrong) |
+| Patch | Targets |
+| ----- | ------- |
+| `renderPlaceholder` + imperative hide | Android never sets React `isComposing` → placeholder stayed visible ([`editable.tsx`](https://github.com/ianstormtaylor/slate/blob/main/packages/slate-react/src/components/editable.tsx)) |
+| `EDITOR_TO_FORCE_RENDER` guard while composing | AF wipe / explosion ([`android-input-manager.ts`](https://github.com/ianstormtaylor/slate/blob/main/packages/slate-react/src/hooks/android-input-manager/android-input-manager.ts) `handleDomMutations`) |
+| `onDOMBeforeInput` | duplicate jamo skip, deferred FF insert skip, trust IME `data` when visible broken |
 
-User report: explosion then shrink flickers; final `가가ㄴㅏㄷㅏ`-class garbage.
-Unit heuristics cannot win against live composition.
-
-`fixSlatePlaceholderHangulText*.ts(x)` kept only as historical coverage of that
-failed idea.
-
-## Emulator note
-
-AF continuous goldens often leave Slate DOM empty under Chromium Vitest
-(mount fidelity gap). Decorative-placeholder success is validated with
-Linux fixed goldens in unit/integration tests; Android needs **device
-recapture** with fixed mode (no rewrite).
+Vitest: `slateAndroidChromeEnv.ts` / `slateAndroidFirefoxEnv.ts` patch UA before `slate-react` init.
 
 ## Run
 
 ```bash
-cd apps/react-example && bun run test SlateLogger.ime.test.tsx SlateLogger.ime.debug.test.tsx
+cd apps/react-example && bun run test SlateLogger.ime.debug.test.tsx
 ```

@@ -1,5 +1,5 @@
 import { useMemo, useState, type MutableRefObject } from "react";
-import { createEditor, Node, type Descendant } from "slate";
+import { createEditor, type Descendant } from "slate";
 import { Editable, Slate, withReact } from "slate-react";
 
 import "./slate-custom-types";
@@ -8,8 +8,8 @@ import { ImeCaptureShell } from "../../ime-logger/ImeCaptureShell";
 import { CaptureInstructions, ModeToolbar } from "../shared/imeBugLoggerChrome";
 import { CaptureTargetToolbar, type SlateCaptureTarget } from "./CaptureTargetToolbar";
 import { SlateCompositionDebugPlugin } from "./SlateCompositionDebugPlugin";
-import { SlateDecorativePlaceholder } from "./SlateDecorativePlaceholder";
 import type { SlateCompositionDebugLog } from "./slateCompositionDebugLog";
+import { useSlatePlaceholderCompositionFixEditableProps } from "./useSlatePlaceholderCompositionFixEditableProps";
 
 const EMPTY_VALUE: Descendant[] = [{ type: "paragraph", children: [{ text: "" }] }];
 const PLACEHOLDER_TEXT = "여기에 입력…";
@@ -22,13 +22,14 @@ const SCENARIO_IDS: Record<SlateCaptureTarget, string> = {
 export type SlateLoggerMode = "broken" | "fixed";
 
 export type SlateLoggerProps = {
-  /** broken = Slate built-in placeholder leaf; fixed = decorative overlay (#5989). */
+  /**
+   * broken = upstream Slate (official placeholder).
+   * fixed = reserved for mechanism patches that **keep** official placeholder
+   * (decorative overlay was rejected — see DEBUG.md / research doc).
+   */
   mode?: SlateLoggerMode;
-  /** Lock capture target (tests). Omit to show on-screen toggle. */
   captureTarget?: SlateCaptureTarget;
-  /** Optional: receive mounted field (tests). */
   editorRef?: MutableRefObject<HTMLElement | null>;
-  /** Optional: record DOM flow (tests / Storybook debugging). */
   debugLog?: SlateCompositionDebugLog;
 };
 
@@ -42,17 +43,20 @@ export function SlateLogger({
   const effectiveMode = modeProp ?? mode;
   const [captureTarget, setCaptureTarget] = useState<SlateCaptureTarget>("slate-placeholder");
   const effectiveTarget = captureTargetProp ?? captureTarget;
-  const [value, setValue] = useState<Descendant[]>(EMPTY_VALUE);
+  const [, setValue] = useState<Descendant[]>(EMPTY_VALUE);
   const [slateEditable, setSlateEditable] = useState<HTMLElement | null>(null);
   const editor = useMemo(() => withReact(createEditor()), [effectiveTarget, effectiveMode]);
-  const docEmpty = value.map((node) => Node.string(node)).join("") === "";
-
-  const useDecorativePlaceholder = effectiveMode === "fixed";
+  const useFix =
+    effectiveTarget === "slate-placeholder" && effectiveMode === "fixed";
+  const fixEditableProps = useSlatePlaceholderCompositionFixEditableProps(
+    useFix ? editor : undefined,
+    slateEditable,
+  );
 
   return (
     <ImeCaptureShell
       title="Slate placeholder Hangul first syllable"
-      description="Android Chrome에서 Slate #5989(placeholder + 첫 음절 조합 깨짐)을 재현하고, plain input control과 비교 캡처합니다."
+      description="Android에서 Slate 공식 placeholder + 한글 조합(#5989)을 재현·캡처합니다. fixed는 placeholder를 유지한 채 메커니즘 패치를 시험합니다."
       scenarioId={
         effectiveTarget === "plain-control"
           ? SCENARIO_IDS["plain-control"]
@@ -75,16 +79,16 @@ export function SlateLogger({
           }
         >
           <li>
-            <strong>Slate + placeholder</strong>: Android + Gboard → 빈 편집기에서 「가」/「가나다」.
-            broken은 Slate 내장 placeholder leaf(#5989). fixed는 contenteditable 밖 장식 placeholder.
+            <strong>Slate + 공식 placeholder</strong>: 빈 편집기에서 「가」/「가나다」. broken =
+            upstream. fixed = placeholder API를 유지한 실험 패치(우회 제거).
           </li>
           <li>
-            <strong>plain control</strong>: 같은 기기에서 plain textarea로 「가」 — 정상 조합 baseline.
+            <strong>plain control</strong>: plain textarea baseline.
           </li>
           <li>
-            사후 text rewrite는 IME와 싸워 깜빡임이 나서 쓰지 않습니다 (DEBUG.md).
+            장식 placeholder / 사후 rewrite는 기각·폭발로 기각 (DEBUG.md, research doc).
           </li>
-          <li>캡처 대상을 바꾼 뒤 Clear → 포커스 → 조합 → JSON 저장.</li>
+          <li>Clear → 포커스 → 조합 → JSON 저장.</li>
         </CaptureInstructions>
       )}
     >
@@ -107,36 +111,20 @@ export function SlateLogger({
             initialValue={EMPTY_VALUE}
             onValueChange={setValue}
           >
-            {useDecorativePlaceholder ? (
-              <SlateDecorativePlaceholder text={PLACEHOLDER_TEXT} empty={docEmpty}>
-                <Editable
-                  ref={(node) => {
-                    attachInputRef(node);
-                    setSlateEditable(node);
-                    if (editorRef) {
-                      editorRef.current = node;
-                    }
-                  }}
-                  className="min-h-[8rem] rounded-md border border-input bg-background px-3 py-2"
-                  aria-label="Slate editor"
-                  role="textbox"
-                />
-              </SlateDecorativePlaceholder>
-            ) : (
-              <Editable
-                ref={(node) => {
-                  attachInputRef(node);
-                  setSlateEditable(node);
-                  if (editorRef) {
-                    editorRef.current = node;
-                  }
-                }}
-                className="min-h-[8rem] rounded-md border border-input bg-background px-3 py-2"
-                aria-label="Slate editor"
-                role="textbox"
-                placeholder={PLACEHOLDER_TEXT}
-              />
-            )}
+            <Editable
+              ref={(node) => {
+                attachInputRef(node);
+                setSlateEditable(node);
+                if (editorRef) {
+                  editorRef.current = node;
+                }
+              }}
+              className="min-h-[8rem] rounded-md border border-input bg-background px-3 py-2"
+              aria-label="Slate editor"
+              role="textbox"
+              placeholder={PLACEHOLDER_TEXT}
+              {...fixEditableProps}
+            />
             {debugLog ? (
               <SlateCompositionDebugPlugin
                 log={debugLog}

@@ -1,5 +1,4 @@
 import { useEffect } from "react";
-import type { Editor } from "slate";
 import { useSlateStatic } from "slate-react";
 
 import type { SlateCompositionDebugEntry, SlateCompositionDebugLog } from "./slateCompositionDebugLog";
@@ -117,25 +116,4 @@ export function SlateCompositionDebugPlugin({
   }, [editable, editor, label, log]);
 
   return null;
-}
-
-export function noteSlateFixPlugin(
-  log: SlateCompositionDebugLog | undefined,
-  editor: Editor,
-  editable: HTMLElement | null,
-  action: string,
-  detail: Record<string, unknown>,
-  fixState: { compositionData: string; committed: string },
-): void {
-  if (!log) {
-    return;
-  }
-  log.entries.push({
-    seq: log.entries.length + 1,
-    t: performance.now(),
-    source: "fix-plugin",
-    event: `fix-plugin:${action}`,
-    detail,
-    snapshot: readSlateCompositionSnapshot(editor, editable, fixState),
-  });
 }

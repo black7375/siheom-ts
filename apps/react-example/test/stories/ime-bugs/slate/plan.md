@@ -30,10 +30,12 @@
 - [x] `composeHangul.test`: placeholder + plain control → `가` (Android와 달리 깨지지 않음)
 - [x] `SlateLogger.ime.test`: Linux Chrome/Firefox placeholder Slate editor = `가`
 
-### Fix plugin (phase 4)
+### Fix direction (phase 4) — mechanism, keep official placeholder
 
-- [x] Reproduce #5989 with Slate built-in placeholder + AC broken golden
-- [x] ~~Post-hoc `fixSlatePlaceholderHangulText` rewrite~~ **rejected** (AF flicker capture)
-- [x] Fixed mode: `SlateDecorativePlaceholder` (no `[data-slate-placeholder]` leaf)
-- [x] Composition debug tooling + `DEBUG.md`
-- [ ] Real device: AC/AF fixed mode re-capture with decorative placeholder → intact `가` / `가나다`
+- [x] Reject post-hoc rewrite (flicker capture)
+- [x] Reject decorative overlay (still explodes; not a real fix) — `decorative-still-explodes-가나다가나다.json`
+- [x] Research notes: `docs/research/slate-placeholder-hangul-mechanism.md`
+- [x] Story always uses Slate `placeholder={…}`; fixed = future mechanism patch slot
+- [x] Debug snapshot: placeholder present/display, selection, `isComposing`
+- [x] Mechanism patch TDD: placeholder hide while composing, force-render guard, composition-data correction (Android)
+- [ ] Device: AC/AF fixed with official placeholder → intact Hangul, no explosion (recapture)

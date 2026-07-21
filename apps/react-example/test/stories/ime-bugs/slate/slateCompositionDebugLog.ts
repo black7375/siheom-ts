@@ -3,7 +3,7 @@ import type { SlateCompositionSnapshot } from "./readSlateCompositionSnapshot";
 export type SlateCompositionDebugEntry = {
   seq: number;
   t: number;
-  source: "dom-capture" | "dom-bubble" | "fix-plugin";
+  source: "dom-capture" | "dom-bubble";
   event: string;
   detail: Record<string, unknown>;
   snapshot?: SlateCompositionSnapshot;
@@ -27,7 +27,7 @@ export function createSlateCompositionDebugLog(): SlateCompositionDebugLog {
       return entries
         .map((entry) => {
           const snap = entry.snapshot
-            ? ` slate="${entry.snapshot.slateText}" dom="${entry.snapshot.domText}" raw=${JSON.stringify(entry.snapshot.domRaw)} committed="${entry.snapshot.fix?.committed ?? ""}" compositionData="${entry.snapshot.fix?.compositionData ?? ""}"`
+            ? ` slate="${entry.snapshot.slateText}" dom="${entry.snapshot.domText}" raw=${JSON.stringify(entry.snapshot.domRaw)} ph=${entry.snapshot.placeholderPresent}:${entry.snapshot.placeholderDisplay} composing=${entry.snapshot.isComposing} sel=${JSON.stringify(entry.snapshot.selection)}`
             : "";
           return `${entry.seq}\t${entry.event}\t${entry.source}\t${JSON.stringify(entry.detail)}${snap}`;
         })
