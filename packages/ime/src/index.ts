@@ -5,6 +5,7 @@ export type { HangulKeyStroke } from "./planHangulKeystrokes";
 export { composeHangul } from "./composeHangul";
 export type { ComposedEventRecord, ComposeHangulOptions } from "./composeHangul";
 export { composeHangulContentEditableFirefoxFixedOn } from "./composeHangul/composeHangulContentEditableFirefoxFixed";
+export { composeHangulAndroidFirefoxSlateClosedLoopOn } from "./composeHangul/composeHangulAndroidFirefoxSlateClosedLoop";
 export { composeBackspace } from "./composeBackspace";
 export { composeArrowLeft } from "./composeArrowLeft";
 export { composeEnter } from "./composeEnter";
