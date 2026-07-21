@@ -11,7 +11,7 @@
 
 - [x] `mode="broken"`: combobox steals Arrow/Enter/digit; no 김金 strip
 - [x] `mode="fixed"`: defer combobox keys while composing / 229 / altKey
-- [x] `mode="fixed"`: `stripHangulBeforeHanja` on Hanja input/compositionend (김金 → 金)
+- [x] `mode="fixed"`: `stripHangulBeforeHanja` only on Hanja **compositionend** (김金 → 金; never on Option+Enter start)
 - [x] Unit tests for strip helper + Chrome append replay
 - [ ] OS `macos-chrome-apple/broken-hanja-name.json` — re-capture
 - [ ] OS `macos-chrome-apple/fixed-hanja-name.json` — re-capture (expect final 金泰熙)

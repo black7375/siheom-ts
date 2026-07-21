@@ -32,7 +32,8 @@ export type HanjaAutocompleteFieldProps = {
   /**
    * `broken` — combobox steals Arrow/Enter/digit during IME; no Hangul-append correction.
    * `fixed` — defer combobox keys while composing, and correct macOS Chrome’s 김金 append
-   * by removing the Hangul left behind when Hanja composition commits (or first appears).
+   * by removing the Hangul left behind when Hanja composition *commits* (compositionend only —
+   * never on Option+Enter start, or the candidate window aborts).
    */
   mode?: "broken" | "fixed";
   suggestions?: string[];
@@ -172,16 +173,8 @@ export function HanjaAutocompleteField({
 
       if (composing) {
         isComposingRef.current = true;
-        // Early correct while browsing Hanja candidates (김金… → 金…), so the field
-        // matches IME intent before compositionend.
-        const data = inputEvent.data ?? "";
-        const stripped = tryStripAppendedHangul(node.value, data);
-        if (stripped !== null) {
-          node.value = stripped;
-          // Keep caret at end; composition may continue on the Hanja glyph.
-          const end = stripped.length;
-          node.setSelectionRange(end, end);
-        }
+        // Do NOT strip mid-composition — Option+Enter only *starts* Hanja conversion;
+        // touching value here aborts the candidate window.
         return;
       }
 

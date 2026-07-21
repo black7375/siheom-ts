@@ -128,6 +128,34 @@ describe("HanjaAutocompleteField", () => {
     expect(input.value).toBe("김金");
   });
 
+  it("fixed 모드: 한자 변환 중(확정 전)에는 한글을 지우지 않는다", async () => {
+    await runSiheom(given.render(<HanjaAutocompleteField mode="fixed" />));
+
+    const input = document.getElementById("hanja-autocomplete-input") as HTMLInputElement;
+    input.focus();
+
+    await act(async () => {
+      input.value = "김";
+      input.dispatchEvent(new CompositionEvent("compositionend", { bubbles: true, data: "김" }));
+    });
+
+    await act(async () => {
+      input.dispatchEvent(new CompositionEvent("compositionstart", { bubbles: true, data: "" }));
+      input.value = "김金";
+      input.dispatchEvent(
+        new InputEvent("input", {
+          bubbles: true,
+          inputType: "insertCompositionText",
+          isComposing: true,
+          data: "金",
+        }),
+      );
+    });
+
+    // Still browsing candidates — strip must wait for compositionend
+    expect(input.value).toBe("김金");
+  });
+
   it("fixed 모드: Chrome 한자 append(김金)를 金으로 보정한다", async () => {
     await runSiheom(given.render(<HanjaAutocompleteField mode="fixed" />));
 
