@@ -1,5 +1,5 @@
 import { type ActionStepDefinitionDict, type Locator } from "@siheom/core";
-import { isEditable, segmentTypeText, withPresentElement } from "@siheom/ime";
+import { isEditable, planTypeImeSteps, withPresentElement } from "@siheom/ime";
 import { userEvent } from "vitest/browser";
 
 import { composeHangulCdp, type ComposeHangulCdpOptions } from "../composeHangulCdp";
@@ -21,12 +21,14 @@ async function typeImeText(
     return;
   }
 
-  const segments = segmentTypeText(text);
-  for (const segment of segments) {
-    if (segment.kind === "hangul") {
-      await composeHangulCdp(element, segment.text, composeOptions);
+  for (const step of planTypeImeSteps(text)) {
+    if (step.kind === "hangul") {
+      await composeHangulCdp(element, step.text, {
+        session: composeOptions.session,
+        commitFinal: composeOptions.commitFinal ?? step.commitFinal,
+      });
     } else {
-      await userEvent.keyboard(segment.text);
+      await userEvent.keyboard(step.text);
     }
   }
 }
