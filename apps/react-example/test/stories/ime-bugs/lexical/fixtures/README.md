@@ -9,7 +9,7 @@
 | File                 | Notes                                                                                      |
 | -------------------- | ------------------------------------------------------------------------------------------ |
 | `broken-가나다.json` | AF pre-fix: `가나다` → `ㄱㅏ나다` — premature `compositionend` after first jamo            |
-| `fixed-가나다.json`  | AF post-fix plugin: visible `ㅏ나다` (first `ㄱ` lost); LF/LC reference in `linux-firefox/` |
+| `fixed-가나다.json`  | AF post-fix v2 plugin: visible `가나다`; single composition session (`ㄱ→가→간→…`) |
 
 Storybook: **IME / Lexical**. Scenario id: `lexical-af-continuous-hangul` (broken) / `lexical-af-continuous-hangul-fixed` (fixed).
 

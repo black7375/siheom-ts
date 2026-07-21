@@ -29,12 +29,11 @@ From `packages/lexical/src/LexicalEvents.ts`:
 - Next `input` with `insertCompositionText` → `$handleInput` → `$onCompositionEndImpl` + `CONTROLLED_TEXT_INSERTION_COMMAND`
 - `COMPOSITION_START_CHAR` = NBSP on Firefox (fix plugin replaces with ZWSP)
 
-## AF fixed golden failure mode (debug trace)
+## AF fixed golden (v2 device capture)
 
-1. During composition: IME sends preedit `ㅏ…` instead of `가…` — fix plugin rewrites via `INPUT_COMMAND`.
-2. After `compositionend`: Firefox deferred `input` (`isComposing: false`) sends `ㅏ나다` again.
-3. Lexical dispatches `CONTROLLED_TEXT_INSERTION_COMMAND` with raw `ㅏ나다`, overwriting corrected `가나다`.
-4. Fix: skip redundant `CONTROLLED_TEXT_INSERTION` when root already equals `가${payload.slice(1)}`.
+Single composition session with syllable preedit (`ㄱ→가→간→가나→가낟→가나다`), ZWSP anchor, no premature `compositionend` after first jamo. Matches LF fixed shape; deferred Firefox `input` commits `가나다` (not `ㅏ나다`).
+
+v1 capture (superseded) had premature `compositionend` on `ㄱ`, second session with `ㅏ…` preedit → visible `ㅏ나다`; fix plugin `ㅏ→가` rewrite handled that in emulator only.
 
 Run trace test:
 

@@ -3,7 +3,7 @@
   "os": "android",
   "browser": "firefox",
   "ime": "",
-  "capturedAt": "2026-07-21T10:07:23.350Z",
+  "capturedAt": "2026-07-21T10:25:46.302Z",
   "scenarioId": "lexical-af-continuous-hangul-fixed",
   "source": "os-ime",
   "events": [
@@ -35,7 +35,7 @@
       "isComposing": null,
       "inputType": null,
       "data": "ㄱ",
-      "value": ""
+      "value": "​​"
     },
     {
       "type": "beforeinput",
@@ -45,7 +45,7 @@
       "isComposing": true,
       "inputType": "insertCompositionText",
       "data": "ㄱ",
-      "value": ""
+      "value": "​​"
     },
     {
       "type": "input",
@@ -55,7 +55,7 @@
       "isComposing": true,
       "inputType": "insertCompositionText",
       "data": "ㄱ",
-      "value": "ㄱ"
+      "value": "ㄱ​"
     },
     {
       "type": "keyup",
@@ -65,87 +65,17 @@
       "isComposing": true,
       "inputType": null,
       "data": null,
-      "value": "ㄱ"
-    },
-    {
-      "type": "beforeinput",
-      "key": null,
-      "code": null,
-      "keyCode": null,
-      "isComposing": true,
-      "inputType": "insertCompositionText",
-      "data": "ㄱ",
-      "value": "ㄱ"
-    },
-    {
-      "type": "input",
-      "key": null,
-      "code": null,
-      "keyCode": null,
-      "isComposing": true,
-      "inputType": "insertCompositionText",
-      "data": "ㄱ",
-      "value": "ㄱ"
-    },
-    {
-      "type": "beforeinput",
-      "key": null,
-      "code": null,
-      "keyCode": null,
-      "isComposing": true,
-      "inputType": "insertCompositionText",
-      "data": "ㄱ",
-      "value": "ㄱ"
-    },
-    {
-      "type": "input",
-      "key": null,
-      "code": null,
-      "keyCode": null,
-      "isComposing": true,
-      "inputType": "insertCompositionText",
-      "data": "ㄱ",
-      "value": "ㄱ"
-    },
-    {
-      "type": "compositionend",
-      "key": null,
-      "code": null,
-      "keyCode": null,
-      "isComposing": null,
-      "inputType": null,
-      "data": "ㄱ",
-      "value": "ㄱ"
-    },
-    {
-      "type": "input",
-      "key": null,
-      "code": null,
-      "keyCode": null,
-      "isComposing": false,
-      "inputType": "insertCompositionText",
-      "data": "ㄱ",
-      "value": "ㄱ"
+      "value": "ㄱ​"
     },
     {
       "type": "keydown",
       "key": "Process",
       "code": "",
       "keyCode": 229,
-      "isComposing": false,
+      "isComposing": true,
       "inputType": null,
       "data": null,
-      "value": "ㄱ"
-    },
-    {
-      "type": "compositionstart",
-      "key": null,
-      "code": null,
-      "keyCode": null,
-      "isComposing": null,
-      "inputType": null,
-      "data": "ㄱ",
-      "value": "ㄱ"
+      "value": "ㄱ​"
     },
     {
       "type": "compositionupdate",
@@ -154,7 +84,7 @@
       "keyCode": null,
       "isComposing": null,
       "inputType": null,
-      "data": "ㅏ",
+      "data": "가",
       "value": "ㄱ​"
     },
     {
@@ -164,7 +94,7 @@
       "keyCode": null,
       "isComposing": true,
       "inputType": "insertCompositionText",
-      "data": "ㅏ",
+      "data": "가",
       "value": "ㄱ​"
     },
     {
@@ -174,8 +104,8 @@
       "keyCode": null,
       "isComposing": true,
       "inputType": "insertCompositionText",
-      "data": "ㅏ",
-      "value": "ㅏ​"
+      "data": "가",
+      "value": "가​"
     },
     {
       "type": "keyup",
@@ -185,7 +115,7 @@
       "isComposing": true,
       "inputType": null,
       "data": null,
-      "value": "ㅏ"
+      "value": "가​"
     },
     {
       "type": "keydown",
@@ -195,7 +125,7 @@
       "isComposing": true,
       "inputType": null,
       "data": null,
-      "value": "ㅏ"
+      "value": "가​"
     },
     {
       "type": "compositionupdate",
@@ -204,8 +134,8 @@
       "keyCode": null,
       "isComposing": null,
       "inputType": null,
-      "data": "ㅏㄴ",
-      "value": "ㅏ"
+      "data": "간",
+      "value": "가​"
     },
     {
       "type": "beforeinput",
@@ -214,8 +144,8 @@
       "keyCode": null,
       "isComposing": true,
       "inputType": "insertCompositionText",
-      "data": "ㅏㄴ",
-      "value": "ㅏ"
+      "data": "간",
+      "value": "가​"
     },
     {
       "type": "input",
@@ -224,8 +154,8 @@
       "keyCode": null,
       "isComposing": true,
       "inputType": "insertCompositionText",
-      "data": "ㅏㄴ",
-      "value": "ㅏㄴ"
+      "data": "간",
+      "value": "간​"
     },
     {
       "type": "keyup",
@@ -235,7 +165,7 @@
       "isComposing": true,
       "inputType": null,
       "data": null,
-      "value": "ㅏㄴ"
+      "value": "간​"
     },
     {
       "type": "keydown",
@@ -245,7 +175,7 @@
       "isComposing": true,
       "inputType": null,
       "data": null,
-      "value": "ㅏㄴ"
+      "value": "간​"
     },
     {
       "type": "compositionupdate",
@@ -254,8 +184,8 @@
       "keyCode": null,
       "isComposing": null,
       "inputType": null,
-      "data": "ㅏ나",
-      "value": "ㅏㄴ"
+      "data": "가나",
+      "value": "간​"
     },
     {
       "type": "beforeinput",
@@ -264,8 +194,8 @@
       "keyCode": null,
       "isComposing": true,
       "inputType": "insertCompositionText",
-      "data": "ㅏ나",
-      "value": "ㅏㄴ"
+      "data": "가나",
+      "value": "간​"
     },
     {
       "type": "input",
@@ -274,8 +204,8 @@
       "keyCode": null,
       "isComposing": true,
       "inputType": "insertCompositionText",
-      "data": "ㅏ나",
-      "value": "ㅏ나"
+      "data": "가나",
+      "value": "가나​"
     },
     {
       "type": "keyup",
@@ -285,7 +215,7 @@
       "isComposing": true,
       "inputType": null,
       "data": null,
-      "value": "ㅏ나"
+      "value": "가나​"
     },
     {
       "type": "keydown",
@@ -295,7 +225,7 @@
       "isComposing": true,
       "inputType": null,
       "data": null,
-      "value": "ㅏ나"
+      "value": "가나​"
     },
     {
       "type": "compositionupdate",
@@ -304,8 +234,8 @@
       "keyCode": null,
       "isComposing": null,
       "inputType": null,
-      "data": "ㅏ낟",
-      "value": "ㅏ나"
+      "data": "가낟",
+      "value": "가나​"
     },
     {
       "type": "beforeinput",
@@ -314,8 +244,8 @@
       "keyCode": null,
       "isComposing": true,
       "inputType": "insertCompositionText",
-      "data": "ㅏ낟",
-      "value": "ㅏ나"
+      "data": "가낟",
+      "value": "가나​"
     },
     {
       "type": "input",
@@ -324,8 +254,8 @@
       "keyCode": null,
       "isComposing": true,
       "inputType": "insertCompositionText",
-      "data": "ㅏ낟",
-      "value": "ㅏ낟"
+      "data": "가낟",
+      "value": "가낟​"
     },
     {
       "type": "keyup",
@@ -335,7 +265,7 @@
       "isComposing": true,
       "inputType": null,
       "data": null,
-      "value": "ㅏ낟"
+      "value": "가낟​"
     },
     {
       "type": "keydown",
@@ -345,7 +275,7 @@
       "isComposing": true,
       "inputType": null,
       "data": null,
-      "value": "ㅏ낟"
+      "value": "가낟​"
     },
     {
       "type": "compositionupdate",
@@ -354,8 +284,8 @@
       "keyCode": null,
       "isComposing": null,
       "inputType": null,
-      "data": "ㅏ나다",
-      "value": "ㅏ낟"
+      "data": "가나다",
+      "value": "가낟​"
     },
     {
       "type": "beforeinput",
@@ -364,8 +294,8 @@
       "keyCode": null,
       "isComposing": true,
       "inputType": "insertCompositionText",
-      "data": "ㅏ나다",
-      "value": "ㅏ낟"
+      "data": "가나다",
+      "value": "가낟​"
     },
     {
       "type": "input",
@@ -374,8 +304,8 @@
       "keyCode": null,
       "isComposing": true,
       "inputType": "insertCompositionText",
-      "data": "ㅏ나다",
-      "value": "ㅏ나다"
+      "data": "가나다",
+      "value": "가나다​"
     },
     {
       "type": "keyup",
@@ -385,7 +315,7 @@
       "isComposing": true,
       "inputType": null,
       "data": null,
-      "value": "ㅏ나다"
+      "value": "가나다​"
     },
     {
       "type": "beforeinput",
@@ -394,8 +324,8 @@
       "keyCode": null,
       "isComposing": true,
       "inputType": "insertCompositionText",
-      "data": "ㅏ나다",
-      "value": "ㅏ나다"
+      "data": "가나다",
+      "value": "가나다​"
     },
     {
       "type": "input",
@@ -404,8 +334,8 @@
       "keyCode": null,
       "isComposing": true,
       "inputType": "insertCompositionText",
-      "data": "ㅏ나다",
-      "value": "ㅏ나다"
+      "data": "가나다",
+      "value": "가나다​"
     },
     {
       "type": "compositionend",
@@ -414,8 +344,8 @@
       "keyCode": null,
       "isComposing": null,
       "inputType": null,
-      "data": "ㅏ나다",
-      "value": "ㅏ나다"
+      "data": "가나다",
+      "value": "가나다​"
     },
     {
       "type": "input",
@@ -424,8 +354,8 @@
       "keyCode": null,
       "isComposing": false,
       "inputType": "insertCompositionText",
-      "data": "ㅏ나다",
-      "value": "ㅏ나다"
+      "data": "가나다",
+      "value": "가나다​"
     }
   ]
 }

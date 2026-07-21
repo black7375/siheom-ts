@@ -118,13 +118,13 @@ describe("composeHangul", () => {
     input.remove();
   });
 
-  it("android-firefox-contenteditable-fixed: 가나다 yields partial ㅏ나다 (AF post-fix v1)", async () => {
+  it("android-firefox-contenteditable-fixed: 가나다 yields intact 가나다 (AF post-fix v2)", async () => {
     const input = document.createElement("input");
     document.body.append(input);
 
     await composeHangul(input, "가나다", { profile: "android-firefox-contenteditable-fixed" });
 
-    expect(input.value.replace(/\u200b/g, "")).toBe("ㅏ나다");
+    expect(input.value.replace(/\u200b/g, "")).toBe("가나다");
     input.remove();
   });
 
@@ -136,7 +136,7 @@ describe("composeHangul", () => {
       profile: "android-firefox-contenteditable-fixed",
     });
 
-    expect(input.value.replace(/\u200b/g, "")).toBe("ㅏ나다");
+    expect(input.value.replace(/\u200b/g, "")).toBe("가나다");
     expect(toCriticalEvents(events)).toEqual(goldenCritical(ceAfFixedGolden.events));
 
     input.remove();

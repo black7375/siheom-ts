@@ -13,7 +13,7 @@ function assertCapturedText(text: string): void {
   }
 }
 
-/** AF post-fix v1 device golden replay — visible ㅏ나다 on plain input. */
+/** AF post-fix v2 device golden replay — visible 가나다 on plain input. */
 export async function composeHangulContentEditableAndroidFirefoxFixed(
   element: HTMLInputElement | HTMLTextAreaElement,
   text: string,

@@ -23,7 +23,7 @@ export type HangulComposeMode =
   | "contenteditable-firefox-broken"
   /** Firefox contenteditable fixed: syllable-boundary commits with deferred compositionend */
   | "contenteditable-firefox-fixed"
-  /** AF post-fix v1 golden replay (Lexical plugin on; visible ㅏ나다 on plain input) */
+  /** AF post-fix v2 golden replay (Lexical plugin on; visible 가나다 on plain input) */
   | "contenteditable-firefox-af-fixed";
 
 /**
