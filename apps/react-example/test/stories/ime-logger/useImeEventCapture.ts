@@ -22,12 +22,17 @@ export type UseImeEventCaptureOptions = {
   attachment?: "effect" | "callback";
   /** Extra deps that remount effect-based listeners (e.g. mode). */
   listenerDeps?: unknown[];
-  /** Customize clearing the input node; default clears `.value`. */
-  clearField?: (input: HTMLInputElement | null) => void;
+  /** Customize clearing the input node; default clears `.value` or `textContent`. */
+  clearField?: (input: HTMLElement | null) => void;
 };
 
-function defaultClearField(input: HTMLInputElement | null) {
-  if (input) input.value = "";
+function defaultClearField(input: HTMLElement | null) {
+  if (!input) return;
+  if (input instanceof HTMLInputElement || input instanceof HTMLTextAreaElement) {
+    input.value = "";
+  } else if (input.isContentEditable) {
+    input.textContent = "";
+  }
 }
 
 export function useImeEventCapture({
@@ -41,7 +46,7 @@ export function useImeEventCapture({
   const [events, setEvents] = useState<ImeEventRecord[]>([]);
   const [fieldValue, setFieldValue] = useState("");
   const [status, setStatus] = useState("");
-  const inputRef = useRef<HTMLInputElement>(null);
+  const inputRef = useRef<HTMLElement>(null);
   const listenersCleanupRef = useRef<(() => void) | null>(null);
 
   const profileId = useMemo(() => profileIdFromMeta(os, browser, ime), [os, browser, ime]);
@@ -53,7 +58,7 @@ export function useImeEventCapture({
   }, []);
 
   const bindListeners = useCallback(
-    (node: HTMLInputElement) => {
+    (node: HTMLElement) => {
       for (const type of LOGGED_EVENT_TYPES) {
         node.addEventListener(type, appendEvent);
       }
@@ -67,7 +72,7 @@ export function useImeEventCapture({
   );
 
   const attachInputRef = useCallback(
-    (node: HTMLInputElement | null) => {
+    (node: HTMLElement | null) => {
       listenersCleanupRef.current?.();
       listenersCleanupRef.current = null;
       inputRef.current = node;
