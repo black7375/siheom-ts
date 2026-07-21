@@ -107,3 +107,22 @@ flowchart TD
 
 Do **not** revisit end-only / preedit-drive unless a new device capture shows a failure mode
 that A/B cannot explain.
+
+---
+
+## Device gate (2026-07-21) — A/B/C all fail on AF `가나다`
+
+Fixtures: `device-alt-gate-{broken,alt-a,alt-b,alt-c}-가나다.json`
+
+| Mode | final `slateText` | fixTrace ran? |
+| ---- | ----------------- | ------------- |
+| broken | `ㄱ가나다` | — |
+| alt-a | `ㄱ가나다` | yes (`keydown-hide-placeholder`, `composition-start-anchor`) |
+| alt-b | `ㄱ가나다` | yes (`composition-end-guard-cooldown`) |
+| alt-c | `ㄱ가나다` | yes (both) |
+
+**events[] are identical** across all four for the first word. alt-a hid placeholder on
+keydown 229 *before* `compositionstart`, yet first jamo `ㄱ` sticks when IME `data` → `가`.
+
+**Conclusion:** Thin Editable wrappers cannot fix AF orphan-ㄱ. Next: **slate-react**
+`android-input-manager` (first `insertCompositionText` / composition range).

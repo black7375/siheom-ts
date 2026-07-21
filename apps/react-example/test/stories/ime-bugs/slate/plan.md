@@ -38,4 +38,5 @@
 - [x] Device tri-mode experiment — broken best; app patch modes removed
 - [x] Fix alternatives: `docs/research/slate-placeholder-fix-alternatives.md`
 - [x] Alternative A/B/C Story modes (`alt-a`, `alt-b`, `alt-c`) + broken baseline
-- [ ] Device: compare alt-a / alt-b / alt-c on AF → `가나다가나다` intact
+- [x] Device gate: all modes → `ㄱ가나다` on AF (A/B/C insufficient)
+- [ ] Investigate slate-react `android-input-manager` first compose insert (upstream)
