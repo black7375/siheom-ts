@@ -1,0 +1,16 @@
+region: "보기 전환"
+  heading: "보기 전환"
+    - properties: [level=2]
+  group: "보기 방식"
+    button: "목록"
+      - states: [pressed=true]
+    button: "그리드"
+      - states: [pressed=false]
+  region: "목록 보기"
+    list:
+      listitem: "서버 점검 안내"
+        "서버 점검 안내"
+      listitem: "연말 휴무 공지"
+        "연말 휴무 공지"
+      listitem: "신규 기능 출시"
+        "신규 기능 출시"

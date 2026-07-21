@@ -1,16 +1,14 @@
 # SignUpForm
 
-이메일·비밀번호·체크박스가 있는 가입 폼입니다. 검증 에러(`errormessage`), fill/click 흐름, region 단위 접근성 스냅샷을 보여줍니다.
+이메일·비밀번호·체크박스가 있는 가입 폼입니다. 검증 에러(`errormessage`), fill/click 흐름, form 단위 접근성 스냅샷을 보여줍니다.
 
 소스: [`apps/react-example/test/stories/SignUpForm.tsx`](https://github.com/twinstae/siheom-ts/blob/main/apps/react-example/test/stories/SignUpForm.tsx), [`SignUpForm.test.tsx`](https://github.com/twinstae/siheom-ts/blob/main/apps/react-example/test/stories/SignUpForm.test.tsx).
 
-## UI
+## UI 접근성
 
-- 텍스트 필드: `label`이 accessible name (`이메일`, `비밀번호`)
-- 체크박스: `label` 연결 (`약관 동의`, `개인정보 수집 동의`)
-- 제출: `button` `"가입하기"`
+`query.form("회원가입")` 기준 초기 스냅샷입니다.
 
-스냅샷은 `region` `"signup-form"`으로 감싼 `<section aria-label="signup-form">` 기준입니다.
+<<< @/_snaps/signup-form-initial.snap{text}
 
 ## 시험: 검증 후 가입
 
@@ -37,40 +35,30 @@ await runSiheom(
 
 ```tsx
 return runSiheom(
-  given.render(
-    <section aria-label="signup-form">
-      <SignUpForm signUpMember={noop} />
-    </section>,
-  ),
-  assertions.a11ySnapshot(query.region("signup-form"), "signup-form-initial.snap"),
+  given.render(<SignUpForm signUpMember={noop} />),
+  assertions.a11ySnapshot(query.form("회원가입"), "signup-form-initial.snap"),
 );
-```
-
-```text
-region: "signup-form"
-  textbox: "이메일 *" [value=""]
-  checkbox: "약관 동의" [checked=false] [value="on"]
-  ...
-  button: "가입하기"
 ```
 
 ## 접근성 스냅샷: 에러 상태
 
 제출 후 invalid·alert 노드가 스냅샷에 나타납니다.
 
-```text
-region: "signup-form"
-  textbox: "이메일 *" [invalid=true] [description="올바른 이메일 형식이 아닙니다"]
-  alert
-    "올바른 이메일 형식이 아닙니다"
-  ...
+```tsx
+return runSiheom(
+  given.render(<SignUpForm signUpMember={noop} />),
+  actions.click(query.button("가입하기")),
+  assertions.a11ySnapshot(query.form("회원가입"), "signup-form-with-errors.snap"),
+);
 ```
+
+<<< @/_snaps/signup-form-with-errors.snap{text}
 
 ## 접근성 포인트
 
 - **레이블**: `query.textbox(/이메일/)`은 accessible name에 `*`가 포함될 수 있습니다. 정규식으로 유연하게 매칭합니다.
-- **에러 연결**: invalid 필드는 `[invalid=true]`와 `description`, `alert` 자식으로 스냅샷에 드러납니다. 시각만으로는 놓치기 쉬운 상태를 assertion으로 고정할 수 있습니다.
-- **region**: 폼 전체를 `aria-label` region으로 묶으면 스냅샷 범위를 명확히 할 수 있습니다.
+- **에러 연결**: invalid 필드는 `[invalid=true]`와 `alert` 자식으로 스냅샷에 드러납니다.
+- **form**: `aria-labelledby`로 이름 붙은 `form`을 스냅샷 루트로 쓰면 범위가 명확합니다.
 
 ## 다음 단계
 

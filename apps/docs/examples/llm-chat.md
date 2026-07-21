@@ -4,12 +4,11 @@
 
 소스: [`apps/react-example/test/stories/shadcn/llm-chat/StreamingChat.tsx`](https://github.com/twinstae/siheom-ts/blob/main/apps/react-example/test/stories/shadcn/llm-chat/StreamingChat.tsx), [`StreamingChat.test.tsx`](https://github.com/twinstae/siheom-ts/blob/main/apps/react-example/test/stories/shadcn/llm-chat/StreamingChat.test.tsx), [`fake-llm-api.ts`](https://github.com/twinstae/siheom-ts/blob/main/apps/react-example/test/stories/shadcn/llm-chat/fake-llm-api.ts).
 
-## UI
+## UI 접근성
 
-- 메시지 입력: role `textbox`, name `"메시지"`
-- 전송: role `button`, name `"전송"`
-- 사용자 메시지: role `listitem`, name은 보낸 텍스트
-- 어시스턴트 응답: role `status`; 상태에 따라 name이 `"어시스턴트 응답 대기 중"` → `"어시스턴트 응답 스트리밍"` → `"어시스턴트 응답"`으로 바뀝니다.
+시험이 고정한 초기 접근성 스냅샷입니다.
+
+<<< @/_snaps/llm-chat-initial.snap{text}
 
 ## Fake LLM API: 테스트가 스트림을 직접 통제
 

@@ -4,12 +4,11 @@
 
 소스: [`apps/react-example/test/stories/shadcn/mobile-filter/MobileFilter.tsx`](https://github.com/twinstae/siheom-ts/blob/main/apps/react-example/test/stories/shadcn/mobile-filter/MobileFilter.tsx), [`MobileFilter.test.tsx`](https://github.com/twinstae/siheom-ts/blob/main/apps/react-example/test/stories/shadcn/mobile-filter/MobileFilter.test.tsx).
 
-## UI
+## UI 접근성
 
-- 선택된 필터 표시: role `status`, name `"선택된 필터"`
-- 필터 열기: role `button`, name `"필터"`
-- Sheet: role `dialog`, name `"필터"`
-- 필터 옵션: role `button`, name `"전체"` / `"진행 중"` / `"완료"`
+시험이 고정한 초기 접근성 스냅샷입니다.
+
+<<< @/_snaps/mobile-filter-initial.snap{text}
 
 ## 시험: 시트를 열고 필터 선택
 

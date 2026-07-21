@@ -4,14 +4,17 @@
 
 소스: [`apps/react-example/test/stories/Counter.tsx`](https://github.com/twinstae/siheom-ts/blob/main/apps/react-example/test/stories/Counter.tsx), [`Counter.test.tsx`](https://github.com/twinstae/siheom-ts/blob/main/apps/react-example/test/stories/Counter.test.tsx).
 
-## UI
+## UI 접근성
 
-버튼의 **텍스트**가 accessible name이 됩니다. 초기 `"0"`, 한 번 클릭 후 `"1"`, 두 번 클릭 후 `"2"`.
+버튼 children이 accessible name입니다.
 
-```tsx
-// Counter.tsx — 버튼 children이 name "0", "1", …
-<Button onClick={() => setState((old) => old + 1)}>{state}</Button>
-```
+초기:
+
+<<< @/_snaps/counter-initial.snap{text}
+
+클릭 두 번 후:
+
+<<< @/_snaps/counter-after-clicks.snap{text}
 
 ## 시험: 값 증가
 
@@ -33,18 +36,6 @@ return runSiheom(
   given.render(<Counter />),
   assertions.a11ySnapshot(query.button("0"), "counter-initial.snap"),
 );
-```
-
-초기 스냅샷:
-
-```text
-button: "0"
-```
-
-클릭 두 번 후:
-
-```text
-button: "2"
 ```
 
 ## 접근성 포인트

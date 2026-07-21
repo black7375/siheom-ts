@@ -4,11 +4,11 @@
 
 소스: [`apps/react-example/test/stories/shadcn/two-factor/TwoFactorForm.tsx`](https://github.com/twinstae/siheom-ts/blob/main/apps/react-example/test/stories/shadcn/two-factor/TwoFactorForm.tsx), [`TwoFactorForm.test.tsx`](https://github.com/twinstae/siheom-ts/blob/main/apps/react-example/test/stories/shadcn/two-factor/TwoFactorForm.test.tsx).
 
-## UI
+## UI 접근성
 
-- 인증 코드: role `textbox`, name `"인증 코드"` (6개의 `InputOTPSlot`으로 시각적으로 나뉘어 보임)
-- 확인: role `button`, name `"확인"`
-- 결과: role `status`, name `"인증 결과"`
+시험이 고정한 초기 접근성 스냅샷입니다.
+
+<<< @/_snaps/two-factor-initial.snap{text}
 
 ## 시험: 코드를 입력하고 확인
 

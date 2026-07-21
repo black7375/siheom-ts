@@ -4,11 +4,11 @@ A settings panel that splits general/notification settings across tabs, toggles 
 
 Source: [`apps/react-example/test/stories/shadcn/settings/SettingsPanel.tsx`](https://github.com/twinstae/siheom-ts/blob/main/apps/react-example/test/stories/shadcn/settings/SettingsPanel.tsx), [`SettingsPanel.test.tsx`](https://github.com/twinstae/siheom-ts/blob/main/apps/react-example/test/stories/shadcn/settings/SettingsPanel.test.tsx).
 
-## UI
+## UI accessibility
 
-- Tabs: role `tab`, name `"일반"` (General) / `"알림"` (Notifications)
-- Dark mode: role `switch`, name `"다크 모드"`
-- Notification frequency: role `radiogroup`, name `"알림 빈도"`; individual `radio`s are `"즉시"` (Immediate) / `"일일 요약"` (Daily digest) / `"끄기"` (Off)
+Initial accessibility snapshot fixed by the test.
+
+<<< @/_snaps/settings-initial.snap{text}
 
 ## Test: visible controls change with the tab
 

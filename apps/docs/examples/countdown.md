@@ -6,11 +6,9 @@
 
 ## UI 접근성
 
-| 요소 | role / name |
-| --- | --- |
-| 남은 시간 | `role="timer"` · `aria-label="남은 시간"` |
-| 시작 / 일시정지 / 리셋 | `button` + `aria-label` |
-| 완료 | `role="status"` · `aria-label="완료"` |
+시험이 고정한 초기 접근성 스냅샷입니다.
+
+<<< @/_snaps/countdown-initial.snap{text}
 
 ## 시험: 시작 후 1초
 

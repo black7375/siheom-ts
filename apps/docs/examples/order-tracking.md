@@ -4,11 +4,11 @@
 
 소스: [`apps/react-example/test/stories/shadcn/order-tracking/OrderTracking.tsx`](https://github.com/twinstae/siheom-ts/blob/main/apps/react-example/test/stories/shadcn/order-tracking/OrderTracking.tsx), [`OrderTracking.test.tsx`](https://github.com/twinstae/siheom-ts/blob/main/apps/react-example/test/stories/shadcn/order-tracking/OrderTracking.test.tsx).
 
-## UI
+## UI 접근성
 
-- 주문 정보: role `region`, name `"주문 정보"` (주문 번호와 상품명 텍스트 포함)
-- 배송 타임라인: role `region`, name `"주문 배송"`
-- 각 단계: role `listitem`, name은 단계 제목(`"주문 접수"`, `"배송 중"`, `"배달 완료"`)
+시험이 고정한 초기 접근성 스냅샷입니다.
+
+<<< @/_snaps/order-tracking-initial.snap{text}
 
 ## 시험: 진행 중인 단계 확인
 

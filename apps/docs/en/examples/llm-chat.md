@@ -4,12 +4,11 @@ A chat UI where sending a message streams the assistant's reply in chunks. Inste
 
 Source: [`apps/react-example/test/stories/shadcn/llm-chat/StreamingChat.tsx`](https://github.com/twinstae/siheom-ts/blob/main/apps/react-example/test/stories/shadcn/llm-chat/StreamingChat.tsx), [`StreamingChat.test.tsx`](https://github.com/twinstae/siheom-ts/blob/main/apps/react-example/test/stories/shadcn/llm-chat/StreamingChat.test.tsx), [`fake-llm-api.ts`](https://github.com/twinstae/siheom-ts/blob/main/apps/react-example/test/stories/shadcn/llm-chat/fake-llm-api.ts).
 
-## UI
+## UI accessibility
 
-- Message input: role `textbox`, name `"메시지"`
-- Send: role `button`, name `"전송"`
-- User message: role `listitem`, name is the sent text
-- Assistant reply: role `status`; its name moves through `"어시스턴트 응답 대기 중"` (waiting) → `"어시스턴트 응답 스트리밍"` (streaming) → `"어시스턴트 응답"` (done).
+Initial accessibility snapshot fixed by the test.
+
+<<< @/_snaps/llm-chat-initial.snap{text}
 
 ## Fake LLM API: the test drives the stream directly
 

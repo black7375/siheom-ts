@@ -4,11 +4,11 @@ Uploading a file drives a Progress bar upward until it completes and swaps in th
 
 Source: [`apps/react-example/test/stories/shadcn/profile-avatar/ProfileAvatar.tsx`](https://github.com/twinstae/siheom-ts/blob/main/apps/react-example/test/stories/shadcn/profile-avatar/ProfileAvatar.tsx), [`ProfileAvatar.test.tsx`](https://github.com/twinstae/siheom-ts/blob/main/apps/react-example/test/stories/shadcn/profile-avatar/ProfileAvatar.test.tsx).
 
-## UI
+## UI accessibility
 
-- Upload input: `label` `"프로필 사진"` (linked to a visually hidden `input[type=file]`)
-- Progress: role `progressbar`, name `"업로드 진행"` (only exists while uploading)
-- Image after completion: role `img`, name `"프로필 사진"`
+Initial accessibility snapshot fixed by the test.
+
+<<< @/_snaps/profile-avatar-initial.snap{text}
 
 ## Test: upload and wait for completion
 

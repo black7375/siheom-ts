@@ -1,0 +1,17 @@
+region: "앱 셸"
+  navigation: "앱 메뉴"
+    "메뉴"
+    list:
+      listitem:
+        link: "대시보드"
+      listitem:
+        link: "설정"
+  main:
+    navigation: "breadcrumb"
+      list:
+        listitem:
+          link: "대시보드"
+            - states: [disabled=true] [current=page]
+    region: "대시보드"
+      heading: "대시보드"
+        - properties: [level=2]

@@ -4,13 +4,11 @@ A table with a status badge per row, paired with Pagination. `assertions.current
 
 Source: [`apps/react-example/test/stories/shadcn/task-table/TaskTable.tsx`](https://github.com/twinstae/siheom-ts/blob/main/apps/react-example/test/stories/shadcn/task-table/TaskTable.tsx), [`TaskTable.test.tsx`](https://github.com/twinstae/siheom-ts/blob/main/apps/react-example/test/stories/shadcn/task-table/TaskTable.test.tsx).
 
-## UI
+## UI accessibility
 
-- Table: role `table`, name `"할 일"`
-- Row: role `row`, name is the task title (e.g. `"API 문서 작성"`)
-- Status badge: role `status`, name is `"{title} 상태"`, text is `"진행 중"` (In progress) / `"완료"` (Done)
-- Page numbers: role `button`, name `"1"`, `"2"`, `"3"`
-- Page navigation: role `button`, name `"이전 페이지"` (Previous) / `"다음 페이지"` (Next)
+Initial accessibility snapshot fixed by the test.
+
+<<< @/_snaps/task-table-initial.snap{text}
 
 ## Test: first page and status badges
 

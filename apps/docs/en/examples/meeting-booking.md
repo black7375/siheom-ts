@@ -4,12 +4,11 @@ A form where picking a date from a Calendar inside a Popover updates the trigger
 
 Source: [`apps/react-example/test/stories/shadcn/meeting-booking/MeetingBookingForm.tsx`](https://github.com/twinstae/siheom-ts/blob/main/apps/react-example/test/stories/shadcn/meeting-booking/MeetingBookingForm.tsx), [`MeetingBookingForm.test.tsx`](https://github.com/twinstae/siheom-ts/blob/main/apps/react-example/test/stories/shadcn/meeting-booking/MeetingBookingForm.test.tsx).
 
-## UI
+## UI accessibility
 
-- Date picker trigger: role `button`, name `"미팅 날짜"` (starts as `"날짜 선택"` and changes to e.g. `"2024년 3월 15일"` once picked)
-- Calendar: role `region`, name `"미팅 날짜 달력"`; date buttons are `button`, named with the formatted date (`"2024년 3월 15일"`)
-- Book button: role `button`, name `"예약하기"`
-- Result: role `status`, name `"예약 결과"`
+Initial accessibility snapshot fixed by the test.
+
+<<< @/_snaps/meeting-booking-initial.snap{text}
 
 ## Test: opening the calendar
 

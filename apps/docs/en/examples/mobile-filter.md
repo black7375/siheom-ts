@@ -4,12 +4,11 @@ On a mobile layout, a button opens a Sheet (bottom sheet); picking an option clo
 
 Source: [`apps/react-example/test/stories/shadcn/mobile-filter/MobileFilter.tsx`](https://github.com/twinstae/siheom-ts/blob/main/apps/react-example/test/stories/shadcn/mobile-filter/MobileFilter.tsx), [`MobileFilter.test.tsx`](https://github.com/twinstae/siheom-ts/blob/main/apps/react-example/test/stories/shadcn/mobile-filter/MobileFilter.test.tsx).
 
-## UI
+## UI accessibility
 
-- Selected filter display: role `status`, name `"선택된 필터"`
-- Open filter: role `button`, name `"필터"`
-- Sheet: role `dialog`, name `"필터"`
-- Filter options: role `button`, name `"전체"` (All) / `"진행 중"` (In progress) / `"완료"` (Done)
+Initial accessibility snapshot fixed by the test.
+
+<<< @/_snaps/mobile-filter-initial.snap{text}
 
 ## Test: open the sheet and pick a filter
 

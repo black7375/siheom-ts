@@ -4,12 +4,11 @@
 
 소스: [`apps/react-example/test/stories/shadcn/team-invite/TeamInviteForm.tsx`](https://github.com/twinstae/siheom-ts/blob/main/apps/react-example/test/stories/shadcn/team-invite/TeamInviteForm.tsx), [`TeamInviteForm.test.tsx`](https://github.com/twinstae/siheom-ts/blob/main/apps/react-example/test/stories/shadcn/team-invite/TeamInviteForm.test.tsx).
 
-## UI
+## UI 접근성
 
-- 역할 Select: `label` `"역할"`이 트리거를 가리킴; 옵션은 `option` (`"멤버"`, `"관리자"`)
-- 팀원 Combobox: role `combobox`, name `"팀원"`; 옵션은 `option` (예: `"김태희"`)
-- 제출: `button` `"초대하기"`
-- 결과: role `status`, name `"초대 결과"`
+시험이 고정한 초기 접근성 스냅샷입니다.
+
+<<< @/_snaps/team-invite-initial.snap{text}
 
 ## 시험: 역할과 팀원을 골라 초대
 

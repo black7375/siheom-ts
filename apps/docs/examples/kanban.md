@@ -4,10 +4,11 @@
 
 소스: [`apps/react-example/test/stories/shadcn/kanban/KanbanBoard.tsx`](https://github.com/twinstae/siheom-ts/blob/main/apps/react-example/test/stories/shadcn/kanban/KanbanBoard.tsx), [`KanbanBoard.test.tsx`](https://github.com/twinstae/siheom-ts/blob/main/apps/react-example/test/stories/shadcn/kanban/KanbanBoard.test.tsx).
 
-## UI
+## UI 접근성
 
-- 열: role `list`, name `"진행 중"` / `"완료"`
-- 카드: role `listitem`, name은 카드 제목(`"디자인"`)
+시험이 고정한 초기 접근성 스냅샷입니다.
+
+<<< @/_snaps/kanban-initial.snap{text}
 
 ## 시험: 카드를 다른 열로 드래그
 

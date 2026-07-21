@@ -4,13 +4,11 @@ A pomodoro-style countdown. Elapsed time is derived from `startTime` and `now`. 
 
 Source: [`apps/react-example/test/stories/countdown/`](https://github.com/twinstae/siheom-ts/tree/main/apps/react-example/test/stories/countdown).
 
-## Accessibility surface
+## UI accessibility
 
-| Element | Role / name |
-| --- | --- |
-| Remaining time | `role="timer"` · `aria-label` (e.g. `"Time remaining"`) |
-| Start / pause / reset | `button` + `aria-label` |
-| Done | `role="status"` · `aria-label` (e.g. `"Done"`) |
+Initial accessibility snapshot fixed by the test.
+
+<<< @/_snaps/countdown-initial.snap{text}
 
 ## Test: one second after start
 

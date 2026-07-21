@@ -4,10 +4,11 @@
 
 소스: [`apps/react-example/test/stories/shadcn/billing-alert/BillingAlert.tsx`](https://github.com/twinstae/siheom-ts/blob/main/apps/react-example/test/stories/shadcn/billing-alert/BillingAlert.tsx), [`BillingAlert.test.tsx`](https://github.com/twinstae/siheom-ts/blob/main/apps/react-example/test/stories/shadcn/billing-alert/BillingAlert.test.tsx).
 
-## UI
+## UI 접근성
 
-- 알림: role `alert`, name `"결제 실패"`
-- 닫기: role `button`, name `"확인"`
+시험이 고정한 초기 접근성 스냅샷입니다.
+
+<<< @/_snaps/billing-alert-initial.snap{text}
 
 ## 시험: 알림을 확인하고 닫기
 

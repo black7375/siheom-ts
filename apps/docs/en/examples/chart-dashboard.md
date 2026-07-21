@@ -4,11 +4,11 @@ A dashboard that switches between revenue and visitor charts via tabs. Even for 
 
 Source: [`apps/react-example/test/stories/shadcn/chart-dashboard/ChartDashboard.tsx`](https://github.com/twinstae/siheom-ts/blob/main/apps/react-example/test/stories/shadcn/chart-dashboard/ChartDashboard.tsx), [`ChartDashboard.test.tsx`](https://github.com/twinstae/siheom-ts/blob/main/apps/react-example/test/stories/shadcn/chart-dashboard/ChartDashboard.test.tsx).
 
-## UI
+## UI accessibility
 
-- Tabs: role `tab`, name `"매출"` (Revenue) / `"방문자"` (Visitors)
-- Revenue chart section: role `region`, name `"매출 차트"`; summary: role `status`, name `"총 매출"`
-- Visitor chart section: role `region`, name `"방문자 차트"`; summary: role `status`, name `"총 방문자"`
+Initial accessibility snapshot fixed by the test.
+
+<<< @/_snaps/chart-dashboard-initial.snap{text}
 
 ## Test: chart and summary change with the tab
 

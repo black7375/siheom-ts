@@ -1,0 +1,7 @@
+region: "LLM 채팅"
+  "LLM 채팅"
+  list: "대화"
+  "메시지"
+  textbox: "메시지" [value=""]
+  button: "전송"
+    - states: [disabled=true]

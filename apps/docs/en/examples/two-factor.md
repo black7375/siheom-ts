@@ -4,11 +4,11 @@ A form that fills in a 6-digit verification code and confirms it. Even though In
 
 Source: [`apps/react-example/test/stories/shadcn/two-factor/TwoFactorForm.tsx`](https://github.com/twinstae/siheom-ts/blob/main/apps/react-example/test/stories/shadcn/two-factor/TwoFactorForm.tsx), [`TwoFactorForm.test.tsx`](https://github.com/twinstae/siheom-ts/blob/main/apps/react-example/test/stories/shadcn/two-factor/TwoFactorForm.test.tsx).
 
-## UI
+## UI accessibility
 
-- Verification code: role `textbox`, name `"인증 코드"` (visually split into 6 `InputOTPSlot`s)
-- Confirm: role `button`, name `"확인"`
-- Result: role `status`, name `"인증 결과"`
+Initial accessibility snapshot fixed by the test.
+
+<<< @/_snaps/two-factor-initial.snap{text}
 
 ## Test: fill in the code and confirm
 

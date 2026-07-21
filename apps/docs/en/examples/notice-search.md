@@ -4,11 +4,11 @@ Typing a search term filters a list; no matches show an empty state. Pairing `as
 
 Source: [`apps/react-example/test/stories/shadcn/notice-search/NoticeSearch.tsx`](https://github.com/twinstae/siheom-ts/blob/main/apps/react-example/test/stories/shadcn/notice-search/NoticeSearch.tsx), [`NoticeSearch.test.tsx`](https://github.com/twinstae/siheom-ts/blob/main/apps/react-example/test/stories/shadcn/notice-search/NoticeSearch.test.tsx).
 
-## UI
+## UI accessibility
 
-- Search input: role `textbox`, name `"공지 검색"`
-- Empty state: role `region`, name `"검색 결과 없음"`
-- Individual notice: role `listitem`, name is the notice title (e.g. `"서버 점검 안내"`)
+Initial accessibility snapshot fixed by the test.
+
+<<< @/_snaps/notice-search-initial.snap{text}
 
 ## Test: no-results state
 

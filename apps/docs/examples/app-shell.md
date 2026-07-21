@@ -4,11 +4,11 @@ Sidebar 메뉴로 라우트를 이동하면 Breadcrumb과 본문이 함께 갱�
 
 소스: [`apps/react-example/test/stories/shadcn/app-shell/AppShell.tsx`](https://github.com/twinstae/siheom-ts/blob/main/apps/react-example/test/stories/shadcn/app-shell/AppShell.tsx), [`AppShell.test.tsx`](https://github.com/twinstae/siheom-ts/blob/main/apps/react-example/test/stories/shadcn/app-shell/AppShell.test.tsx).
 
-## UI
+## UI 접근성
 
-- 사이드바 메뉴: role `navigation`, name `"앱 메뉴"`; 링크는 `link` (`"대시보드"`, `"설정"`)
-- Breadcrumb: role `navigation`, name `"breadcrumb"` (shadcn/ui `Breadcrumb`가 기본으로 부여); 현재 페이지는 `link`이면서 `aria-current="page"`
-- 본문: role `region`, name `"대시보드"` / `"설정"`
+시험이 고정한 초기 접근성 스냅샷입니다.
+
+<<< @/_snaps/app-shell-initial.snap{text}
 
 ## 시험: 사이드바로 이동하면 breadcrumb과 본문이 갱신된다
 

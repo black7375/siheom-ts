@@ -5,9 +5,9 @@
   "type": "module",
   "scripts": {
     "dev": "vitepress dev",
-    "build": "vitepress build",
-    "preview": "vitepress preview",
-    "sync-showcase": "bun ./scripts/sync-showcase-artifacts.mjs"
+    "sync-showcase": "bun ./scripts/sync-showcase-artifacts.mjs",
+    "build": "bun ./scripts/sync-showcase-artifacts.mjs && vitepress build",
+    "preview": "vitepress preview"
   },
   "devDependencies": {
     "vitepress": "^1.6.3"

@@ -4,11 +4,11 @@
 
 소스: [`apps/react-example/test/stories/shadcn/chart-dashboard/ChartDashboard.tsx`](https://github.com/twinstae/siheom-ts/blob/main/apps/react-example/test/stories/shadcn/chart-dashboard/ChartDashboard.tsx), [`ChartDashboard.test.tsx`](https://github.com/twinstae/siheom-ts/blob/main/apps/react-example/test/stories/shadcn/chart-dashboard/ChartDashboard.test.tsx).
 
-## UI
+## UI 접근성
 
-- 탭: role `tab`, name `"매출"` / `"방문자"`
-- 매출 차트 영역: role `region`, name `"매출 차트"`; 요약: role `status`, name `"총 매출"`
-- 방문자 차트 영역: role `region`, name `"방문자 차트"`; 요약: role `status`, name `"총 방문자"`
+시험이 고정한 초기 접근성 스냅샷입니다.
+
+<<< @/_snaps/chart-dashboard-initial.snap{text}
 
 ## 시험: 탭 전환에 따라 차트와 요약이 바뀐다
 

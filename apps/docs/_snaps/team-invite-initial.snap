@@ -1,0 +1,23 @@
+region: "팀원 초대"
+  heading: "팀원 초대"
+    - properties: [level=2]
+  form: "팀원 초대"
+    - relations:
+      labelledby: "팀원 초대"
+    group:
+      "역할"
+      combobox: "역할"
+        - states: [expanded=false] [required=true]
+        - properties: [haspopup="listbox"]
+        "역할 선택"
+    group:
+      "팀원"
+      group:
+        combobox: "팀원" [value=""]
+          - states: [expanded=false]
+          - properties: [autocomplete="list"] [haspopup="listbox"]
+        group:
+          button:
+            - states: [expanded=false]
+            - properties: [haspopup="listbox"]
+    button: "초대하기"

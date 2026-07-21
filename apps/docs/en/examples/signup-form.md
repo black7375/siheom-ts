@@ -1,16 +1,14 @@
 # SignUpForm
 
-A sign-up form with email, password, and checkboxes. Demonstrates validation errors (`errormessage`), fill/click flows, and region-level accessibility snapshots.
+A sign-up form with email, password, and checkboxes. Demonstrates validation errors (`errormessage`), fill/click flows, and form-level accessibility snapshots.
 
 Source: [`apps/react-example/test/stories/SignUpForm.tsx`](https://github.com/twinstae/siheom-ts/blob/main/apps/react-example/test/stories/SignUpForm.tsx), [`SignUpForm.test.tsx`](https://github.com/twinstae/siheom-ts/blob/main/apps/react-example/test/stories/SignUpForm.test.tsx).
 
-## UI
+## UI accessibility
 
-- Text fields: `label` as accessible name (`Email`, `Password` in EN UI; Korean labels in the example app)
-- Checkboxes: linked labels (`약관 동의`, `개인정보 수집 동의`)
-- Submit: `button` `"가입하기"`
+Initial snapshot scoped to `query.form("회원가입")`.
 
-Snapshots wrap the form in `<section aria-label="signup-form">` and target `query.region("signup-form")`.
+<<< @/_snaps/signup-form-initial.snap{text}
 
 ## Test: validate then sign up
 
@@ -37,40 +35,30 @@ await runSiheom(
 
 ```tsx
 return runSiheom(
-  given.render(
-    <section aria-label="signup-form">
-      <SignUpForm signUpMember={noop} />
-    </section>,
-  ),
-  assertions.a11ySnapshot(query.region("signup-form"), "signup-form-initial.snap"),
+  given.render(<SignUpForm signUpMember={noop} />),
+  assertions.a11ySnapshot(query.form("회원가입"), "signup-form-initial.snap"),
 );
-```
-
-```text
-region: "signup-form"
-  textbox: "이메일 *" [value=""]
-  checkbox: "약관 동의" [checked=false] [value="on"]
-  ...
-  button: "가입하기"
 ```
 
 ## Snapshot: errors
 
 After submit, invalid fields and `alert` nodes appear in the tree:
 
-```text
-region: "signup-form"
-  textbox: "이메일 *" [invalid=true] [description="올바른 이메일 형식이 아닙니다"]
-  alert
-    "올바른 이메일 형식이 아닙니다"
-  ...
+```tsx
+return runSiheom(
+  given.render(<SignUpForm signUpMember={noop} />),
+  actions.click(query.button("가입하기")),
+  assertions.a11ySnapshot(query.form("회원가입"), "signup-form-with-errors.snap"),
+);
 ```
+
+<<< @/_snaps/signup-form-with-errors.snap{text}
 
 ## Accessibility notes
 
 - **Labels**: `query.textbox(/이메일/)` matches accessible names that include `*`. Use RegExp when labels vary.
-- **Error wiring**: Invalid fields show `[invalid=true]`, `description`, and `alert` children in snapshots — easy to miss visually alone.
-- **Region**: Wrapping the form in an `aria-label` region scopes snapshots clearly.
+- **Error wiring**: Invalid fields show `[invalid=true]` and `alert` children in snapshots.
+- **form**: A named `form` (`aria-labelledby`) makes a clear snapshot root.
 
 ## Next steps
 

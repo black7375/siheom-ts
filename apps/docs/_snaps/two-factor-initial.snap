@@ -1,0 +1,3 @@
+region: "2단계 인증"
+  textbox: "인증 코드" [value=""]
+  button: "확인"

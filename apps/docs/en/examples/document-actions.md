@@ -4,12 +4,11 @@ Each document card exposes the same actions (copy, rename, delete) through a "mo
 
 Source: [`apps/react-example/test/stories/shadcn/document-actions/DocumentActions.tsx`](https://github.com/twinstae/siheom-ts/blob/main/apps/react-example/test/stories/shadcn/document-actions/DocumentActions.tsx), [`DocumentActions.test.tsx`](https://github.com/twinstae/siheom-ts/blob/main/apps/react-example/test/stories/shadcn/document-actions/DocumentActions.test.tsx).
 
-## UI
+## UI accessibility
 
-- Document: role `article`, name is the document title (`"기획서"`)
-- More button: role `button`, name `"기획서 더보기"`
-- Menu: role `menu`, name is `"기획서 더보기"` for the dropdown or `"문서 동작"` for the context menu; items are `menuitem` (`"복사"`, `"이름 변경"`, `"삭제"`)
-- Result: role `status`, name `"복사 결과"`
+Initial accessibility snapshot fixed by the test.
+
+<<< @/_snaps/document-actions-initial.snap{text}
 
 ## Test: copy from the more menu
 

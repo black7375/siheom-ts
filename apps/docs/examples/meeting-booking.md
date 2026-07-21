@@ -4,12 +4,11 @@ Popover 안에 열리는 Calendar에서 날짜를 골라 트리거 버튼에 반
 
 소스: [`apps/react-example/test/stories/shadcn/meeting-booking/MeetingBookingForm.tsx`](https://github.com/twinstae/siheom-ts/blob/main/apps/react-example/test/stories/shadcn/meeting-booking/MeetingBookingForm.tsx), [`MeetingBookingForm.test.tsx`](https://github.com/twinstae/siheom-ts/blob/main/apps/react-example/test/stories/shadcn/meeting-booking/MeetingBookingForm.test.tsx).
 
-## UI
+## UI 접근성
 
-- 날짜 선택 트리거: role `button`, name `"미팅 날짜"` (초기 텍스트는 `"날짜 선택"`, 선택 후 `"2024년 3월 15일"`처럼 바뀜)
-- 달력: role `region`, name `"미팅 날짜 달력"`; 날짜 버튼은 `button`, name은 포맷된 날짜(`"2024년 3월 15일"`)
-- 예약 버튼: role `button`, name `"예약하기"`
-- 결과: role `status`, name `"예약 결과"`
+시험이 고정한 초기 접근성 스냅샷입니다.
+
+<<< @/_snaps/meeting-booking-initial.snap{text}
 
 ## 시험: 달력 열기
 

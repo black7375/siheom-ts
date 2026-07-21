@@ -4,11 +4,11 @@
 
 소스: [`apps/react-example/test/stories/shadcn/notice-search/NoticeSearch.tsx`](https://github.com/twinstae/siheom-ts/blob/main/apps/react-example/test/stories/shadcn/notice-search/NoticeSearch.tsx), [`NoticeSearch.test.tsx`](https://github.com/twinstae/siheom-ts/blob/main/apps/react-example/test/stories/shadcn/notice-search/NoticeSearch.test.tsx).
 
-## UI
+## UI 접근성
 
-- 검색 입력: role `textbox`, name `"공지 검색"`
-- 결과 없음 안내: role `region`, name `"검색 결과 없음"`
-- 개별 공지: role `listitem`, name은 공지 제목(예: `"서버 점검 안내"`)
+시험이 고정한 초기 접근성 스냅샷입니다.
+
+<<< @/_snaps/notice-search-initial.snap{text}
 
 ## 시험: 결과 없음 안내
 

@@ -4,12 +4,11 @@ A form that picks a role via Select and a team member via a searchable Combobox 
 
 Source: [`apps/react-example/test/stories/shadcn/team-invite/TeamInviteForm.tsx`](https://github.com/twinstae/siheom-ts/blob/main/apps/react-example/test/stories/shadcn/team-invite/TeamInviteForm.tsx), [`TeamInviteForm.test.tsx`](https://github.com/twinstae/siheom-ts/blob/main/apps/react-example/test/stories/shadcn/team-invite/TeamInviteForm.test.tsx).
 
-## UI
+## UI accessibility
 
-- Role Select: `label` `"역할"` points at the trigger; options are `option` (`"멤버"`, `"관리자"`)
-- Member Combobox: role `combobox`, name `"팀원"`; options are `option` (e.g. `"김태희"`)
-- Submit: `button` `"초대하기"`
-- Result: role `status`, name `"초대 결과"`
+Initial accessibility snapshot fixed by the test.
+
+<<< @/_snaps/team-invite-initial.snap{text}
 
 ## Test: pick a role and member, then invite
 

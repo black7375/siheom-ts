@@ -1,0 +1,32 @@
+region: "할 일 관리"
+  heading: "할 일 관리"
+    - properties: [level=2]
+  table: "할 일"
+    rowgroup:
+      row: "제목 상태"
+        columnheader: "제목"
+        columnheader: "상태"
+    rowgroup:
+      row: "API 문서 작성"
+        cell: "API 문서 작성"
+        cell: "API 문서 작성 상태"
+          status: "API 문서 작성 상태"
+            "진행 중"
+      row: "디자인 리뷰"
+        cell: "디자인 리뷰"
+        cell: "디자인 리뷰 상태"
+          status: "디자인 리뷰 상태"
+            "완료"
+  navigation: "pagination"
+    list:
+      listitem:
+        button: "이전 페이지"
+      listitem:
+        button: "1"
+          - states: [current=page]
+      listitem:
+        button: "2"
+      listitem:
+        button: "3"
+      listitem:
+        button: "다음 페이지"

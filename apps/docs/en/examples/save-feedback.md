@@ -4,10 +4,11 @@ One of the shortest siheom examples: a button click announces a save result via 
 
 Source: [`apps/react-example/test/stories/shadcn/save-feedback/SaveFeedback.tsx`](https://github.com/twinstae/siheom-ts/blob/main/apps/react-example/test/stories/shadcn/save-feedback/SaveFeedback.tsx), [`SaveFeedback.test.tsx`](https://github.com/twinstae/siheom-ts/blob/main/apps/react-example/test/stories/shadcn/save-feedback/SaveFeedback.test.tsx).
 
-## UI
+## UI accessibility
 
-- Save button: role `button`, name `"저장"`
-- Toast region: role `region`, name `"Notifications alt+T"`
+Initial accessibility snapshot fixed by the test.
+
+<<< @/_snaps/save-feedback-initial.snap{text}
 
 ## Test: saving shows a toast
 

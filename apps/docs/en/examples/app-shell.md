@@ -4,11 +4,11 @@ A composite example where several components move together: navigating via the S
 
 Source: [`apps/react-example/test/stories/shadcn/app-shell/AppShell.tsx`](https://github.com/twinstae/siheom-ts/blob/main/apps/react-example/test/stories/shadcn/app-shell/AppShell.tsx), [`AppShell.test.tsx`](https://github.com/twinstae/siheom-ts/blob/main/apps/react-example/test/stories/shadcn/app-shell/AppShell.test.tsx).
 
-## UI
+## UI accessibility
 
-- Sidebar menu: role `navigation`, name `"앱 메뉴"`; links are `link` (`"대시보드"`, `"설정"`)
-- Breadcrumb: role `navigation`, name `"breadcrumb"` (shadcn/ui's `Breadcrumb` sets this by default); the current page is a `link` with `aria-current="page"`
-- Content: role `region`, name `"대시보드"` (Dashboard) / `"설정"` (Settings)
+Initial accessibility snapshot fixed by the test.
+
+<<< @/_snaps/app-shell-initial.snap{text}
 
 ## Test: navigating via the sidebar updates breadcrumb and content
 

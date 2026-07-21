@@ -4,10 +4,11 @@
 
 소스: [`apps/react-example/test/stories/shadcn/save-feedback/SaveFeedback.tsx`](https://github.com/twinstae/siheom-ts/blob/main/apps/react-example/test/stories/shadcn/save-feedback/SaveFeedback.tsx), [`SaveFeedback.test.tsx`](https://github.com/twinstae/siheom-ts/blob/main/apps/react-example/test/stories/shadcn/save-feedback/SaveFeedback.test.tsx).
 
-## UI
+## UI 접근성
 
-- 저장 버튼: role `button`, name `"저장"`
-- 토스트 영역: role `region`, name `"Notifications alt+T"`
+시험이 고정한 초기 접근성 스냅샷입니다.
+
+<<< @/_snaps/save-feedback-initial.snap{text}
 
 ## 시험: 저장하면 토스트가 보인다
 

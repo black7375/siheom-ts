@@ -4,10 +4,11 @@ A kanban board where dragging a card into another column moves it there. `action
 
 Source: [`apps/react-example/test/stories/shadcn/kanban/KanbanBoard.tsx`](https://github.com/twinstae/siheom-ts/blob/main/apps/react-example/test/stories/shadcn/kanban/KanbanBoard.tsx), [`KanbanBoard.test.tsx`](https://github.com/twinstae/siheom-ts/blob/main/apps/react-example/test/stories/shadcn/kanban/KanbanBoard.test.tsx).
 
-## UI
+## UI accessibility
 
-- Columns: role `list`, name `"진행 중"` (In progress) / `"완료"` (Done)
-- Cards: role `listitem`, name is the card title (`"디자인"`)
+Initial accessibility snapshot fixed by the test.
+
+<<< @/_snaps/kanban-initial.snap{text}
 
 ## Test: drag a card into another column
 

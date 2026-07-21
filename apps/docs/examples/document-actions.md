@@ -4,12 +4,11 @@
 
 소스: [`apps/react-example/test/stories/shadcn/document-actions/DocumentActions.tsx`](https://github.com/twinstae/siheom-ts/blob/main/apps/react-example/test/stories/shadcn/document-actions/DocumentActions.tsx), [`DocumentActions.test.tsx`](https://github.com/twinstae/siheom-ts/blob/main/apps/react-example/test/stories/shadcn/document-actions/DocumentActions.test.tsx).
 
-## UI
+## UI 접근성
 
-- 문서: role `article`, name은 문서 제목(`"기획서"`)
-- 더보기 버튼: role `button`, name `"기획서 더보기"`
-- 메뉴: role `menu`, name은 dropdown이면 `"기획서 더보기"`, context menu면 `"문서 동작"`; 항목은 `menuitem` (`"복사"`, `"이름 변경"`, `"삭제"`)
-- 결과: role `status`, name `"복사 결과"`
+시험이 고정한 초기 접근성 스냅샷입니다.
+
+<<< @/_snaps/document-actions-initial.snap{text}
 
 ## 시험: 더보기 메뉴로 복사
 

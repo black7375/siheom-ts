@@ -4,11 +4,11 @@
 
 소스: [`apps/react-example/test/stories/shadcn/settings/SettingsPanel.tsx`](https://github.com/twinstae/siheom-ts/blob/main/apps/react-example/test/stories/shadcn/settings/SettingsPanel.tsx), [`SettingsPanel.test.tsx`](https://github.com/twinstae/siheom-ts/blob/main/apps/react-example/test/stories/shadcn/settings/SettingsPanel.test.tsx).
 
-## UI
+## UI 접근성
 
-- 탭: role `tab`, name `"일반"` / `"알림"`
-- 다크 모드: role `switch`, name `"다크 모드"`
-- 알림 빈도: role `radiogroup`, name `"알림 빈도"`; 개별 `radio`는 `"즉시"` / `"일일 요약"` / `"끄기"`
+시험이 고정한 초기 접근성 스냅샷입니다.
+
+<<< @/_snaps/settings-initial.snap{text}
 
 ## 시험: 탭에 따라 보이는 컨트롤이 다르다
 

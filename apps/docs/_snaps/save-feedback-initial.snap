@@ -1,0 +1,4 @@
+region: "저장 피드백"
+  button: "저장"
+  region: "Notifications alt+T"
+    - live-region: [live=polite] [atomic=false] [relevant="additions text"]

@@ -4,10 +4,11 @@ The simplest possible alert example: a payment-failure Alert dismissed by a conf
 
 Source: [`apps/react-example/test/stories/shadcn/billing-alert/BillingAlert.tsx`](https://github.com/twinstae/siheom-ts/blob/main/apps/react-example/test/stories/shadcn/billing-alert/BillingAlert.tsx), [`BillingAlert.test.tsx`](https://github.com/twinstae/siheom-ts/blob/main/apps/react-example/test/stories/shadcn/billing-alert/BillingAlert.test.tsx).
 
-## UI
+## UI accessibility
 
-- Alert: role `alert`, name `"결제 실패"`
-- Dismiss: role `button`, name `"확인"`
+Initial accessibility snapshot fixed by the test.
+
+<<< @/_snaps/billing-alert-initial.snap{text}
 
 ## Test: acknowledge and dismiss
 

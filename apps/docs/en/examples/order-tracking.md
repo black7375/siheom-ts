@@ -4,11 +4,11 @@ Shipping steps rendered as a timeline. The current step is marked with `aria-cur
 
 Source: [`apps/react-example/test/stories/shadcn/order-tracking/OrderTracking.tsx`](https://github.com/twinstae/siheom-ts/blob/main/apps/react-example/test/stories/shadcn/order-tracking/OrderTracking.tsx), [`OrderTracking.test.tsx`](https://github.com/twinstae/siheom-ts/blob/main/apps/react-example/test/stories/shadcn/order-tracking/OrderTracking.test.tsx).
 
-## UI
+## UI accessibility
 
-- Order info: role `region`, name `"주문 정보"` (contains order id and product name text)
-- Shipping timeline: role `region`, name `"주문 배송"`
-- Each step: role `listitem`, name is the step title (`"주문 접수"`, `"배송 중"`, `"배달 완료"`)
+Initial accessibility snapshot fixed by the test.
+
+<<< @/_snaps/order-tracking-initial.snap{text}
 
 ## Test: which step is current
 

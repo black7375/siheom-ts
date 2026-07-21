@@ -4,13 +4,11 @@ A command palette opened from a button. Typing into the combobox inside the dial
 
 Source: [`apps/react-example/test/stories/shadcn/command-menu/CommandMenuApp.tsx`](https://github.com/twinstae/siheom-ts/blob/main/apps/react-example/test/stories/shadcn/command-menu/CommandMenuApp.tsx), [`CommandMenuApp.test.tsx`](https://github.com/twinstae/siheom-ts/blob/main/apps/react-example/test/stories/shadcn/command-menu/CommandMenuApp.test.tsx).
 
-## UI
+## UI accessibility
 
-- Trigger: role `button`, name `"빠른 실행"`
-- Dialog: role `dialog`, name `"빠른 실행"`
-- Search: role `combobox`, name `"명령 검색"`
-- Options: role `option` (`"새 문서"`, `"설정 열기"`)
-- Result: role `status`, name `"실행 결과"`
+Initial accessibility snapshot fixed by the test.
+
+<<< @/_snaps/command-menu-initial.snap{text}
 
 ## Test: search and pick a command
 

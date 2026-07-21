@@ -4,13 +4,11 @@
 
 소스: [`apps/react-example/test/stories/shadcn/task-table/TaskTable.tsx`](https://github.com/twinstae/siheom-ts/blob/main/apps/react-example/test/stories/shadcn/task-table/TaskTable.tsx), [`TaskTable.test.tsx`](https://github.com/twinstae/siheom-ts/blob/main/apps/react-example/test/stories/shadcn/task-table/TaskTable.test.tsx).
 
-## UI
+## UI 접근성
 
-- 테이블: role `table`, name `"할 일"`
-- 행: role `row`, name은 할 일 제목(예: `"API 문서 작성"`)
-- 상태 배지: role `status`, name은 `"{제목} 상태"`, 텍스트는 `"진행 중"` / `"완료"`
-- 페이지 번호: role `button`, name `"1"`, `"2"`, `"3"`
-- 페이지 이동: role `button`, name `"이전 페이지"` / `"다음 페이지"`
+시험이 고정한 초기 접근성 스냅샷입니다.
+
+<<< @/_snaps/task-table-initial.snap{text}
 
 ## 시험: 첫 페이지 목록과 상태 배지
 

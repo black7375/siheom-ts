@@ -4,13 +4,11 @@
 
 소스: [`apps/react-example/test/stories/shadcn/command-menu/CommandMenuApp.tsx`](https://github.com/twinstae/siheom-ts/blob/main/apps/react-example/test/stories/shadcn/command-menu/CommandMenuApp.tsx), [`CommandMenuApp.test.tsx`](https://github.com/twinstae/siheom-ts/blob/main/apps/react-example/test/stories/shadcn/command-menu/CommandMenuApp.test.tsx).
 
-## UI
+## UI 접근성
 
-- 트리거: role `button`, name `"빠른 실행"`
-- 다이얼로그: role `dialog`, name `"빠른 실행"`
-- 검색: role `combobox`, name `"명령 검색"`
-- 옵션: role `option` (`"새 문서"`, `"설정 열기"`)
-- 결과: role `status`, name `"실행 결과"`
+시험이 고정한 초기 접근성 스냅샷입니다.
+
+<<< @/_snaps/command-menu-initial.snap{text}
 
 ## 시험: 검색하고 명령 선택
 

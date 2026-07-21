@@ -4,11 +4,11 @@ The same data rendered two ways — list and grid — switched with a Toggle Gro
 
 Source: [`apps/react-example/test/stories/shadcn/view-switcher/ViewSwitcher.tsx`](https://github.com/twinstae/siheom-ts/blob/main/apps/react-example/test/stories/shadcn/view-switcher/ViewSwitcher.tsx), [`ViewSwitcher.test.tsx`](https://github.com/twinstae/siheom-ts/blob/main/apps/react-example/test/stories/shadcn/view-switcher/ViewSwitcher.test.tsx).
 
-## UI
+## UI accessibility
 
-- Switch buttons: role `button`, name `"목록"` (List) / `"그리드"` (Grid) — Toggle Group items
-- List view: role `region`, name `"목록 보기"`
-- Grid view: role `region`, name `"그리드 보기"`
+Initial accessibility snapshot fixed by the test.
+
+<<< @/_snaps/view-switcher-initial.snap{text}
 
 ## Test: switch from list to grid
 

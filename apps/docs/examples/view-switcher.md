@@ -4,11 +4,11 @@
 
 소스: [`apps/react-example/test/stories/shadcn/view-switcher/ViewSwitcher.tsx`](https://github.com/twinstae/siheom-ts/blob/main/apps/react-example/test/stories/shadcn/view-switcher/ViewSwitcher.tsx), [`ViewSwitcher.test.tsx`](https://github.com/twinstae/siheom-ts/blob/main/apps/react-example/test/stories/shadcn/view-switcher/ViewSwitcher.test.tsx).
 
-## UI
+## UI 접근성
 
-- 전환 버튼: role `button`, name `"목록"` / `"그리드"` (Toggle Group 아이템)
-- 목록 뷰: role `region`, name `"목록 보기"`
-- 그리드 뷰: role `region`, name `"그리드 보기"`
+시험이 고정한 초기 접근성 스냅샷입니다.
+
+<<< @/_snaps/view-switcher-initial.snap{text}
 
 ## 시험: 목록에서 그리드로 전환
 

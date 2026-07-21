@@ -4,14 +4,17 @@ Counter is a single button whose label increments by 1 on each click. Use it to 
 
 Source: [`apps/react-example/test/stories/Counter.tsx`](https://github.com/twinstae/siheom-ts/blob/main/apps/react-example/test/stories/Counter.tsx), [`Counter.test.tsx`](https://github.com/twinstae/siheom-ts/blob/main/apps/react-example/test/stories/Counter.test.tsx).
 
-## UI
+## UI accessibility
 
-Button **text** is the accessible name: `"0"` initially, `"1"` after one click, `"2"` after two.
+The button's children are its accessible name.
 
-```tsx
-// Counter.tsx — button children become names "0", "1", …
-<Button onClick={() => setState((old) => old + 1)}>{state}</Button>
-```
+Initial:
+
+<<< @/_snaps/counter-initial.snap{text}
+
+After two clicks:
+
+<<< @/_snaps/counter-after-clicks.snap{text}
 
 ## Test: increment
 
@@ -33,18 +36,6 @@ return runSiheom(
   given.render(<Counter />),
   assertions.a11ySnapshot(query.button("0"), "counter-initial.snap"),
 );
-```
-
-Initial snapshot:
-
-```text
-button: "0"
-```
-
-After two clicks:
-
-```text
-button: "2"
 ```
 
 ## Accessibility notes

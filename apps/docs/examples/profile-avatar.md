@@ -4,11 +4,11 @@
 
 소스: [`apps/react-example/test/stories/shadcn/profile-avatar/ProfileAvatar.tsx`](https://github.com/twinstae/siheom-ts/blob/main/apps/react-example/test/stories/shadcn/profile-avatar/ProfileAvatar.tsx), [`ProfileAvatar.test.tsx`](https://github.com/twinstae/siheom-ts/blob/main/apps/react-example/test/stories/shadcn/profile-avatar/ProfileAvatar.test.tsx).
 
-## UI
+## UI 접근성
 
-- 업로드 입력: `label` `"프로필 사진"` (시각적으로 숨겨진 `input[type=file]`과 연결)
-- 진행률: role `progressbar`, name `"업로드 진행"` (업로드 중에만 존재)
-- 완료 후 이미지: role `img`, name `"프로필 사진"`
+시험이 고정한 초기 접근성 스냅샷입니다.
+
+<<< @/_snaps/profile-avatar-initial.snap{text}
 
 ## 시험: 업로드하고 완료까지 기다리기
 
