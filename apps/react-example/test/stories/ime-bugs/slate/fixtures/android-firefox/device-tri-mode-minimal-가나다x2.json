@@ -1,0 +1,1068 @@
+{
+  "profileId": "android-firefox",
+  "os": "android",
+  "browser": "firefox",
+  "ime": "",
+  "capturedAt": "2026-07-21T12:50:14.279Z",
+  "scenarioId": "slate-ac-first-hangul-placeholder-minimal",
+  "source": "os-ime",
+  "events": [
+    {
+      "type": "keydown",
+      "key": "Process",
+      "code": "",
+      "keyCode": 229,
+      "isComposing": false,
+      "inputType": null,
+      "data": null,
+      "value": ""
+    },
+    {
+      "type": "compositionstart",
+      "key": null,
+      "code": null,
+      "keyCode": null,
+      "isComposing": null,
+      "inputType": null,
+      "data": "",
+      "value": ""
+    },
+    {
+      "type": "compositionupdate",
+      "key": null,
+      "code": null,
+      "keyCode": null,
+      "isComposing": null,
+      "inputType": null,
+      "data": "ㄱ",
+      "value": ""
+    },
+    {
+      "type": "beforeinput",
+      "key": null,
+      "code": null,
+      "keyCode": null,
+      "isComposing": true,
+      "inputType": "insertCompositionText",
+      "data": "ㄱ",
+      "value": ""
+    },
+    {
+      "type": "input",
+      "key": null,
+      "code": null,
+      "keyCode": null,
+      "isComposing": true,
+      "inputType": "insertCompositionText",
+      "data": "ㄱ",
+      "value": "ㄱ"
+    },
+    {
+      "type": "keyup",
+      "key": "Process",
+      "code": "",
+      "keyCode": 229,
+      "isComposing": true,
+      "inputType": null,
+      "data": null,
+      "value": "ㄱ"
+    },
+    {
+      "type": "keydown",
+      "key": "Process",
+      "code": "",
+      "keyCode": 229,
+      "isComposing": true,
+      "inputType": null,
+      "data": null,
+      "value": "ㄱ"
+    },
+    {
+      "type": "compositionupdate",
+      "key": null,
+      "code": null,
+      "keyCode": null,
+      "isComposing": null,
+      "inputType": null,
+      "data": "가",
+      "value": "ㄱ"
+    },
+    {
+      "type": "beforeinput",
+      "key": null,
+      "code": null,
+      "keyCode": null,
+      "isComposing": true,
+      "inputType": "insertCompositionText",
+      "data": "가",
+      "value": "ㄱ"
+    },
+    {
+      "type": "input",
+      "key": null,
+      "code": null,
+      "keyCode": null,
+      "isComposing": true,
+      "inputType": "insertCompositionText",
+      "data": "가",
+      "value": "ㄱ"
+    },
+    {
+      "type": "keyup",
+      "key": "Process",
+      "code": "",
+      "keyCode": 229,
+      "isComposing": true,
+      "inputType": null,
+      "data": null,
+      "value": "ㄱ"
+    },
+    {
+      "type": "beforeinput",
+      "key": null,
+      "code": null,
+      "keyCode": null,
+      "isComposing": true,
+      "inputType": "insertCompositionText",
+      "data": "가",
+      "value": "ㄱ"
+    },
+    {
+      "type": "input",
+      "key": null,
+      "code": null,
+      "keyCode": null,
+      "isComposing": true,
+      "inputType": "insertCompositionText",
+      "data": "가",
+      "value": "ㄱ"
+    },
+    {
+      "type": "compositionend",
+      "key": null,
+      "code": null,
+      "keyCode": null,
+      "isComposing": null,
+      "inputType": null,
+      "data": "가",
+      "value": "ㄱ"
+    },
+    {
+      "type": "input",
+      "key": null,
+      "code": null,
+      "keyCode": null,
+      "isComposing": false,
+      "inputType": "insertCompositionText",
+      "data": "가",
+      "value": "ㄱ"
+    },
+    {
+      "type": "keydown",
+      "key": "Process",
+      "code": "",
+      "keyCode": 229,
+      "isComposing": false,
+      "inputType": null,
+      "data": null,
+      "value": "ㄱ"
+    },
+    {
+      "type": "compositionstart",
+      "key": null,
+      "code": null,
+      "keyCode": null,
+      "isComposing": null,
+      "inputType": null,
+      "data": "",
+      "value": "ㄱ"
+    },
+    {
+      "type": "compositionupdate",
+      "key": null,
+      "code": null,
+      "keyCode": null,
+      "isComposing": null,
+      "inputType": null,
+      "data": "간",
+      "value": "ㄱ"
+    },
+    {
+      "type": "beforeinput",
+      "key": null,
+      "code": null,
+      "keyCode": null,
+      "isComposing": true,
+      "inputType": "insertCompositionText",
+      "data": "간",
+      "value": "ㄱ"
+    },
+    {
+      "type": "input",
+      "key": null,
+      "code": null,
+      "keyCode": null,
+      "isComposing": true,
+      "inputType": "insertCompositionText",
+      "data": "간",
+      "value": "ㄱ간"
+    },
+    {
+      "type": "keyup",
+      "key": "Process",
+      "code": "",
+      "keyCode": 229,
+      "isComposing": true,
+      "inputType": null,
+      "data": null,
+      "value": "ㄱ간"
+    },
+    {
+      "type": "keydown",
+      "key": "Process",
+      "code": "",
+      "keyCode": 229,
+      "isComposing": true,
+      "inputType": null,
+      "data": null,
+      "value": "ㄱ간"
+    },
+    {
+      "type": "compositionupdate",
+      "key": null,
+      "code": null,
+      "keyCode": null,
+      "isComposing": null,
+      "inputType": null,
+      "data": "가나",
+      "value": "ㄱ간"
+    },
+    {
+      "type": "beforeinput",
+      "key": null,
+      "code": null,
+      "keyCode": null,
+      "isComposing": true,
+      "inputType": "insertCompositionText",
+      "data": "가나",
+      "value": "ㄱ간"
+    },
+    {
+      "type": "input",
+      "key": null,
+      "code": null,
+      "keyCode": null,
+      "isComposing": true,
+      "inputType": "insertCompositionText",
+      "data": "가나",
+      "value": "ㄱ가나"
+    },
+    {
+      "type": "keyup",
+      "key": "Process",
+      "code": "",
+      "keyCode": 229,
+      "isComposing": true,
+      "inputType": null,
+      "data": null,
+      "value": "ㄱ가나"
+    },
+    {
+      "type": "keydown",
+      "key": "Process",
+      "code": "",
+      "keyCode": 229,
+      "isComposing": true,
+      "inputType": null,
+      "data": null,
+      "value": "ㄱ가나"
+    },
+    {
+      "type": "compositionupdate",
+      "key": null,
+      "code": null,
+      "keyCode": null,
+      "isComposing": null,
+      "inputType": null,
+      "data": "가낟",
+      "value": "ㄱ가나"
+    },
+    {
+      "type": "beforeinput",
+      "key": null,
+      "code": null,
+      "keyCode": null,
+      "isComposing": true,
+      "inputType": "insertCompositionText",
+      "data": "가낟",
+      "value": "ㄱ가나"
+    },
+    {
+      "type": "input",
+      "key": null,
+      "code": null,
+      "keyCode": null,
+      "isComposing": true,
+      "inputType": "insertCompositionText",
+      "data": "가낟",
+      "value": "ㄱ가낟"
+    },
+    {
+      "type": "keyup",
+      "key": "Process",
+      "code": "",
+      "keyCode": 229,
+      "isComposing": true,
+      "inputType": null,
+      "data": null,
+      "value": "ㄱ가낟"
+    },
+    {
+      "type": "keydown",
+      "key": "Process",
+      "code": "",
+      "keyCode": 229,
+      "isComposing": true,
+      "inputType": null,
+      "data": null,
+      "value": "ㄱ가낟"
+    },
+    {
+      "type": "compositionupdate",
+      "key": null,
+      "code": null,
+      "keyCode": null,
+      "isComposing": null,
+      "inputType": null,
+      "data": "가나다",
+      "value": "ㄱ가낟"
+    },
+    {
+      "type": "beforeinput",
+      "key": null,
+      "code": null,
+      "keyCode": null,
+      "isComposing": true,
+      "inputType": "insertCompositionText",
+      "data": "가나다",
+      "value": "ㄱ가낟"
+    },
+    {
+      "type": "input",
+      "key": null,
+      "code": null,
+      "keyCode": null,
+      "isComposing": true,
+      "inputType": "insertCompositionText",
+      "data": "가나다",
+      "value": "ㄱ가나다"
+    },
+    {
+      "type": "keyup",
+      "key": "Process",
+      "code": "",
+      "keyCode": 229,
+      "isComposing": true,
+      "inputType": null,
+      "data": null,
+      "value": "ㄱ가나다"
+    },
+    {
+      "type": "beforeinput",
+      "key": null,
+      "code": null,
+      "keyCode": null,
+      "isComposing": true,
+      "inputType": "insertCompositionText",
+      "data": "가나다",
+      "value": "ㄱ가나다"
+    },
+    {
+      "type": "input",
+      "key": null,
+      "code": null,
+      "keyCode": null,
+      "isComposing": true,
+      "inputType": "insertCompositionText",
+      "data": "가나다",
+      "value": "ㄱ가나다"
+    },
+    {
+      "type": "compositionend",
+      "key": null,
+      "code": null,
+      "keyCode": null,
+      "isComposing": null,
+      "inputType": null,
+      "data": "가나다",
+      "value": "ㄱ가나다"
+    },
+    {
+      "type": "input",
+      "key": null,
+      "code": null,
+      "keyCode": null,
+      "isComposing": false,
+      "inputType": "insertCompositionText",
+      "data": "가나다",
+      "value": "ㄱ가나다"
+    },
+    {
+      "type": "keydown",
+      "key": "Process",
+      "code": "",
+      "keyCode": 229,
+      "isComposing": false,
+      "inputType": null,
+      "data": null,
+      "value": ""
+    },
+    {
+      "type": "compositionstart",
+      "key": null,
+      "code": null,
+      "keyCode": null,
+      "isComposing": null,
+      "inputType": null,
+      "data": "",
+      "value": ""
+    },
+    {
+      "type": "compositionupdate",
+      "key": null,
+      "code": null,
+      "keyCode": null,
+      "isComposing": null,
+      "inputType": null,
+      "data": "ㄱ",
+      "value": ""
+    },
+    {
+      "type": "beforeinput",
+      "key": null,
+      "code": null,
+      "keyCode": null,
+      "isComposing": true,
+      "inputType": "insertCompositionText",
+      "data": "ㄱ",
+      "value": ""
+    },
+    {
+      "type": "input",
+      "key": null,
+      "code": null,
+      "keyCode": null,
+      "isComposing": true,
+      "inputType": "insertCompositionText",
+      "data": "ㄱ",
+      "value": "ㄱ"
+    },
+    {
+      "type": "keyup",
+      "key": "Process",
+      "code": "",
+      "keyCode": 229,
+      "isComposing": true,
+      "inputType": null,
+      "data": null,
+      "value": "ㄱ"
+    },
+    {
+      "type": "keydown",
+      "key": "Process",
+      "code": "",
+      "keyCode": 229,
+      "isComposing": true,
+      "inputType": null,
+      "data": null,
+      "value": "ㄱ"
+    },
+    {
+      "type": "compositionupdate",
+      "key": null,
+      "code": null,
+      "keyCode": null,
+      "isComposing": null,
+      "inputType": null,
+      "data": "가",
+      "value": "ㄱ"
+    },
+    {
+      "type": "beforeinput",
+      "key": null,
+      "code": null,
+      "keyCode": null,
+      "isComposing": true,
+      "inputType": "insertCompositionText",
+      "data": "가",
+      "value": "ㄱ"
+    },
+    {
+      "type": "input",
+      "key": null,
+      "code": null,
+      "keyCode": null,
+      "isComposing": true,
+      "inputType": "insertCompositionText",
+      "data": "가",
+      "value": "ㄱ"
+    },
+    {
+      "type": "keyup",
+      "key": "Process",
+      "code": "",
+      "keyCode": 229,
+      "isComposing": true,
+      "inputType": null,
+      "data": null,
+      "value": "ㄱ"
+    },
+    {
+      "type": "beforeinput",
+      "key": null,
+      "code": null,
+      "keyCode": null,
+      "isComposing": true,
+      "inputType": "insertCompositionText",
+      "data": "가",
+      "value": "ㄱ"
+    },
+    {
+      "type": "input",
+      "key": null,
+      "code": null,
+      "keyCode": null,
+      "isComposing": true,
+      "inputType": "insertCompositionText",
+      "data": "가",
+      "value": "ㄱ"
+    },
+    {
+      "type": "compositionend",
+      "key": null,
+      "code": null,
+      "keyCode": null,
+      "isComposing": null,
+      "inputType": null,
+      "data": "가",
+      "value": "ㄱ"
+    },
+    {
+      "type": "input",
+      "key": null,
+      "code": null,
+      "keyCode": null,
+      "isComposing": false,
+      "inputType": "insertCompositionText",
+      "data": "가",
+      "value": "ㄱ"
+    },
+    {
+      "type": "keydown",
+      "key": "Process",
+      "code": "",
+      "keyCode": 229,
+      "isComposing": false,
+      "inputType": null,
+      "data": null,
+      "value": "ㄱ"
+    },
+    {
+      "type": "compositionstart",
+      "key": null,
+      "code": null,
+      "keyCode": null,
+      "isComposing": null,
+      "inputType": null,
+      "data": "",
+      "value": "ㄱ"
+    },
+    {
+      "type": "compositionupdate",
+      "key": null,
+      "code": null,
+      "keyCode": null,
+      "isComposing": null,
+      "inputType": null,
+      "data": "간",
+      "value": "ㄱ"
+    },
+    {
+      "type": "beforeinput",
+      "key": null,
+      "code": null,
+      "keyCode": null,
+      "isComposing": true,
+      "inputType": "insertCompositionText",
+      "data": "간",
+      "value": "ㄱ"
+    },
+    {
+      "type": "input",
+      "key": null,
+      "code": null,
+      "keyCode": null,
+      "isComposing": true,
+      "inputType": "insertCompositionText",
+      "data": "간",
+      "value": "간ㄱ"
+    },
+    {
+      "type": "keyup",
+      "key": "Process",
+      "code": "",
+      "keyCode": 229,
+      "isComposing": true,
+      "inputType": null,
+      "data": null,
+      "value": "간ㄱ"
+    },
+    {
+      "type": "beforeinput",
+      "key": null,
+      "code": null,
+      "keyCode": null,
+      "isComposing": true,
+      "inputType": "insertCompositionText",
+      "data": "간",
+      "value": "간ㄱ"
+    },
+    {
+      "type": "input",
+      "key": null,
+      "code": null,
+      "keyCode": null,
+      "isComposing": true,
+      "inputType": "insertCompositionText",
+      "data": "간",
+      "value": "간ㄱ"
+    },
+    {
+      "type": "compositionend",
+      "key": null,
+      "code": null,
+      "keyCode": null,
+      "isComposing": null,
+      "inputType": null,
+      "data": "간",
+      "value": "간ㄱ"
+    },
+    {
+      "type": "input",
+      "key": null,
+      "code": null,
+      "keyCode": null,
+      "isComposing": false,
+      "inputType": "insertCompositionText",
+      "data": "간",
+      "value": "간ㄱ"
+    },
+    {
+      "type": "keydown",
+      "key": "Process",
+      "code": "",
+      "keyCode": 229,
+      "isComposing": false,
+      "inputType": null,
+      "data": null,
+      "value": "간ㄱ"
+    },
+    {
+      "type": "compositionstart",
+      "key": null,
+      "code": null,
+      "keyCode": null,
+      "isComposing": null,
+      "inputType": null,
+      "data": "",
+      "value": "간ㄱ"
+    },
+    {
+      "type": "compositionupdate",
+      "key": null,
+      "code": null,
+      "keyCode": null,
+      "isComposing": null,
+      "inputType": null,
+      "data": "간ㅏ",
+      "value": "간ㄱ"
+    },
+    {
+      "type": "beforeinput",
+      "key": null,
+      "code": null,
+      "keyCode": null,
+      "isComposing": true,
+      "inputType": "insertCompositionText",
+      "data": "간ㅏ",
+      "value": "간ㄱ"
+    },
+    {
+      "type": "input",
+      "key": null,
+      "code": null,
+      "keyCode": null,
+      "isComposing": true,
+      "inputType": "insertCompositionText",
+      "data": "간ㅏ",
+      "value": "간ㅏ간ㄱ"
+    },
+    {
+      "type": "compositionend",
+      "key": null,
+      "code": null,
+      "keyCode": null,
+      "isComposing": null,
+      "inputType": null,
+      "data": "간ㅏ",
+      "value": "간ㅏ간ㄱ"
+    },
+    {
+      "type": "input",
+      "key": null,
+      "code": null,
+      "keyCode": null,
+      "isComposing": false,
+      "inputType": "insertCompositionText",
+      "data": "간ㅏ",
+      "value": "간ㅏ간ㄱ"
+    },
+    {
+      "type": "keyup",
+      "key": "Process",
+      "code": "",
+      "keyCode": 229,
+      "isComposing": false,
+      "inputType": null,
+      "data": null,
+      "value": "간ㅏ간ㄱ"
+    },
+    {
+      "type": "keydown",
+      "key": "Process",
+      "code": "",
+      "keyCode": 229,
+      "isComposing": false,
+      "inputType": null,
+      "data": null,
+      "value": "간ㅏ간ㄱ"
+    },
+    {
+      "type": "compositionstart",
+      "key": null,
+      "code": null,
+      "keyCode": null,
+      "isComposing": null,
+      "inputType": null,
+      "data": "",
+      "value": "간ㅏ간ㄱ"
+    },
+    {
+      "type": "compositionupdate",
+      "key": null,
+      "code": null,
+      "keyCode": null,
+      "isComposing": null,
+      "inputType": null,
+      "data": "간ㅏㄷ",
+      "value": "간ㅏ간ㄱ"
+    },
+    {
+      "type": "beforeinput",
+      "key": null,
+      "code": null,
+      "keyCode": null,
+      "isComposing": true,
+      "inputType": "insertCompositionText",
+      "data": "간ㅏㄷ",
+      "value": "간ㅏ간ㄱ"
+    },
+    {
+      "type": "input",
+      "key": null,
+      "code": null,
+      "keyCode": null,
+      "isComposing": true,
+      "inputType": "insertCompositionText",
+      "data": "간ㅏㄷ",
+      "value": "간ㅏㄷ간ㅏ간ㄱ"
+    },
+    {
+      "type": "compositionend",
+      "key": null,
+      "code": null,
+      "keyCode": null,
+      "isComposing": null,
+      "inputType": null,
+      "data": "간ㅏㄷ",
+      "value": "간ㅏㄷ간ㅏ간ㄱ"
+    },
+    {
+      "type": "input",
+      "key": null,
+      "code": null,
+      "keyCode": null,
+      "isComposing": false,
+      "inputType": "insertCompositionText",
+      "data": "간ㅏㄷ",
+      "value": "간ㅏㄷ간ㅏ간ㄱ"
+    },
+    {
+      "type": "keyup",
+      "key": "Process",
+      "code": "",
+      "keyCode": 229,
+      "isComposing": false,
+      "inputType": null,
+      "data": null,
+      "value": "간ㅏㄷ간ㅏ간ㄱ"
+    },
+    {
+      "type": "keydown",
+      "key": "Process",
+      "code": "",
+      "keyCode": 229,
+      "isComposing": false,
+      "inputType": null,
+      "data": null,
+      "value": "간ㅏㄷ간ㅏ간ㄱ"
+    },
+    {
+      "type": "compositionstart",
+      "key": null,
+      "code": null,
+      "keyCode": null,
+      "isComposing": null,
+      "inputType": null,
+      "data": "",
+      "value": "간ㅏㄷ간ㅏ간ㄱ"
+    },
+    {
+      "type": "compositionupdate",
+      "key": null,
+      "code": null,
+      "keyCode": null,
+      "isComposing": null,
+      "inputType": null,
+      "data": "간ㅏ다",
+      "value": "간ㅏㄷ간ㅏ간ㄱ"
+    },
+    {
+      "type": "beforeinput",
+      "key": null,
+      "code": null,
+      "keyCode": null,
+      "isComposing": true,
+      "inputType": "insertCompositionText",
+      "data": "간ㅏ다",
+      "value": "간ㅏㄷ간ㅏ간ㄱ"
+    },
+    {
+      "type": "input",
+      "key": null,
+      "code": null,
+      "keyCode": null,
+      "isComposing": true,
+      "inputType": "insertCompositionText",
+      "data": "간ㅏ다",
+      "value": "간ㅏ다간ㅏㄷ간ㅏ간ㄱ"
+    },
+    {
+      "type": "compositionend",
+      "key": null,
+      "code": null,
+      "keyCode": null,
+      "isComposing": null,
+      "inputType": null,
+      "data": "간ㅏ다",
+      "value": "간ㅏ다간ㅏㄷ간ㅏ간ㄱ"
+    },
+    {
+      "type": "input",
+      "key": null,
+      "code": null,
+      "keyCode": null,
+      "isComposing": false,
+      "inputType": "insertCompositionText",
+      "data": "간ㅏ다",
+      "value": "간ㅏ다간ㅏㄷ간ㅏ간ㄱ"
+    },
+    {
+      "type": "keyup",
+      "key": "Process",
+      "code": "",
+      "keyCode": 229,
+      "isComposing": false,
+      "inputType": null,
+      "data": null,
+      "value": "간ㅏ다간ㅏㄷ간ㅏ간ㄱ"
+    }
+  ],
+  "slateDebug": {
+    "imeEventCount": 89,
+    "fixTrace": [
+      {
+        "seq": 1,
+        "t": 14332,
+        "action": "composition-start",
+        "detail": {
+          "committed": ""
+        },
+        "snap": {
+          "slateText": "",
+          "isComposingWeak": true,
+          "isComposingReact": true,
+          "pendingDiffCount": 0,
+          "committedHangul": ""
+        }
+      },
+      {
+        "seq": 2,
+        "t": 16070,
+        "action": "composition-end-minimal",
+        "detail": {
+          "data": "가"
+        },
+        "snap": {
+          "slateText": "ㄱ",
+          "isComposingWeak": true,
+          "isComposingReact": true,
+          "pendingDiffCount": 0,
+          "committedHangul": ""
+        }
+      },
+      {
+        "seq": 3,
+        "t": 16095,
+        "action": "composition-start",
+        "detail": {
+          "committed": ""
+        },
+        "snap": {
+          "slateText": "ㄱ",
+          "isComposingWeak": true,
+          "isComposingReact": true,
+          "pendingDiffCount": 0,
+          "committedHangul": ""
+        }
+      },
+      {
+        "seq": 4,
+        "t": 16193,
+        "action": "composition-end-minimal",
+        "detail": {
+          "data": "간"
+        },
+        "snap": {
+          "slateText": "간ㄱ",
+          "isComposingWeak": true,
+          "isComposingReact": true,
+          "pendingDiffCount": 0,
+          "committedHangul": ""
+        }
+      },
+      {
+        "seq": 5,
+        "t": 16790,
+        "action": "composition-start",
+        "detail": {
+          "committed": ""
+        },
+        "snap": {
+          "slateText": "간ㄱ",
+          "isComposingWeak": true,
+          "isComposingReact": true,
+          "pendingDiffCount": 0,
+          "committedHangul": ""
+        }
+      },
+      {
+        "seq": 6,
+        "t": 16840,
+        "action": "composition-end-minimal",
+        "detail": {
+          "data": "간ㅏ"
+        },
+        "snap": {
+          "slateText": "간ㅏ간ㄱ",
+          "isComposingWeak": true,
+          "isComposingReact": true,
+          "pendingDiffCount": 0,
+          "committedHangul": ""
+        }
+      },
+      {
+        "seq": 7,
+        "t": 17573,
+        "action": "composition-start",
+        "detail": {
+          "committed": ""
+        },
+        "snap": {
+          "slateText": "간ㅏ간ㄱ",
+          "isComposingWeak": true,
+          "isComposingReact": true,
+          "pendingDiffCount": 0,
+          "committedHangul": ""
+        }
+      },
+      {
+        "seq": 8,
+        "t": 17634,
+        "action": "composition-end-minimal",
+        "detail": {
+          "data": "간ㅏㄷ"
+        },
+        "snap": {
+          "slateText": "간ㅏㄷ간ㅏ간ㄱ",
+          "isComposingWeak": true,
+          "isComposingReact": true,
+          "pendingDiffCount": 0,
+          "committedHangul": ""
+        }
+      },
+      {
+        "seq": 9,
+        "t": 18196,
+        "action": "composition-start",
+        "detail": {
+          "committed": ""
+        },
+        "snap": {
+          "slateText": "간ㅏㄷ간ㅏ간ㄱ",
+          "isComposingWeak": true,
+          "isComposingReact": true,
+          "pendingDiffCount": 0,
+          "committedHangul": ""
+        }
+      },
+      {
+        "seq": 10,
+        "t": 18253,
+        "action": "composition-end-minimal",
+        "detail": {
+          "data": "간ㅏ다"
+        },
+        "snap": {
+          "slateText": "간ㅏ다간ㅏㄷ간ㅏ간ㄱ",
+          "isComposingWeak": true,
+          "isComposingReact": true,
+          "pendingDiffCount": 0,
+          "committedHangul": ""
+        }
+      }
+    ],
+    "summary": {
+      "lastSlateText": "간ㅏ다간ㅏㄷ간ㅏ간ㄱ",
+      "lastCommittedHangul": "",
+      "fixStepCount": 10
+    },
+    "final": {
+      "slateText": "간ㅏ다간ㅏㄷ간ㅏ간ㄱ",
+      "domText": "간ㅏ다간ㅏㄷ간ㅏ간ㄱ",
+      "placeholderPresent": false,
+      "placeholderDisplay": null,
+      "pendingDiffCount": 0
+    }
+  }
+}

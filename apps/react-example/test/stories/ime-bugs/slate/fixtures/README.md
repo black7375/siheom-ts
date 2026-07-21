@@ -24,7 +24,10 @@ Profile: `android-chrome-slate-placeholder-broken` / `-plain-control`
 | `fixed-가-plain-control.json` | `가` | plain textarea — **works** |
 | `rejected-rewrite-flicker-가나다.json` | flicker → garbage | post-hoc rewrite rejected |
 | `decorative-still-explodes-가나다가나다.json` | explosion (decorative era) | overlay rejected |
-| `mechanism-fix-still-explodes-가나다가나다.json` | `가나ㄷㅏ…` concat | first mechanism patch insufficient; v2 committed+preedit |
+| `mechanism-fix-v4-still-explodes-가나다가나다.json` | explosion | fix-pair drift 0%; DOM drive still fails |
+| `device-tri-mode-broken-가나다.json` | `ㄱ가나다` | 1 word; best-looking outcome |
+| `device-tri-mode-minimal-가나다x2.json` | `간ㅏ다간ㅏㄷ간ㅏ간ㄱ` | 2 words; guard-only, session 2 explodes |
+| `device-tri-mode-fixed-가나다x3.json` | `가ㅏㄷ가ㅏㅏ` | 3 words; preedit drive reshuffles garbage |
 
 Profile: `android-firefox-slate-placeholder-broken` / `-plain-control`
 

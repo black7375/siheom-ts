@@ -65,4 +65,29 @@ See `useSlatePlaceholderCompositionFixEditableProps.tsx` + `slatePlaceholderComp
 2. **No force-re-render during composition** — wrap `EDITOR_TO_FORCE_RENDER` (MutationObserver wipe / explosion).
 3. **`onDOMBeforeInput` (full fixed only, Android)** — document = cumulative IME `data` when it already includes `committed`; skip deferred duplicate/explosion; `documentAfterCompositionEnd` after flush.
 
-Device v4 (`mechanism-fix-v4-still-explodes-가나다가나다.json`): fix-pair drift **0%** — pure function matches device `next`, but driving DOM each step still explodes. **Compare broken / minimal / fixed on device** before more recapture.
+Device v4 (`mechanism-fix-v4-still-explodes-가나다가나다.json`): fix-pair drift **0%** — pure function matches device `next`, but driving DOM each step still explodes.
+
+### Device tri-mode compare (2026-07-21, same device session)
+
+Fixtures: `device-tri-mode-broken-가나다.json`, `device-tri-mode-minimal-가나다x2.json`, `device-tri-mode-fixed-가나다x3.json`.
+
+| Mode | Final `slateText` | Sessions typed | Verdict |
+| ---- | ----------------- | -------------- | ------- |
+| **broken** | `ㄱ가나다` | 1× `가나다` | Almost readable — one stuck leading `ㄱ` |
+| **minimal** | `간ㅏ다간ㅏㄷ간ㅏ간ㄱ` | 2× (2nd explodes) | Guard alone does not help session 2+ |
+| **fixed** | `가ㅏㄷ가ㅏㅏ` | 3× (patch fights IME) | Different garbage; preedit drive makes it worse |
+
+**Session 1 (all modes identical in `events[]`):**
+
+- IME cumulative preedit: `ㄱ` → `간` → `가나` → `가나다`.
+- DOM sticks first jamo: final `value` = `ㄱ가나다` while `compositionend.data` = `가나다`.
+- This is the **real single-word bug**: orphaned `ㄱ`, not exponential growth.
+
+**Session 2+ (minimal/fixed only):**
+
+- After first word, `keydown` reports `value: ""` — DOM wiped before next `compositionstart` while Slate model still holds fragments (`fixTrace` snap: `slateText: "ㄱ"` or longer garbage).
+- Same stuck-`ㄱ` pattern on a corrupt baseline → jamo/syllable concat (`간ㅏ다…`).
+- **minimal** has no `committed-preedit` — explosion is **not** caused by preedit drive; it is Slate+AF reconciliation after the first word.
+- **fixed** `replaceSlateEditorPlainText` + skip-input reshuffles DOM mid-compose → shorter but still wrong (`가ㅏㄷ가ㅏㅏ`).
+
+**Implication:** Fixing the stuck first `ㄱ` (composition range / placeholder leaf) is the right target. Driving document text during compose or after corrupt state amplifies damage. Next experiment: broken + **only** strip leading orphan jamo on `compositionend` (no during-compose rewrite)?
