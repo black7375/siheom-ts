@@ -74,64 +74,63 @@ export function getRegisteredProfileIds(): string[] {
   return [...registry.keys()];
 }
 
+function registerSyllableProfile(
+  profile: Omit<ImeProfile, "hangulCompositionBoundary">,
+): void {
+  registerProfile({ ...profile, hangulCompositionBoundary: "syllable" });
+}
+
 function registerBuiltins() {
   // Linux Chrome + ibus-hangul Enter-confirm is compositionend → Enter(isComposing:false),
   // same order as Safari (OS capture in enter-submit/fixtures/linux-ibus-hangul-chrome/).
-  registerProfile({
+  registerSyllableProfile({
     id: "linux-chrome-ibus-hangul",
     enterDuringComposition: "webkit",
     hangulKeyEventKey: "process",
     hangulComposeMode: "composition",
     hanjaConversion: "replace",
-    hangulCompositionBoundary: "syllable",
   });
-  registerProfile({
+  registerSyllableProfile({
     id: "macos-safari",
     enterDuringComposition: "webkit",
     hangulKeyEventKey: "process",
     hangulComposeMode: "composition",
     hanjaConversion: "replace",
-    hangulCompositionBoundary: "syllable",
   });
-  registerProfile({
+  registerSyllableProfile({
     id: "macos-safari-apple",
     enterDuringComposition: "webkit",
     hangulKeyEventKey: "jamo",
     hangulComposeMode: "replacement",
     hanjaConversion: "replace",
-    hangulCompositionBoundary: "syllable",
   });
-  registerProfile({
+  registerSyllableProfile({
     id: "macos-chrome-apple",
     enterDuringComposition: "chromium-apple",
     hangulKeyEventKey: "jamo",
     hangulComposeMode: "composition",
     hanjaConversion: "append",
-    hangulCompositionBoundary: "syllable",
   });
-  registerProfile({
+  registerSyllableProfile({
     id: "windows-chrome-ms",
     enterDuringComposition: "chromium-duplicate",
     hangulKeyEventKey: "process",
     hangulComposeMode: "composition",
     hanjaConversion: "replace",
-    hangulCompositionBoundary: "syllable",
   });
-  registerProfile({
+  registerSyllableProfile({
     id: "chromium-enter-229",
     enterDuringComposition: "chromium",
     hangulKeyEventKey: "process",
     hangulComposeMode: "composition",
     hanjaConversion: "replace",
-    hangulCompositionBoundary: "syllable",
   });
-  registerProfile({
+  registerSyllableProfile({
     id: "chromium-cdp",
     enterDuringComposition: "chromium",
     hangulKeyEventKey: "process",
     hangulComposeMode: "composition",
     hanjaConversion: "replace",
-    hangulCompositionBoundary: "syllable",
   });
 }
 
