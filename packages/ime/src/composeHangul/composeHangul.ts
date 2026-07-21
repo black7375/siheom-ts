@@ -15,6 +15,7 @@ import {
 } from "./composeHangulSafari";
 import { composeHangulContentEditableFirefoxBroken } from "./composeHangulContentEditableFirefoxBroken";
 import { composeHangulContentEditableFirefoxFixed } from "./composeHangulContentEditableFirefoxFixed";
+import { composeHangulContentEditableAndroidFirefoxFixed } from "./composeHangulContentEditableAndroidFirefoxFixed";
 import {
   decideStrokeStepOutcome,
   planBoundaryCommitAfterStep,
@@ -188,6 +189,11 @@ export async function composeHangul(
   if (profile.hangulComposeMode === "contenteditable-firefox-fixed") {
     element.focus();
     return composeHangulContentEditableFirefoxFixed(element, text, { commitFinal, profile });
+  }
+
+  if (profile.hangulComposeMode === "contenteditable-firefox-af-fixed") {
+    element.focus();
+    return composeHangulContentEditableAndroidFirefoxFixed(element, text);
   }
 
   const blurred = { current: false };

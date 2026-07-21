@@ -5,6 +5,7 @@ import golden from "../../fixtures/linux-chrome-ibus-hangul/continuous-hangul.js
 import macosGolden from "../../fixtures/macos-chrome-apple/continuous-hangul.json";
 import ceBrokenGolden from "../../fixtures/android-firefox-contenteditable-broken/continuous-hangul.json";
 import ceFixedGolden from "../../fixtures/linux-firefox-contenteditable-fixed/continuous-hangul.json";
+import ceAfFixedGolden from "../../fixtures/android-firefox-contenteditable-fixed/continuous-hangul.json";
 import { attachImeRecorder } from "../attachImeRecorder";
 import { composeEnter } from "../composeEnter";
 import { resolveProfile } from "../profiles";
@@ -113,6 +114,30 @@ describe("composeHangul", () => {
 
     expect(input.value.replace(/\u200b/g, "")).toBe("가나다");
     expect(toCriticalEvents(events)).toEqual(goldenCritical(ceFixedGolden.events));
+
+    input.remove();
+  });
+
+  it("android-firefox-contenteditable-fixed: 가나다 yields partial ㅏ나다 (AF post-fix v1)", async () => {
+    const input = document.createElement("input");
+    document.body.append(input);
+
+    await composeHangul(input, "가나다", { profile: "android-firefox-contenteditable-fixed" });
+
+    expect(input.value.replace(/\u200b/g, "")).toBe("ㅏ나다");
+    input.remove();
+  });
+
+  it("matches android-firefox-contenteditable-fixed golden critical fields for 가나다", async () => {
+    const input = document.createElement("input");
+    document.body.append(input);
+
+    const events = await composeHangul(input, "가나다", {
+      profile: "android-firefox-contenteditable-fixed",
+    });
+
+    expect(input.value.replace(/\u200b/g, "")).toBe("ㅏ나다");
+    expect(toCriticalEvents(events)).toEqual(goldenCritical(ceAfFixedGolden.events));
 
     input.remove();
   });

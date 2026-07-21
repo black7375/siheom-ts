@@ -7,6 +7,7 @@ import { composeEnter } from "../composeEnter";
 import { composeHangul, type ComposeHangulOptions } from "../composeHangul";
 import { composeHangulContentEditableFirefoxBrokenOn } from "../composeHangul/composeHangulContentEditableFirefoxBroken";
 import { composeHangulContentEditableFirefoxFixedOn } from "../composeHangul/composeHangulContentEditableFirefoxFixed";
+import { composeHangulContentEditableAndroidFirefoxFixedOn } from "../composeHangul/composeHangulContentEditableAndroidFirefoxFixed";
 import { planTypeImeSteps } from "../planTypeImeSteps";
 import { resolveProfile, type ImeProfile } from "../profiles";
 import { isContentEditableComposeTarget } from "../_internal/editableElement";
@@ -92,6 +93,22 @@ async function typeImeText(
           commitFinal: step.commitFinal,
           profile,
         });
+      } else if (isEditable(element)) {
+        await typeKeySegment(user, element, step.text, profile);
+      } else {
+        await user.type(element, step.text);
+      }
+    }
+    return;
+  }
+
+  if (
+    profile.hangulComposeMode === "contenteditable-firefox-af-fixed" &&
+    isContentEditableComposeTarget(element)
+  ) {
+    for (const step of planTypeImeSteps(text)) {
+      if (step.kind === "hangul") {
+        await composeHangulContentEditableAndroidFirefoxFixedOn(element, step.text);
       } else if (isEditable(element)) {
         await typeKeySegment(user, element, step.text, profile);
       } else {

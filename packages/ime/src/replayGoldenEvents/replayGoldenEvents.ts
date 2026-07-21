@@ -1,10 +1,15 @@
 import type { ComposedEventRecord } from "../_internal/types";
 import { ContentEditableImeTrace } from "../_internal/contentEditableImeTrace";
+import { setInputValue } from "../_internal/events";
 import type { KeyEventFields } from "../_internal/events";
 import type { ImeTraceEmitter, InputEventFields } from "../_internal/imeTrace";
 import { ImeTrace } from "../_internal/imeTrace";
 import { isEditable } from "../withPresentElement";
 import { settleAfterPreedit } from "../composeHangul/settle";
+
+function stripZwsp(text: string): string {
+  return text.replace(/\u200b/g, "");
+}
 
 function toKeyFields(event: ComposedEventRecord): KeyEventFields {
   return {
@@ -73,6 +78,10 @@ export async function replayGoldenEvents(
 
   for (const event of events) {
     playGoldenEvent(trace, event);
+    if (trace instanceof ImeTrace && event.type === "input" && event.value != null) {
+      const visible = stripZwsp(event.value);
+      setInputValue(trace.element, visible, visible.length);
+    }
     if (options.settle === "macrotask" && trace instanceof ContentEditableImeTrace) {
       await settleAfterPreedit("macrotask");
     }

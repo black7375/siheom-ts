@@ -23,7 +23,10 @@ import { readLexicalPlainText } from "./readLexicalPlainText";
 import fixedGolden from "./fixtures/linux-firefox/fixed-가나다.json";
 
 function runWithLexicalIme(
-  profile: "android-firefox-contenteditable-broken" | "linux-firefox-contenteditable-fixed",
+  profile:
+    | "android-firefox-contenteditable-broken"
+    | "linux-firefox-contenteditable-fixed"
+    | "android-firefox-contenteditable-fixed",
 ) {
   return overrideSiheom(
     {
@@ -88,5 +91,21 @@ describe("LexicalLogger + linux-firefox-contenteditable-fixed IME", () => {
   });
 });
 
-// AF post-fix device golden: fixtures/android-firefox/fixed-가나다.json (visible ㅏ나다 on v1 fix).
-// Replay regression test after v2 fix plugin lands.
+describe("LexicalLogger + android-firefox-contenteditable-fixed IME", () => {
+  it("fixed mode + android-firefox-contenteditable-fixed: typing 가나다 composes intact 가나다 in Lexical", async () => {
+    const editorRef: { current: LexicalEditor | null } = { current: null };
+    const { runSiheom, actions, given } = runWithLexicalIme(
+      "android-firefox-contenteditable-fixed",
+    );
+
+    await runSiheom(
+      given.render(<LexicalLogger mode="fixed" editorRef={editorRef} />),
+      actions.type(query.textbox("Lexical editor"), "가나다"),
+    );
+
+    await waitFor(() => {
+      expect(editorRef.current).not.toBeNull();
+      expect(readLexicalPlainText(editorRef.current!)).toBe("가나다");
+    });
+  });
+});

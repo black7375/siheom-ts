@@ -9,7 +9,9 @@ import type { LexicalEditor } from "lexical";
 import { ImeCaptureShell } from "../../ime-logger/ImeCaptureShell";
 import { CaptureInstructions, ModeToolbar } from "../shared/imeBugLoggerChrome";
 import { LexicalAndroidFirefoxCompositionFixPlugin } from "./LexicalAndroidFirefoxCompositionFixPlugin";
+import { LexicalCompositionDebugPlugin } from "./LexicalCompositionDebugPlugin";
 import { LexicalEditorRefPlugin } from "./LexicalEditorRefPlugin";
+import type { LexicalCompositionDebugLog } from "./lexicalCompositionDebugLog";
 
 const initialConfig = {
   namespace: "LexicalLogger",
@@ -25,9 +27,11 @@ export type LexicalLoggerProps = {
   mode?: LexicalLoggerMode;
   /** Optional: receive mounted LexicalEditor (tests). */
   editorRef?: MutableRefObject<LexicalEditor | null>;
+  /** Optional: record Lexical DOM/command flow (tests / Storybook debugging). */
+  debugLog?: LexicalCompositionDebugLog;
 };
 
-export function LexicalLogger({ mode: modeProp, editorRef }: LexicalLoggerProps = {}) {
+export function LexicalLogger({ mode: modeProp, editorRef, debugLog }: LexicalLoggerProps = {}) {
   const [mode, setMode] = useState<LexicalLoggerMode>(modeProp ?? "broken");
   const effectiveMode = modeProp ?? mode;
 
@@ -52,7 +56,7 @@ export function LexicalLogger({ mode: modeProp, editorRef }: LexicalLoggerProps 
         >
           <li>Android Firefox + Gboard에서 Lexical 편집기를 탭해 포커스를 줍니다.</li>
           <li>「가나다」처럼 연속된 한글을 조합하면서 조합 중 끊김 여부를 확인합니다.</li>
-          <li>broken은 Lexical 기본(Firefox NBSP sentinel), fixed는 sentinel 삽입을 건너뜁니다.</li>
+          <li>broken은 Lexical 기본(Firefox NBSP sentinel), fixed는 NBSP→ZWSP + AF v1 preedit 보정.</li>
           <li>이벤트 로그가 기록되면 JSON 복사 또는 다운로드로 트레이스를 저장합니다.</li>
         </CaptureInstructions>
       )}
@@ -72,7 +76,10 @@ export function LexicalLogger({ mode: modeProp, editorRef }: LexicalLoggerProps 
           />
           <HistoryPlugin />
           {editorRef ? <LexicalEditorRefPlugin editorRef={editorRef} /> : null}
-          {effectiveMode === "fixed" ? <LexicalAndroidFirefoxCompositionFixPlugin /> : null}
+          {debugLog ? <LexicalCompositionDebugPlugin log={debugLog} label={effectiveMode} /> : null}
+          {effectiveMode === "fixed" ? (
+            <LexicalAndroidFirefoxCompositionFixPlugin debugLog={debugLog} />
+          ) : null}
         </LexicalComposer>
       )}
     </ImeCaptureShell>

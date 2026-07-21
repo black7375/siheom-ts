@@ -22,7 +22,9 @@ export type HangulComposeMode =
   /** Firefox contenteditable broken: premature end after first jamo, then jamo-chain preedit */
   | "contenteditable-firefox-broken"
   /** Firefox contenteditable fixed: syllable-boundary commits with deferred compositionend */
-  | "contenteditable-firefox-fixed";
+  | "contenteditable-firefox-fixed"
+  /** AF post-fix v1 golden replay (Lexical plugin on; visible ㅏ나다 on plain input) */
+  | "contenteditable-firefox-af-fixed";
 
 /**
  * How Hangul→Hanja candidate conversion applies the chosen Hanja to the field.
@@ -134,6 +136,13 @@ function registerBuiltins() {
     enterDuringComposition: "webkit",
     hangulKeyEventKey: "process",
     hangulComposeMode: "contenteditable-firefox-fixed",
+    hanjaConversion: "replace",
+  });
+  registerProfile({
+    id: "android-firefox-contenteditable-fixed",
+    enterDuringComposition: "webkit",
+    hangulKeyEventKey: "process",
+    hangulComposeMode: "contenteditable-firefox-af-fixed",
     hanjaConversion: "replace",
   });
 }
