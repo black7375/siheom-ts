@@ -19,6 +19,7 @@ import { composeHangulContentEditableAndroidFirefoxFixed } from "./composeHangul
 import { composeHangulAndroidChromeSlatePlaceholderBroken } from "./composeHangulAndroidChromeSlatePlaceholderBroken";
 import { composeHangulAndroidChromeSlatePlainControl } from "./composeHangulAndroidChromeSlatePlainControl";
 import { composeHangulAndroidFirefoxSlatePlaceholderBroken } from "./composeHangulAndroidFirefoxSlatePlaceholderBroken";
+import { composeHangulAndroidFirefoxSlatePlaceholderFixed } from "./composeHangulAndroidFirefoxSlatePlaceholderFixed";
 import { composeHangulAndroidFirefoxSlatePlainControl } from "./composeHangulAndroidFirefoxSlatePlainControl";
 import {
   composeHangulLinuxChromeSlatePlaceholderFixed,
@@ -227,6 +228,11 @@ export async function composeHangul(
   if (profile.hangulComposeMode === "android-firefox-slate-plain-control") {
     element.focus();
     return composeHangulAndroidFirefoxSlatePlainControl(element, text);
+  }
+
+  if (profile.hangulComposeMode === "android-firefox-slate-placeholder-fixed") {
+    element.focus();
+    return composeHangulAndroidFirefoxSlatePlaceholderFixed(element, text);
   }
 
   if (profile.hangulComposeMode === "linux-chrome-slate-placeholder-fixed") {

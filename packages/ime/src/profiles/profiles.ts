@@ -33,6 +33,8 @@ export type HangulComposeMode =
   | "android-firefox-slate-placeholder-broken"
   /** AF plain textarea control baseline */
   | "android-firefox-slate-plain-control"
+  /** AF Slate fixed plugin device golden — continuous 가나다 preedit dup */
+  | "android-firefox-slate-placeholder-fixed"
   /** Desktop Linux Chrome — Slate #5989 does not reproduce; placeholder → 가 */
   | "linux-chrome-slate-placeholder-fixed"
   | "linux-chrome-slate-plain-control"
@@ -212,6 +214,14 @@ function registerBuiltins() {
     enterDuringComposition: "webkit",
     hangulKeyEventKey: "process",
     hangulComposeMode: "android-firefox-slate-plain-control",
+    hanjaConversion: "replace",
+    hangulCompositionBoundary: "run",
+  });
+  registerProfile({
+    id: "android-firefox-slate-placeholder-fixed",
+    enterDuringComposition: "webkit",
+    hangulKeyEventKey: "process",
+    hangulComposeMode: "android-firefox-slate-placeholder-fixed",
     hanjaConversion: "replace",
     hangulCompositionBoundary: "run",
   });

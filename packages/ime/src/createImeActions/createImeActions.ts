@@ -10,6 +10,7 @@ import { composeHangulContentEditableFirefoxFixedOn } from "../composeHangul/com
 import { composeHangulContentEditableAndroidFirefoxFixedOn } from "../composeHangul/composeHangulContentEditableAndroidFirefoxFixed";
 import { composeHangulAndroidChromeSlatePlaceholderBrokenOn } from "../composeHangul/composeHangulAndroidChromeSlatePlaceholderBroken";
 import { composeHangulAndroidFirefoxSlatePlaceholderBrokenOn } from "../composeHangul/composeHangulAndroidFirefoxSlatePlaceholderBroken";
+import { composeHangulAndroidFirefoxSlatePlaceholderFixedOn } from "../composeHangul/composeHangulAndroidFirefoxSlatePlaceholderFixed";
 import {
   composeHangulLinuxChromeSlatePlaceholderFixedOn,
   composeHangulLinuxFirefoxSlatePlaceholderFixedOn,
@@ -147,6 +148,22 @@ async function typeImeText(
     for (const step of planTypeImeSteps(text)) {
       if (step.kind === "hangul") {
         await composeHangulAndroidFirefoxSlatePlaceholderBrokenOn(element, step.text);
+      } else if (isEditable(element)) {
+        await typeKeySegment(user, element, step.text, profile);
+      } else {
+        await user.type(element, step.text);
+      }
+    }
+    return;
+  }
+
+  if (
+    profile.hangulComposeMode === "android-firefox-slate-placeholder-fixed" &&
+    isContentEditableComposeTarget(element)
+  ) {
+    for (const step of planTypeImeSteps(text)) {
+      if (step.kind === "hangul") {
+        await composeHangulAndroidFirefoxSlatePlaceholderFixedOn(element, step.text);
       } else if (isEditable(element)) {
         await typeKeySegment(user, element, step.text, profile);
       } else {
