@@ -18,6 +18,8 @@ import { composeHangulContentEditableFirefoxFixed } from "./composeHangulContent
 import { composeHangulContentEditableAndroidFirefoxFixed } from "./composeHangulContentEditableAndroidFirefoxFixed";
 import { composeHangulAndroidChromeSlatePlaceholderBroken } from "./composeHangulAndroidChromeSlatePlaceholderBroken";
 import { composeHangulAndroidChromeSlatePlainControl } from "./composeHangulAndroidChromeSlatePlainControl";
+import { composeHangulAndroidFirefoxSlatePlaceholderBroken } from "./composeHangulAndroidFirefoxSlatePlaceholderBroken";
+import { composeHangulAndroidFirefoxSlatePlainControl } from "./composeHangulAndroidFirefoxSlatePlainControl";
 import {
   decideStrokeStepOutcome,
   planBoundaryCommitAfterStep,
@@ -209,6 +211,16 @@ export async function composeHangul(
   if (profile.hangulComposeMode === "android-chrome-slate-plain-control") {
     element.focus();
     return composeHangulAndroidChromeSlatePlainControl(element, text);
+  }
+
+  if (profile.hangulComposeMode === "android-firefox-slate-placeholder-broken") {
+    element.focus();
+    return composeHangulAndroidFirefoxSlatePlaceholderBroken(element, text);
+  }
+
+  if (profile.hangulComposeMode === "android-firefox-slate-plain-control") {
+    element.focus();
+    return composeHangulAndroidFirefoxSlatePlainControl(element, text);
   }
 
   const blurred = { current: false };

@@ -1,0 +1,151 @@
+{
+  "profileId": "android-firefox",
+  "os": "android",
+  "browser": "firefox",
+  "ime": "",
+  "capturedAt": "2026-07-21T11:00:34.525Z",
+  "scenarioId": "slate-ac-plain-control-가",
+  "source": "os-ime",
+  "events": [
+    {
+      "type": "compositionstart",
+      "key": null,
+      "code": null,
+      "keyCode": null,
+      "isComposing": null,
+      "inputType": null,
+      "data": "",
+      "value": ""
+    },
+    {
+      "type": "compositionupdate",
+      "key": null,
+      "code": null,
+      "keyCode": null,
+      "isComposing": null,
+      "inputType": null,
+      "data": "ㄱ",
+      "value": ""
+    },
+    {
+      "type": "beforeinput",
+      "key": null,
+      "code": null,
+      "keyCode": null,
+      "isComposing": true,
+      "inputType": "insertCompositionText",
+      "data": "ㄱ",
+      "value": ""
+    },
+    {
+      "type": "input",
+      "key": null,
+      "code": null,
+      "keyCode": null,
+      "isComposing": true,
+      "inputType": "insertCompositionText",
+      "data": "ㄱ",
+      "value": "ㄱ"
+    },
+    {
+      "type": "keyup",
+      "key": "Process",
+      "code": "",
+      "keyCode": 229,
+      "isComposing": true,
+      "inputType": null,
+      "data": null,
+      "value": "ㄱ"
+    },
+    {
+      "type": "keydown",
+      "key": "Process",
+      "code": "",
+      "keyCode": 229,
+      "isComposing": true,
+      "inputType": null,
+      "data": null,
+      "value": "ㄱ"
+    },
+    {
+      "type": "compositionupdate",
+      "key": null,
+      "code": null,
+      "keyCode": null,
+      "isComposing": null,
+      "inputType": null,
+      "data": "가",
+      "value": "ㄱ"
+    },
+    {
+      "type": "beforeinput",
+      "key": null,
+      "code": null,
+      "keyCode": null,
+      "isComposing": true,
+      "inputType": "insertCompositionText",
+      "data": "가",
+      "value": "ㄱ"
+    },
+    {
+      "type": "input",
+      "key": null,
+      "code": null,
+      "keyCode": null,
+      "isComposing": true,
+      "inputType": "insertCompositionText",
+      "data": "가",
+      "value": "가"
+    },
+    {
+      "type": "keyup",
+      "key": "Process",
+      "code": "",
+      "keyCode": 229,
+      "isComposing": true,
+      "inputType": null,
+      "data": null,
+      "value": "가"
+    },
+    {
+      "type": "beforeinput",
+      "key": null,
+      "code": null,
+      "keyCode": null,
+      "isComposing": true,
+      "inputType": "insertCompositionText",
+      "data": "가",
+      "value": "가"
+    },
+    {
+      "type": "input",
+      "key": null,
+      "code": null,
+      "keyCode": null,
+      "isComposing": true,
+      "inputType": "insertCompositionText",
+      "data": "가",
+      "value": "가"
+    },
+    {
+      "type": "compositionend",
+      "key": null,
+      "code": null,
+      "keyCode": null,
+      "isComposing": null,
+      "inputType": null,
+      "data": "가",
+      "value": "가"
+    },
+    {
+      "type": "input",
+      "key": null,
+      "code": null,
+      "keyCode": null,
+      "isComposing": false,
+      "inputType": "insertCompositionText",
+      "data": "가",
+      "value": "가"
+    }
+  ]
+}

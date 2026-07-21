@@ -28,7 +28,11 @@ export type HangulComposeMode =
   /** Slate #5989 — premature compositionend on first syllable (Android Chrome + placeholder) */
   | "android-chrome-slate-placeholder-broken"
   /** Plain textarea control baseline for Slate capture (Android Chrome) */
-  | "android-chrome-slate-plain-control";
+  | "android-chrome-slate-plain-control"
+  /** AF Slate + placeholder — value stuck at ㄱ while preedit says 가 */
+  | "android-firefox-slate-placeholder-broken"
+  /** AF plain textarea control baseline */
+  | "android-firefox-slate-plain-control";
 
 /**
  * How Hangul→Hanja candidate conversion applies the chosen Hanja to the field.
@@ -188,6 +192,20 @@ function registerBuiltins() {
     hangulComposeMode: "android-chrome-slate-plain-control",
     hanjaConversion: "replace",
     hangulCompositionBoundary: "run",
+  });
+  registerProfile({
+    id: "android-firefox-slate-placeholder-broken",
+    enterDuringComposition: "webkit",
+    hangulKeyEventKey: "process",
+    hangulComposeMode: "android-firefox-slate-placeholder-broken",
+    hanjaConversion: "replace",
+  });
+  registerProfile({
+    id: "android-firefox-slate-plain-control",
+    enterDuringComposition: "webkit",
+    hangulKeyEventKey: "process",
+    hangulComposeMode: "android-firefox-slate-plain-control",
+    hanjaConversion: "replace",
   });
 }
 

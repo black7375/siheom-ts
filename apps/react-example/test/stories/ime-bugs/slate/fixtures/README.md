@@ -1,14 +1,35 @@
 # Slate placeholder Hangul — capture fixtures
 
-| Directory         | Meaning                    |
-| ----------------- | -------------------------- |
-| `android-chrome/` | Android Chrome + Slate/plain |
+| Directory          | Browser | Meaning |
+| ------------------ | ------- | ------- |
+| `android-chrome/`  | Chrome  | Slate #5989 jamo-split on placeholder |
+| `android-firefox/` | Firefox | Slate placeholder stuck-at-ㄱ; plain OK |
 
-| File | Notes |
-| ---- | ----- |
-| `broken-가-placeholder.json` | Slate + placeholder: `가` → `ㄱㄱㅏㄱㅏ` ([Slate #5989](https://github.com/ianstormtaylor/slate/issues/5989)) |
-| `fixed-가-plain-control.json` | Plain textarea: `가` intact (second composition session after clear) |
+## Android Chrome
 
-Emulator profiles: `android-chrome-slate-placeholder-broken` / `android-chrome-slate-plain-control` in `@siheom/ime`.
+| File | Visible | Notes |
+| ---- | ------- | ----- |
+| `broken-가-placeholder.json` | `ㄱㄱㅏㄱㅏ` | premature `compositionend`, jamo duplication |
+| `fixed-가-plain-control.json` | `가` | second session after clear |
 
-Storybook: **IME / Slate**. Scenario ids: `slate-ac-first-hangul-placeholder` / `slate-ac-plain-control`.
+Profile: `android-chrome-slate-placeholder-broken` / `-plain-control`
+
+## Android Firefox
+
+| File | Visible | Notes |
+| ---- | ------- | ----- |
+| `broken-가-placeholder.json` | `ㄱ` (not `가`) | preedit `가` but `value` stuck at `ㄱ`; Firefox deferred `input` |
+| `fixed-가-plain-control.json` | `가` | plain textarea — **works** (unlike Chrome first-try glitch) |
+
+Profile: `android-firefox-slate-placeholder-broken` / `-plain-control`
+
+**Cross-browser:** plain control baseline works on both browsers. Slate+placeholder failure mode **differs**:
+
+| | Chrome | Firefox |
+|---|--------|---------|
+| Broken visible | `ㄱㄱㅏㄱㅏ` jamo split | `ㄱ` stuck (preedit `가`, DOM not updated) |
+| Plain control | `가` (2nd session) | `가` (2nd session; 1st try also stuck in log) |
+| Emulator plain input | ✅ | ✅ |
+| Emulator Slate mount (Chromium) | ✅ repro | ❌ events replay; Slate composes `가` — **device-only** |
+
+Storybook: **IME / Slate**.

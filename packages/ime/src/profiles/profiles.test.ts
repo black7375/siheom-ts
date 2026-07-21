@@ -91,6 +91,20 @@ describe("IME profiles", () => {
     });
   });
 
+  it("resolves android-firefox-slate-placeholder-broken with golden replay compose mode", () => {
+    expect(resolveProfile("android-firefox-slate-placeholder-broken")).toMatchObject({
+      hangulComposeMode: "android-firefox-slate-placeholder-broken",
+      hangulKeyEventKey: "process",
+    });
+  });
+
+  it("resolves android-firefox-slate-plain-control with golden replay compose mode", () => {
+    expect(resolveProfile("android-firefox-slate-plain-control")).toMatchObject({
+      hangulComposeMode: "android-firefox-slate-plain-control",
+      hangulKeyEventKey: "process",
+    });
+  });
+
   it("throws for unknown profile ids", () => {
     expect(() => resolveProfile("not-a-real-profile")).toThrow(/Unknown IME profile/);
   });

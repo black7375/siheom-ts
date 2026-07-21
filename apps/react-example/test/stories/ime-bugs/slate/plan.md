@@ -21,3 +21,4 @@
 - [x] `@siheom/ime` `android-chrome-slate-placeholder-broken` / `-plain-control` profiles (golden replay)
 - [x] `composeHangul.test`: broken → `ㄱㄱㅏㄱㅏ`, plain control → `가`
 - [x] `SlateLogger.ime.test`: broken on Slate editor ≠ `가`; plain control textarea = `가`
+- [x] Android Firefox captures + `android-firefox-slate-*` profiles (plain input `ㄱ`; Slate mount fidelity device-only)

@@ -14,7 +14,11 @@ import { SlateLogger } from "./SlateLogger";
 import { readSlatePlainText } from "./readSlatePlainText";
 
 function runWithSlateIme(
-  profile: "android-chrome-slate-placeholder-broken" | "android-chrome-slate-plain-control",
+  profile:
+    | "android-chrome-slate-placeholder-broken"
+    | "android-chrome-slate-plain-control"
+    | "android-firefox-slate-placeholder-broken"
+    | "android-firefox-slate-plain-control",
 ) {
   return overrideSiheom(
     {
@@ -54,6 +58,25 @@ describe("SlateLogger + android-chrome-slate-plain-control IME", () => {
   it("typing 가 composes intact 가 in plain control textarea", async () => {
     const editorRef: { current: HTMLElement | null } = { current: null };
     const { runSiheom, actions, given } = runWithSlateIme("android-chrome-slate-plain-control");
+
+    await runSiheom(
+      given.render(
+        <SlateLogger captureTarget="plain-control" editorRef={editorRef} />,
+      ),
+      actions.type(query.textbox("Plain control input"), "가"),
+    );
+
+    await waitFor(() => {
+      expect(editorRef.current).not.toBeNull();
+      expect((editorRef.current as HTMLTextAreaElement).value).toBe("가");
+    });
+  });
+});
+
+describe("SlateLogger + android-firefox-slate-plain-control IME", () => {
+  it("typing 가 composes intact 가 in plain control textarea", async () => {
+    const editorRef: { current: HTMLElement | null } = { current: null };
+    const { runSiheom, actions, given } = runWithSlateIme("android-firefox-slate-plain-control");
 
     await runSiheom(
       given.render(
