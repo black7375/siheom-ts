@@ -1,8 +1,9 @@
 import type { HangulKeyStroke } from "../planHangulKeystrokes/planHangulKeystrokes";
-import { applyPreedit } from "./applyPreedit";
-import { setInputValue } from "./events";
+import { playEventPlan } from "./eventPlan";
 import type { ImeTrace } from "./imeTrace";
-import { clearImeSession, getImeSession, setImeSession } from "./session";
+import { readMaxLength } from "./maxLength";
+import { planConfirmAndEndComposition } from "./planConfirmComposition";
+import { getImeSession, setImeSession } from "./session";
 
 /** After the first preedit of a syllable-boundary stroke, end then restart composition. */
 export function commitBetweenPreeditSteps(
@@ -13,8 +14,10 @@ export function commitBetweenPreeditSteps(
 ) {
   if (stepIndex !== 0 || stroke.commitAfterFirstStep === undefined) return;
 
-  trace.compositionEnd(stroke.commitAfterFirstStep, value);
-  trace.compositionStart();
+  playEventPlan(trace, [
+    { kind: "compositionend", data: stroke.commitAfterFirstStep, value },
+    { kind: "compositionstart" },
+  ]);
 }
 
 /** Confirm an active IME session with compositionend (Enter / ArrowLeft paths). */
@@ -23,13 +26,13 @@ export function confirmAndEndComposition(trace: ImeTrace) {
   const session = getImeSession(element);
   if (!session?.composing) return;
 
-  const caret = session.committed.length + session.preedit.length;
-  const value = session.committed + session.preedit + session.suffix;
-  applyPreedit(trace, session.preedit, value, caret);
-
-  trace.compositionEnd(session.preedit, value);
-  clearImeSession(element);
-  setInputValue(element, value, caret);
+  playEventPlan(
+    trace,
+    planConfirmAndEndComposition(session, {
+      valueBefore: element.value,
+      maxLength: readMaxLength(element),
+    }),
+  );
 }
 
 export function updateImeSessionForPreedit(

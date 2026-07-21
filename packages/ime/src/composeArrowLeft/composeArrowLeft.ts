@@ -1,5 +1,6 @@
 import type { ComposedEventRecord } from "../_internal";
-import { confirmAndEndComposition, getImeSession, ImeTrace, setInputValue } from "../_internal";
+import { getImeSession, ImeTrace, playEventPlan, readMaxLength } from "../_internal";
+import { planArrowLeft } from "./planArrowLeft";
 
 /**
  * ArrowLeft: if composing, confirm+end composition first (ibus-hangul style), then move caret.
@@ -10,28 +11,19 @@ export async function composeArrowLeft(
   const trace = new ImeTrace(element);
   const session = getImeSession(element);
 
-  if (session?.composing) {
-    confirmAndEndComposition(trace);
-  }
-
-  trace.keydown({
-    key: "ArrowLeft",
-    code: "ArrowLeft",
-    keyCode: 37,
-    isComposing: false,
-  });
-
-  const pos = element.selectionStart ?? 0;
-  if (pos > 0) {
-    setInputValue(element, element.value, pos - 1);
-  }
-
-  trace.keyup({
-    key: "ArrowLeft",
-    code: "ArrowLeft",
-    keyCode: 37,
-    isComposing: false,
-  });
+  playEventPlan(
+    trace,
+    planArrowLeft({
+      composing: Boolean(session?.composing),
+      session,
+      caret: element.selectionStart ?? 0,
+      value: element.value,
+      confirmFacts: {
+        valueBefore: element.value,
+        maxLength: readMaxLength(element),
+      },
+    }),
+  );
 
   return trace.records;
 }

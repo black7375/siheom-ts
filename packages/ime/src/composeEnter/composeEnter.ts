@@ -1,6 +1,7 @@
 import type { ComposedEventRecord } from "../_internal";
-import { confirmAndEndComposition, getImeSession, ImeTrace } from "../_internal";
+import { getImeSession, ImeTrace, playEventPlan, readMaxLength } from "../_internal";
 import type { ImeProfile } from "../profiles";
+import { planEnter } from "./planEnter";
 
 /**
  * Enter while composing — order depends on profile facet (webkit vs chromium).
@@ -13,106 +14,18 @@ export async function composeEnter(
   const trace = new ImeTrace(element);
   const session = getImeSession(element);
 
-  if (!session?.composing) {
-    trace.keydown({
-      key: "Enter",
-      code: "Enter",
-      keyCode: 13,
-      isComposing: false,
-    });
-    trace.keyup({
-      key: "Enter",
-      code: "Enter",
-      keyCode: 13,
-      isComposing: false,
-    });
-    return trace.records;
-  }
-
-  switch (profile.enterDuringComposition) {
-    case "webkit": {
-      confirmAndEndComposition(trace);
-      trace.keydown({
-        key: "Enter",
-        code: "Enter",
-        keyCode: 13,
-        isComposing: false,
-      });
-      trace.keyup({
-        key: "Enter",
-        code: "Enter",
-        keyCode: 13,
-        isComposing: false,
-      });
-      break;
-    }
-    case "chromium": {
-      trace.keydown({
-        key: "Process",
-        code: "Enter",
-        keyCode: 229,
-        isComposing: true,
-      });
-      confirmAndEndComposition(trace);
-      trace.keyup({
-        key: "Enter",
-        code: "Enter",
-        keyCode: 13,
-        isComposing: false,
-      });
-      break;
-    }
-    case "chromium-duplicate": {
-      trace.keydown({
-        key: "Process",
-        code: "Enter",
-        keyCode: 229,
-        isComposing: true,
-      });
-      confirmAndEndComposition(trace);
-      trace.keydown({
-        key: "Enter",
-        code: "Enter",
-        keyCode: 13,
-        isComposing: false,
-      });
-      trace.keyup({
-        key: "Enter",
-        code: "Enter",
-        keyCode: 13,
-        isComposing: false,
-      });
-      break;
-    }
-    case "chromium-apple": {
-      trace.keydown({
-        key: "Enter",
-        code: "Enter",
-        keyCode: 229,
-        isComposing: true,
-      });
-      confirmAndEndComposition(trace);
-      trace.keyup({
-        key: "Enter",
-        code: "Enter",
-        keyCode: 13,
-        isComposing: false,
-      });
-      trace.keydown({
-        key: "Enter",
-        code: "Enter",
-        keyCode: 13,
-        isComposing: false,
-      });
-      trace.keyup({
-        key: "Enter",
-        code: "Enter",
-        keyCode: 13,
-        isComposing: false,
-      });
-      break;
-    }
-  }
+  playEventPlan(
+    trace,
+    planEnter({
+      composing: Boolean(session?.composing),
+      facet: profile.enterDuringComposition,
+      session,
+      confirmFacts: {
+        valueBefore: element.value,
+        maxLength: readMaxLength(element),
+      },
+    }),
+  );
 
   return trace.records;
 }

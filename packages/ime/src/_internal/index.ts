@@ -5,6 +5,11 @@ export { hangulKeydownFields, hangulKeyupFields } from "./hangulKeyEvent";
 export { dispatch, setInputValue, snapshot, type KeyEventFields } from "./events";
 export { ImeTrace, type InputEventFields } from "./imeTrace";
 export { playEventPlan, type EventPlanStep } from "./eventPlan";
+export { planPreedit, type PlanPreeditFacts } from "./planPreedit";
+export {
+  planConfirmAndEndComposition,
+  type PlanConfirmFacts,
+} from "./planConfirmComposition";
 export { applyPreedit } from "./applyPreedit";
 export { applyReplacementText, replacementInputType } from "./applyReplacementText";
 export {
