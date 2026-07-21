@@ -63,4 +63,10 @@ IME-faithful `fill` / `type` that plug into siheom via `overrideSiheom`, startin
 - [x] `typeHanja(element, "金泰熙", "김태희")` plays full name on Chrome append and Safari replace profiles
 - [x] `@siheom/ime/hanja` subpath exports `typeHanja` / `composeHanjaConversion` (main entry does not)
 - [x] `typeHanja` Chrome append: conversion+confirm critical events match `fixed-hanja-name` through first syllable (Alt → last critical while value still `김金`)
-- [x] `typeHanja` Safari replace: conversion+confirm critical events match `fixed-hanja-name` through first syllable commit (before next Hangul)
+### Coverage gaps (hanja)
+
+- [x] `createHanjaActions({ resolveElement: "sync" })` types when the element is already present
+- [x] `createHanjaActions` typeHanja rejects non-input targets (e.g. contenteditable)
+- [x] `createHanjaActions` types Hanja into a textarea
+- [ ] `createHanjaActions` sync path throws when locator resolves to a disconnected element
+
