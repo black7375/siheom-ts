@@ -3,6 +3,7 @@ import { describe, expect, it } from "vitest";
 import { composeHangul } from "./composeHangul";
 import golden from "../../fixtures/linux-chrome-ibus-hangul/continuous-hangul.json";
 import macosGolden from "../../fixtures/macos-chrome-apple/continuous-hangul.json";
+import androidGolden from "../../fixtures/android-chrome/continuous-hangul.json";
 import { attachImeRecorder } from "../attachImeRecorder";
 import { composeEnter } from "../composeEnter";
 import { resolveProfile } from "../profiles";
@@ -74,6 +75,17 @@ describe("composeHangul", () => {
     const events = await composeHangul(input, "김태희", { profile: "macos-chrome-apple" });
     expect(input.value).toBe("김태희");
     expect(toCriticalEvents(events)).toEqual(goldenCritical(macosGolden.events));
+
+    input.remove();
+  });
+
+  it("matches android-chrome continuous-hangul critical fields for 김태희", async () => {
+    const input = document.createElement("input");
+    document.body.append(input);
+
+    const events = await composeHangul(input, "김태희", { profile: "android-chrome" });
+    expect(input.value).toBe("김태희");
+    expect(toCriticalEvents(events)).toEqual(goldenCritical(androidGolden.events));
 
     input.remove();
   });

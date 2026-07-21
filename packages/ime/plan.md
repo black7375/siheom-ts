@@ -79,7 +79,7 @@ OS captures under `apps/react-example/.../fixtures/android-chrome/` (virtual key
 - [x] (structural) `ImeProfile.hangulCompositionBoundary`: `syllable` | `run`; existing builtins default to `syllable`
 - [x] `HangulKeyEventKey` includes `unidentified`; `resolveProfile("android-chrome")` returns webkit Enter, unidentified keys, composition Hangul, replace Hanja, run boundary
 - [x] Hangul keydown/keyup with `unidentified` emit `key: "Unidentified"`, `keyCode: 229`, `code: ""`
-- [ ] `composeHangul` with android-chrome for `"김태희"` matches android `continuous-hangul` critical fields (single run composition + Unidentified keys)
+- [x] `composeHangul` with android-chrome for `"김태희"` matches android `continuous-hangul` critical fields (single run composition + Unidentified keys)
 - [ ] `composeEnter` during composition on android-chrome matches android `fixed-김-enter` critical order (compositionend → Enter 13 `isComposing: false`)
 - [ ] `createImeActions({ profile: "android-chrome" }).type("김태희")` matches android continuous-hangul critical fields
 - [ ] android maxlength host-clamp (fixed): overflow `insertCompositionText` keeps overflow `data` with clamped `value` (no Chrome empty-data + compositionend reject)

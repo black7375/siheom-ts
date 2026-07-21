@@ -156,7 +156,10 @@ export async function composeHangul(
   const selectionEnd = element.selectionEnd ?? element.value.length;
   const prefix = element.value.slice(0, selectionStart);
   const suffix = element.value.slice(selectionEnd);
-  const strokes = planHangulKeystrokes(text, { prefix });
+  const strokes = planHangulKeystrokes(text, {
+    prefix,
+    compositionBoundary: profile.hangulCompositionBoundary,
+  });
   const trace = new ImeTrace(element);
 
   if (

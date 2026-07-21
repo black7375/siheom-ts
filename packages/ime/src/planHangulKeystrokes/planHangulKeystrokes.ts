@@ -2,6 +2,7 @@ import { assemble, canBeChoseong, canBeJongseong, canBeJungseong, combineVowels 
 
 import { hangulJamos } from "../hangulJamos";
 import { keyForJamo } from "../_internal/jamoKeyMap";
+import type { HangulCompositionBoundary } from "../profiles";
 
 export type HangulKeyStroke = {
   jamo: string;
@@ -56,6 +57,25 @@ function pushBoundaryStroke(
   });
 }
 
+function pushRunStroke(
+  strokes: HangulKeyStroke[],
+  meta: { code: string; key: string },
+  jamo: string,
+  preedit: string,
+  value: string,
+  composing: boolean,
+) {
+  strokes.push({
+    jamo,
+    code: meta.code,
+    key: meta.key,
+    keydownIsComposing: composing,
+    compositionStart: !composing,
+    preeditSteps: [preedit],
+    valuesAfterSteps: [value],
+  });
+}
+
 function tryGrowSyllable(current: SyllableParts, jamo: string): SyllableParts | null {
   if (canBeChoseong(jamo) && !current.choseong) {
     return { choseong: jamo };
@@ -92,6 +112,8 @@ function tryGrowSyllable(current: SyllableParts, jamo: string): SyllableParts | 
 export type PlanHangulKeystrokesOptions = {
   /** Already-committed text before this Hangul run (e.g. Latin prefix). */
   prefix?: string;
+  /** Desktop IMEs commit per syllable; Android keeps one composition for the run. */
+  compositionBoundary?: HangulCompositionBoundary;
 };
 
 /** Plan per-keystroke Hangul IME behavior for `text` (2-set style / ibus-hangul-like). */
@@ -101,7 +123,10 @@ export function planHangulKeystrokes(
 ): HangulKeyStroke[] {
   const jamos = hangulJamos(text);
   const strokes: HangulKeyStroke[] = [];
+  const boundary = options.compositionBoundary ?? "syllable";
   let committed = options.prefix ?? "";
+  /** Syllables already in the active run composition (android); empty for syllable mode. */
+  let runBase = "";
   let current: SyllableParts = {};
   let composing = false;
 
@@ -121,10 +146,18 @@ export function planHangulKeystrokes(
         ...(keptJong ? { jongseong: keptJong } : {}),
       };
       const strippedText = syllableText(stripped);
-      const afterCommit = committed + strippedText;
       current = { choseong: moved, jungseong: jamo };
       const nextPreedit = syllableText(current);
 
+      if (boundary === "run") {
+        runBase += strippedText;
+        const preedit = runBase + nextPreedit;
+        pushRunStroke(strokes, meta, jamo, preedit, committed + preedit, composing);
+        composing = true;
+        continue;
+      }
+
+      const afterCommit = committed + strippedText;
       pushBoundaryStroke(
         strokes,
         meta,
@@ -142,19 +175,9 @@ export function planHangulKeystrokes(
     const grown = tryGrowSyllable(current, jamo);
     if (grown) {
       current = grown;
-      const preedit = syllableText(current);
+      const preedit = runBase + syllableText(current);
       const value = committed + preedit;
-      const starting = !composing;
-
-      strokes.push({
-        jamo,
-        code: meta.code,
-        key: meta.key,
-        keydownIsComposing: composing,
-        compositionStart: starting,
-        preeditSteps: [preedit],
-        valuesAfterSteps: [value],
-      });
+      pushRunStroke(strokes, meta, jamo, preedit, value, composing);
       composing = true;
       continue;
     }
@@ -162,8 +185,17 @@ export function planHangulKeystrokes(
     // New choseong after a syllable that already has a vowel (and possibly batchim)
     if (canBeChoseong(jamo) && current.choseong && current.jungseong) {
       const oldText = syllableText(current);
-      const afterCommit = committed + oldText;
 
+      if (boundary === "run") {
+        runBase += oldText;
+        current = { choseong: jamo };
+        const preedit = runBase + jamo;
+        pushRunStroke(strokes, meta, jamo, preedit, committed + preedit, composing);
+        composing = true;
+        continue;
+      }
+
+      const afterCommit = committed + oldText;
       pushBoundaryStroke(
         strokes,
         meta,
