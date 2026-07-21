@@ -159,16 +159,10 @@ export async function composeHangul(
   const strokes = planHangulKeystrokes(text, { prefix });
   const trace = new ImeTrace(element);
 
-  if (profile.id === "macos-safari-apple" && settle === "macrotask") {
-    element.focus();
-    return composeHangulSafariComposition(element, strokes, suffix, profile, {
-      commitFinal,
-      settle,
-      deferredUpdateRace,
-    });
-  }
-
-  if (profile.id === "macos-safari-apple" && readMaxLength(element) !== null) {
+  if (
+    profile.id === "macos-safari-apple" &&
+    (settle === "macrotask" || readMaxLength(element) !== null)
+  ) {
     element.focus();
     return composeHangulSafariComposition(element, strokes, suffix, profile, {
       commitFinal,
