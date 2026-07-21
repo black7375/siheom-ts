@@ -21,7 +21,9 @@ Profile: `android-chrome-slate-placeholder-broken` / `-plain-control`
 | File | Visible | Notes |
 | ---- | ------- | ----- |
 | `broken-가-placeholder.json` | `ㄱ` (not `가`) | preedit `가` but `value` stuck at `ㄱ`; Firefox deferred `input` |
-| `fixed-가-plain-control.json` | `가` | plain textarea — **works** (unlike Chrome first-try glitch) |
+| `fixed-가-plain-control.json` | `가` | plain textarea — **works** |
+| `rejected-rewrite-flicker-가나다.json` | flicker → `가가ㄴㅏㄷ…` | post-hoc rewrite rejected (DEBUG.md) |
+| `fixed-가나다-placeholder.json` | explosion | earlier rewrite-era capture |
 
 Profile: `android-firefox-slate-placeholder-broken` / `-plain-control`
 

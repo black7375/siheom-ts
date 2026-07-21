@@ -1,63 +1,59 @@
 # Slate composition debugging
 
-Slate #5989 fix work needs visibility into **both** DOM IME events and the fix plugin's
-internal state (`compositionData`, `committed`).
+Slate #5989 fix work needs visibility into DOM IME events and whether the
+**built-in placeholder leaf** is present (`[data-slate-placeholder]`).
 
 ## Tools
 
 | File | Role |
 | ---- | ---- |
-| `readSlateCompositionSnapshot.ts` | Slate `Node.string`, DOM text (sans placeholder), fix refs |
+| `readSlateCompositionSnapshot.ts` | Slate `Node.string`, DOM text (sans placeholder) |
 | `slateCompositionDebugLog.ts` | Append-only log + `dump()` for test failure messages |
-| `SlateCompositionDebugPlugin.tsx` | Records DOM capture/bubble; `noteSlateFixPlugin` for rewrite/noop |
-| `SlateLogger.ime.debug.test.tsx` | AF fixed `가나다` trace test; dumps log on mismatch |
+| `SlateCompositionDebugPlugin.tsx` | Records DOM capture/bubble |
+| `SlateLogger.ime.debug.test.tsx` | Diagnostic dump on mismatch |
+| `SlateDecorativePlaceholder.tsx` | **Current fixed-mode approach** — overlay outside contenteditable |
 
-## Usage in tests
+## Current fix (preventive)
 
-```tsx
-const debugLog = createSlateCompositionDebugLog();
-await runSiheom(
-  given.render(
-    <SlateLogger mode="fixed" captureTarget="slate-placeholder" debugLog={debugLog} editorRef={editorRef} />,
-  ),
-  actions.type(query.textbox("Slate editor"), "가나다"),
-);
-// on failure: console.log(debugLog.dump());
-```
+`mode="fixed"` does **not** pass Slate's `placeholder` prop. It renders
+`SlateDecorativePlaceholder` (pointer-events: none overlay) so Hangul IME never
+composes next to a non-contenteditable leaf inside the editor.
 
-Pass the same `debugLog` to `SlatePlaceholderHangulFixPlugin` (via `SlateLogger`) to see
-`fix-plugin:*` actions.
+Broken mode keeps Slate's built-in placeholder to reproduce #5989.
 
-## What to look for
+## Rejected approach — post-hoc text rewrite
 
-Device AF fixed capture for `가나다` shows **preedit prefix duplication / append explosion**:
+Rewriting Slate document text from `compositionupdate` / `compositionend`
+(`fixSlatePlaceholderHangulText` + former fix plugin) **fights the IME**:
 
-| Step | composition data | visible (broken) |
-| ---- | ---------------- | ---------------- |
-| 가 | `가` | `가` (ok after first-syllable fix) |
-| ㄴ | `가ㄴ` | `가가ㄴ` (prefix + preedit) |
-| ㅏ | `가가ㄴㅏ` | `가가ㄴ가가ㄴㅏ` (append of previous visible + data) |
-| … | grows | exponential |
+Device capture `fixtures/android-firefox/rejected-rewrite-flicker-가나다.json`
+(fixed mode + rewrite, 2026-07-21):
 
-Fix plugin entries:
+| t | visible `value` |
+| - | --------------- |
+| … | `가` |
+| … | `가가ㄴ` (dup) |
+| … | `가ㄴ` (rewrite shrink — **flicker**) |
+| … | `가ㄴ가가ㄴㅏ` |
+| … | `가가ㄴㅏ` (rewrite again) |
+| … | … |
+| end | `가가ㄴㅏㄷ가가ㄴㅏㄷㅏ` (still wrong) |
 
-- `fix-plugin:compositionstart` — records `committed` from stable syllables
-- `fix-plugin:compositionupdate` — whether `applyFirstSyllableFix` ran mid-composition
-- `fix-plugin:rewrite` / `noop` — decision after `setTimeout(0)` with `from`/`to`/`committed`
+User report: explosion then shrink flickers; final `가가ㄴㅏㄷㅏ`-class garbage.
+Unit heuristics cannot win against live composition.
 
-## Finding (2026-07-21) — AF fixed golden on Chromium Vitest
+`fixSlatePlaceholderHangulText*.ts(x)` kept only as historical coverage of that
+failed idea.
 
-`SlateLogger.ime.debug.test.tsx` with `android-firefox-slate-placeholder-fixed` shows:
+## Emulator note
 
-1. Composition events fire with growing `data` (`ㄱ` → `가` → `가ㄴ` → … explosion string).
-2. **`visible` / `slate` / `dom` stay empty for the whole run** (`raw` is only ZWSP `\ufeff`).
-3. Every `fix-plugin:noop` has `visible:""` — rewrite never triggers.
-4. Final editor text is ZWSP, not the device explosion string and not `가나다`.
-
-So the AF continuous golden **does not drive Slate's contenteditable model in Chromium Vitest** (same class of gap as AF placeholder broken Slate mount). Unit tests on `fixSlatePlaceholderHangulText` still cover the explosion math; device + debug dump validate the real fix path.
+AF continuous goldens often leave Slate DOM empty under Chromium Vitest
+(mount fidelity gap). Decorative-placeholder success is validated with
+Linux fixed goldens in unit/integration tests; Android needs **device
+recapture** with fixed mode (no rewrite).
 
 ## Run
 
 ```bash
-cd apps/react-example && bun run test SlateLogger.ime.debug.test.tsx
+cd apps/react-example && bun run test SlateLogger.ime.test.tsx SlateLogger.ime.debug.test.tsx
 ```

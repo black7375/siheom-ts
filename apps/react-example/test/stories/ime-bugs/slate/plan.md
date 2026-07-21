@@ -32,10 +32,8 @@
 
 ### Fix plugin (phase 4)
 
-- [x] `fixSlatePlaceholderHangulText`: AC jamo dup `ㄱㄱㅏ` + AF stuck `ㄱ` + trailing `가ㄱㅏ` → `가`
-- [x] `SlatePlaceholderHangulFixPlugin` + `SlateLogger` broken/fixed ModeToolbar
-- [x] `SlateLogger.ime.test`: fixed + `android-chrome-slate-placeholder-broken` → `가`
-- [x] `SlateLogger.ime.test`: fixed mode Linux placeholder baseline 회귀 없음
-- [x] Composition debug tooling (`SlateCompositionDebugPlugin`, `readSlateCompositionSnapshot`, `SlateLogger.ime.debug.test.tsx`)
-- [x] AF continuous `가나다` fix: unit-level explosion recovery (`fixSlatePlaceholderHangulText` walk test); emulator Slate mount stays empty — see `DEBUG.md`
-- [ ] Real device: Android Firefox fixed mode re-capture after fix (no explosion)
+- [x] Reproduce #5989 with Slate built-in placeholder + AC broken golden
+- [x] ~~Post-hoc `fixSlatePlaceholderHangulText` rewrite~~ **rejected** (AF flicker capture)
+- [x] Fixed mode: `SlateDecorativePlaceholder` (no `[data-slate-placeholder]` leaf)
+- [x] Composition debug tooling + `DEBUG.md`
+- [ ] Real device: AC/AF fixed mode re-capture with decorative placeholder → intact `가` / `가나다`

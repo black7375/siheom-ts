@@ -41,7 +41,6 @@ function keyDetail(event: KeyboardEvent): Record<string, unknown> {
 
 /**
  * Records DOM (capture + bubble) for Slate #5989 debugging.
- * Pair with `SlatePlaceholderHangulFixPlugin` + the same `debugLog` to see `fix-plugin:*`.
  */
 export function SlateCompositionDebugPlugin({
   log,

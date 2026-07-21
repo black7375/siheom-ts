@@ -5,7 +5,7 @@ import {
   isStableCommittedText,
 } from "./fixSlatePlaceholderHangulText";
 
-describe("fixSlatePlaceholderHangulText", () => {
+describe("fixSlatePlaceholderHangulText (rejected rewrite heuristic)", () => {
   it("rewrites android-chrome jamo duplication ㄱㄱㅏ to 가 when composition data is ㄱㅏ", () => {
     expect(fixSlatePlaceholderHangulText("ㄱㄱㅏ", "ㄱㅏ")).toBe("가");
   });

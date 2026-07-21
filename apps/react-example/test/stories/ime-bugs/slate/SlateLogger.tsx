@@ -1,5 +1,5 @@
 import { useMemo, useState, type MutableRefObject } from "react";
-import { createEditor, type Descendant } from "slate";
+import { createEditor, Node, type Descendant } from "slate";
 import { Editable, Slate, withReact } from "slate-react";
 
 import "./slate-custom-types";
@@ -8,10 +8,11 @@ import { ImeCaptureShell } from "../../ime-logger/ImeCaptureShell";
 import { CaptureInstructions, ModeToolbar } from "../shared/imeBugLoggerChrome";
 import { CaptureTargetToolbar, type SlateCaptureTarget } from "./CaptureTargetToolbar";
 import { SlateCompositionDebugPlugin } from "./SlateCompositionDebugPlugin";
-import { SlatePlaceholderHangulFixPlugin } from "./SlatePlaceholderHangulFixPlugin";
+import { SlateDecorativePlaceholder } from "./SlateDecorativePlaceholder";
 import type { SlateCompositionDebugLog } from "./slateCompositionDebugLog";
 
 const EMPTY_VALUE: Descendant[] = [{ type: "paragraph", children: [{ text: "" }] }];
+const PLACEHOLDER_TEXT = "여기에 입력…";
 
 const SCENARIO_IDS: Record<SlateCaptureTarget, string> = {
   "slate-placeholder": "slate-ac-first-hangul-placeholder",
@@ -21,13 +22,13 @@ const SCENARIO_IDS: Record<SlateCaptureTarget, string> = {
 export type SlateLoggerMode = "broken" | "fixed";
 
 export type SlateLoggerProps = {
-  /** broken = upstream Slate; fixed = #5989 placeholder Hangul correction. */
+  /** broken = Slate built-in placeholder leaf; fixed = decorative overlay (#5989). */
   mode?: SlateLoggerMode;
   /** Lock capture target (tests). Omit to show on-screen toggle. */
   captureTarget?: SlateCaptureTarget;
   /** Optional: receive mounted field (tests). */
   editorRef?: MutableRefObject<HTMLElement | null>;
-  /** Optional: record DOM + fix-plugin flow (tests / Storybook debugging). */
+  /** Optional: record DOM flow (tests / Storybook debugging). */
   debugLog?: SlateCompositionDebugLog;
 };
 
@@ -41,9 +42,12 @@ export function SlateLogger({
   const effectiveMode = modeProp ?? mode;
   const [captureTarget, setCaptureTarget] = useState<SlateCaptureTarget>("slate-placeholder");
   const effectiveTarget = captureTargetProp ?? captureTarget;
-  const [, setValue] = useState<Descendant[]>(EMPTY_VALUE);
+  const [value, setValue] = useState<Descendant[]>(EMPTY_VALUE);
   const [slateEditable, setSlateEditable] = useState<HTMLElement | null>(null);
-  const editor = useMemo(() => withReact(createEditor()), [effectiveTarget]);
+  const editor = useMemo(() => withReact(createEditor()), [effectiveTarget, effectiveMode]);
+  const docEmpty = value.map((node) => Node.string(node)).join("") === "";
+
+  const useDecorativePlaceholder = effectiveMode === "fixed";
 
   return (
     <ImeCaptureShell
@@ -56,7 +60,7 @@ export function SlateLogger({
             ? "slate-ac-first-hangul-placeholder-fixed"
             : SCENARIO_IDS["slate-placeholder"]
       }
-      listenerDeps={[effectiveTarget]}
+      listenerDeps={[effectiveTarget, effectiveMode]}
       beforeField={() => (
         <CaptureInstructions
           footer={
@@ -71,15 +75,14 @@ export function SlateLogger({
           }
         >
           <li>
-            <strong>Slate + placeholder</strong>: Android Chrome + Gboard → 빈 Slate 편집기(placeholder
-            보임)에서 「가」 조합. #5989 재현(예: ㄱㄱㅏ). fixed는 composition data 기준 음절 보정.
+            <strong>Slate + placeholder</strong>: Android + Gboard → 빈 편집기에서 「가」/「가나다」.
+            broken은 Slate 내장 placeholder leaf(#5989). fixed는 contenteditable 밖 장식 placeholder.
           </li>
           <li>
             <strong>plain control</strong>: 같은 기기에서 plain textarea로 「가」 — 정상 조합 baseline.
           </li>
           <li>
-            Slate placeholder off는 Android에서 IME 입력 자체가 막히는 별도 버그(#4693)라 control로
-            쓰지 않습니다.
+            사후 text rewrite는 IME와 싸워 깜빡임이 나서 쓰지 않습니다 (DEBUG.md).
           </li>
           <li>캡처 대상을 바꾼 뒤 Clear → 포커스 → 조합 → JSON 저장.</li>
         </CaptureInstructions>
@@ -99,36 +102,46 @@ export function SlateLogger({
           />
         ) : (
           <Slate
-            key={effectiveTarget}
+            key={`${effectiveTarget}-${effectiveMode}`}
             editor={editor}
             initialValue={EMPTY_VALUE}
             onValueChange={setValue}
           >
-            <Editable
-              ref={(node) => {
-                attachInputRef(node);
-                setSlateEditable(node);
-                if (editorRef) {
-                  editorRef.current = node;
-                }
-              }}
-              className="min-h-[8rem] rounded-md border border-input bg-background px-3 py-2"
-              aria-label="Slate editor"
-              role="textbox"
-              placeholder="여기에 입력…"
-            />
+            {useDecorativePlaceholder ? (
+              <SlateDecorativePlaceholder text={PLACEHOLDER_TEXT} empty={docEmpty}>
+                <Editable
+                  ref={(node) => {
+                    attachInputRef(node);
+                    setSlateEditable(node);
+                    if (editorRef) {
+                      editorRef.current = node;
+                    }
+                  }}
+                  className="min-h-[8rem] rounded-md border border-input bg-background px-3 py-2"
+                  aria-label="Slate editor"
+                  role="textbox"
+                />
+              </SlateDecorativePlaceholder>
+            ) : (
+              <Editable
+                ref={(node) => {
+                  attachInputRef(node);
+                  setSlateEditable(node);
+                  if (editorRef) {
+                    editorRef.current = node;
+                  }
+                }}
+                className="min-h-[8rem] rounded-md border border-input bg-background px-3 py-2"
+                aria-label="Slate editor"
+                role="textbox"
+                placeholder={PLACEHOLDER_TEXT}
+              />
+            )}
             {debugLog ? (
               <SlateCompositionDebugPlugin
                 log={debugLog}
                 editable={slateEditable}
                 label={effectiveMode}
-              />
-            ) : null}
-            {effectiveMode === "fixed" ? (
-              <SlatePlaceholderHangulFixPlugin
-                enabled
-                editable={slateEditable}
-                debugLog={debugLog}
               />
             ) : null}
           </Slate>

@@ -58,7 +58,26 @@ describe("SlateLogger + android-chrome-slate-placeholder-broken IME", () => {
     });
   });
 
-  it("fixed mode: typing 가 composes intact 가 in Slate with placeholder", async () => {
+  it("fixed mode: decorative placeholder — no data-slate-placeholder leaf", async () => {
+    const editorRef: { current: HTMLElement | null } = { current: null };
+    const { runSiheom, given } = runWithSlateIme("android-chrome-slate-placeholder-broken");
+
+    await runSiheom(
+      given.render(
+        <SlateLogger mode="fixed" captureTarget="slate-placeholder" editorRef={editorRef} />,
+      ),
+    );
+
+    await waitFor(() => {
+      expect(editorRef.current).not.toBeNull();
+      expect(editorRef.current!.querySelector("[data-slate-placeholder]")).toBeNull();
+      expect(
+        editorRef.current!.parentElement?.querySelector("[data-slate-decorative-placeholder]"),
+      ).not.toBeNull();
+    });
+  });
+
+  it("fixed mode + broken AC golden still ≠ 가 (rewrite rejected; need device recapture)", async () => {
     const editorRef: { current: HTMLElement | null } = { current: null };
     const { runSiheom, actions, given } = runWithSlateIme(
       "android-chrome-slate-placeholder-broken",
@@ -73,7 +92,9 @@ describe("SlateLogger + android-chrome-slate-placeholder-broken IME", () => {
 
     await waitFor(() => {
       expect(editorRef.current).not.toBeNull();
-      expect(readSlatePlainText(editorRef.current!)).toBe("가");
+      // Broken golden events already encode jamo split — decorative placeholder
+      // prevents device breakage; it cannot repair a broken event replay.
+      expect(readSlatePlainText(editorRef.current!)).not.toBe("가");
     });
   });
 });
@@ -117,13 +138,13 @@ describe("SlateLogger + android-firefox-slate-plain-control IME", () => {
 });
 
 describe("SlateLogger + linux-chrome-slate-placeholder-fixed IME", () => {
-  it("typing 가 composes intact 가 in Slate with placeholder", async () => {
+  it("typing 가 composes intact 가 in Slate with built-in placeholder", async () => {
     const editorRef: { current: HTMLElement | null } = { current: null };
     const { runSiheom, actions, given } = runWithSlateIme("linux-chrome-slate-placeholder-fixed");
 
     await runSiheom(
       given.render(
-        <SlateLogger captureTarget="slate-placeholder" editorRef={editorRef} />,
+        <SlateLogger mode="broken" captureTarget="slate-placeholder" editorRef={editorRef} />,
       ),
       actions.type(query.textbox("Slate editor"), "가"),
     );
@@ -134,7 +155,7 @@ describe("SlateLogger + linux-chrome-slate-placeholder-fixed IME", () => {
     });
   });
 
-  it("fixed mode does not regress linux-chrome placeholder 가", async () => {
+  it("fixed mode (decorative placeholder) composes intact 가", async () => {
     const editorRef: { current: HTMLElement | null } = { current: null };
     const { runSiheom, actions, given } = runWithSlateIme("linux-chrome-slate-placeholder-fixed");
 
@@ -153,7 +174,7 @@ describe("SlateLogger + linux-chrome-slate-placeholder-fixed IME", () => {
 });
 
 describe("SlateLogger + android-firefox-slate-placeholder-fixed IME", () => {
-  it("fixed mode: typing 가나다 is device-only on Slate mount (emulator DOM stays empty)", async () => {
+  it("rewrite-era AF golden is device flicker evidence — emulator Slate mount stays empty", async () => {
     const editorRef: { current: HTMLElement | null } = { current: null };
     const { runSiheom, actions, given } = runWithSlateIme(
       "android-firefox-slate-placeholder-fixed",
@@ -170,8 +191,6 @@ describe("SlateLogger + android-firefox-slate-placeholder-fixed IME", () => {
       expect(editorRef.current).not.toBeNull();
     });
 
-    // Chromium Vitest does not apply AF continuous golden into Slate's model
-    // (see DEBUG.md). Explosion recovery is covered by unit tests + device.
     expect(readSlatePlainText(editorRef.current!)).not.toBe("가나다");
   });
 });

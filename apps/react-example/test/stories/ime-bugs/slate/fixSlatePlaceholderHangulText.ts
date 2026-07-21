@@ -187,9 +187,9 @@ function fixFirstSyllablePlaceholderBug(visible: string, compositionData: string
 }
 
 /**
- * Slate #5989 — placeholder + Hangul composition breaks on Android.
- * - First syllable: jamo duplication / stuck jamo (Chrome + Firefox)
- * - Later syllables (Firefox): duplicated preedit prefix / append explosion
+ * Historical heuristic for post-hoc Slate text rewrite.
+ * **Rejected** for product fix — fights IME (flicker). See DEBUG.md.
+ * Kept so we do not rediscover the same dead end without tests.
  */
 export function fixSlatePlaceholderHangulText(
   visible: string,
