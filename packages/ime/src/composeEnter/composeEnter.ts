@@ -3,6 +3,18 @@ import { getImeSession, ImeTrace, playEventPlan, readMaxLength } from "../_inter
 import type { ImeProfile } from "../profiles";
 import { planEnter } from "./planEnter";
 
+/** Android virtual keyboard: empty key `code`, compositionend without confirm pulse. */
+function enterPresentation(profile: ImeProfile): {
+  enterKeyCode: string;
+  confirmPulse: boolean;
+} {
+  const virtualKeyboard = profile.hangulKeyEventKey === "unidentified";
+  return {
+    enterKeyCode: virtualKeyboard ? "" : "Enter",
+    confirmPulse: !virtualKeyboard,
+  };
+}
+
 /**
  * Enter while composing — order depends on profile facet (webkit vs chromium).
  * When not composing, fires a plain Enter keydown/keyup.
@@ -24,6 +36,7 @@ export async function composeEnter(
         valueBefore: element.value,
         maxLength: readMaxLength(element),
       },
+      ...enterPresentation(profile),
     }),
   );
 

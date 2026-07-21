@@ -11,14 +11,16 @@ export type PlanConfirmFacts = {
 export function planConfirmAndEndComposition(
   session: ImeComposeSession,
   facts: PlanConfirmFacts,
+  options: { pulse?: boolean } = {},
 ): EventPlanStep[] {
   if (!session.composing) return [];
 
   const caret = session.committed.length + session.preedit.length;
   const value = session.committed + session.preedit + session.suffix;
+  const pulse = options.pulse !== false;
 
   return [
-    ...planPreedit(session.preedit, value, caret, facts),
+    ...(pulse ? planPreedit(session.preedit, value, caret, facts) : []),
     { kind: "compositionend", data: session.preedit, value },
     { kind: "clearSession" },
     { kind: "setValue", value, caret },

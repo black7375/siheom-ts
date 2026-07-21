@@ -11,29 +11,43 @@ export type PlanEnterInput = {
   facet: EnterDuringCompositionFacet;
   session?: ImeComposeSession;
   confirmFacts: PlanConfirmFacts;
+  /** Desktop keyboards use "Enter"; Android virtual keyboard captures use "". */
+  enterKeyCode?: string;
+  /** Linux ibus pulses preedit before compositionend; Android Enter skips the pulse. */
+  confirmPulse?: boolean;
 };
 
-const plainEnterKeydown = {
-  kind: "keydown" as const,
-  fields: { key: "Enter", code: "Enter", keyCode: 13, isComposing: false },
-};
+function plainEnterKeydown(code: string): EventPlanStep {
+  return {
+    kind: "keydown",
+    fields: { key: "Enter", code, keyCode: 13, isComposing: false },
+  };
+}
 
-const plainEnterKeyup = {
-  kind: "keyup" as const,
-  fields: { key: "Enter", code: "Enter", keyCode: 13, isComposing: false },
-};
+function plainEnterKeyup(code: string): EventPlanStep {
+  return {
+    kind: "keyup",
+    fields: { key: "Enter", code, keyCode: 13, isComposing: false },
+  };
+}
 
 /** Pure: Enter ordering by profile facet (and plain Enter when not composing). */
 export function planEnter(input: PlanEnterInput): EventPlanStep[] {
+  const enterCode = input.enterKeyCode ?? "Enter";
+  const enterDown = plainEnterKeydown(enterCode);
+  const enterUp = plainEnterKeyup(enterCode);
+
   if (!input.composing || !input.session) {
-    return [plainEnterKeydown, plainEnterKeyup];
+    return [enterDown, enterUp];
   }
 
-  const confirm = planConfirmAndEndComposition(input.session, input.confirmFacts);
+  const confirm = planConfirmAndEndComposition(input.session, input.confirmFacts, {
+    pulse: input.confirmPulse,
+  });
 
   switch (input.facet) {
     case "webkit":
-      return [...confirm, plainEnterKeydown, plainEnterKeyup];
+      return [...confirm, enterDown, enterUp];
     case "chromium":
     case "chromium-duplicate":
       return [
@@ -42,8 +56,8 @@ export function planEnter(input: PlanEnterInput): EventPlanStep[] {
           fields: { key: "Process", code: "Enter", keyCode: 229, isComposing: true },
         },
         ...confirm,
-        ...(input.facet === "chromium-duplicate" ? [plainEnterKeydown] : []),
-        plainEnterKeyup,
+        ...(input.facet === "chromium-duplicate" ? [enterDown] : []),
+        enterUp,
       ];
     case "chromium-apple":
       return [
@@ -52,9 +66,9 @@ export function planEnter(input: PlanEnterInput): EventPlanStep[] {
           fields: { key: "Enter", code: "Enter", keyCode: 229, isComposing: true },
         },
         ...confirm,
-        plainEnterKeyup,
-        plainEnterKeydown,
-        plainEnterKeyup,
+        enterUp,
+        enterDown,
+        enterUp,
       ];
   }
 }

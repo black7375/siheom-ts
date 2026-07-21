@@ -6,6 +6,8 @@ import { composeHangul, type ComposedEventRecord } from "../composeHangul";
 import { toCriticalEvents } from "../toCriticalEvents";
 import { resolveProfile } from "../profiles";
 import macosEnterGolden from "../../fixtures/macos-chrome-apple/broken-김-enter.json";
+import androidEnterGolden from "../../fixtures/android-chrome/fixed-김-enter.json";
+import { goldenCritical } from "../goldenCritical";
 
 async function withRecordedInput(
   run: (input: HTMLInputElement, recorder: ReturnType<typeof attachImeRecorder>) => Promise<void>,
@@ -110,6 +112,16 @@ describe("composeEnter during composition", () => {
       await composeEnter(input, resolveProfile("macos-chrome-apple"));
 
       expect(toCriticalEvents(recorder.events)).toEqual(toCriticalEvents(macosEnterGolden.events));
+    });
+  });
+
+  it("android-chrome: compositionend then Enter matches fixed-김-enter critical fields", async () => {
+    await withRecordedInput(async (input, recorder) => {
+      await composeHangul(input, "김", { commitFinal: false, profile: "android-chrome" });
+      await composeEnter(input, resolveProfile("android-chrome"));
+
+      expect(input.value).toBe("김");
+      expect(toCriticalEvents(recorder.events)).toEqual(goldenCritical(androidEnterGolden.events));
     });
   });
 });
