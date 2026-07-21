@@ -1,12 +1,17 @@
 import type { ImeProfile } from "../profiles";
 import { keyForJamo } from "./jamoKeyMap";
 
+const UNIDENTIFIED_KEY = { key: "Unidentified", code: "", keyCode: 229 } as const;
+
 export function hangulKeydownFields(
   profile: ImeProfile,
   stroke: JamoStroke,
 ): { key: string; code: string; keyCode: number } {
   if (profile.hangulKeyEventKey === "jamo") {
     return { key: stroke.jamo, code: stroke.code, keyCode: 229 };
+  }
+  if (profile.hangulKeyEventKey === "unidentified") {
+    return { ...UNIDENTIFIED_KEY };
   }
   return { key: "Process", code: stroke.code, keyCode: 229 };
 }
@@ -16,6 +21,9 @@ export function hangulKeyupFields(
   stroke: JamoStroke,
   isComposing: boolean,
 ): { key: string; code: string; keyCode: number; isComposing: boolean } {
+  if (profile.hangulKeyEventKey === "unidentified") {
+    return { ...UNIDENTIFIED_KEY, isComposing };
+  }
   const meta = keyForJamo(stroke.jamo);
   if (profile.hangulKeyEventKey === "jamo") {
     return {
