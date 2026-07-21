@@ -6,6 +6,15 @@ export { composeHangul } from "./composeHangul";
 export type { ComposedEventRecord, ComposeHangulOptions } from "./composeHangul";
 export { composeHangulContentEditableFirefoxFixedOn } from "./composeHangul/composeHangulContentEditableFirefoxFixed";
 export { composeHangulAndroidFirefoxSlateClosedLoopOn } from "./composeHangul/composeHangulAndroidFirefoxSlateClosedLoop";
+export {
+  composeHangulAndroidFirefoxSlateNativeComposition,
+  compositionIntentsFromEvents,
+} from "./composeHangul/composeHangulAndroidFirefoxSlateNativeComposition";
+export type {
+  CompositionIntent,
+  NativeCompositionResult,
+  NativeCompositionStep,
+} from "./composeHangul/composeHangulAndroidFirefoxSlateNativeComposition";
 export { composeBackspace } from "./composeBackspace";
 export { composeArrowLeft } from "./composeArrowLeft";
 export { composeEnter } from "./composeEnter";
