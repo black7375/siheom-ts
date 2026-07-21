@@ -19,6 +19,23 @@
         "types": "./dist/index.d.cts",
         "default": "./dist/index.cjs"
       }
+    },
+    "./hanja": {
+      "import": {
+        "types": "./dist/hanja.d.mts",
+        "default": "./dist/hanja.mjs"
+      },
+      "require": {
+        "types": "./dist/hanja.d.cts",
+        "default": "./dist/hanja.cjs"
+      }
+    }
+  },
+  "typesVersions": {
+    "*": {
+      "hanja": [
+        "./dist/hanja.d.mts"
+      ]
     }
   },
   "scripts": {

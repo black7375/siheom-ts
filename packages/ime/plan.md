@@ -59,6 +59,6 @@ IME-faithful `fill` / `type` that plug into siheom via `overrideSiheom`, startin
 
 - [x] `ImeProfile.hanjaConversion`: `replace` (default / Safari) vs `append` (macos-chrome-apple)
 - [x] `composeHanjaConversion` first syllable matches macos-chrome-apple golden critical path through `김金`
-- [ ] `composeHanjaConversion` first syllable matches macos-safari-apple golden critical path (replace → `金`)
-- [ ] `typeHanja(element, "金泰熙", "김태희")` plays full name on Chrome append and Safari replace profiles
-- [ ] `@siheom/ime/hanja` subpath exports `typeHanja` / `composeHanjaConversion` (main entry does not)
+- [x] `composeHanjaConversion` first syllable matches macos-safari-apple golden critical path (replace → `金`)
+- [x] `typeHanja(element, "金泰熙", "김태희")` plays full name on Chrome append and Safari replace profiles
+- [x] `@siheom/ime/hanja` subpath exports `typeHanja` / `composeHanjaConversion` (main entry does not)
