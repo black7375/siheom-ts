@@ -17,6 +17,14 @@
 ### Fixtures + emulator (phase 2)
 
 - [x] OS 캡처 JSON이 `fixtures/`에 정리된다 (`broken-가나다` / `fixed-가나다`)
-- [x] `@siheom/ime` `android-firefox-lexical` 프로필이 등록된다
-- [x] `composeHangul`이 AF Lexical broken golden critical events와 일치한다 (`가나다` → jamo split)
-- [x] `LexicalLogger.ime.test`: `android-firefox-lexical` 프로필로 `가나다` 입력 시 정상 조합(`가나다`)이 되지 않는다
+- [x] `@siheom/ime` `android-firefox-contenteditable-broken` 프로필이 등록된다
+- [x] `composeHangul`이 AF contenteditable broken golden critical events와 일치한다 (`가나다` → jamo split)
+- [x] `LexicalLogger.ime.test`: `android-firefox-contenteditable-broken` 프로필로 `가나다` 입력 시 정상 조합(`가나다`)이 되지 않는다
+
+### Fix + fixed golden (phase 3)
+
+- [x] `@siheom/ime` `linux-firefox-contenteditable-fixed` 프로필 + `contenteditable-firefox-fixed` compose mode
+- [x] `composeHangul`이 LF contenteditable fixed golden critical events와 일치한다 (`가나다` intact)
+- [x] `LexicalAndroidFirefoxCompositionFixPlugin`: NBSP/ZWSP sentinel `CONTROLLED_TEXT_INSERTION_COMMAND` 차단
+- [x] `LexicalLogger` broken/fixed 모드 + ModeToolbar
+- [x] `LexicalLogger.ime.test`: fixed + `linux-firefox-contenteditable-fixed` → fixed golden critical events on contenteditable

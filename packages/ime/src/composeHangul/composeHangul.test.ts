@@ -3,7 +3,8 @@ import { describe, expect, it } from "vitest";
 import { composeHangul } from "./composeHangul";
 import golden from "../../fixtures/linux-chrome-ibus-hangul/continuous-hangul.json";
 import macosGolden from "../../fixtures/macos-chrome-apple/continuous-hangul.json";
-import lexicalBrokenGolden from "../../fixtures/android-firefox-lexical/lexical-continuous-hangul.json";
+import ceBrokenGolden from "../../fixtures/android-firefox-contenteditable-broken/continuous-hangul.json";
+import ceFixedGolden from "../../fixtures/linux-firefox-contenteditable-fixed/continuous-hangul.json";
 import { attachImeRecorder } from "../attachImeRecorder";
 import { composeEnter } from "../composeEnter";
 import { resolveProfile } from "../profiles";
@@ -68,24 +69,50 @@ describe("composeHangul", () => {
     input.remove();
   });
 
-  it("android-firefox-lexical: 가나다 yields jamo-split ㄱㅏ나다", async () => {
+  it("android-firefox-contenteditable-broken: 가나다 yields jamo-split ㄱㅏ나다", async () => {
     const input = document.createElement("input");
     document.body.append(input);
 
-    await composeHangul(input, "가나다", { profile: "android-firefox-lexical" });
+    await composeHangul(input, "가나다", { profile: "android-firefox-contenteditable-broken" });
 
     expect(input.value.replace(/\u200b/g, "")).toBe("ㄱㅏ나다");
     input.remove();
   });
 
-  it("matches android-firefox-lexical broken golden critical fields for 가나다", async () => {
+  it("matches android-firefox-contenteditable-broken golden critical fields for 가나다", async () => {
     const input = document.createElement("input");
     document.body.append(input);
 
-    const events = await composeHangul(input, "가나다", { profile: "android-firefox-lexical" });
+    const events = await composeHangul(input, "가나다", {
+      profile: "android-firefox-contenteditable-broken",
+    });
 
     expect(input.value.replace(/\u200b/g, "")).toBe("ㄱㅏ나다");
-    expect(toCriticalEvents(events)).toEqual(goldenCritical(lexicalBrokenGolden.events));
+    expect(toCriticalEvents(events)).toEqual(goldenCritical(ceBrokenGolden.events));
+
+    input.remove();
+  });
+
+  it("linux-firefox-contenteditable-fixed: 가나다 yields intact 가나다", async () => {
+    const input = document.createElement("input");
+    document.body.append(input);
+
+    await composeHangul(input, "가나다", { profile: "linux-firefox-contenteditable-fixed" });
+
+    expect(input.value.replace(/\u200b/g, "")).toBe("가나다");
+    input.remove();
+  });
+
+  it("matches linux-firefox-contenteditable-fixed golden critical fields for 가나다", async () => {
+    const input = document.createElement("input");
+    document.body.append(input);
+
+    const events = await composeHangul(input, "가나다", {
+      profile: "linux-firefox-contenteditable-fixed",
+    });
+
+    expect(input.value.replace(/\u200b/g, "")).toBe("가나다");
+    expect(toCriticalEvents(events)).toEqual(goldenCritical(ceFixedGolden.events));
 
     input.remove();
   });

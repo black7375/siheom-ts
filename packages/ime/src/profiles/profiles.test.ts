@@ -65,10 +65,18 @@ describe("IME profiles", () => {
     expect(() => resolveProfile("not-a-real-profile")).toThrow(/Unknown IME profile/);
   });
 
-  it("resolves android-firefox-lexical with lexical-android-firefox compose mode", () => {
-    expect(resolveProfile("android-firefox-lexical")).toMatchObject({
-      id: "android-firefox-lexical",
-      hangulComposeMode: "lexical-android-firefox",
+  it("resolves android-firefox-contenteditable-broken with contenteditable-firefox-broken compose mode", () => {
+    expect(resolveProfile("android-firefox-contenteditable-broken")).toMatchObject({
+      id: "android-firefox-contenteditable-broken",
+      hangulComposeMode: "contenteditable-firefox-broken",
+      hangulKeyEventKey: "process",
+    });
+  });
+
+  it("resolves linux-firefox-contenteditable-fixed with contenteditable-firefox-fixed compose mode", () => {
+    expect(resolveProfile("linux-firefox-contenteditable-fixed")).toMatchObject({
+      id: "linux-firefox-contenteditable-fixed",
+      hangulComposeMode: "contenteditable-firefox-fixed",
       hangulKeyEventKey: "process",
     });
   });

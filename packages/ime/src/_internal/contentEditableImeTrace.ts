@@ -3,9 +3,10 @@ import { dispatch, type KeyEventFields } from "./events";
 import { readEditableText } from "./editableElement";
 import type { ImeTraceEmitter, InputEventFields } from "./imeTrace";
 
-/** IME trace for contenteditable targets (Lexical, etc.) — events only, no session/value writeback. */
+/** IME trace for contenteditable targets — events only, no session/value writeback. */
 export class ContentEditableImeTrace implements ImeTraceEmitter {
   readonly records: ComposedEventRecord[] = [];
+  private lastValue = "";
 
   constructor(readonly element: HTMLElement) {}
 
@@ -42,13 +43,24 @@ export class ContentEditableImeTrace implements ImeTraceEmitter {
     init: KeyEventFields,
     options: { cancelable?: boolean } = {},
   ): void {
+    const { recordValue, cancelable, ...keyboardInit } = init;
     const fields = {
-      key: init.key,
-      code: init.code,
-      keyCode: init.keyCode,
-      isComposing: init.isComposing,
+      key: keyboardInit.key,
+      code: keyboardInit.code,
+      keyCode: keyboardInit.keyCode,
+      isComposing: keyboardInit.isComposing,
+      ...(recordValue !== undefined ? { value: recordValue } : {}),
     };
-    this.emit(type, { bubbles: true, ...options, ...fields, ...init }, fields);
+    this.emit(
+      type,
+      {
+        bubbles: true,
+        ...options,
+        ...(cancelable !== undefined ? { cancelable } : {}),
+        ...keyboardInit,
+      },
+      fields,
+    );
   }
 
   private emitComposition(
@@ -85,6 +97,11 @@ export class ContentEditableImeTrace implements ImeTraceEmitter {
     partial: Partial<ComposedEventRecord>,
   ): void {
     dispatch(this.element, type, init);
+    const value =
+      partial.value ?? (this.lastValue !== "" ? this.lastValue : readEditableText(this.element));
+    if (partial.value !== undefined) {
+      this.lastValue = partial.value;
+    }
     this.records.push({
       type,
       key: partial.key ?? null,
@@ -93,7 +110,7 @@ export class ContentEditableImeTrace implements ImeTraceEmitter {
       isComposing: partial.isComposing ?? null,
       inputType: partial.inputType ?? null,
       data: partial.data ?? null,
-      value: partial.value ?? readEditableText(this.element),
+      value,
     });
   }
 }

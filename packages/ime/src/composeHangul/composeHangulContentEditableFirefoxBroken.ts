@@ -7,53 +7,14 @@ import { playEventPlan, type EventPlanStep } from "../_internal/eventPlan";
 import { ImeTrace } from "../_internal/imeTrace";
 import { isEditable } from "../withPresentElement";
 import { planPreedit } from "../_internal/planPreedit";
+import {
+  FIREFOX_CE_SENTINEL,
+  planDuplicateCompositionPulse,
+  planFirefoxDeferredEnd,
+  withZwsp,
+} from "./contentEditableFirefoxShared";
 
-/** Lexical Firefox COMPOSITION_START_CHAR (NBSP) + trailing ZWSP in contenteditable captures. */
-const LEXICAL_FF_SENTINEL = "\u00a0\u200b";
-const ZWSP = "\u200b";
-
-function withZwsp(text: string): string {
-  return `${text}${ZWSP}`;
-}
-
-function planDuplicateCompositionPulse(preedit: string, valueBefore: string): EventPlanStep[] {
-  return [
-    {
-      kind: "beforeinput",
-      fields: {
-        inputType: "insertCompositionText",
-        data: preedit,
-        isComposing: true,
-        value: valueBefore,
-      },
-    },
-    {
-      kind: "input",
-      fields: {
-        inputType: "insertCompositionText",
-        data: preedit,
-        isComposing: true,
-      },
-    },
-  ];
-}
-
-function planFirefoxDeferredEnd(preedit: string): EventPlanStep[] {
-  const visible = withZwsp(preedit);
-  return [
-    { kind: "compositionend", data: preedit, value: visible },
-    {
-      kind: "input",
-      fields: {
-        inputType: "insertCompositionText",
-        data: preedit,
-        isComposing: false,
-      },
-    },
-  ];
-}
-
-function planLexicalPreeditPulse(
+function planContentEditablePreeditPulse(
   preedit: string,
   valueBefore: string,
   domValue: string,
@@ -90,8 +51,8 @@ function planLexicalPreeditPulse(
   ];
 }
 
-/** Plan full preedit snapshots for Lexical AF broken mode (first syllable stays jamo). */
-export function planLexicalBrokenPreeditSequence(text: string): string[] {
+/** Plan preedit snapshots for broken Firefox contenteditable mode (first syllable stays jamo). */
+export function planContentEditableBrokenPreeditSequence(text: string): string[] {
   const chars = [...text.replace(/\s/g, "")];
   if (chars.length === 0) return [];
 
@@ -123,12 +84,12 @@ export function planLexicalBrokenPreeditSequence(text: string): string[] {
   return sequence;
 }
 
-function playLexicalBrokenSequence(
+function playContentEditableBrokenSequence(
   trace: ImeTrace | ContentEditableImeTrace,
   text: string,
   commitFinal: boolean,
 ): ComposedEventRecord[] {
-  const preeditSequence = planLexicalBrokenPreeditSequence(text);
+  const preeditSequence = planContentEditableBrokenPreeditSequence(text);
   const applyDom = trace instanceof ImeTrace;
 
   if (preeditSequence.length === 0) {
@@ -166,10 +127,10 @@ function playLexicalBrokenSequence(
 
     playEventPlan(trace, head);
 
-    const valueBefore = isFirst || isRestart ? LEXICAL_FF_SENTINEL : withZwsp(previous);
+    const valueBefore = isFirst || isRestart ? FIREFOX_CE_SENTINEL : withZwsp(previous);
     const domValue = withZwsp(preedit);
 
-    playEventPlan(trace, planLexicalPreeditPulse(preedit, valueBefore, domValue, applyDom));
+    playEventPlan(trace, planContentEditablePreeditPulse(preedit, valueBefore, domValue, applyDom));
     playEventPlan(trace, [
       {
         kind: "keyup",
@@ -209,37 +170,37 @@ function playLexicalBrokenSequence(
 }
 
 /**
- * Emulate Lexical #6377 on Android Firefox: after the first jamo, composition ends
+ * Broken Firefox contenteditable path: after the first jamo, composition ends
  * prematurely and the first syllable stays jamo while later syllables compose normally.
  */
-export async function composeHangulLexicalAndroidFirefox(
+export async function composeHangulContentEditableFirefoxBroken(
   element: HTMLInputElement | HTMLTextAreaElement,
   text: string,
   options: { commitFinal?: boolean } = {},
 ): Promise<ComposedEventRecord[]> {
   const { commitFinal = true } = options;
   element.focus();
-  return playLexicalBrokenSequence(new ImeTrace(element), text, commitFinal);
+  return playContentEditableBrokenSequence(new ImeTrace(element), text, commitFinal);
 }
 
-/** Same AF Lexical sequence for contenteditable (events only — host editor owns DOM). */
-export async function composeHangulLexicalAndroidFirefoxContentEditable(
+/** Same broken sequence for contenteditable (events only — host editor owns DOM). */
+export async function composeHangulContentEditableFirefoxBrokenOnContentEditable(
   element: HTMLElement,
   text: string,
   options: { commitFinal?: boolean } = {},
 ): Promise<ComposedEventRecord[]> {
   const { commitFinal = true } = options;
   element.focus();
-  return playLexicalBrokenSequence(new ContentEditableImeTrace(element), text, commitFinal);
+  return playContentEditableBrokenSequence(new ContentEditableImeTrace(element), text, commitFinal);
 }
 
-export function composeHangulLexicalAndroidFirefoxOn(
+export function composeHangulContentEditableFirefoxBrokenOn(
   element: HTMLElement,
   text: string,
   options: { commitFinal?: boolean } = {},
 ): Promise<ComposedEventRecord[]> {
   if (isEditable(element)) {
-    return composeHangulLexicalAndroidFirefox(element, text, options);
+    return composeHangulContentEditableFirefoxBroken(element, text, options);
   }
-  return composeHangulLexicalAndroidFirefoxContentEditable(element, text, options);
+  return composeHangulContentEditableFirefoxBrokenOnContentEditable(element, text, options);
 }

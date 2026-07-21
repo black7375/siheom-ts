@@ -13,7 +13,8 @@ import {
   composeHangulSafariComposition,
   composeHangulSafariReplacement,
 } from "./composeHangulSafari";
-import { composeHangulLexicalAndroidFirefox } from "./composeHangulLexicalAndroidFirefox";
+import { composeHangulContentEditableFirefoxBroken } from "./composeHangulContentEditableFirefoxBroken";
+import { composeHangulContentEditableFirefoxFixed } from "./composeHangulContentEditableFirefoxFixed";
 import {
   decideStrokeStepOutcome,
   planBoundaryCommitAfterStep,
@@ -179,9 +180,14 @@ export async function composeHangul(
     });
   }
 
-  if (profile.hangulComposeMode === "lexical-android-firefox") {
+  if (profile.hangulComposeMode === "contenteditable-firefox-broken") {
     element.focus();
-    return composeHangulLexicalAndroidFirefox(element, text, { commitFinal });
+    return composeHangulContentEditableFirefoxBroken(element, text, { commitFinal });
+  }
+
+  if (profile.hangulComposeMode === "contenteditable-firefox-fixed") {
+    element.focus();
+    return composeHangulContentEditableFirefoxFixed(element, text, { commitFinal, profile });
   }
 
   const blurred = { current: false };

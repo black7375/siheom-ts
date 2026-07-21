@@ -19,8 +19,10 @@ export type HangulComposeMode =
   | "replacement"
   /** composition with input before keydown (Safari Apple delayed-update fixed) */
   | "safari-composition"
-  /** Lexical on Android Firefox: premature end after first jamo, then jamo-chain preedit */
-  | "lexical-android-firefox";
+  /** Firefox contenteditable broken: premature end after first jamo, then jamo-chain preedit */
+  | "contenteditable-firefox-broken"
+  /** Firefox contenteditable fixed: syllable-boundary commits with deferred compositionend */
+  | "contenteditable-firefox-fixed";
 
 /**
  * How Hangul→Hanja candidate conversion applies the chosen Hanja to the field.
@@ -121,10 +123,17 @@ function registerBuiltins() {
     hanjaConversion: "replace",
   });
   registerProfile({
-    id: "android-firefox-lexical",
+    id: "android-firefox-contenteditable-broken",
     enterDuringComposition: "webkit",
     hangulKeyEventKey: "process",
-    hangulComposeMode: "lexical-android-firefox",
+    hangulComposeMode: "contenteditable-firefox-broken",
+    hanjaConversion: "replace",
+  });
+  registerProfile({
+    id: "linux-firefox-contenteditable-fixed",
+    enterDuringComposition: "webkit",
+    hangulKeyEventKey: "process",
+    hangulComposeMode: "contenteditable-firefox-fixed",
     hanjaConversion: "replace",
   });
 }

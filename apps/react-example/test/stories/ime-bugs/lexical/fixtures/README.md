@@ -13,6 +13,6 @@
 
 Storybook: **IME / Lexical**. Scenario id: `lexical-af-continuous-hangul`.
 
-Emulator: `android-firefox-lexical` profile in `@siheom/ime`; see `LexicalLogger.ime.test.tsx`.
+Emulator: `android-firefox-contenteditable-broken` / `linux-firefox-contenteditable-fixed` profiles in `@siheom/ime`; see `LexicalLogger.ime.test.tsx`.
 
 Related: [Lexical #6377](https://github.com/facebook/lexical/issues/6377), `docs/research/lexical-android-firefox-composition.md`.

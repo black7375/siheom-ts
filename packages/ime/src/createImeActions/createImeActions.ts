@@ -5,10 +5,11 @@ import { composeArrowLeft } from "../composeArrowLeft";
 import { composeBackspace } from "../composeBackspace";
 import { composeEnter } from "../composeEnter";
 import { composeHangul, type ComposeHangulOptions } from "../composeHangul";
-import { composeHangulLexicalAndroidFirefoxOn } from "../composeHangul/composeHangulLexicalAndroidFirefox";
+import { composeHangulContentEditableFirefoxBrokenOn } from "../composeHangul/composeHangulContentEditableFirefoxBroken";
+import { composeHangulContentEditableFirefoxFixedOn } from "../composeHangul/composeHangulContentEditableFirefoxFixed";
 import { planTypeImeSteps } from "../planTypeImeSteps";
 import { resolveProfile, type ImeProfile } from "../profiles";
-import { isLexicalComposeTarget } from "../_internal/editableElement";
+import { isContentEditableComposeTarget } from "../_internal/editableElement";
 import { isEditable, withPresentElement } from "../withPresentElement";
 
 export type CreateImeActionsOptions = {
@@ -63,11 +64,33 @@ async function typeImeText(
   profile: ImeProfile,
   composeOptions: Pick<ComposeHangulOptions, "settle" | "deferredUpdateRace">,
 ): Promise<void> {
-  if (profile.hangulComposeMode === "lexical-android-firefox" && isLexicalComposeTarget(element)) {
+  if (
+    profile.hangulComposeMode === "contenteditable-firefox-broken" &&
+    isContentEditableComposeTarget(element)
+  ) {
     for (const step of planTypeImeSteps(text)) {
       if (step.kind === "hangul") {
-        await composeHangulLexicalAndroidFirefoxOn(element, step.text, {
+        await composeHangulContentEditableFirefoxBrokenOn(element, step.text, {
           commitFinal: step.commitFinal,
+        });
+      } else if (isEditable(element)) {
+        await typeKeySegment(user, element, step.text, profile);
+      } else {
+        await user.type(element, step.text);
+      }
+    }
+    return;
+  }
+
+  if (
+    profile.hangulComposeMode === "contenteditable-firefox-fixed" &&
+    isContentEditableComposeTarget(element)
+  ) {
+    for (const step of planTypeImeSteps(text)) {
+      if (step.kind === "hangul") {
+        await composeHangulContentEditableFirefoxFixedOn(element, step.text, {
+          commitFinal: step.commitFinal,
+          profile,
         });
       } else if (isEditable(element)) {
         await typeKeySegment(user, element, step.text, profile);

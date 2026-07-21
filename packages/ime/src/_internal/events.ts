@@ -56,4 +56,6 @@ export type KeyEventFields = {
   keyCode: number;
   isComposing: boolean;
   cancelable?: boolean;
+  /** Golden-record value override (not sent on the KeyboardEvent). */
+  recordValue?: string;
 };
