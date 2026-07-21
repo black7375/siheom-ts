@@ -21,7 +21,9 @@ Understand Slate + Android Hangul IME — **exploration, not app patches**. See
    - `timeline[]` — per-event slateText/domText/flags (H1)
    - `domStructures[]` — Slate vs textarea tree at key steps (H2)
    - `sourceMapHints[]` + `minimalFixture.path` (H3)
-3. Optional: open `slate-minimal-dom-fixture.html` on same device, type `가`, compare.
+3. Optional H3: open `slate-minimal-dom-fixture.html` on same device, type `가`, compare.
+   - **2026-07-21 gate:** minimal HTML → `가` OK; SlateLogger → `ㄱ가나다`. Bug is slate-react
+     Android path, not raw contenteditable + placeholder.
 
 ## Retired
 

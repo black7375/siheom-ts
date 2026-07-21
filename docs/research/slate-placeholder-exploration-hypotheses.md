@@ -108,6 +108,20 @@ IME + DOM shape** alone?
 
 **Not:** Another Editable prop patch without the map above.
 
+### H3 device gate (2026-07-21)
+
+| Surface | AF Firefox `가` | Notes |
+| ------- | --------------- | ----- |
+| `slate-minimal-dom-fixture.html` | **OK** (`가`) | Static Slate-shaped DOM + `[data-slate-placeholder]`; **no** slate-react handlers |
+| SlateLogger (upstream Slate) | **broken** (`ㄱ가나다`) | `slateDebug.exploration` capture `…1784639834061.json` |
+
+**Verdict:** Orphan leading `ㄱ` is **not** inherent to “Android Firefox + contenteditable +
+placeholder leaf”. Same device accepts composition when the browser owns the DOM. Bug lives in
+**slate-react active path** (`android-input-manager` intercepting `beforeinput` / composition).
+
+H1 on the broken capture: `slateText === domText` throughout; failure at timeline **i=7**
+(`compositionupdate data=가` while dom still `ㄱ`) — replace diff never applied in first session.
+
 ---
 
 ## Suggested order

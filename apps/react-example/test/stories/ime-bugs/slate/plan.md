@@ -5,4 +5,5 @@
 - [x] **H1** Divergence timeline — `slateDebug.exploration.timeline[]`
 - [x] **H2** Structural diff — Slate + reference textarea, `domStructures[]`
 - [x] **H3** Minimal DOM fixture + `sourceMapHints[]` in JSON export
-- [ ] Device: download JSON after `가나다`, review `firstDivergence`
+- [x] Device: download JSON after `가나다`, review `firstDivergence` (i=7 stuck-ㄱ; i=3 timing only)
+- [x] Device H3: minimal HTML `가` OK → slate-react android-input-manager scope

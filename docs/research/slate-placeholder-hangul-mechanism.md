@@ -37,8 +37,23 @@ Slate `androidInputManager` comments (0.126):
 
 - Plain `<textarea>`: `가` OK.
 - Linux desktop Slate + official placeholder: `가` OK.
-- So the bug is Slate's Android composition path (placeholder interacts, but
-  empty-editor / Android IM is deeper).
+- **Static minimal Slate DOM** (`slate-minimal-dom-fixture.html`, placeholder present): `가` OK
+  on AF Firefox (2026-07-21) — no React, no `android-input-manager`.
+- So the bug is **slate-react's Android composition path**, not “Hangul + contenteditable +
+  placeholder shape” alone.
+
+## Exploration gate — H1 + H3 (2026-07-21)
+
+SlateLogger capture (`slate-ac-first-hangul-placeholder-explore`):
+
+1. First `insertCompositionText` `ㄱ` commits (timeline i=3).
+2. `compositionupdate` / `insertCompositionText` with `data=가` leave dom at `ㄱ` (i=7+).
+3. `compositionend.data=가` but dom still `ㄱ`; second composition appends → `ㄱ가나다`.
+4. `slateText === domText` and `pendingDiffCount=0` — not a React-vs-DOM desync story.
+
+Minimal HTML fixture on **same device**: `가` correct. **Falsifies** browser-only DOM-shape
+hypothesis; **confirms** `android-input-manager` (or Editable handlers it installs) as the
+layer that fails to replace jamo `ㄱ` with syllable `가` on the first composition cycle.
 
 ## Hypotheses for a real fix (keep official `placeholder`)
 
