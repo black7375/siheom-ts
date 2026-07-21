@@ -29,3 +29,16 @@ emulator that drives real Slate and lets it mediate.
 - [ ] Model composition DOM writeback + pending-diff flush desync → unpatched emul == device `ㄱ`
 - [ ] Replace `android-firefox-slate-placeholder-*` golden-replay modes with closed-loop
 - [ ] Wire closed-loop as an `@siheom/ime` profile mode (`createImeActions({ profile })`)
+
+### CORRECTION (2026-07-21 device) — the bug is the composing process, not the final value
+
+Device v2 capture (`device-v2-patched-process-still-buggy-가나다.json`, `patchActive:true`) has
+final `가나다` but the composing display flickers duplicates (`가가나`, `가나가나ㄷ`) at each
+syllable boundary. v2 only corrects the committed value at `compositionend` — user still sees
+the bug. See `docs/research/slate-closed-loop-emulator.md` (Correction section).
+
+- [x] Characterization: `SlateLogger.device-v2-process.test.tsx` locks known-bad process
+- [ ] Real fix: `androidInputManager` shows cumulative preedit as a **replace** of the running
+      composition (`가나`) during composition, not append-then-correct at `compositionend`
+- [ ] Emulation must reproduce the flicker (`가가나`, `가나가나ㄷ`) to be device-faithful, then
+      go green only when the composing process is clean end-to-end

@@ -43,6 +43,39 @@ post-mediation `beforeinput`/`input` (with device-specific duplications and DOM-
 target ranges). Slate expects to be the mediator between raw IME intent and DOM mutation;
 replaying the *mediated* events double-mediates.
 
+## Correction (2026-07-21, device) — the bug is the *composing process*, not the final value
+
+A capture on a real Android Firefox device against the **v2-patched** Storybook
+(`fixtures/android-firefox/device-v2-patched-process-still-buggy-가나다.json`,
+`patchActive: true`) has final `domText: "가나다"` — but the **composing process still
+flickers**. Tracing each `input` event's visible DOM value:
+
+| typing | visible DOM value during composition |
+| ------ | ------------------------------------ |
+| `가` | stays `ㄱ` until commit, then jumps to `가` |
+| `나` | `가간` → **`가가나`** → (commit) `가나` |
+| `다` | **`가나가나ㄷ`** → `가나ㄷ` → (commit) `가나다` |
+
+**The v2 patch masks, not fixes:** it corrects the *committed* value at `compositionend`
+(`storeDiff` + `flush`) but each syllable boundary transiently shows a **duplicated cumulative
+preedit** (`가가나`, `가나가나ㄷ`). The user sees this flicker → "여전히 버그처럼 보여요".
+
+Mechanism: after committing syllable N (e.g. `가`), the selection sits after it; the Android
+IME sends the **cumulative** run preedit (`가나`, then `가나다`) for the next syllable, and
+native contenteditable renders it *after* the committed text → `가` + `가나` = `가가나`. Slate's
+`androidInputManager` only reconciles/replaces at `compositionend`, so the duplication is
+visible until commit. (H3: plain contenteditable on the same device does not flicker → this is
+slate-react's cumulative-preedit handling, not the browser.)
+
+**Consequences:**
+- The real fix must make the composing display a **replace** of the running composition
+  (`가나`), not append-then-correct — during composition, not only at `compositionend`.
+- Emulation faithfulness now means **reproducing the flicker** (`가가나`, `가나가나ㄷ`). The
+  first closed-loop increment produces a *clean* `가나다`, so it does **not** yet reproduce the
+  device process — it is not faithful to the still-buggy device either.
+
+Characterization test: `SlateLogger.device-v2-process.test.tsx` locks the known-bad process.
+
 ## The fix direction — closed-loop IME emulator (decision 2026-07-21)
 
 Instead of replaying a fixed log, model the IME as a **state machine that drives the mounted
@@ -80,9 +113,10 @@ Slate mediates via `androidInputManager`, no golden replay):
 | **unpatched** Slate | `ㄱ가` | `ㄱ가간가나가낟가나다` | explosion |
 | device (for ref) | `ㄱ` | `ㄱ가나다` | orphan `ㄱ` |
 
-**Proven:** the fix (patched slate-react) works against *real* Slate for single and continuous
-Hangul when driven by clean editor-mediated composition — much stronger than a golden-replay
-green.
+**Note (superseded by the device correction above):** the patched emulation reaches a clean
+final `가나다`, but that only matches the *committed value*, which the device also gets right.
+It does **not** reproduce the device's composing flicker (`가가나`, `가나가나ㄷ`), so a green
+here is necessary but not sufficient — the process is the real bug.
 
 **Directional, not exact, faithfulness:** unpatched closed-loop reproduces the orphan-`ㄱ`
 *family* (`ㄱ가…`) — closer to the device (`ㄱ`) than open-loop replay (`ㄱ가가`) — but not the
