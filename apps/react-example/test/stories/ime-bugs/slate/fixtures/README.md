@@ -1,13 +1,20 @@
 # Slate placeholder Hangul — capture fixtures
 
-| Directory        | Meaning                          |
-| ---------------- | -------------------------------- |
-| `android-chrome/` | Android Chrome + Slate Editable |
+| Directory         | Meaning                    |
+| ----------------- | -------------------------- |
+| `android-chrome/` | Android Chrome + Slate/plain |
 
 | File | Notes |
 | ---- | ----- |
-| (pending) | Phase 2: device capture after Storybook `IME/Slate` → placeholder on, type first syllable |
+| (pending) | Re-capture after Logger fix — see below |
 
-Storybook: **IME / Slate**. Scenario id: `slate-ac-first-hangul-placeholder` / `slate-ac-first-hangul-no-placeholder`.
+## Capture targets (Logger)
 
-Related: [Slate #5989](https://github.com/ianstormtaylor/slate/issues/5989), survey P0 in `docs/research/korean-ime-github-issue-survey.md`.
+| Scenario id | Field | Purpose |
+| ----------- | ----- | ------- |
+| `slate-ac-first-hangul-placeholder` | Slate `Editable` + placeholder | [Slate #5989](https://github.com/ianstormtaylor/slate/issues/5989) repro |
+| `slate-ac-plain-control` | plain `<textarea>` | Baseline — Gboard should compose `가` normally |
+
+**Do not use** Slate without placeholder as control on Android: empty Slate editor blocks IME entirely (Slate #4693 class), not a working comparison.
+
+Storybook: **IME / Slate**.

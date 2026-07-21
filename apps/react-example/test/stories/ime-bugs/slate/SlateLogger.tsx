@@ -6,67 +6,93 @@ import "./slate-custom-types";
 
 import { ImeCaptureShell } from "../../ime-logger/ImeCaptureShell";
 import { CaptureInstructions } from "../shared/imeBugLoggerChrome";
-import { PlaceholderToolbar } from "./PlaceholderToolbar";
+import { CaptureTargetToolbar, type SlateCaptureTarget } from "./CaptureTargetToolbar";
 
 const EMPTY_VALUE: Descendant[] = [{ type: "paragraph", children: [{ text: "" }] }];
 
+const SCENARIO_IDS: Record<SlateCaptureTarget, string> = {
+  "slate-placeholder": "slate-ac-first-hangul-placeholder",
+  "plain-control": "slate-ac-plain-control",
+};
+
 export type SlateLoggerProps = {
-  /** Lock placeholder visibility (tests). Omit to show on-screen toggle. */
-  showPlaceholder?: boolean;
-  /** Optional: receive mounted contenteditable (tests). */
+  /** Lock capture target (tests). Omit to show on-screen toggle. */
+  captureTarget?: SlateCaptureTarget;
+  /** Optional: receive mounted field (tests). */
   editorRef?: MutableRefObject<HTMLElement | null>;
 };
 
-export function SlateLogger({ showPlaceholder: showPlaceholderProp, editorRef }: SlateLoggerProps = {}) {
-  const [showPlaceholder, setShowPlaceholder] = useState(true);
-  const effectiveShowPlaceholder = showPlaceholderProp ?? showPlaceholder;
-  const editor = useMemo(() => withReact(createEditor()), []);
+export function SlateLogger({ captureTarget: captureTargetProp, editorRef }: SlateLoggerProps = {}) {
+  const [captureTarget, setCaptureTarget] = useState<SlateCaptureTarget>("slate-placeholder");
+  const effectiveTarget = captureTargetProp ?? captureTarget;
+  const [, setValue] = useState<Descendant[]>(EMPTY_VALUE);
+  const editor = useMemo(() => withReact(createEditor()), [effectiveTarget]);
 
   return (
     <ImeCaptureShell
       title="Slate placeholder Hangul first syllable"
-      description="Android Chrome 등에서 Slate Editable + placeholder 상태의 첫 한글 음절 조합 깨짐을 재현·캡처합니다."
-      scenarioId={
-        effectiveShowPlaceholder
-          ? "slate-ac-first-hangul-placeholder"
-          : "slate-ac-first-hangul-no-placeholder"
-      }
+      description="Android Chrome에서 Slate #5989(placeholder + 첫 음절 조합 깨짐)을 재현하고, plain input control과 비교 캡처합니다."
+      scenarioId={SCENARIO_IDS[effectiveTarget]}
+      listenerDeps={[effectiveTarget]}
       beforeField={() => (
         <CaptureInstructions
           footer={
-            showPlaceholderProp === undefined ? (
+            captureTargetProp === undefined ? (
               <div className="mt-3">
-                <PlaceholderToolbar
-                  showPlaceholder={showPlaceholder}
-                  onShowPlaceholderChange={setShowPlaceholder}
-                />
+                <CaptureTargetToolbar target={captureTarget} onTargetChange={setCaptureTarget} />
               </div>
             ) : null
           }
         >
-          <li>Android Chrome + Gboard에서 Slate 편집기를 탭해 포커스를 줍니다.</li>
-          <li>placeholder가 켜진 상태에서 첫 음절(예: 「가」)을 조합합니다.</li>
-          <li>placeholder off와 비교해 첫 음절만 깨지는지 확인합니다.</li>
-          <li>이벤트 로그가 기록되면 JSON 복사 또는 다운로드로 트레이스를 저장합니다.</li>
+          <li>
+            <strong>Slate + placeholder</strong>: Android Chrome + Gboard → 빈 Slate 편집기(placeholder
+            보임)에서 「가」 조합. #5989 재현(예: ㄱㄱㅏㄱㅏ).
+          </li>
+          <li>
+            <strong>plain control</strong>: 같은 기기에서 plain textarea로 「가」 — 정상 조합 baseline.
+          </li>
+          <li>
+            Slate placeholder off는 Android에서 IME 입력 자체가 막히는 별도 버그(#4693)라 control로
+            쓰지 않습니다.
+          </li>
+          <li>캡처 대상을 바꾼 뒤 Clear → 포커스 → 조합 → JSON 저장.</li>
         </CaptureInstructions>
       )}
     >
-      {({ attachInputRef }) => (
-        <Slate editor={editor} initialValue={EMPTY_VALUE}>
-          <Editable
+      {({ attachInputRef }) =>
+        effectiveTarget === "plain-control" ? (
+          <textarea
             ref={(node) => {
               attachInputRef(node);
               if (editorRef) {
                 editorRef.current = node;
               }
             }}
-            className="min-h-[8rem] rounded-md border border-input bg-background px-3 py-2"
-            aria-label="Slate editor"
-            role="textbox"
-            placeholder={effectiveShowPlaceholder ? "여기에 입력…" : undefined}
+            className="min-h-[8rem] w-full rounded-md border border-input bg-background px-3 py-2"
+            aria-label="Plain control input"
           />
-        </Slate>
-      )}
+        ) : (
+          <Slate
+            key={effectiveTarget}
+            editor={editor}
+            initialValue={EMPTY_VALUE}
+            onValueChange={setValue}
+          >
+            <Editable
+              ref={(node) => {
+                attachInputRef(node);
+                if (editorRef) {
+                  editorRef.current = node;
+                }
+              }}
+              className="min-h-[8rem] rounded-md border border-input bg-background px-3 py-2"
+              aria-label="Slate editor"
+              role="textbox"
+              placeholder="여기에 입력…"
+            />
+          </Slate>
+        )
+      }
     </ImeCaptureShell>
   );
 }

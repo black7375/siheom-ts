@@ -10,7 +10,7 @@
 
 - [x] `SlateLogger`가 렌더링되고 contenteditable 영역이 accessible name을 가진다
 - [x] Storybook에 `IME/Slate` Capture story가 등록된다
-- [x] placeholder on/off 토글이 표시된다
+- [x] placeholder on/off 토글 → **캡처 대상** 토글 (Slate+placeholder / plain control)
 - [x] IME 이벤트가 로그에 기록된다
 - [x] 트레이스 JSON을 복사/다운로드할 수 있다 (`ImeCaptureShell` 기본 동작)
 - [x] Android Chrome 캡처용 안내 문구가 표시된다

@@ -16,7 +16,11 @@ export function readEditableValue(target: EventTarget | null): string {
     return target.value;
   }
   if (target instanceof HTMLElement && target.isContentEditable) {
-    return target.textContent ?? "";
+    const clone = target.cloneNode(true) as HTMLElement;
+    for (const placeholder of clone.querySelectorAll("[data-slate-placeholder]")) {
+      placeholder.remove();
+    }
+    return clone.textContent ?? "";
   }
   return "";
 }
