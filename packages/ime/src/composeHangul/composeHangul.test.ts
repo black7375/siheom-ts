@@ -178,4 +178,39 @@ describe("composeHangul", () => {
 
     input.remove();
   });
+
+  it("android-chrome host clamp keeps overflow data with clamped value (no empty reject)", async () => {
+    const input = document.createElement("input");
+    input.maxLength = 6;
+    document.body.append(input);
+    input.addEventListener("input", () => {
+      if (input.value.length > input.maxLength) {
+        input.value = input.value.slice(0, input.maxLength);
+      }
+    });
+
+    const events = await composeHangul(input, "가나다라마바사", {
+      profile: "android-chrome",
+      commitFinal: false,
+    });
+
+    expect(input.value).toBe("가나다라마바");
+    const overflowInput = events.find(
+      (e) =>
+        e.type === "input" &&
+        e.inputType === "insertCompositionText" &&
+        e.data === "가나다라마바사" &&
+        e.value === "가나다라마바",
+    );
+    expect(overflowInput).toBeDefined();
+    // Desktop Chrome reject path uses empty insertCompositionText + compositionend.
+    expect(
+      events.some(
+        (e) => e.type === "input" && e.inputType === "insertCompositionText" && e.data === "",
+      ),
+    ).toBe(false);
+    expect(events.filter((e) => e.type === "compositionend")).toHaveLength(0);
+
+    input.remove();
+  });
 });
