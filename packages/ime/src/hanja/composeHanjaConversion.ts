@@ -1,13 +1,9 @@
 import {
   applyPreedit,
-  dispatch,
+  commitSafariInsertFromComposition,
   getImeSession,
-  pushCompositionStart,
-  pushKeydown,
-  pushKeyup,
+  ImeTrace,
   setImeSession,
-  setInputValue,
-  snapshot,
   type ComposedEventRecord,
 } from "../_internal";
 import { resolveProfile, type ImeProfile } from "../profiles";
@@ -28,15 +24,15 @@ export async function composeHanjaConversion(
 ): Promise<ComposedEventRecord[]> {
   const { hangul, hanja } = options;
   const profile = resolveProfile(options.profile);
-  const records: ComposedEventRecord[] = [];
+  const trace = new ImeTrace(element);
 
   if (profile.hanjaConversion === "append") {
-    playChromeAppendConversion(element, hangul, hanja, records);
-    return records;
+    playChromeAppendConversion(trace, hangul, hanja);
+    return trace.records;
   }
 
-  playSafariReplaceConversion(element, hangul, hanja, records);
-  return records;
+  playSafariReplaceConversion(trace, hangul, hanja);
+  return trace.records;
 }
 
 function sessionBounds(
@@ -51,33 +47,29 @@ function sessionBounds(
 }
 
 /** macOS Chrome Apple: Option+Enter appends Hanja after Hangul (김 → 김金). */
-function playChromeAppendConversion(
-  element: HTMLInputElement | HTMLTextAreaElement,
-  hangul: string,
-  hanja: string,
-  records: ComposedEventRecord[],
-) {
+function playChromeAppendConversion(trace: ImeTrace, hangul: string, hanja: string) {
+  const { element } = trace;
   const { prefix, suffix } = sessionBounds(element, hangul);
   const hangulValue = prefix + hangul + suffix;
 
-  pushKeydown(element, records, {
+  trace.keydown({
     key: "Alt",
     code: "AltLeft",
     keyCode: 18,
     isComposing: true,
   });
-  pushKeydown(element, records, {
+  trace.keydown({
     key: "Enter",
     code: "Enter",
     keyCode: 229,
     isComposing: true,
   });
 
-  applyPreedit(element, hangul, hangulValue, records, prefix.length + hangul.length);
-  pushCompositionStart(element, records);
+  applyPreedit(trace, hangul, hangulValue, prefix.length + hangul.length);
+  trace.compositionStart();
 
   const appended = prefix + hangul + hanja + suffix;
-  applyPreedit(element, hanja, appended, records, prefix.length + hangul.length + hanja.length);
+  applyPreedit(trace, hanja, appended, prefix.length + hangul.length + hanja.length);
 
   setImeSession(element, {
     composing: true,
@@ -86,13 +78,13 @@ function playChromeAppendConversion(
     suffix,
   });
 
-  pushKeyup(element, records, {
+  trace.keyup({
     key: "Enter",
     code: "Enter",
     keyCode: 13,
     isComposing: true,
   });
-  pushKeyup(element, records, {
+  trace.keyup({
     key: "Alt",
     code: "AltLeft",
     keyCode: 18,
@@ -104,94 +96,29 @@ function playChromeAppendConversion(
  * macOS Safari Apple: Option starts conversion; Hangul is deleted then re-inserted,
  * then a new composition replaces it with Hanja (김 → 金).
  */
-function playSafariReplaceConversion(
-  element: HTMLInputElement | HTMLTextAreaElement,
-  hangul: string,
-  hanja: string,
-  records: ComposedEventRecord[],
-) {
+function playSafariReplaceConversion(trace: ImeTrace, hangul: string, hanja: string) {
+  const { element } = trace;
   const { prefix, suffix } = sessionBounds(element, hangul);
   const hangulValue = prefix + hangul + suffix;
 
-  pushKeydown(element, records, {
+  trace.keydown({
     key: "Alt",
     code: "AltLeft",
     keyCode: 18,
     isComposing: true,
   });
 
-  applyPreedit(element, hangul, hangulValue, records, prefix.length + hangul.length);
+  applyPreedit(trace, hangul, hangulValue, prefix.length + hangul.length);
 
-  dispatch(element, "beforeinput", {
-    bubbles: true,
-    cancelable: true,
-    inputType: "deleteCompositionText",
-    data: null,
-    isComposing: true,
+  commitSafariInsertFromComposition(trace, hangul, hangulValue, {
+    clearedCaret: prefix.length,
+    finalCaret: prefix.length + hangul.length,
   });
-  records.push(
-    snapshot(element, "beforeinput", {
-      inputType: "deleteCompositionText",
-      data: null,
-      isComposing: true,
-      value: hangulValue,
-    }),
-  );
 
-  const cleared = prefix + suffix;
-  setInputValue(element, cleared, prefix.length);
-  dispatch(element, "input", {
-    bubbles: true,
-    inputType: "deleteCompositionText",
-    data: null,
-    isComposing: true,
-  });
-  records.push(
-    snapshot(element, "input", {
-      inputType: "deleteCompositionText",
-      data: null,
-      isComposing: true,
-      value: cleared,
-    }),
-  );
-
-  dispatch(element, "beforeinput", {
-    bubbles: true,
-    cancelable: true,
-    inputType: "insertFromComposition",
-    data: hangul,
-    isComposing: true,
-  });
-  records.push(
-    snapshot(element, "beforeinput", {
-      inputType: "insertFromComposition",
-      data: hangul,
-      isComposing: true,
-      value: cleared,
-    }),
-  );
-
-  setInputValue(element, hangulValue, prefix.length + hangul.length);
-  dispatch(element, "input", {
-    bubbles: true,
-    inputType: "insertFromComposition",
-    data: hangul,
-    isComposing: true,
-  });
-  records.push(
-    snapshot(element, "input", {
-      inputType: "insertFromComposition",
-      data: hangul,
-      isComposing: true,
-      value: hangulValue,
-    }),
-  );
-
-  dispatch(element, "compositionstart", { bubbles: true, data: hangul });
-  records.push(snapshot(element, "compositionstart", { data: hangul, value: hangulValue }));
+  trace.compositionStart(hangul, hangulValue);
 
   const replaced = prefix + hanja + suffix;
-  applyPreedit(element, hanja, replaced, records, prefix.length + hanja.length);
+  applyPreedit(trace, hanja, replaced, prefix.length + hanja.length);
 
   setImeSession(element, {
     composing: true,

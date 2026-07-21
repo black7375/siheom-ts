@@ -1,112 +1,73 @@
-import type { ComposedEventRecord } from "./types";
 import { applyPreedit } from "./applyPreedit";
-import { dispatch, pushCompositionStart, setInputValue, snapshot } from "./events";
+import { setInputValue } from "./events";
+import type { ImeTrace } from "./imeTrace";
 
 /** Safari composition: commit a syllable via deleteCompositionText + insertFromComposition. */
-export function commitSafariSyllable(
-  element: HTMLInputElement | HTMLTextAreaElement,
-  syllable: string,
-  committedValue: string,
-  records: ComposedEventRecord[],
-) {
-  applyPreedit(element, syllable, committedValue, records, committedValue.length);
-  commitSafariSyllableCore(element, syllable, committedValue, records);
+export function commitSafariSyllable(trace: ImeTrace, syllable: string, committedValue: string) {
+  applyPreedit(trace, syllable, committedValue, committedValue.length);
+  commitSafariSyllableCore(trace, syllable, committedValue);
 }
+
+export type CommitSafariInsertOptions = {
+  /** Caret after clearing composition text (default: end of cleared value). */
+  clearedCaret?: number;
+  /** Caret after re-inserting (default: end of committedValue). */
+  finalCaret?: number;
+};
 
 /** deleteCompositionText + insertFromComposition (no compositionend). */
 export function commitSafariInsertFromComposition(
-  element: HTMLInputElement | HTMLTextAreaElement,
+  trace: ImeTrace,
   syllable: string,
   committedValue: string,
-  records: ComposedEventRecord[],
+  options: CommitSafariInsertOptions = {},
 ) {
-  dispatch(element, "beforeinput", {
-    bubbles: true,
-    cancelable: true,
-    inputType: "deleteCompositionText",
-    data: null,
-    isComposing: true,
-  });
-  records.push(
-    snapshot(element, "beforeinput", {
-      inputType: "deleteCompositionText",
-      data: null,
-      isComposing: true,
-      value: committedValue,
-    }),
-  );
-
+  const { element } = trace;
   const cleared = committedValue.slice(0, committedValue.length - syllable.length);
-  setInputValue(element, cleared, cleared.length);
-  dispatch(element, "input", {
-    bubbles: true,
+  const clearedCaret = options.clearedCaret ?? cleared.length;
+  const finalCaret = options.finalCaret ?? committedValue.length;
+
+  trace.beforeInput({
     inputType: "deleteCompositionText",
     data: null,
     isComposing: true,
+    value: committedValue,
   });
-  records.push(
-    snapshot(element, "input", {
-      inputType: "deleteCompositionText",
-      data: null,
-      isComposing: true,
-      value: cleared,
-    }),
-  );
 
-  dispatch(element, "beforeinput", {
-    bubbles: true,
-    cancelable: true,
+  setInputValue(element, cleared, clearedCaret);
+  trace.input({
+    inputType: "deleteCompositionText",
+    data: null,
+    isComposing: true,
+    value: cleared,
+  });
+
+  trace.beforeInput({
     inputType: "insertFromComposition",
     data: syllable,
     isComposing: true,
+    value: cleared,
   });
-  records.push(
-    snapshot(element, "beforeinput", {
-      inputType: "insertFromComposition",
-      data: syllable,
-      isComposing: true,
-      value: cleared,
-    }),
-  );
 
-  setInputValue(element, committedValue, committedValue.length);
-  dispatch(element, "input", {
-    bubbles: true,
+  setInputValue(element, committedValue, finalCaret);
+  trace.input({
     inputType: "insertFromComposition",
     data: syllable,
     isComposing: true,
+    value: committedValue,
   });
-  records.push(
-    snapshot(element, "input", {
-      inputType: "insertFromComposition",
-      data: syllable,
-      isComposing: true,
-      value: committedValue,
-    }),
-  );
 }
 
 /** The delete + insertFromComposition + compositionend block, without the preedit echo. */
 export function commitSafariSyllableCore(
-  element: HTMLInputElement | HTMLTextAreaElement,
+  trace: ImeTrace,
   syllable: string,
   committedValue: string,
-  records: ComposedEventRecord[],
 ) {
-  commitSafariInsertFromComposition(element, syllable, committedValue, records);
-
-  dispatch(element, "compositionend", { bubbles: true, data: syllable });
-  records.push(
-    snapshot(element, "compositionend", {
-      data: syllable,
-      value: committedValue,
-    }),
-  );
+  commitSafariInsertFromComposition(trace, syllable, committedValue);
+  trace.compositionEnd(syllable, committedValue);
 }
 
-export function restartSafariComposition(
-  element: HTMLInputElement | HTMLTextAreaElement,
-  records: ComposedEventRecord[],
-) {
-  pushCompositionStart(element, records);
+export function restartSafariComposition(trace: ImeTrace) {
+  trace.compositionStart();
 }

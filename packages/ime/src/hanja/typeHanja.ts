@@ -2,10 +2,9 @@ import {
   applyPreedit,
   clearImeSession,
   commitSafariInsertFromComposition,
-  dispatch,
   getImeSession,
+  ImeTrace,
   setInputValue,
-  snapshot,
   type ComposedEventRecord,
 } from "../_internal";
 import { composeHangul } from "../composeHangul";
@@ -37,30 +36,30 @@ export async function typeHanja(
     );
   }
 
-  const records: ComposedEventRecord[] = [];
+  const trace = new ImeTrace(element);
   const hangulProfile = hangulProfileForConversion(profile);
 
   for (let i = 0; i < hanjaChars.length; i++) {
     const hanjaChar = hanjaChars[i]!;
     const hangulChar = hangulChars[i]!;
 
-    records.push(
-      ...(await composeHangul(element, hangulChar, {
+    trace.append(
+      await composeHangul(element, hangulChar, {
         commitFinal: false,
         profile: hangulProfile,
-      })),
+      }),
     );
-    records.push(
-      ...(await composeHanjaConversion(element, {
+    trace.append(
+      await composeHanjaConversion(element, {
         hangul: hangulChar,
         hanja: hanjaChar,
         profile,
-      })),
+      }),
     );
-    records.push(...confirmHanjaCandidate(element, hangulChar, hanjaChar, profile));
+    confirmHanjaCandidate(trace, hangulChar, hanjaChar, profile);
   }
 
-  return records;
+  return trace.records;
 }
 
 /** Replacement-mode Hangul cannot stay composing for Option+Enter; use composition. */
@@ -75,23 +74,20 @@ function hangulProfileForConversion(profile: ImeProfile): ImeProfile {
  * Replace: OS pulses / Enter / delete+insertFromComposition commit (see Safari golden).
  */
 function confirmHanjaCandidate(
-  element: HTMLInputElement | HTMLTextAreaElement,
+  trace: ImeTrace,
   hangul: string,
   hanja: string,
   profile: ImeProfile,
-): ComposedEventRecord[] {
+): void {
   if (profile.hanjaConversion === "append") {
-    return confirmChromeAppendCandidate(element, hangul, hanja);
+    confirmChromeAppendCandidate(trace, hangul, hanja);
+    return;
   }
-  return confirmSafariReplaceCandidate(element, hangul, hanja);
+  confirmSafariReplaceCandidate(trace, hangul, hanja);
 }
 
-function confirmChromeAppendCandidate(
-  element: HTMLInputElement | HTMLTextAreaElement,
-  hangul: string,
-  hanja: string,
-): ComposedEventRecord[] {
-  const records: ComposedEventRecord[] = [];
+function confirmChromeAppendCandidate(trace: ImeTrace, hangul: string, hanja: string): void {
+  const { element } = trace;
   const session = getImeSession(element);
   const suffix = session?.suffix ?? "";
   const committed = session?.committed ?? "";
@@ -100,46 +96,23 @@ function confirmChromeAppendCandidate(
     : committed;
 
   const appended = element.value;
-  dispatch(element, "keydown", {
-    bubbles: true,
-    cancelable: true,
+  trace.keydown({
     key: "Enter",
     code: "Enter",
     keyCode: 229,
     isComposing: true,
   });
-  records.push(
-    snapshot(element, "keydown", {
-      key: "Enter",
-      code: "Enter",
-      keyCode: 229,
-      isComposing: true,
-      value: appended,
-    }),
-  );
 
-  applyPreedit(
-    element,
-    hanja,
-    appended,
-    records,
-    committedPrefix.length + hangul.length + hanja.length,
-  );
+  applyPreedit(trace, hanja, appended, committedPrefix.length + hangul.length + hanja.length);
 
   const settled = committedPrefix + hanja + suffix;
-  dispatch(element, "compositionend", { bubbles: true, data: hanja });
-  records.push(snapshot(element, "compositionend", { data: hanja, value: element.value }));
+  trace.compositionEnd(hanja);
   setInputValue(element, settled, committedPrefix.length + hanja.length);
   clearImeSession(element);
-  return records;
 }
 
-function confirmSafariReplaceCandidate(
-  element: HTMLInputElement | HTMLTextAreaElement,
-  _hangul: string,
-  hanja: string,
-): ComposedEventRecord[] {
-  const records: ComposedEventRecord[] = [];
+function confirmSafariReplaceCandidate(trace: ImeTrace, _hangul: string, hanja: string): void {
+  const { element } = trace;
   const session = getImeSession(element);
   const suffix = session?.suffix ?? "";
   const committedPrefix =
@@ -147,48 +120,25 @@ function confirmSafariReplaceCandidate(
   const settled = committedPrefix + hanja + suffix;
   const caret = committedPrefix.length + hanja.length;
 
-  applyPreedit(element, hanja, settled, records, caret);
-  applyPreedit(element, hanja, settled, records, caret);
+  applyPreedit(trace, hanja, settled, caret);
+  applyPreedit(trace, hanja, settled, caret);
 
-  dispatch(element, "keydown", {
-    bubbles: true,
-    cancelable: true,
+  trace.keydown({
     key: "Enter",
     code: "Enter",
     keyCode: 229,
     isComposing: true,
   });
-  records.push(
-    snapshot(element, "keydown", {
-      key: "Enter",
-      code: "Enter",
-      keyCode: 229,
-      isComposing: true,
-      value: settled,
-    }),
-  );
 
-  applyPreedit(element, hanja, settled, records, caret);
-  commitSafariInsertFromComposition(element, hanja, settled, records);
+  applyPreedit(trace, hanja, settled, caret);
+  commitSafariInsertFromComposition(trace, hanja, settled);
 
-  dispatch(element, "keydown", {
-    bubbles: true,
-    cancelable: true,
+  trace.keydown({
     key: "Enter",
     code: "Enter",
     keyCode: 229,
     isComposing: false,
   });
-  records.push(
-    snapshot(element, "keydown", {
-      key: "Enter",
-      code: "Enter",
-      keyCode: 229,
-      isComposing: false,
-      value: settled,
-    }),
-  );
 
   clearImeSession(element);
-  return records;
 }

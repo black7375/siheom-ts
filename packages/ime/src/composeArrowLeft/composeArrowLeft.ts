@@ -1,11 +1,5 @@
 import type { ComposedEventRecord } from "../_internal";
-import {
-  confirmAndEndComposition,
-  getImeSession,
-  pushKeydown,
-  pushKeyup,
-  setInputValue,
-} from "../_internal";
+import { confirmAndEndComposition, getImeSession, ImeTrace, setInputValue } from "../_internal";
 
 /**
  * ArrowLeft: if composing, confirm+end composition first (ibus-hangul style), then move caret.
@@ -13,14 +7,14 @@ import {
 export async function composeArrowLeft(
   element: HTMLInputElement | HTMLTextAreaElement,
 ): Promise<ComposedEventRecord[]> {
-  const records: ComposedEventRecord[] = [];
+  const trace = new ImeTrace(element);
   const session = getImeSession(element);
 
   if (session?.composing) {
-    confirmAndEndComposition(element, records);
+    confirmAndEndComposition(trace);
   }
 
-  pushKeydown(element, records, {
+  trace.keydown({
     key: "ArrowLeft",
     code: "ArrowLeft",
     keyCode: 37,
@@ -32,12 +26,12 @@ export async function composeArrowLeft(
     setInputValue(element, element.value, pos - 1);
   }
 
-  pushKeyup(element, records, {
+  trace.keyup({
     key: "ArrowLeft",
     code: "ArrowLeft",
     keyCode: 37,
     isComposing: false,
   });
 
-  return records;
+  return trace.records;
 }

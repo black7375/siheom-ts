@@ -7,9 +7,7 @@ import {
   commitSafariSyllableCore,
   hangulKeydownFields,
   hangulKeyupFields,
-  pushCompositionStart,
-  pushKeydown,
-  pushKeyup,
+  ImeTrace,
   readMaxLength,
   rejectSafariCompositionOverflow,
   rejectSafariReplacementOverflow,
@@ -40,12 +38,8 @@ async function settleAfterPreedit(settle: "microtask" | "macrotask") {
   });
 }
 
-function confirmSyllable(
-  element: HTMLInputElement | HTMLTextAreaElement,
-  syllable: string,
-  records: ComposedEventRecord[],
-) {
-  applyReplacementText(element, syllable, element.value, records, "insertReplacementText");
+function confirmSyllable(trace: ImeTrace, syllable: string) {
+  applyReplacementText(trace, syllable, trace.element.value, "insertReplacementText");
 }
 
 /** macOS Safari Apple: insertText / insertReplacementText + jamo keydown (no composition). */
@@ -57,7 +51,7 @@ export async function composeHangulSafariReplacement(
   options: Pick<ComposeHangulOptions, "settle">,
 ): Promise<ComposedEventRecord[]> {
   const { settle = "microtask" } = options;
-  const records: ComposedEventRecord[] = [];
+  const trace = new ImeTrace(element);
 
   for (let strokeIndex = 0; strokeIndex < strokes.length; strokeIndex++) {
     const stroke = strokes[strokeIndex];
@@ -72,19 +66,18 @@ export async function composeHangulSafariReplacement(
       const previousValue = element.value;
 
       applyReplacementText(
-        element,
+        trace,
         preedit,
         value,
-        records,
         replacementInputType(previousValue, value, preedit),
         caret,
       );
 
-      pushKeydown(element, records, {
+      trace.keydown({
         ...hangulKeydownFields(profile, stroke),
         isComposing: false,
       });
-      pushKeyup(element, records, {
+      trace.keyup({
         ...hangulKeyupFields(profile, stroke, false),
       });
 
@@ -92,30 +85,30 @@ export async function composeHangulSafariReplacement(
     }
 
     if (shouldConfirmAfterStroke(strokes, strokeIndex) && finalPreedit) {
-      confirmSyllable(element, finalPreedit, records);
+      confirmSyllable(trace, finalPreedit);
     }
   }
 
-  return records;
+  return trace.records;
 }
 
 /** macOS Safari Apple composition order: update → input → keydown (fixed delayed-update captures). */
 async function playStrokeSafariComposition(
-  element: HTMLInputElement | HTMLTextAreaElement,
+  trace: ImeTrace,
   stroke: HangulKeyStroke,
   suffix: string,
-  records: ComposedEventRecord[],
   profile: ImeProfile,
   settle: "microtask" | "macrotask",
   deferredUpdateRace: boolean,
 ): Promise<
   { status: "aborted-deferred"; step: number } | { status: "maxlength-reject" } | { status: "ok" }
 > {
+  const { element } = trace;
   const carets = stroke.valuesAfterSteps.map((value) => value.length - suffix.length);
   const limit = readMaxLength(element);
 
   if (stroke.compositionStart) {
-    pushCompositionStart(element, records);
+    trace.compositionStart();
   }
 
   for (let i = 0; i < stroke.preeditSteps.length; i++) {
@@ -124,7 +117,7 @@ async function playStrokeSafariComposition(
     const caret = carets[i] ?? value.length - suffix.length;
 
     updateImeSessionForPreedit(element, preedit, value, caret, suffix);
-    applyPreedit(element, preedit, value, records, caret);
+    applyPreedit(trace, preedit, value, caret);
 
     if (limit !== null && value.length > limit) {
       // Overflow keystroke: Safari fires the keydown, then either the host
@@ -132,37 +125,37 @@ async function playStrokeSafariComposition(
       const clamped = value.slice(0, limit);
       const hostClamped = element.value === clamped;
 
-      pushKeydown(element, records, {
+      trace.keydown({
         ...hangulKeydownFields(profile, stroke),
         isComposing: !hostClamped,
       });
-      pushKeyup(element, records, {
+      trace.keyup({
         ...hangulKeyupFields(profile, stroke, !hostClamped),
       });
 
       if (hostClamped) {
         // Composition died with the clamp: restart, echo the preedit, then empty insertText.
-        pushCompositionStart(element, records);
-        applyPreedit(element, preedit, clamped, records, clamped.length);
-        rejectSafariReplacementOverflow(element, records);
+        trace.compositionStart();
+        applyPreedit(trace, preedit, clamped, clamped.length);
+        rejectSafariReplacementOverflow(trace);
       } else {
-        rejectSafariCompositionOverflow(element, preedit, value, records);
+        rejectSafariCompositionOverflow(trace, preedit, value);
       }
       clearImeSession(element);
       return { status: "maxlength-reject" };
     }
 
     if (i === 0 && stroke.commitAfterFirstStep !== undefined) {
-      commitSafariSyllableCore(element, stroke.commitAfterFirstStep, element.value, records);
-      pushCompositionStart(element, records);
+      commitSafariSyllableCore(trace, stroke.commitAfterFirstStep, element.value);
+      trace.compositionStart();
     }
   }
 
-  pushKeydown(element, records, {
+  trace.keydown({
     ...hangulKeydownFields(profile, stroke),
     isComposing: true,
   });
-  pushKeyup(element, records, {
+  trace.keyup({
     ...hangulKeyupFields(profile, stroke, true),
   });
 
@@ -185,20 +178,21 @@ async function playStrokeSafariComposition(
 
 /** Safari broken deferred-update: append preedit onto stale DOM value (OS capture). */
 async function playSafariDeferredBroken(
-  element: HTMLInputElement | HTMLTextAreaElement,
+  trace: ImeTrace,
   strokes: HangulKeyStroke[],
   startIndex: number,
   startStep: number,
   suffix: string,
   profile: ImeProfile,
-  records: ComposedEventRecord[],
   settle: "microtask" | "macrotask",
 ) {
+  const { element } = trace;
+
   for (let strokeIndex = startIndex; strokeIndex < strokes.length; strokeIndex++) {
     const stroke = strokes[strokeIndex];
     if (!stroke) continue;
 
-    pushCompositionStart(element, records);
+    trace.compositionStart();
     const firstStep = strokeIndex === startIndex ? startStep : 0;
 
     for (let step = firstStep; step < stroke.preeditSteps.length; step++) {
@@ -208,12 +202,12 @@ async function playSafariDeferredBroken(
       }
       const appended = element.value + preedit;
       const value = appended + suffix;
-      applyPreedit(element, preedit, value, records, appended.length);
-      pushKeydown(element, records, {
+      applyPreedit(trace, preedit, value, appended.length);
+      trace.keydown({
         ...hangulKeydownFields(profile, stroke),
         isComposing: false,
       });
-      pushKeyup(element, records, {
+      trace.keyup({
         ...hangulKeyupFields(profile, stroke, false),
       });
       await settleAfterPreedit(settle);
@@ -229,17 +223,16 @@ export async function composeHangulSafariComposition(
   options: Pick<ComposeHangulOptions, "commitFinal" | "settle" | "deferredUpdateRace">,
 ): Promise<ComposedEventRecord[]> {
   const { settle = "macrotask", deferredUpdateRace = false } = options;
-  const records: ComposedEventRecord[] = [];
+  const trace = new ImeTrace(element);
 
   for (let index = 0; index < strokes.length; index++) {
     const stroke = strokes[index];
     if (!stroke) continue;
 
     const result = await playStrokeSafariComposition(
-      element,
+      trace,
       stroke,
       suffix,
-      records,
       profile,
       settle ?? "macrotask",
       deferredUpdateRace ?? false,
@@ -247,31 +240,30 @@ export async function composeHangulSafariComposition(
 
     if (result.status === "aborted-deferred") {
       await playSafariDeferredBroken(
-        element,
+        trace,
         strokes,
         index,
         result.step,
         suffix,
         profile,
-        records,
         settle ?? "macrotask",
       );
-      return records;
+      return trace.records;
     }
 
     if (result.status === "maxlength-reject") {
-      return records;
+      return trace.records;
     }
 
     const finalPreedit = stroke.preeditSteps[stroke.preeditSteps.length - 1] ?? "";
     const finalValue = stroke.valuesAfterSteps[stroke.valuesAfterSteps.length - 1] ?? element.value;
     if (shouldConfirmAfterStroke(strokes, index) && finalPreedit) {
-      commitSafariSyllable(element, finalPreedit, finalValue, records);
+      commitSafariSyllable(trace, finalPreedit, finalValue);
       if (index < strokes.length - 1) {
-        restartSafariComposition(element, records);
+        restartSafariComposition(trace);
       }
     }
   }
 
-  return records;
+  return trace.records;
 }

@@ -5,13 +5,10 @@ import type { ComposedEventRecord } from "../_internal";
 import {
   applyPreedit,
   clearImeSession,
-  dispatch,
   getImeSession,
-  pushKeydown,
-  pushKeyup,
+  ImeTrace,
   setImeSession,
   setInputValue,
-  snapshot,
 } from "../_internal";
 
 function shrinkPreedit(preedit: string): string {
@@ -26,11 +23,11 @@ function shrinkPreedit(preedit: string): string {
 export async function composeBackspace(
   element: HTMLInputElement | HTMLTextAreaElement,
 ): Promise<ComposedEventRecord[]> {
-  const records: ComposedEventRecord[] = [];
+  const trace = new ImeTrace(element);
   const session = getImeSession(element);
 
   if (session?.composing) {
-    pushKeydown(element, records, {
+    trace.keydown({
       key: "Process",
       code: "Backspace",
       keyCode: 229,
@@ -41,55 +38,45 @@ export async function composeBackspace(
     const caret = session.committed.length + nextPreedit.length;
     const value = session.committed + nextPreedit + session.suffix;
 
-    applyPreedit(element, nextPreedit, value, records, caret);
+    applyPreedit(trace, nextPreedit, value, caret);
 
     if (nextPreedit === "") {
-      dispatch(element, "compositionend", { bubbles: true, data: "" });
-      records.push(snapshot(element, "compositionend", { data: "", value }));
+      trace.compositionEnd("", value);
       clearImeSession(element);
       setInputValue(element, value, caret);
 
-      pushKeyup(element, records, {
+      trace.keyup({
         key: "Backspace",
         code: "Backspace",
         keyCode: 8,
         isComposing: false,
       });
-      return records;
+      return trace.records;
     }
 
     setImeSession(element, { ...session, preedit: nextPreedit });
 
-    pushKeyup(element, records, {
+    trace.keyup({
       key: "Backspace",
       code: "Backspace",
       keyCode: 8,
       isComposing: true,
     });
-    return records;
+    return trace.records;
   }
 
-  pushKeydown(element, records, {
+  trace.keydown({
     key: "Backspace",
     code: "Backspace",
     keyCode: 8,
     isComposing: false,
   });
 
-  dispatch(element, "beforeinput", {
-    bubbles: true,
-    cancelable: true,
+  trace.beforeInput({
     inputType: "deleteContentBackward",
     data: null,
     isComposing: false,
   });
-  records.push(
-    snapshot(element, "beforeinput", {
-      inputType: "deleteContentBackward",
-      data: null,
-      isComposing: false,
-    }),
-  );
 
   const start = element.selectionStart ?? element.value.length;
   const end = element.selectionEnd ?? element.value.length;
@@ -104,27 +91,19 @@ export async function composeBackspace(
   }
   setInputValue(element, nextValue, nextCaret);
 
-  dispatch(element, "input", {
-    bubbles: true,
+  trace.input({
     inputType: "deleteContentBackward",
     data: null,
     isComposing: false,
+    value: nextValue,
   });
-  records.push(
-    snapshot(element, "input", {
-      inputType: "deleteContentBackward",
-      data: null,
-      isComposing: false,
-      value: nextValue,
-    }),
-  );
 
-  pushKeyup(element, records, {
+  trace.keyup({
     key: "Backspace",
     code: "Backspace",
     keyCode: 8,
     isComposing: false,
   });
 
-  return records;
+  return trace.records;
 }

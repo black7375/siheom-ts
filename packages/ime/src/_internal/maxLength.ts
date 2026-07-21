@@ -1,5 +1,5 @@
-import type { ComposedEventRecord } from "./types";
-import { dispatch, setInputValue, snapshot } from "./events";
+import { setInputValue } from "./events";
+import type { ImeTrace } from "./imeTrace";
 import { clearImeSession, getImeSession, setImeSession } from "./session";
 
 export function readMaxLength(element: HTMLInputElement | HTMLTextAreaElement): number | null {
@@ -13,207 +13,110 @@ function clampValue(value: string, limit: number): string {
 
 /** Chrome / Linux composition: reject overflow with empty input data then compositionend. */
 export function rejectChromeCompositionOverflow(
-  element: HTMLInputElement | HTMLTextAreaElement,
+  trace: ImeTrace,
   preedit: string,
   overflowValue: string,
-  records: ComposedEventRecord[],
 ) {
+  const { element } = trace;
   const limit = readMaxLength(element);
   if (limit === null) return;
 
   const clamped = clampValue(overflowValue, limit);
 
-  dispatch(element, "compositionupdate", { bubbles: true, data: preedit, cancelable: true });
-  records.push(snapshot(element, "compositionupdate", { data: preedit, value: overflowValue }));
-
-  dispatch(element, "beforeinput", {
-    bubbles: true,
-    cancelable: true,
+  trace.compositionUpdate(preedit, overflowValue);
+  trace.beforeInput({
     inputType: "insertCompositionText",
     data: preedit,
     isComposing: true,
+    value: overflowValue,
   });
-  records.push(
-    snapshot(element, "beforeinput", {
-      inputType: "insertCompositionText",
-      data: preedit,
-      isComposing: true,
-      value: overflowValue,
-    }),
-  );
 
   setInputValue(element, clamped, clamped.length);
-  dispatch(element, "input", {
-    bubbles: true,
+  trace.input({
     inputType: "insertCompositionText",
     data: "",
     isComposing: true,
+    value: clamped,
   });
-  records.push(
-    snapshot(element, "input", {
-      inputType: "insertCompositionText",
-      data: "",
-      isComposing: true,
-      value: clamped,
-    }),
-  );
 
-  dispatch(element, "compositionend", { bubbles: true, data: preedit });
-  records.push(snapshot(element, "compositionend", { data: preedit, value: clamped }));
+  trace.compositionEnd(preedit, clamped);
   clearImeSession(element);
 }
 
 /** Safari composition: deleteCompositionText + insertFromComposition("") + compositionend. */
 export function rejectSafariCompositionOverflow(
-  element: HTMLInputElement | HTMLTextAreaElement,
+  trace: ImeTrace,
   preedit: string,
   overflowValue: string,
-  records: ComposedEventRecord[],
 ) {
+  const { element } = trace;
   const limit = readMaxLength(element);
   if (limit === null) return;
 
   const clamped = clampValue(overflowValue, limit);
 
-  dispatch(element, "compositionupdate", { bubbles: true, data: preedit, cancelable: true });
-  records.push(snapshot(element, "compositionupdate", { data: preedit, value: overflowValue }));
-
-  dispatch(element, "beforeinput", {
-    bubbles: true,
-    cancelable: true,
+  trace.compositionUpdate(preedit, overflowValue);
+  trace.beforeInput({
     inputType: "insertCompositionText",
     data: preedit,
     isComposing: true,
+    value: overflowValue,
   });
-  records.push(
-    snapshot(element, "beforeinput", {
-      inputType: "insertCompositionText",
-      data: preedit,
-      isComposing: true,
-      value: overflowValue,
-    }),
-  );
-
-  dispatch(element, "input", {
-    bubbles: true,
+  trace.input({
     inputType: "insertCompositionText",
     data: preedit,
     isComposing: true,
+    value: overflowValue,
   });
-  records.push(
-    snapshot(element, "input", {
-      inputType: "insertCompositionText",
-      data: preedit,
-      isComposing: true,
-      value: overflowValue,
-    }),
-  );
 
-  dispatch(element, "beforeinput", {
-    bubbles: true,
-    cancelable: true,
+  trace.beforeInput({
     inputType: "deleteCompositionText",
     data: null,
     isComposing: true,
+    value: overflowValue,
   });
-  records.push(
-    snapshot(element, "beforeinput", {
-      inputType: "deleteCompositionText",
-      data: null,
-      isComposing: true,
-      value: overflowValue,
-    }),
-  );
 
   setInputValue(element, clamped, clamped.length);
-  dispatch(element, "input", {
-    bubbles: true,
+  trace.input({
     inputType: "deleteCompositionText",
     data: null,
     isComposing: true,
+    value: clamped,
   });
-  records.push(
-    snapshot(element, "input", {
-      inputType: "deleteCompositionText",
-      data: null,
-      isComposing: true,
-      value: clamped,
-    }),
-  );
 
-  dispatch(element, "beforeinput", {
-    bubbles: true,
-    cancelable: true,
+  trace.beforeInput({
     inputType: "insertFromComposition",
     data: "",
     isComposing: true,
+    value: clamped,
   });
-  records.push(
-    snapshot(element, "beforeinput", {
-      inputType: "insertFromComposition",
-      data: "",
-      isComposing: true,
-      value: clamped,
-    }),
-  );
-
-  dispatch(element, "input", {
-    bubbles: true,
+  trace.input({
     inputType: "insertFromComposition",
     data: "",
     isComposing: true,
+    value: clamped,
   });
-  records.push(
-    snapshot(element, "input", {
-      inputType: "insertFromComposition",
-      data: "",
-      isComposing: true,
-      value: clamped,
-    }),
-  );
 
-  dispatch(element, "compositionend", { bubbles: true, data: preedit });
-  records.push(snapshot(element, "compositionend", { data: preedit, value: clamped }));
+  trace.compositionEnd(preedit, clamped);
   clearImeSession(element);
 }
 
 /** Safari replacement: reject overflow with empty insertText. */
-export function rejectSafariReplacementOverflow(
-  element: HTMLInputElement | HTMLTextAreaElement,
-  records: ComposedEventRecord[],
-) {
-  const value = element.value;
+export function rejectSafariReplacementOverflow(trace: ImeTrace) {
+  const value = trace.element.value;
 
-  dispatch(element, "beforeinput", {
-    bubbles: true,
-    cancelable: true,
+  trace.beforeInput({
     inputType: "insertText",
     data: "",
     isComposing: false,
+    value,
   });
-  records.push(
-    snapshot(element, "beforeinput", {
-      inputType: "insertText",
-      data: "",
-      isComposing: false,
-      value,
-    }),
-  );
-
-  dispatch(element, "input", {
-    bubbles: true,
+  trace.input({
     inputType: "insertText",
     data: "",
     isComposing: false,
+    value,
   });
-  records.push(
-    snapshot(element, "input", {
-      inputType: "insertText",
-      data: "",
-      isComposing: false,
-      value,
-    }),
-  );
 }
 
 export function markPendingMaxLengthReject(

@@ -1,5 +1,5 @@
 import type { ComposedEventRecord } from "../_internal";
-import { confirmAndEndComposition, getImeSession, pushKeydown, pushKeyup } from "../_internal";
+import { confirmAndEndComposition, getImeSession, ImeTrace } from "../_internal";
 import type { ImeProfile } from "../profiles";
 
 /**
@@ -10,35 +10,35 @@ export async function composeEnter(
   element: HTMLInputElement | HTMLTextAreaElement,
   profile: ImeProfile,
 ): Promise<ComposedEventRecord[]> {
-  const records: ComposedEventRecord[] = [];
+  const trace = new ImeTrace(element);
   const session = getImeSession(element);
 
   if (!session?.composing) {
-    pushKeydown(element, records, {
+    trace.keydown({
       key: "Enter",
       code: "Enter",
       keyCode: 13,
       isComposing: false,
     });
-    pushKeyup(element, records, {
+    trace.keyup({
       key: "Enter",
       code: "Enter",
       keyCode: 13,
       isComposing: false,
     });
-    return records;
+    return trace.records;
   }
 
   switch (profile.enterDuringComposition) {
     case "webkit": {
-      confirmAndEndComposition(element, records);
-      pushKeydown(element, records, {
+      confirmAndEndComposition(trace);
+      trace.keydown({
         key: "Enter",
         code: "Enter",
         keyCode: 13,
         isComposing: false,
       });
-      pushKeyup(element, records, {
+      trace.keyup({
         key: "Enter",
         code: "Enter",
         keyCode: 13,
@@ -47,14 +47,14 @@ export async function composeEnter(
       break;
     }
     case "chromium": {
-      pushKeydown(element, records, {
+      trace.keydown({
         key: "Process",
         code: "Enter",
         keyCode: 229,
         isComposing: true,
       });
-      confirmAndEndComposition(element, records);
-      pushKeyup(element, records, {
+      confirmAndEndComposition(trace);
+      trace.keyup({
         key: "Enter",
         code: "Enter",
         keyCode: 13,
@@ -63,20 +63,20 @@ export async function composeEnter(
       break;
     }
     case "chromium-duplicate": {
-      pushKeydown(element, records, {
+      trace.keydown({
         key: "Process",
         code: "Enter",
         keyCode: 229,
         isComposing: true,
       });
-      confirmAndEndComposition(element, records);
-      pushKeydown(element, records, {
+      confirmAndEndComposition(trace);
+      trace.keydown({
         key: "Enter",
         code: "Enter",
         keyCode: 13,
         isComposing: false,
       });
-      pushKeyup(element, records, {
+      trace.keyup({
         key: "Enter",
         code: "Enter",
         keyCode: 13,
@@ -85,26 +85,26 @@ export async function composeEnter(
       break;
     }
     case "chromium-apple": {
-      pushKeydown(element, records, {
+      trace.keydown({
         key: "Enter",
         code: "Enter",
         keyCode: 229,
         isComposing: true,
       });
-      confirmAndEndComposition(element, records);
-      pushKeyup(element, records, {
+      confirmAndEndComposition(trace);
+      trace.keyup({
         key: "Enter",
         code: "Enter",
         keyCode: 13,
         isComposing: false,
       });
-      pushKeydown(element, records, {
+      trace.keydown({
         key: "Enter",
         code: "Enter",
         keyCode: 13,
         isComposing: false,
       });
-      pushKeyup(element, records, {
+      trace.keyup({
         key: "Enter",
         code: "Enter",
         keyCode: 13,
@@ -114,5 +114,5 @@ export async function composeEnter(
     }
   }
 
-  return records;
+  return trace.records;
 }

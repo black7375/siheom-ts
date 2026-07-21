@@ -1,5 +1,5 @@
-import type { ComposedEventRecord } from "./types";
-import { dispatch, setInputValue, snapshot } from "./events";
+import { setInputValue } from "./events";
+import type { ImeTrace } from "./imeTrace";
 
 export type ReplacementInputType = "insertText" | "insertReplacementText";
 
@@ -23,42 +23,26 @@ export function replacementInputType(
 
 /** Safari Apple IME: beforeinput → input without composition events. */
 export function applyReplacementText(
-  element: HTMLInputElement | HTMLTextAreaElement,
+  trace: ImeTrace,
   data: string,
   value: string,
-  records: ComposedEventRecord[],
   inputType: ReplacementInputType,
   caret: number = value.length,
 ) {
-  dispatch(element, "beforeinput", {
-    bubbles: true,
-    cancelable: true,
+  const { element } = trace;
+
+  trace.beforeInput({
     inputType,
     data,
     isComposing: false,
+    value: element.value,
   });
-  records.push(
-    snapshot(element, "beforeinput", {
-      inputType,
-      data,
-      isComposing: false,
-      value: element.value,
-    }),
-  );
 
   setInputValue(element, value, caret);
-  dispatch(element, "input", {
-    bubbles: true,
+  trace.input({
     inputType,
     data,
     isComposing: false,
+    value,
   });
-  records.push(
-    snapshot(element, "input", {
-      inputType,
-      data,
-      isComposing: false,
-      value,
-    }),
-  );
 }
