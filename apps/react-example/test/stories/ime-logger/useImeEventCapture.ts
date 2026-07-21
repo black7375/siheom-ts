@@ -11,7 +11,7 @@ import {
 } from "./serializeImeEvent";
 import { useImeLoggerMeta } from "./useImeLoggerMeta";
 
-export type UseImeEventCaptureOptions = {
+export type UseImeEventCaptureOptions<T extends HTMLElement = HTMLElement> = {
   scenarioId: string;
   /** Filename stem after profileId; default uses scenarioId. */
   downloadStem?: string;
@@ -23,7 +23,7 @@ export type UseImeEventCaptureOptions = {
   /** Extra deps that remount effect-based listeners (e.g. mode). */
   listenerDeps?: unknown[];
   /** Customize clearing the input node; default clears `.value` or `textContent`. */
-  clearField?: (input: HTMLElement | null) => void;
+  clearField?: (input: T | null) => void;
 };
 
 function defaultClearField(input: HTMLElement | null) {
@@ -35,18 +35,18 @@ function defaultClearField(input: HTMLElement | null) {
   }
 }
 
-export function useImeEventCapture({
+export function useImeEventCapture<T extends HTMLElement = HTMLElement>({
   scenarioId,
   downloadStem,
   attachment = "effect",
   listenerDeps = [],
-  clearField = defaultClearField,
-}: UseImeEventCaptureOptions) {
+  clearField = defaultClearField as (input: T | null) => void,
+}: UseImeEventCaptureOptions<T>) {
   const { os, browser, ime, setOs, setBrowser, setIme } = useImeLoggerMeta();
   const [events, setEvents] = useState<ImeEventRecord[]>([]);
   const [fieldValue, setFieldValue] = useState("");
   const [status, setStatus] = useState("");
-  const inputRef = useRef<HTMLElement>(null);
+  const inputRef = useRef<T>(null);
   const listenersCleanupRef = useRef<(() => void) | null>(null);
 
   const profileId = useMemo(() => profileIdFromMeta(os, browser, ime), [os, browser, ime]);
@@ -58,7 +58,7 @@ export function useImeEventCapture({
   }, []);
 
   const bindListeners = useCallback(
-    (node: HTMLElement) => {
+    (node: T) => {
       for (const type of LOGGED_EVENT_TYPES) {
         node.addEventListener(type, appendEvent);
       }
@@ -72,7 +72,7 @@ export function useImeEventCapture({
   );
 
   const attachInputRef = useCallback(
-    (node: HTMLElement | null) => {
+    (node: T | null) => {
       listenersCleanupRef.current?.();
       listenersCleanupRef.current = null;
       inputRef.current = node;

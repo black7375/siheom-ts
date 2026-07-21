@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-import { ImeCaptureShell } from "../../ime-logger/ImeCaptureShell";
+import { ImeCaptureShellInput } from "../../ime-logger/ImeCaptureShell";
 import { ModeToolbar, clearWithInputEvent } from "../shared/imeBugLoggerChrome";
 import { HanjaAutocompleteField, type HanjaAutocompleteFieldProps } from "./HanjaAutocompleteField";
 import { CAPTURE_SCENARIOS } from "./scenarios";
@@ -20,7 +20,7 @@ export function HanjaAutocompleteFieldLogger() {
   const [mode, setMode] = useState<NonNullable<HanjaAutocompleteFieldProps["mode"]>>("broken");
 
   return (
-    <ImeCaptureShell
+    <ImeCaptureShellInput
       title="Hanja autocomplete conflict (IME bug)"
       description={
         <>
@@ -76,6 +76,6 @@ export function HanjaAutocompleteFieldLogger() {
           onValueChange={setFieldValue}
         />
       )}
-    </ImeCaptureShell>
+    </ImeCaptureShellInput>
   );
 }

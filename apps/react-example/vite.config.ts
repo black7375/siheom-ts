@@ -32,6 +32,7 @@ export default defineConfig({
 			"lexical",
 			"@lexical/react/LexicalComposer",
 			"@lexical/react/LexicalContentEditable",
+			"@lexical/react/LexicalErrorBoundary",
 			"@lexical/react/LexicalPlainTextPlugin",
 			"@lexical/react/LexicalHistoryPlugin",
 		],

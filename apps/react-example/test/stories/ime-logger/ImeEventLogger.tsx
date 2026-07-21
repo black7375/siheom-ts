@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 
-import { ImeCaptureShell } from "./ImeCaptureShell";
+import { ImeCaptureShellInput } from "./ImeCaptureShell";
 import { CAPTURE_SCENARIOS, getCaptureScenario, type CaptureScenario } from "./scenarios";
 
 const DEFAULT_SCENARIO = CAPTURE_SCENARIOS[0] as CaptureScenario;
@@ -14,7 +14,7 @@ export function ImeEventLogger() {
   const scenario = getCaptureScenario(scenarioId) ?? DEFAULT_SCENARIO;
 
   return (
-    <ImeCaptureShell
+    <ImeCaptureShellInput
       title="IME Event Logger"
       description={
         <>
@@ -96,6 +96,6 @@ export function ImeEventLogger() {
           />
         </div>
       )}
-    </ImeCaptureShell>
+    </ImeCaptureShellInput>
   );
 }

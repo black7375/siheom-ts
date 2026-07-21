@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-import { ImeCaptureShell } from "../../ime-logger/ImeCaptureShell";
+import { ImeCaptureShellInput } from "../../ime-logger/ImeCaptureShell";
 import { CaptureInstructions, ModeToolbar } from "../shared/imeBugLoggerChrome";
 import { SearchField, type SearchFieldProps } from "./SearchField";
 
@@ -13,7 +13,7 @@ export function SearchFieldLogger() {
   const scenarioId = `enter-submit-${mode}`;
 
   return (
-    <ImeCaptureShell
+    <ImeCaptureShellInput
       title="Enter-submit SearchField (IME bug)"
       description={
         <>
@@ -59,6 +59,6 @@ export function SearchFieldLogger() {
           </p>
         </>
       )}
-    </ImeCaptureShell>
+    </ImeCaptureShellInput>
   );
 }

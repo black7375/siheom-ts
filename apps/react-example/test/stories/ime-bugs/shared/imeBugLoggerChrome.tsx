@@ -53,8 +53,8 @@ export function CaptureInstructions({
   );
 }
 
-export function clearWithInputEvent(input: HTMLInputElement | null) {
-  if (!input) return;
+export function clearWithInputEvent(input: HTMLElement | null) {
+  if (!(input instanceof HTMLInputElement)) return;
   input.value = "";
   input.dispatchEvent(new Event("input", { bubbles: true }));
 }

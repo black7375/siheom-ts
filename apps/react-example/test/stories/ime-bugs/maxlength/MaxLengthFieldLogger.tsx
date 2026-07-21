@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-import { ImeCaptureShell } from "../../ime-logger/ImeCaptureShell";
+import { ImeCaptureShellInput } from "../../ime-logger/ImeCaptureShell";
 import { CaptureInstructions, ModeToolbar } from "../shared/imeBugLoggerChrome";
 import { MaxLengthField, type MaxLengthFieldProps } from "./MaxLengthField";
 
@@ -14,7 +14,7 @@ export function MaxLengthFieldLogger() {
   const scenarioId = `maxlength-${mode}-${maxLength}`;
 
   return (
-    <ImeCaptureShell
+    <ImeCaptureShellInput
       title="MaxLength Field (IME bug)"
       description={
         <>
@@ -79,6 +79,6 @@ export function MaxLengthFieldLogger() {
           </p>
         </>
       )}
-    </ImeCaptureShell>
+    </ImeCaptureShellInput>
   );
 }
