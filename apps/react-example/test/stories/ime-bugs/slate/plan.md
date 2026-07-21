@@ -36,4 +36,6 @@
 - [x] `SlatePlaceholderHangulFixPlugin` + `SlateLogger` broken/fixed ModeToolbar
 - [x] `SlateLogger.ime.test`: fixed + `android-chrome-slate-placeholder-broken` → `가`
 - [x] `SlateLogger.ime.test`: fixed mode Linux placeholder baseline 회귀 없음
-- [ ] Real device: Android Firefox fixed mode capture (emulator Slate mount fidelity gap)
+- [x] Composition debug tooling (`SlateCompositionDebugPlugin`, `readSlateCompositionSnapshot`, `SlateLogger.ime.debug.test.tsx`)
+- [ ] AF continuous `가나다` fix: unit-level + device (emulator Slate mount stays empty — see `DEBUG.md`)
+- [ ] Real device: Android Firefox fixed mode re-capture after fix (no explosion)

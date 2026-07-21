@@ -18,6 +18,19 @@ describe("fixSlatePlaceholderHangulText", () => {
   it("returns null when visible text already matches composed syllable", () => {
     expect(fixSlatePlaceholderHangulText("가", "가")).toBeNull();
     expect(fixSlatePlaceholderHangulText("가", "ㄱㅏ")).toBeNull();
+    expect(fixSlatePlaceholderHangulText("가", "가ㄴ")).toBeNull();
+  });
+
+  it("dedupes android-firefox preedit prefix duplication (가가ㄴ + composition 가ㄴ → 가ㄴ)", () => {
+    expect(fixSlatePlaceholderHangulText("가가ㄴ", "가ㄴ")).toBe("가ㄴ");
+  });
+
+  it("dedupes android-firefox concatenated preedit append explosion", () => {
+    expect(fixSlatePlaceholderHangulText("가가ㄴ가가ㄴㅏ", "가가ㄴㅏ", "가")).toBe("가나");
+  });
+
+  it("merges committed 가 with preedit 가ㄴ → 가ㄴ", () => {
+    expect(fixSlatePlaceholderHangulText("가가ㄴ", "가ㄴ", "가")).toBe("가ㄴ");
   });
 
   it("returns null for unrelated text", () => {

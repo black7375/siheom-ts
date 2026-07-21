@@ -7,7 +7,9 @@ import "./slate-custom-types";
 import { ImeCaptureShell } from "../../ime-logger/ImeCaptureShell";
 import { CaptureInstructions, ModeToolbar } from "../shared/imeBugLoggerChrome";
 import { CaptureTargetToolbar, type SlateCaptureTarget } from "./CaptureTargetToolbar";
+import { SlateCompositionDebugPlugin } from "./SlateCompositionDebugPlugin";
 import { SlatePlaceholderHangulFixPlugin } from "./SlatePlaceholderHangulFixPlugin";
+import type { SlateCompositionDebugLog } from "./slateCompositionDebugLog";
 
 const EMPTY_VALUE: Descendant[] = [{ type: "paragraph", children: [{ text: "" }] }];
 
@@ -25,12 +27,15 @@ export type SlateLoggerProps = {
   captureTarget?: SlateCaptureTarget;
   /** Optional: receive mounted field (tests). */
   editorRef?: MutableRefObject<HTMLElement | null>;
+  /** Optional: record DOM + fix-plugin flow (tests / Storybook debugging). */
+  debugLog?: SlateCompositionDebugLog;
 };
 
 export function SlateLogger({
   mode: modeProp,
   captureTarget: captureTargetProp,
   editorRef,
+  debugLog,
 }: SlateLoggerProps = {}) {
   const [mode, setMode] = useState<SlateLoggerMode>(modeProp ?? "broken");
   const effectiveMode = modeProp ?? mode;
@@ -112,8 +117,19 @@ export function SlateLogger({
               role="textbox"
               placeholder="여기에 입력…"
             />
+            {debugLog ? (
+              <SlateCompositionDebugPlugin
+                log={debugLog}
+                editable={slateEditable}
+                label={effectiveMode}
+              />
+            ) : null}
             {effectiveMode === "fixed" ? (
-              <SlatePlaceholderHangulFixPlugin enabled editable={slateEditable} />
+              <SlatePlaceholderHangulFixPlugin
+                enabled
+                editable={slateEditable}
+                debugLog={debugLog}
+              />
             ) : null}
           </Slate>
         )

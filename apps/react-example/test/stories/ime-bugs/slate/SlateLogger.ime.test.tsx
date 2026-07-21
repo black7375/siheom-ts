@@ -18,6 +18,7 @@ function runWithSlateIme(
     | "android-chrome-slate-placeholder-broken"
     | "android-chrome-slate-plain-control"
     | "android-firefox-slate-placeholder-broken"
+    | "android-firefox-slate-placeholder-fixed"
     | "android-firefox-slate-plain-control"
     | "linux-chrome-slate-placeholder-fixed"
     | "linux-firefox-slate-placeholder-fixed"
@@ -147,6 +148,27 @@ describe("SlateLogger + linux-chrome-slate-placeholder-fixed IME", () => {
     await waitFor(() => {
       expect(editorRef.current).not.toBeNull();
       expect(readSlatePlainText(editorRef.current!)).toBe("가");
+    });
+  });
+});
+
+describe("SlateLogger + android-firefox-slate-placeholder-fixed IME", () => {
+  it("fixed mode: typing 가나다 composes intact 가나다 without preedit explosion", async () => {
+    const editorRef: { current: HTMLElement | null } = { current: null };
+    const { runSiheom, actions, given } = runWithSlateIme(
+      "android-firefox-slate-placeholder-fixed",
+    );
+
+    await runSiheom(
+      given.render(
+        <SlateLogger mode="fixed" captureTarget="slate-placeholder" editorRef={editorRef} />,
+      ),
+      actions.type(query.textbox("Slate editor"), "가나다"),
+    );
+
+    await waitFor(() => {
+      expect(editorRef.current).not.toBeNull();
+      expect(readSlatePlainText(editorRef.current!)).toBe("가나다");
     });
   });
 });
