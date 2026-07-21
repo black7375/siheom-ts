@@ -1,10 +1,5 @@
 import type { ComposedEventRecord } from "../_internal";
-import {
-  getImeSession,
-  ImeTrace,
-  playEventPlan,
-  readMaxLength,
-} from "../_internal";
+import { getImeSession, ImeTrace, playEventPlan, readMaxLength } from "../_internal";
 import { planBackspace } from "./planBackspace";
 
 /**

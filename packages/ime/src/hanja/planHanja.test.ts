@@ -26,9 +26,7 @@ describe("planHanjaConversion", () => {
       facts: { valueBefore: "김", maxLength: null },
     });
     expect(
-      steps.some(
-        (s) => s.kind === "beforeinput" && s.fields.inputType === "insertFromComposition",
-      ),
+      steps.some((s) => s.kind === "beforeinput" && s.fields.inputType === "insertFromComposition"),
     ).toBe(true);
   });
 });

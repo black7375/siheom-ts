@@ -187,7 +187,8 @@ export function planHangulKeystrokes(
 
 /** Append `suffix` to each planned value without mutating the input strokes. */
 export function withSuffix(strokes: HangulKeyStroke[], suffix: string): HangulKeyStroke[] {
-  if (!suffix) return strokes.map((stroke) => ({ ...stroke, valuesAfterSteps: [...stroke.valuesAfterSteps] }));
+  if (!suffix)
+    return strokes.map((stroke) => ({ ...stroke, valuesAfterSteps: [...stroke.valuesAfterSteps] }));
   return strokes.map((stroke) => ({
     ...stroke,
     valuesAfterSteps: stroke.valuesAfterSteps.map((value) => value + suffix),

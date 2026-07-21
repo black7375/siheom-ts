@@ -47,14 +47,13 @@ describe("decideStrokeStepOutcome", () => {
 
 describe("decideSafariOverflow", () => {
   it("returns null under limit", () => {
-    expect(
-      decideSafariOverflow({ maxLength: 3, plannedValue: "김", domValue: "김" }),
-    ).toBeNull();
+    expect(decideSafariOverflow({ maxLength: 3, plannedValue: "김", domValue: "김" })).toBeNull();
   });
 
   it("detects host clamp", () => {
-    expect(
-      decideSafariOverflow({ maxLength: 1, plannedValue: "가나", domValue: "가" }),
-    ).toEqual({ hostClamped: true, clamped: "가" });
+    expect(decideSafariOverflow({ maxLength: 1, plannedValue: "가나", domValue: "가" })).toEqual({
+      hostClamped: true,
+      clamped: "가",
+    });
   });
 });

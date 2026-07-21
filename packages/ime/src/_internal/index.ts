@@ -6,10 +6,7 @@ export { dispatch, setInputValue, snapshot, type KeyEventFields } from "./events
 export { ImeTrace, type InputEventFields } from "./imeTrace";
 export { playEventPlan, type EventPlanStep } from "./eventPlan";
 export { planPreedit, type PlanPreeditFacts } from "./planPreedit";
-export {
-  planConfirmAndEndComposition,
-  type PlanConfirmFacts,
-} from "./planConfirmComposition";
+export { planConfirmAndEndComposition, type PlanConfirmFacts } from "./planConfirmComposition";
 export {
   planSafariInsertFromComposition,
   planSafariSyllableCommit,
@@ -23,8 +20,5 @@ export {
   planSafariReplacementOverflow,
   planReplacementText,
 } from "./planMaxLength";
-export {
-  replacementInputType,
-  type ReplacementInputType,
-} from "./replacementInputType";
+export { replacementInputType, type ReplacementInputType } from "./replacementInputType";
 export { readMaxLength, takePendingMaxLengthReject } from "./maxLength";

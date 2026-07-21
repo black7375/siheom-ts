@@ -125,11 +125,7 @@ async function playStrokeRespectingBlur(
     if (limit !== null && element.value.length > limit) {
       playEventPlan(
         trace,
-        planChromePendingOverflowReject(
-          pendingReject.preedit,
-          pendingReject.overflowValue,
-          limit,
-        ),
+        planChromePendingOverflowReject(pendingReject.preedit, pendingReject.overflowValue, limit),
       );
     }
     return "maxlength-reject";

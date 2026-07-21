@@ -1,10 +1,11 @@
 import { describe, expect, it } from "vitest";
 
+import { planChromeCompositionOverflow, planSafariCompositionOverflow } from "./planMaxLength";
 import {
-  planChromeCompositionOverflow,
-  planSafariCompositionOverflow,
-} from "./planMaxLength";
-import { planSafariInsertFromComposition, planSafariSyllableCommit, planRestartSafariComposition } from "./planSafari";
+  planSafariInsertFromComposition,
+  planSafariSyllableCommit,
+  planRestartSafariComposition,
+} from "./planSafari";
 import { replacementInputType } from "./replacementInputType";
 
 describe("planChromeCompositionOverflow", () => {
@@ -53,9 +54,7 @@ describe("planSafariSyllableCommit", () => {
     });
     expect(steps.some((s) => s.kind === "compositionupdate")).toBe(true);
     expect(
-      steps.some(
-        (s) => s.kind === "beforeinput" && s.fields.inputType === "deleteCompositionText",
-      ),
+      steps.some((s) => s.kind === "beforeinput" && s.fields.inputType === "deleteCompositionText"),
     ).toBe(true);
     expect(steps.at(-1)).toMatchObject({ kind: "compositionend", data: "김" });
   });
