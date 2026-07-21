@@ -38,15 +38,24 @@ export type CompositionIntent =
   | { kind: "update"; data: string }
   | { kind: "commit"; data: string };
 
-function placeCaretAtEnd(node: Text): void {
-  const doc = node.ownerDocument;
+/**
+ * Where the composition begins — the DOM selection at `compositionstart`. The browser paints
+ * the composing text into this region; whatever the editor SELECTS here is what gets replaced.
+ * A collapsed caret after committed `가` → the preedit is appended (`가가나`); a range that spans
+ * `가` (what a single-composition fix would keep) → the preedit replaces it (`가나`). So reading
+ * the real selection is what makes the writeback fix-sensitive.
+ */
+function captureCompositionRange(element: HTMLElement): Range {
+  const doc = element.ownerDocument;
   const selection = doc.getSelection();
-  if (!selection) return;
+  if (selection && selection.rangeCount > 0 && element.contains(selection.anchorNode)) {
+    return selection.getRangeAt(0).cloneRange();
+  }
+  // No usable selection (e.g. empty placeholder) → collapse at end of the editor content.
   const range = doc.createRange();
-  range.setStart(node, node.data.length);
-  range.collapse(true);
-  selection.removeAllRanges();
-  selection.addRange(range);
+  range.selectNodeContents(element);
+  range.collapse(false);
+  return range;
 }
 
 export async function composeHangulAndroidFirefoxSlateNativeComposition(
@@ -56,31 +65,41 @@ export async function composeHangulAndroidFirefoxSlateNativeComposition(
   const trace = new ContentEditableImeTrace(element);
   element.focus();
 
+  const doc = element.ownerDocument;
   const visibleTimeline: NativeCompositionStep[] = [];
   let stepIndex = 0;
-  // The browser's single composing text node, sitting after the committed content.
-  let composingNode: Text | null = null;
+  // The live composition region the "browser" owns; updates replace its contents in place.
+  let compositionRange: Range | null = null;
 
   for (const intent of intents) {
     if (intent.kind === "start") {
       trace.keydown({ key: "Process", code: "", keyCode: 229, isComposing: readEditableText(element) !== "" });
       trace.compositionStart("");
-      composingNode = null;
+      compositionRange = captureCompositionRange(element);
       continue;
     }
 
     if (intent.kind === "update") {
       trace.compositionUpdate(intent.data);
       trace.beforeInput({ inputType: "insertCompositionText", data: intent.data, isComposing: true });
-      // Browser native paint: replace the composing node's text (cumulative preedit) in place,
-      // after the committed content — no mid-composition reconcile (device holds the value).
-      if (!composingNode || !composingNode.isConnected) {
-        composingNode = element.ownerDocument.createTextNode(intent.data);
-        element.appendChild(composingNode);
-      } else {
-        composingNode.data = intent.data;
+      // Browser native paint: replace the composition region's contents with the cumulative
+      // preedit. The region = wherever the editor's selection was at compositionstart, so a fix
+      // that spans the committed syllable makes this a clean replace instead of an append.
+      const range: Range = compositionRange ?? captureCompositionRange(element);
+      range.deleteContents();
+      const node = doc.createTextNode(intent.data);
+      range.insertNode(node);
+      // Region now spans the freshly painted text; next update replaces it.
+      range.selectNodeContents(node);
+      compositionRange = range;
+      const selection = doc.getSelection();
+      if (selection) {
+        const caret = doc.createRange();
+        caret.setStart(node, node.data.length);
+        caret.collapse(true);
+        selection.removeAllRanges();
+        selection.addRange(caret);
       }
-      placeCaretAtEnd(composingNode);
       visibleTimeline.push({ index: stepIndex, phase: "native-paint", value: readEditableText(element) });
       trace.input({ inputType: "insertCompositionText", data: intent.data, isComposing: true });
       stepIndex++;
@@ -91,7 +110,7 @@ export async function composeHangulAndroidFirefoxSlateNativeComposition(
     trace.compositionEnd(intent.data);
     await settleAfterPreedit("macrotask");
     visibleTimeline.push({ index: stepIndex - 1, phase: "reconcile", value: readEditableText(element) });
-    composingNode = null;
+    compositionRange = null;
   }
 
   return { records: trace.records, visibleTimeline, final: readEditableText(element) };
