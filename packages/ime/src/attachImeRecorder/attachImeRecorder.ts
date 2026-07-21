@@ -1,4 +1,5 @@
 import type { ComposedEventRecord } from "../_internal";
+import { readEditableText } from "../_internal/editableElement";
 
 const IME_EVENT_TYPES = [
   "keydown",
@@ -11,10 +12,7 @@ const IME_EVENT_TYPES = [
   "input",
 ] as const;
 
-function snapshotFromDom(
-  element: HTMLInputElement | HTMLTextAreaElement,
-  event: Event,
-): ComposedEventRecord {
+function snapshotFromDom(element: HTMLElement, event: Event): ComposedEventRecord {
   const keyboard = event as KeyboardEvent;
   const composition = event as CompositionEvent;
   const input = event as InputEvent;
@@ -33,12 +31,12 @@ function snapshotFromDom(
       event.type.startsWith("composition") || event.type === "beforeinput" || event.type === "input"
         ? ((composition.data ?? input.data ?? null) as string | null)
         : null,
-    value: element.value,
+    value: readEditableText(element),
   };
 }
 
 /** Attach listeners that record IME-relevant DOM events (logger-compatible shape). */
-export function attachImeRecorder(element: HTMLInputElement | HTMLTextAreaElement): {
+export function attachImeRecorder(element: HTMLElement): {
   events: ComposedEventRecord[];
   detach: () => void;
 } {

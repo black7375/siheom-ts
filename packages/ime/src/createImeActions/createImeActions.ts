@@ -5,8 +5,12 @@ import { composeArrowLeft } from "../composeArrowLeft";
 import { composeBackspace } from "../composeBackspace";
 import { composeEnter } from "../composeEnter";
 import { composeHangul, type ComposeHangulOptions } from "../composeHangul";
+import { composeHangulContentEditableFirefoxBrokenOn } from "../composeHangul/composeHangulContentEditableFirefoxBroken";
+import { composeHangulContentEditableFirefoxFixedOn } from "../composeHangul/composeHangulContentEditableFirefoxFixed";
+import { composeHangulContentEditableAndroidFirefoxFixedOn } from "../composeHangul/composeHangulContentEditableAndroidFirefoxFixed";
 import { planTypeImeSteps } from "../planTypeImeSteps";
 import { resolveProfile, type ImeProfile } from "../profiles";
+import { isContentEditableComposeTarget } from "../_internal/editableElement";
 import { isEditable, withPresentElement } from "../withPresentElement";
 
 export type CreateImeActionsOptions = {
@@ -61,6 +65,59 @@ async function typeImeText(
   profile: ImeProfile,
   composeOptions: Pick<ComposeHangulOptions, "settle" | "deferredUpdateRace">,
 ): Promise<void> {
+  if (
+    profile.hangulComposeMode === "contenteditable-firefox-broken" &&
+    isContentEditableComposeTarget(element)
+  ) {
+    for (const step of planTypeImeSteps(text)) {
+      if (step.kind === "hangul") {
+        await composeHangulContentEditableFirefoxBrokenOn(element, step.text, {
+          commitFinal: step.commitFinal,
+        });
+      } else if (isEditable(element)) {
+        await typeKeySegment(user, element, step.text, profile);
+      } else {
+        await user.type(element, step.text);
+      }
+    }
+    return;
+  }
+
+  if (
+    profile.hangulComposeMode === "contenteditable-firefox-fixed" &&
+    isContentEditableComposeTarget(element)
+  ) {
+    for (const step of planTypeImeSteps(text)) {
+      if (step.kind === "hangul") {
+        await composeHangulContentEditableFirefoxFixedOn(element, step.text, {
+          commitFinal: step.commitFinal,
+          profile,
+        });
+      } else if (isEditable(element)) {
+        await typeKeySegment(user, element, step.text, profile);
+      } else {
+        await user.type(element, step.text);
+      }
+    }
+    return;
+  }
+
+  if (
+    profile.hangulComposeMode === "contenteditable-firefox-af-fixed" &&
+    isContentEditableComposeTarget(element)
+  ) {
+    for (const step of planTypeImeSteps(text)) {
+      if (step.kind === "hangul") {
+        await composeHangulContentEditableAndroidFirefoxFixedOn(element, step.text);
+      } else if (isEditable(element)) {
+        await typeKeySegment(user, element, step.text, profile);
+      } else {
+        await user.type(element, step.text);
+      }
+    }
+    return;
+  }
+
   if (!isEditable(element)) {
     await user.type(element, text);
     return;

@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-import { ImeCaptureShell } from "../../ime-logger/ImeCaptureShell";
+import { ImeCaptureShellInput } from "../../ime-logger/ImeCaptureShell";
 import { CaptureInstructions, ModeToolbar } from "../shared/imeBugLoggerChrome";
 import { DelayedControlledField, type DelayedControlledFieldProps } from "./DelayedControlledField";
 
@@ -13,7 +13,7 @@ export function DelayedControlledFieldLogger() {
   const scenarioId = `delayed-update-${mode}`;
 
   return (
-    <ImeCaptureShell
+    <ImeCaptureShellInput
       title="Delayed controlled update (IME bug)"
       description={
         <>
@@ -68,6 +68,6 @@ export function DelayedControlledFieldLogger() {
           </p>
         </>
       )}
-    </ImeCaptureShell>
+    </ImeCaptureShellInput>
   );
 }

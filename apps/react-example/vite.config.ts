@@ -24,7 +24,18 @@ export default defineConfig({
 		},
 	},
 	optimizeDeps: {
-		include: ["react-aria-components", "@ariakit/react", "@ark-ui/react", "recharts"],
+		include: [
+			"react-aria-components",
+			"@ariakit/react",
+			"@ark-ui/react",
+			"recharts",
+			"lexical",
+			"@lexical/react/LexicalComposer",
+			"@lexical/react/LexicalContentEditable",
+			"@lexical/react/LexicalErrorBoundary",
+			"@lexical/react/LexicalPlainTextPlugin",
+			"@lexical/react/LexicalHistoryPlugin",
+		],
 	},
 	test: {
 		alias: {

@@ -18,7 +18,13 @@ export type HangulComposeMode =
   /** insertText / insertReplacementText without composition (Safari Apple) */
   | "replacement"
   /** composition with input before keydown (Safari Apple delayed-update fixed) */
-  | "safari-composition";
+  | "safari-composition"
+  /** Firefox contenteditable broken: premature end after first jamo, then jamo-chain preedit */
+  | "contenteditable-firefox-broken"
+  /** Firefox contenteditable fixed: syllable-boundary commits with deferred compositionend */
+  | "contenteditable-firefox-fixed"
+  /** AF post-fix v2 golden replay (Lexical plugin on; visible 가나다 on plain input) */
+  | "contenteditable-firefox-af-fixed";
 
 /**
  * How Hangul→Hanja candidate conversion applies the chosen Hanja to the field.
@@ -141,6 +147,27 @@ function registerBuiltins() {
     hangulComposeMode: "composition",
     hanjaConversion: "replace",
     hangulCompositionBoundary: "run",
+  });
+  registerProfile({
+    id: "android-firefox-contenteditable-broken",
+    enterDuringComposition: "webkit",
+    hangulKeyEventKey: "process",
+    hangulComposeMode: "contenteditable-firefox-broken",
+    hanjaConversion: "replace",
+  });
+  registerProfile({
+    id: "linux-firefox-contenteditable-fixed",
+    enterDuringComposition: "webkit",
+    hangulKeyEventKey: "process",
+    hangulComposeMode: "contenteditable-firefox-fixed",
+    hanjaConversion: "replace",
+  });
+  registerProfile({
+    id: "android-firefox-contenteditable-fixed",
+    enterDuringComposition: "webkit",
+    hangulKeyEventKey: "process",
+    hangulComposeMode: "contenteditable-firefox-af-fixed",
+    hanjaConversion: "replace",
   });
 }
 

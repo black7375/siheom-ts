@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-import { ImeCaptureShell } from "../../ime-logger/ImeCaptureShell";
+import { ImeCaptureShellInput } from "../../ime-logger/ImeCaptureShell";
 import {
   CaptureInstructions,
   ModeToolbar,
@@ -21,7 +21,7 @@ export function FocusStealComboboxLogger() {
   const [mode, setMode] = useState<NonNullable<FocusStealComboboxProps["mode"]>>("broken");
 
   return (
-    <ImeCaptureShell
+    <ImeCaptureShellInput
       title="Focus-steal Combobox (IME bug)"
       description={
         <>
@@ -75,6 +75,6 @@ export function FocusStealComboboxLogger() {
           onValueChange={setFieldValue}
         />
       )}
-    </ImeCaptureShell>
+    </ImeCaptureShellInput>
   );
 }

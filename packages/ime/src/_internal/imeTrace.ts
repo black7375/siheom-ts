@@ -75,18 +75,21 @@ export class ImeTrace {
     init: KeyEventFields,
     options: { cancelable?: boolean } = {},
   ): void {
+    const { recordValue, cancelable, ...keyboardInit } = init;
     const fields = {
-      key: init.key,
-      code: init.code,
-      keyCode: init.keyCode,
-      isComposing: init.isComposing,
+      key: keyboardInit.key,
+      code: keyboardInit.code,
+      keyCode: keyboardInit.keyCode,
+      isComposing: keyboardInit.isComposing,
+      ...(recordValue !== undefined ? { value: recordValue } : {}),
     };
     this.emit(
       type,
       {
         bubbles: true,
         ...(options.cancelable !== undefined ? { cancelable: options.cancelable } : {}),
-        ...fields,
+        ...(cancelable !== undefined ? { cancelable } : {}),
+        ...keyboardInit,
       },
       fields,
     );
@@ -135,3 +138,15 @@ export class ImeTrace {
     );
   }
 }
+
+export type ImeTraceEmitter = Pick<
+  ImeTrace,
+  | "records"
+  | "keydown"
+  | "keyup"
+  | "compositionStart"
+  | "compositionUpdate"
+  | "compositionEnd"
+  | "beforeInput"
+  | "input"
+>;

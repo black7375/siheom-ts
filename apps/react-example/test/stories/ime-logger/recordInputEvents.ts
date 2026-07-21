@@ -15,6 +15,9 @@ export function readEditableValue(target: EventTarget | null): string {
   if (target instanceof HTMLInputElement || target instanceof HTMLTextAreaElement) {
     return target.value;
   }
+  if (target instanceof HTMLElement && target.isContentEditable) {
+    return target.textContent ?? "";
+  }
   return "";
 }
 

@@ -4,6 +4,7 @@ export { planHangulKeystrokes, withSuffix } from "./planHangulKeystrokes";
 export type { HangulKeyStroke } from "./planHangulKeystrokes";
 export { composeHangul } from "./composeHangul";
 export type { ComposedEventRecord, ComposeHangulOptions } from "./composeHangul";
+export { composeHangulContentEditableFirefoxFixedOn } from "./composeHangul/composeHangulContentEditableFirefoxFixed";
 export { composeBackspace } from "./composeBackspace";
 export { composeArrowLeft } from "./composeArrowLeft";
 export { composeEnter } from "./composeEnter";
@@ -12,7 +13,7 @@ export type { TypeSegment } from "./segmentTypeText";
 export { planTypeImeSteps } from "./planTypeImeSteps";
 export type { TypeImeStep } from "./planTypeImeSteps";
 export { isEditable, withPresentElement } from "./withPresentElement";
-export type { ResolveElementMode } from "./withPresentElement";
+export { isContentEditableComposeTarget, readEditableText } from "./_internal/editableElement";
 export { createImeActions } from "./createImeActions";
 export type { CreateImeActionsOptions, ImeActions } from "./createImeActions";
 export {
@@ -32,6 +33,8 @@ export type {
 export { attachImeRecorder } from "./attachImeRecorder";
 export { goldenCritical, fromFirstCompositionStart } from "./goldenCritical";
 export { toCriticalEvents } from "./toCriticalEvents";
+export { replayGoldenEvents } from "./replayGoldenEvents";
+export type { ReplayGoldenEventsOptions } from "./replayGoldenEvents";
 export {
   markImeControlledWriteback,
   consumeImeControlledWriteback,

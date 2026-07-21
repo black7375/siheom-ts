@@ -7,20 +7,22 @@ import { Label } from "@/components/ui/label";
 import { formatImeTraceJson } from "./serializeImeEvent";
 import { useImeEventCapture, type UseImeEventCaptureOptions } from "./useImeEventCapture";
 
-export type ImeCaptureApi = ReturnType<typeof useImeEventCapture>;
+export type ImeCaptureApi<T extends HTMLElement = HTMLElement> = ReturnType<
+  typeof useImeEventCapture<T>
+>;
 
-export type ImeCaptureShellProps = {
+export type ImeCaptureShellProps<T extends HTMLElement = HTMLElement> = {
   title: string;
   description: ReactNode;
   scenarioId: string;
   downloadStem?: string;
-  attachment?: UseImeEventCaptureOptions["attachment"];
-  listenerDeps?: UseImeEventCaptureOptions["listenerDeps"];
-  clearField?: UseImeEventCaptureOptions["clearField"];
+  attachment?: UseImeEventCaptureOptions<T>["attachment"];
+  listenerDeps?: UseImeEventCaptureOptions<T>["listenerDeps"];
+  clearField?: UseImeEventCaptureOptions<T>["clearField"];
   /** Above meta (scenario picker, instructions, mode toolbar). */
-  beforeField?: (capture: ImeCaptureApi) => ReactNode;
+  beforeField?: (capture: ImeCaptureApi<T>) => ReactNode;
   /** Demo field. */
-  children: (capture: ImeCaptureApi) => ReactNode;
+  children: (capture: ImeCaptureApi<T>) => ReactNode;
   /** Extra bits after the scenarioId segment (e.g. mode). */
   profileExtra?: ReactNode;
   emptyLogMessage?: string;
@@ -32,7 +34,7 @@ export type ImeCaptureShellProps = {
  * Shared IME OS-capture chrome: meta fields, copy/download/clear, event log.
  * Demo-specific UI goes in `beforeField` and `children`.
  */
-export function ImeCaptureShell({
+export function ImeCaptureShell<T extends HTMLElement = HTMLElement>({
   title,
   description,
   scenarioId,
@@ -45,8 +47,8 @@ export function ImeCaptureShell({
   profileExtra,
   emptyLogMessage = "아직 이벤트가 없습니다. 시나리오를 고른 뒤 IME로 타이핑하세요.",
   scenarioLabel,
-}: ImeCaptureShellProps) {
-  const capture = useImeEventCapture({
+}: ImeCaptureShellProps<T>) {
+  const capture = useImeEventCapture<T>({
     scenarioId,
     downloadStem,
     attachment,
@@ -162,3 +164,6 @@ export function ImeCaptureShell({
     </div>
   );
 }
+
+/** Pre-bound generic alias for input-based capture shells (JSX cannot close `</Tag<T>>`). */
+export const ImeCaptureShellInput = ImeCaptureShell<HTMLInputElement>;
