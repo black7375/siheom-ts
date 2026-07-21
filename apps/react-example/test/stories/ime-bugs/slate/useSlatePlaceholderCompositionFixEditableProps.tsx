@@ -1,12 +1,15 @@
-import { useCallback, useEffect, useMemo } from "react";
+import { useCallback, useEffect, useMemo, useRef } from "react";
 import type { Editor } from "slate";
 import { Editor as SlateEditor, Transforms } from "slate";
 import type { RenderPlaceholderProps } from "slate-react";
+import { IS_ANDROID } from "slate-dom";
 
 import {
   attachSlatePlaceholderCompositionFix,
-  compositionPreeditCorrection,
+  dedupeDoubledSyllableCommit,
+  documentFromCommittedPreedit,
   hideOfficialPlaceholderElement,
+  noteCompositionEndForGuard,
   placeholderStyleWhileComposing,
   readSlateVisibleText,
   shouldSkipDuplicateCompositionInsert,
@@ -15,21 +18,27 @@ import {
 import { readSlatePlainText } from "./readSlatePlainText";
 import { replaceSlateEditorPlainText } from "./replaceSlateEditorPlainText";
 
+const ANDROID_IM_FLUSH_MS = 400;
+const JAMO = /^[\u3131-\u3163]+$/;
+
 /**
- * Slate #5989 / AF explosion mechanism patch — keeps official `placeholder` prop.
+ * Slate #5989 / AF explosion — keeps official `placeholder` prop.
  *
- * - Hide placeholder visually while IS_COMPOSING (Android never flips React isComposing)
- * - Skip force-re-render from MutationObserver during composition
- * - Block duplicate composition inserts + Firefox deferred document re-insert
+ * Android: drive the document from `committed + IME preedit` during composition
+ * instead of Slate Android IM concat (device explosion captures).
  */
 export function useSlatePlaceholderCompositionFixEditableProps(
   editor: Editor | undefined,
   editable: HTMLElement | null,
 ) {
+  const committedHangulRef = useRef("");
+  const compositionEndDataRef = useRef<string | null>(null);
+
   useEffect(() => {
     if (!editor) {
       return;
     }
+    committedHangulRef.current = "";
     return attachSlatePlaceholderCompositionFix(editor);
   }, [editor]);
 
@@ -67,6 +76,36 @@ export function useSlatePlaceholderCompositionFixEditableProps(
     Transforms.select(editor, start);
   }, [editor]);
 
+  const syncCommittedFromEditor = useCallback(() => {
+    if (!editor) {
+      return;
+    }
+    committedHangulRef.current = readSlateVisibleText(editor);
+  }, [editor]);
+
+  const onCompositionEnd = useCallback(
+    (event: React.CompositionEvent) => {
+      if (!editor) {
+        return;
+      }
+
+      compositionEndDataRef.current = event.data;
+      noteCompositionEndForGuard(editor);
+
+      window.setTimeout(() => {
+        const endData = compositionEndDataRef.current;
+        let visible = readSlateVisibleText(editor);
+        const deduped = dedupeDoubledSyllableCommit(visible, endData);
+        if (deduped) {
+          replaceSlateEditorPlainText(editor, deduped);
+          visible = deduped;
+        }
+        committedHangulRef.current = visible;
+      }, ANDROID_IM_FLUSH_MS);
+    },
+    [editor],
+  );
+
   const onDOMBeforeInput = useCallback(
     (event: InputEvent) => {
       if (!editor) {
@@ -74,12 +113,6 @@ export function useSlatePlaceholderCompositionFixEditableProps(
       }
 
       const domText = readSlatePlainText(editable);
-      const corrected = compositionPreeditCorrection(domText, event.data);
-      if (corrected) {
-        replaceSlateEditorPlainText(editor, corrected);
-        event.preventDefault();
-        return;
-      }
 
       if (
         shouldSkipDuplicateCompositionInsert(domText, event.data, event.inputType) ||
@@ -90,9 +123,32 @@ export function useSlatePlaceholderCompositionFixEditableProps(
         )
       ) {
         event.preventDefault();
+        return;
+      }
+
+      if (
+        IS_ANDROID &&
+        event.isComposing &&
+        event.inputType === "insertCompositionText" &&
+        event.data
+      ) {
+        const next = documentFromCommittedPreedit(committedHangulRef.current, event.data);
+        replaceSlateEditorPlainText(editor, next);
+        event.preventDefault();
+        return;
+      }
+
+      if (
+        IS_ANDROID &&
+        !event.isComposing &&
+        event.inputType === "insertCompositionText" &&
+        event.data
+      ) {
+        syncCommittedFromEditor();
+        event.preventDefault();
       }
     },
-    [editable, editor],
+    [editable, editor, syncCommittedFromEditor],
   );
 
   return useMemo(
@@ -101,9 +157,10 @@ export function useSlatePlaceholderCompositionFixEditableProps(
         ? {
             renderPlaceholder,
             onCompositionStart,
+            onCompositionEnd,
             onDOMBeforeInput,
           }
         : {},
-    [editor, onCompositionStart, onDOMBeforeInput, renderPlaceholder],
+    [editor, onCompositionEnd, onCompositionStart, onDOMBeforeInput, renderPlaceholder],
   );
 }

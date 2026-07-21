@@ -15,6 +15,10 @@ type GuardedForceRender = (() => void) & {
 const JAMO = /^[\u3131-\u3163]+$/;
 const HANGUL_SYLLABLE = /^[\uAC00-\uD7A3]$/;
 
+/** Slate Android IM flushes shortly after compositionend — keep guarding force-render. */
+const COMPOSITION_COOLDOWN_MS = 600;
+const lastCompositionEndAt = new WeakMap<Editor, number>();
+
 /** IME preedit `data` → intended visible syllable (when jamo or syllable). */
 export function syllableFromCompositionData(data: string): string | null {
   if (!data) {
@@ -29,9 +33,35 @@ export function syllableFromCompositionData(data: string): string | null {
   return null;
 }
 
+export function noteCompositionEndForGuard(editor: Editor): void {
+  lastCompositionEndAt.set(editor, Date.now());
+}
+
+function isInCompositionCooldown(editor: Editor): boolean {
+  const at = lastCompositionEndAt.get(editor);
+  return at !== undefined && Date.now() - at < COMPOSITION_COOLDOWN_MS;
+}
+
+/** Document text during an active composition session (committed prefix + live preedit). */
+export function documentFromCommittedPreedit(committed: string, compositionData: string): string {
+  if (JAMO.test(compositionData)) {
+    if (compositionData.length === 1) {
+      return committed + compositionData;
+    }
+    return committed + assemble([...compositionData]);
+  }
+
+  const syllable = syllableFromCompositionData(compositionData);
+  if (syllable) {
+    return committed + syllable;
+  }
+
+  return committed + compositionData;
+}
+
 /**
- * When Slate placeholder + Android leaves broken visible text but IME `data` is the
- * intended syllable, trust composition `data` (not post-hoc guessing).
+ * Trust IME `data` when visible text is broken (jamo split) — used by unit tests / legacy.
+ * Runtime Android path uses {@link documentFromCommittedPreedit} instead.
  */
 export function compositionPreeditCorrection(
   visible: string,
@@ -51,13 +81,40 @@ export function compositionPreeditCorrection(
     return null;
   }
 
-  // Ignore explosion-scale `data` (whole document echoed back).
+  // Explosion-scale `data` echoes the document — never apply.
   if (compositionData.length > target.length + 4 && compositionData.includes(normalized)) {
     return null;
   }
 
-  if (normalized.length <= target.length + 2) {
+  // AC #5989: jamo-only broken visible while IME preedit is the syllable.
+  if (JAMO.test(normalized)) {
     return target;
+  }
+
+  // AF device: editor still holds previous syllables while `data` is fresh preedit.
+  if (normalized.length > compositionData.length && normalized.includes(compositionData)) {
+    return target;
+  }
+
+  return null;
+}
+
+/** After compositionend flush duplicates syllable (`가` → `가가`). */
+export function dedupeDoubledSyllableCommit(
+  visible: string,
+  compositionEndData: string | null | undefined,
+): string | null {
+  if (!IS_ANDROID || !compositionEndData) {
+    return null;
+  }
+
+  const syllable = syllableFromCompositionData(compositionEndData) ?? compositionEndData;
+  if (!syllable) {
+    return null;
+  }
+
+  if (visible === syllable + syllable) {
+    return syllable;
   }
 
   return null;
@@ -90,7 +147,7 @@ export function placeholderStyleWhileComposing(
 
 /**
  * Firefox deferred `insertCompositionText` after compositionend can re-insert the
- * whole document and cause exponential growth (AF explosion captures).
+ * syllable or the whole document (AF explosion captures).
  */
 export function shouldSkipFirefoxDeferredCompositionInput(
   slateText: string,
@@ -110,7 +167,12 @@ export function shouldSkipFirefoxDeferredCompositionInput(
     return true;
   }
 
-  if (data.length > visible.length + 2 && data.includes(visible)) {
+  // Device: `가` → `가가`, `간` → `간간` on deferred commit after compositionend.
+  if (visible.startsWith(data) && visible.length > data.length && visible.length <= data.length * 2 + 2) {
+    return true;
+  }
+
+  if (data.length > visible.length && data.includes(visible)) {
     return true;
   }
 
@@ -135,6 +197,28 @@ export function shouldSkipDuplicateCompositionInsert(
   return true;
 }
 
+/**
+ * While composing, skip Slate accepting an insert that would concatenate stale
+ * document text with fresh preedit (`가나` + old `간간` → `가나간간`).
+ */
+export function shouldSkipStaleDocumentCompositionInsert(
+  visible: string,
+  data: string | null | undefined,
+  inputType: string,
+  isComposing: boolean,
+): boolean {
+  if (!isComposing || inputType !== "insertCompositionText" || !data) {
+    return false;
+  }
+
+  const normalized = stripInvisible(visible);
+  if (normalized.length > data.length + 1 && normalized.includes(data) && data.length <= 8) {
+    return true;
+  }
+
+  return false;
+}
+
 function installForceRenderGuard(editor: Editor): void {
   const current = EDITOR_TO_FORCE_RENDER.get(editor) as GuardedForceRender | undefined;
   if (!current || current.__slateImeGuard) {
@@ -142,7 +226,7 @@ function installForceRenderGuard(editor: Editor): void {
   }
 
   const guarded: GuardedForceRender = () => {
-    if (isActivelyComposing(editor)) {
+    if (isActivelyComposing(editor) || isInCompositionCooldown(editor)) {
       return;
     }
     current();

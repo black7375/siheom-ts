@@ -23,7 +23,8 @@ Profile: `android-chrome-slate-placeholder-broken` / `-plain-control`
 | `broken-가-placeholder.json` | `ㄱ` (not `가`) | preedit `가` but `value` stuck at `ㄱ`; Firefox deferred `input` |
 | `fixed-가-plain-control.json` | `가` | plain textarea — **works** |
 | `rejected-rewrite-flicker-가나다.json` | flicker → garbage | post-hoc rewrite rejected |
-| `decorative-still-explodes-가나다가나다.json` | `ㄱ가나다…` explosion | no official placeholder; **still broken** |
+| `decorative-still-explodes-가나다가나다.json` | explosion (decorative era) | overlay rejected |
+| `mechanism-fix-still-explodes-가나다가나다.json` | `가나ㄷㅏ…` concat | first mechanism patch insufficient; v2 committed+preedit |
 
 Profile: `android-firefox-slate-placeholder-broken` / `-plain-control`
 

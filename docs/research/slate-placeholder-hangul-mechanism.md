@@ -57,6 +57,6 @@ See `useSlatePlaceholderCompositionFixEditableProps.tsx` + `slatePlaceholderComp
 
 1. **Placeholder stays official** — `renderPlaceholder` hides via `display:none` while `IS_COMPOSING` (Android never flips React `isComposing`, so `showPlaceholder` stayed true).
 2. **No force-re-render during composition** — wrap `EDITOR_TO_FORCE_RENDER` (MutationObserver wipe / explosion).
-3. **`onDOMBeforeInput`** — skip duplicate jamo insert; skip FF deferred document re-insert; when visible is broken but IME `data` is the syllable, apply `data` (Android only).
+3. **`onDOMBeforeInput` (Android)** — document = `committed + IME preedit` on each composing insert (bypass Slate IM concat); skip deferred duplicate/explosion; dedupe `가가` after flush.
 
-Emulator: AC/AF broken goldens → `가` with official `[data-slate-placeholder]`. Device recapture still required.
+Emulator: AC/AF goldens + `mechanism-fix-still-explodes-가나다가나다.json` replay. **Device recapture** still required.

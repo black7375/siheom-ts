@@ -1,3 +1,5 @@
+import "./slateLinuxDesktopEnv";
+
 import { describe, expect, it } from "vitest";
 import {
   createDefaultActions,
