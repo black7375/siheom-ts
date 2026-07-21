@@ -35,14 +35,6 @@ export function planEnter(input: PlanEnterInput): EventPlanStep[] {
     case "webkit":
       return [...confirm, plainEnterKeydown, plainEnterKeyup];
     case "chromium":
-      return [
-        {
-          kind: "keydown",
-          fields: { key: "Process", code: "Enter", keyCode: 229, isComposing: true },
-        },
-        ...confirm,
-        plainEnterKeyup,
-      ];
     case "chromium-duplicate":
       return [
         {
@@ -50,7 +42,7 @@ export function planEnter(input: PlanEnterInput): EventPlanStep[] {
           fields: { key: "Process", code: "Enter", keyCode: 229, isComposing: true },
         },
         ...confirm,
-        plainEnterKeydown,
+        ...(input.facet === "chromium-duplicate" ? [plainEnterKeydown] : []),
         plainEnterKeyup,
       ];
     case "chromium-apple":
