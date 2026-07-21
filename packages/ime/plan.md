@@ -54,6 +54,9 @@ IME-faithful `fill` / `type` that plug into siheom via `overrideSiheom`, startin
 - [x] `createImeActions({ profile })` accepts a profile object (not only an id string)
 - [x] Unknown key descriptors like `{Home}` delegate to user-event
 - [x] Contenteditable targets fall back to user-event type
+- [x] `composeHangul` macos-safari-apple + `maxLength`: composition path rejects overflow (deleteCompositionText / empty insertFromComposition)
+- [x] `composeHangul` macos-safari-apple + `settle: "macrotask"`: multi-syllable composition commits between syllables
+- [x] `composeHangul` macos-safari-apple + maxLength host clamp: empty `insertText` reject (fixed UI)
 
 ### Phase 6 — Hanja candidate conversion (`@siheom/ime/hanja`)
 

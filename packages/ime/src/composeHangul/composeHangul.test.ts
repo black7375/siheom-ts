@@ -105,4 +105,65 @@ describe("composeHangul", () => {
     expect(input.value).toBe("가나다");
     input.remove();
   });
+
+  it("macos-safari-apple with maxLength rejects overflow on composition path", async () => {
+    const input = document.createElement("input");
+    input.maxLength = 3;
+    document.body.append(input);
+
+    const events = await composeHangul(input, "가나다라", { profile: "macos-safari-apple" });
+
+    expect(input.value).toBe("가나다");
+    expect(events.some((e) => e.type === "input" && e.inputType === "deleteCompositionText")).toBe(
+      true,
+    );
+    expect(
+      events.some(
+        (e) => e.type === "input" && e.inputType === "insertFromComposition" && e.data === "",
+      ),
+    ).toBe(true);
+
+    input.remove();
+  });
+
+  it("macos-safari-apple settle macrotask commits between syllables on composition path", async () => {
+    const input = document.createElement("input");
+    document.body.append(input);
+
+    const events = await composeHangul(input, "김태", {
+      profile: "macos-safari-apple",
+      settle: "macrotask",
+    });
+
+    expect(input.value).toBe("김태");
+    const compositionEnds = events.filter((e) => e.type === "compositionend");
+    expect(compositionEnds.length).toBeGreaterThanOrEqual(2);
+    expect(
+      events.some(
+        (e) => e.type === "input" && e.inputType === "insertFromComposition" && e.data === "김",
+      ),
+    ).toBe(true);
+
+    input.remove();
+  });
+
+  it("macos-safari-apple maxLength with host clamp rejects via empty insertText", async () => {
+    const input = document.createElement("input");
+    input.maxLength = 3;
+    document.body.append(input);
+    input.addEventListener("input", () => {
+      if (input.value.length > input.maxLength) {
+        input.value = input.value.slice(0, input.maxLength);
+      }
+    });
+
+    const events = await composeHangul(input, "가나다라", { profile: "macos-safari-apple" });
+
+    expect(input.value).toBe("가나다");
+    expect(
+      events.some((e) => e.type === "input" && e.inputType === "insertText" && e.data === ""),
+    ).toBe(true);
+
+    input.remove();
+  });
 });
