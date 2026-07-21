@@ -50,7 +50,12 @@ function useSlatePlaceholderHangulFixEffect(
             fixState(),
           );
           replaceSlateEditorPlainText(editor, fixed);
-          if (isStableCommittedText(fixed)) {
+          // Only advance committed after composition settles — mid-preedit
+          // "가낟" must not become the base for the next ㅏ (→ 가낟다).
+          if (
+            (reason === "compositionend" || reason === "input-deferred") &&
+            isStableCommittedText(fixed)
+          ) {
             committedRef.current = fixed;
           }
           return;
