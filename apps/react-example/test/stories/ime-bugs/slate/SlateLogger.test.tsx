@@ -31,6 +31,13 @@ describe("SlateLogger", () => {
     );
   });
 
+  it("shows reference textarea for H2 structural diff", async () => {
+    await runSiheom(
+      given.render(<SlateLogger />),
+      assertions.visible(query.textbox("Reference textarea for DOM structure")),
+    );
+  });
+
   it("renders plain control textarea when captureTarget is plain-control", async () => {
     await runSiheom(
       given.render(<SlateLogger captureTarget="plain-control" />),

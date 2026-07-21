@@ -10,7 +10,7 @@ import { createImeActions } from "@siheom/ime";
 import { defaultGivens, reactEffects } from "@siheom/react";
 
 import { SlateLogger } from "./SlateLogger";
-import { createSlateCompositionDebugLog } from "./slateCompositionDebugLog";
+import { createSlateExplorationLog } from "./slateExplorationCapture";
 import { readSlatePlainText } from "./readSlatePlainText";
 
 function runWithSlateIme(profile: "android-firefox-slate-placeholder-fixed") {
@@ -27,14 +27,10 @@ function runWithSlateIme(profile: "android-firefox-slate-placeholder-fixed") {
   );
 }
 
-/**
- * Diagnostic test — dumps passive slateDebug at download shape.
- * Run: cd apps/react-example && bun run test SlateLogger.ime.debug.test.tsx
- */
-describe("SlateLogger AF — composition debug export", () => {
-  it("dump trace while typing 가나다 (android-firefox-slate-placeholder-fixed)", async () => {
+describe("SlateLogger AF — exploration timeline", () => {
+  it("records timeline rows while typing 가나다", async () => {
     const editorRef: { current: HTMLElement | null } = { current: null };
-    const debugLog = createSlateCompositionDebugLog();
+    const explorationLog = createSlateExplorationLog();
     const { runSiheom, actions, given } = runWithSlateIme(
       "android-firefox-slate-placeholder-fixed",
     );
@@ -44,19 +40,21 @@ describe("SlateLogger AF — composition debug export", () => {
         <SlateLogger
           captureTarget="slate-placeholder"
           editorRef={editorRef}
-          debugLog={debugLog}
+          explorationLog={explorationLog}
         />,
       ),
       actions.type(query.textbox("Slate editor"), "가나다"),
     );
 
+    expect(explorationLog.timeline.length).toBeGreaterThan(0);
+    expect(explorationLog.domStructures.length).toBeGreaterThan(0);
+
     const text = readSlatePlainText(editorRef.current);
-    const dump = debugLog.dump();
+    const dump = explorationLog.timeline.map((row) => `${row.i}\t${row.type}\t${row.flags.join(",")}`).join("\n");
 
     // eslint-disable-next-line no-console
-    console.log("\n--- Slate composition debug trace ---\n" + dump + "\n--- end ---\n");
+    console.log("\n--- exploration timeline ---\n" + dump + "\n--- end ---\n");
 
-    expect(editorRef.current).not.toBeNull();
-    expect(text, `Unexpected intact 가나다 under Vitest.\n\n${dump}`).not.toBe("가나다");
+    expect(text, dump).not.toBe("가나다");
   });
 });

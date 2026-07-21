@@ -10,13 +10,18 @@ Understand Slate + Android Hangul IME — **exploration, not app patches**. See
 | File | Role |
 | ---- | ---- |
 | `readSlateCompositionSnapshot.ts` | Slate text, DOM text, composing flags, selection |
-| `slateCompositionDebugLog.ts` | `toExport()` → `slateDebug.final` at download |
-| `SlateLogger.tsx` | Upstream Slate capture shell |
+| `slateExplorationCapture.ts` | H1 timeline, H2 domStructures, H3 sourceMapHints |
+| `slate-minimal-dom-fixture.html` | H3 static repro (open on AF device) |
+| `SlateLogger.tsx` | Upstream Slate + exploration JSON on download |
 
 ## Device capture
 
-1. **SlateLogger** → type repro → JSON (`scenarioId`: `slate-ac-first-hangul-placeholder`).
-2. Compare with plain control (`slate-ac-plain-control`) for structural diff (H2).
+1. Focus **Slate editor** (not reference textarea) → type repro → **JSON 다운로드**.
+2. Inspect `slateDebug.exploration`:
+   - `timeline[]` — per-event slateText/domText/flags (H1)
+   - `domStructures[]` — Slate vs textarea tree at key steps (H2)
+   - `sourceMapHints[]` + `minimalFixture.path` (H3)
+3. Optional: open `slate-minimal-dom-fixture.html` on same device, type `가`, compare.
 
 ## Retired
 

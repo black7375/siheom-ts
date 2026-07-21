@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="ko">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Slate minimal DOM fixture (H3)</title>
+    <style>
+      body {
+        font-family: system-ui, sans-serif;
+        margin: 1rem;
+        max-width: 40rem;
+      }
+      [data-slate-editor] {
+        min-height: 8rem;
+        border: 1px solid #ccc;
+        padding: 0.5rem 0.75rem;
+        white-space: pre-wrap;
+      }
+      [data-slate-placeholder] {
+        position: absolute;
+        pointer-events: none;
+        user-select: none;
+        opacity: 0.5;
+      }
+      .hint {
+        color: #555;
+        font-size: 0.875rem;
+        margin-top: 1rem;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Slate minimal DOM (no React)</h1>
+    <p class="hint">
+      Mimics empty Slate + official placeholder leaf. Type <strong>가</strong> with Hangul IME on
+      Android Firefox. Compare with SlateLogger <code>slateDebug.exploration.timeline</code>.
+    </p>
+    <div
+      data-slate-editor="true"
+      data-slate-node="value"
+      contenteditable="true"
+      role="textbox"
+      aria-label="Minimal Slate fixture"
+      style="position: relative"
+    >
+      <div data-slate-node="element">
+        <span data-slate-node="text"><span data-slate-leaf="true"><span data-slate-string="true"></span></span></span>
+      </div>
+      <span data-slate-placeholder="true" contenteditable="false" style="position: absolute; top: 0; left: 0">
+        여기에 입력…
+      </span>
+    </div>
+    <p class="hint" id="status">value: (empty)</p>
+    <script>
+      const editor = document.querySelector("[data-slate-editor]");
+      const status = document.getElementById("status");
+      const update = () => {
+        status.textContent = "value: " + JSON.stringify(editor.textContent);
+      };
+      for (const type of ["input", "compositionupdate", "compositionend"]) {
+        editor.addEventListener(type, update);
+      }
+    </script>
+  </body>
+</html>
