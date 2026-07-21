@@ -39,108 +39,99 @@ export class ImeTrace {
   }
 
   keydown(init: KeyEventFields): void {
-    this.emit(
-      "keydown",
-      {
-        bubbles: true,
-        cancelable: init.cancelable ?? true,
-        key: init.key,
-        code: init.code,
-        keyCode: init.keyCode,
-        isComposing: init.isComposing,
-      },
-      {
-        key: init.key,
-        code: init.code,
-        keyCode: init.keyCode,
-        isComposing: init.isComposing,
-      },
-    );
+    this.emitKey("keydown", init, { cancelable: init.cancelable ?? true });
   }
 
   keyup(init: KeyEventFields): void {
-    this.emit(
-      "keyup",
-      {
-        bubbles: true,
-        key: init.key,
-        code: init.code,
-        keyCode: init.keyCode,
-        isComposing: init.isComposing,
-      },
-      {
-        key: init.key,
-        code: init.code,
-        keyCode: init.keyCode,
-        isComposing: init.isComposing,
-      },
-    );
+    this.emitKey("keyup", init);
   }
 
   compositionStart(data: string = "", value?: string): void {
-    this.emit(
-      "compositionstart",
-      { bubbles: true, data },
-      value === undefined ? { data } : { data, value },
-    );
+    this.emitComposition("compositionstart", data, value);
   }
 
   compositionUpdate(data: string, value?: string): void {
-    this.emit(
-      "compositionupdate",
-      { bubbles: true, data, cancelable: true },
-      value === undefined ? { data } : { data, value },
-    );
+    this.emitComposition("compositionupdate", data, value, { cancelable: true });
   }
 
   compositionEnd(data: string, value?: string): void {
-    this.emit(
-      "compositionend",
-      { bubbles: true, data },
-      value === undefined ? { data } : { data, value },
-    );
+    this.emitComposition("compositionend", data, value);
   }
 
   beforeInput(fields: InputEventFields): void {
-    const { inputType, data, isComposing, value, cancelable = true } = fields;
-    this.emit(
-      "beforeinput",
-      {
-        bubbles: true,
-        cancelable,
-        inputType,
-        data,
-        ...(isComposing !== undefined ? { isComposing } : {}),
-      },
-      {
-        inputType,
-        data,
-        ...(isComposing !== undefined ? { isComposing } : {}),
-        ...(value !== undefined ? { value } : {}),
-      },
-    );
+    this.emitInput("beforeinput", fields, { cancelable: fields.cancelable ?? true });
   }
 
   input(fields: InputEventFields): void {
-    const { inputType, data, isComposing, value } = fields;
-    this.emit(
-      "input",
-      {
-        bubbles: true,
-        inputType,
-        data,
-        ...(isComposing !== undefined ? { isComposing } : {}),
-      },
-      {
-        inputType,
-        data,
-        ...(isComposing !== undefined ? { isComposing } : {}),
-        ...(value !== undefined ? { value } : {}),
-      },
-    );
+    this.emitInput("input", fields);
   }
 
   append(other: ComposedEventRecord[]): void {
     this.records.push(...other);
+  }
+
+  private emitKey(
+    type: "keydown" | "keyup",
+    init: KeyEventFields,
+    options: { cancelable?: boolean } = {},
+  ): void {
+    const fields = {
+      key: init.key,
+      code: init.code,
+      keyCode: init.keyCode,
+      isComposing: init.isComposing,
+    };
+    this.emit(
+      type,
+      {
+        bubbles: true,
+        ...(options.cancelable !== undefined ? { cancelable: options.cancelable } : {}),
+        ...fields,
+      },
+      fields,
+    );
+  }
+
+  private emitComposition(
+    type: "compositionstart" | "compositionupdate" | "compositionend",
+    data: string,
+    value?: string,
+    options: { cancelable?: boolean } = {},
+  ): void {
+    this.emit(
+      type,
+      {
+        bubbles: true,
+        data,
+        ...(options.cancelable !== undefined ? { cancelable: options.cancelable } : {}),
+      },
+      value === undefined ? { data } : { data, value },
+    );
+  }
+
+  private emitInput(
+    type: "beforeinput" | "input",
+    fields: InputEventFields,
+    options: { cancelable?: boolean } = {},
+  ): void {
+    const { inputType, data, isComposing, value } = fields;
+    const composing =
+      isComposing !== undefined ? ({ isComposing } as { isComposing: boolean }) : {};
+    this.emit(
+      type,
+      {
+        bubbles: true,
+        ...(options.cancelable !== undefined ? { cancelable: options.cancelable } : {}),
+        inputType,
+        data,
+        ...composing,
+      },
+      {
+        inputType,
+        data,
+        ...composing,
+        ...(value !== undefined ? { value } : {}),
+      },
+    );
   }
 }
