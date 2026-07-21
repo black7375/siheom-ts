@@ -1,0 +1,10 @@
+{
+  "profileId": "linux-chrome-ibus-pinyin",
+  "os": "linux",
+  "browser": "chrome",
+  "ime": "ibus-pinyin",
+  "capturedAt": "",
+  "scenarioId": "pinyin-candidate-enter-fixed",
+  "source": "os-ime",
+  "events": []
+}

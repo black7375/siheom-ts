@@ -4,7 +4,7 @@
   "browser": "chrome",
   "ime": "japanese",
   "capturedAt": "",
-  "scenarioId": "japanese-romaji",
+  "scenarioId": "japanese-romaji-broken",
   "source": "os-ime",
   "events": []
 }

@@ -1,0 +1,10 @@
+{
+  "profileId": "macos-chrome-japanese",
+  "os": "macos",
+  "browser": "chrome",
+  "ime": "japanese",
+  "capturedAt": "",
+  "scenarioId": "japanese-romaji-fixed",
+  "source": "os-ime",
+  "events": []
+}

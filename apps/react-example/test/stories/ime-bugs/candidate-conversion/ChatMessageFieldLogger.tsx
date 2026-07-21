@@ -28,7 +28,7 @@ export function ChatMessageFieldLogger() {
   const inputRef = useRef<HTMLTextAreaElement>(null);
 
   const profileId = useMemo(() => profileIdFromMeta(os, browser, ime), [os, browser, ime]);
-  const activeScenario = CAPTURE_SCENARIOS.find((s) => s.id === scenarioId);
+  const captureScenarioId = `${scenarioId}-${mode}`;
 
   const appendEvent = useCallback((event: Event) => {
     const value = readEditableValue(event.target);
@@ -63,7 +63,7 @@ export function ChatMessageFieldLogger() {
       ime,
       events,
       capturedAt: new Date().toISOString(),
-      scenarioId,
+      scenarioId: captureScenarioId,
       source: "os-ime",
     });
 
@@ -176,12 +176,19 @@ export function ChatMessageFieldLogger() {
       <p className="text-sm">
         profileId: <code className="rounded bg-muted px-1.5 py-0.5">{profileId}</code>
         {" · "}
-        scenario: <code className="rounded bg-muted px-1.5 py-0.5">{activeScenario?.id}</code>
+        scenario: <code className="rounded bg-muted px-1.5 py-0.5">{scenarioId}</code>
+        {" · "}
+        capture: <code className="rounded bg-muted px-1.5 py-0.5">{captureScenarioId}</code>
         {" · "}
         mode: <code className="rounded bg-muted px-1.5 py-0.5">{mode}</code>
       </p>
 
-      <ChatMessageField key={mode} mode={mode} inputRef={inputRef} onValueChange={setFieldValue} />
+      <ChatMessageField
+        key={`${mode}-${scenarioId}`}
+        mode={mode}
+        inputRef={inputRef}
+        onValueChange={setFieldValue}
+      />
 
       <div className="flex flex-wrap gap-2">
         <Button
@@ -204,7 +211,7 @@ export function ChatMessageFieldLogger() {
             const url = URL.createObjectURL(blob);
             const anchor = document.createElement("a");
             anchor.href = url;
-            anchor.download = `${profileId}-${scenarioId}-${Date.now()}.json`;
+            anchor.download = `${profileId}-${mode}-${scenarioId}-${Date.now()}.json`;
             anchor.click();
             URL.revokeObjectURL(url);
             setStatus("JSON 파일을 다운로드했습니다.");
