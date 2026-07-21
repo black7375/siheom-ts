@@ -1,6 +1,12 @@
 import { useEffect } from "react";
 import { useLexicalComposerContext } from "@lexical/react/LexicalComposerContext";
-import { COMMAND_PRIORITY_HIGH, CONTROLLED_TEXT_INSERTION_COMMAND } from "lexical";
+import {
+  COMMAND_PRIORITY_HIGH,
+  COMMAND_PRIORITY_LOW,
+  CONTROLLED_TEXT_INSERTION_COMMAND,
+  INPUT_COMMAND,
+  $setCompositionKey,
+} from "lexical";
 
 const NBSP = "\u00a0";
 const ZWSP = "\u200b";
@@ -12,15 +18,15 @@ function isCompositionSentinel(text: string | null | undefined): boolean {
 }
 
 /**
- * Lexical #6377 workaround: skip Firefox COMPOSITION_START_CHAR (NBSP) controlled
- * insertion that breaks Android Firefox Hangul when IS_ANDROID_CHROME mitigations
- * do not apply.
+ * Lexical #6377 workaround for Android Firefox + contenteditable:
+ * 1. Skip Firefox COMPOSITION_START_CHAR (NBSP) controlled insertion.
+ * 2. Clear compositionKey after composing input (Android Chrome upstream mitigation).
  */
 export function LexicalAndroidFirefoxCompositionFixPlugin() {
   const [editor] = useLexicalComposerContext();
 
   useEffect(() => {
-    return editor.registerCommand(
+    const removeSentinelInsert = editor.registerCommand(
       CONTROLLED_TEXT_INSERTION_COMMAND,
       (payload) => {
         const text =
@@ -36,6 +42,31 @@ export function LexicalAndroidFirefoxCompositionFixPlugin() {
       },
       COMMAND_PRIORITY_HIGH,
     );
+
+    const clearCompositionKeyOnInput = editor.registerCommand(
+      INPUT_COMMAND,
+      (event) => {
+        if (!(event instanceof InputEvent)) {
+          return false;
+        }
+        if (event.inputType !== "insertCompositionText") {
+          return false;
+        }
+        if (!editor.isComposing()) {
+          return false;
+        }
+        editor.update(() => {
+          $setCompositionKey(null);
+        });
+        return false;
+      },
+      COMMAND_PRIORITY_LOW,
+    );
+
+    return () => {
+      removeSentinelInsert();
+      clearCompositionKeyOnInput();
+    };
   }, [editor]);
 
   return null;

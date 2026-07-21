@@ -28,3 +28,9 @@
 - [x] `LexicalAndroidFirefoxCompositionFixPlugin`: NBSP/ZWSP sentinel `CONTROLLED_TEXT_INSERTION_COMMAND` 차단
 - [x] `LexicalLogger` broken/fixed 모드 + ModeToolbar
 - [x] `LexicalLogger.ime.test`: fixed + `linux-firefox-contenteditable-fixed` → fixed golden critical events on contenteditable
+
+### Fix validation (phase 4)
+
+- [x] Vitest UA shim (`lexicalAndroidFirefoxEnv`) so Lexical `IS_FIREFOX` matches emulator event order
+- [x] `LexicalLogger.ime.test`: fixed mode + `linux-firefox-contenteditable-fixed` → editor text `가나다`
+- [ ] Real device: Android Firefox fixed mode → capture `android-firefox/fixed-가나다.json` (post-fix golden)

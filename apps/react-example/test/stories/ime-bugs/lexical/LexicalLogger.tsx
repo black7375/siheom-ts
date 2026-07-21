@@ -1,13 +1,15 @@
-import { useState } from "react";
+import { useState, type MutableRefObject } from "react";
 import { LexicalComposer } from "@lexical/react/LexicalComposer";
 import { ContentEditable } from "@lexical/react/LexicalContentEditable";
 import { LexicalErrorBoundary } from "@lexical/react/LexicalErrorBoundary";
 import { PlainTextPlugin } from "@lexical/react/LexicalPlainTextPlugin";
 import { HistoryPlugin } from "@lexical/react/LexicalHistoryPlugin";
+import type { LexicalEditor } from "lexical";
 
 import { ImeCaptureShell } from "../../ime-logger/ImeCaptureShell";
 import { CaptureInstructions, ModeToolbar } from "../shared/imeBugLoggerChrome";
 import { LexicalAndroidFirefoxCompositionFixPlugin } from "./LexicalAndroidFirefoxCompositionFixPlugin";
+import { LexicalEditorRefPlugin } from "./LexicalEditorRefPlugin";
 
 const initialConfig = {
   namespace: "LexicalLogger",
@@ -21,9 +23,11 @@ export type LexicalLoggerMode = "broken" | "fixed";
 export type LexicalLoggerProps = {
   /** broken = upstream Lexical; fixed = skip NBSP composition sentinel (#6377). */
   mode?: LexicalLoggerMode;
+  /** Optional: receive mounted LexicalEditor (tests). */
+  editorRef?: MutableRefObject<LexicalEditor | null>;
 };
 
-export function LexicalLogger({ mode: modeProp }: LexicalLoggerProps = {}) {
+export function LexicalLogger({ mode: modeProp, editorRef }: LexicalLoggerProps = {}) {
   const [mode, setMode] = useState<LexicalLoggerMode>(modeProp ?? "broken");
   const effectiveMode = modeProp ?? mode;
 
@@ -67,6 +71,7 @@ export function LexicalLogger({ mode: modeProp }: LexicalLoggerProps = {}) {
             ErrorBoundary={LexicalErrorBoundary}
           />
           <HistoryPlugin />
+          {editorRef ? <LexicalEditorRefPlugin editorRef={editorRef} /> : null}
           {effectiveMode === "fixed" ? <LexicalAndroidFirefoxCompositionFixPlugin /> : null}
         </LexicalComposer>
       )}

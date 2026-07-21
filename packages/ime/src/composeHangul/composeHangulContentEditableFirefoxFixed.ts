@@ -16,6 +16,7 @@ import {
   withZwsp,
 } from "./contentEditableFirefoxShared";
 import { planChromeStrokeHead, planChromeStrokeKeyup } from "./planStroke";
+import { settleAfterPreedit } from "./settle";
 
 function planContentEditablePreeditPulse(
   preedit: string,
@@ -54,14 +55,15 @@ function planContentEditablePreeditPulse(
   ];
 }
 
-function playContentEditableFixedSequence(
+async function playContentEditableFixedSequence(
   trace: ImeTrace | ContentEditableImeTrace,
   text: string,
   commitFinal: boolean,
   profile: ImeProfile,
-): ComposedEventRecord[] {
+): Promise<ComposedEventRecord[]> {
   const strokes = planHangulKeystrokes(text);
   const applyDom = trace instanceof ImeTrace;
+  const settleHost = trace instanceof ContentEditableImeTrace;
   let sessionJustStarted = true;
   let previousVisible = "";
 
@@ -91,9 +93,16 @@ function playContentEditableFixedSequence(
         previousVisible = stripZwsp(value);
         sessionJustStarted = false;
       }
+
+      if (settleHost) {
+        await settleAfterPreedit("macrotask");
+      }
     }
 
     playEventPlan(trace, planChromeStrokeKeyup(stroke, profile));
+    if (settleHost) {
+      await settleAfterPreedit("macrotask");
+    }
   }
 
   if (commitFinal && strokes.length > 0) {
@@ -106,6 +115,9 @@ function playContentEditableFixedSequence(
       ...planFirefoxDeferredEnd(finalPreedit, finalDomValue),
       { kind: "clearSession" },
     ]);
+    if (settleHost) {
+      await settleAfterPreedit("macrotask");
+    }
   }
 
   return trace.records;
