@@ -2,6 +2,10 @@ import { describe, expect, it } from "vitest";
 
 import { composeHangul } from "./composeHangul";
 import { markImeControlledWriteback } from "../markImeControlledWriteback";
+import { goldenCritical } from "../goldenCritical";
+import { toCriticalEvents } from "../toCriticalEvents";
+import androidFixedGolden from "../../fixtures/android-chrome/delayed-update-fixed-김태희.json";
+import androidBrokenGolden from "../../fixtures/android-chrome/delayed-update-broken-김태희.json";
 
 /**
  * Mimic DelayedControlledField broken mode: one deferred writeback per tick with
@@ -46,6 +50,38 @@ describe("composeHangul deferred controlled update race", () => {
     await composeHangul(input, "김태희", { settle: "macrotask" });
 
     expect(input.value).toBe("김태희");
+
+    input.remove();
+  });
+
+  it("android-chrome fixed: macrotask settle matches delayed-update fixed golden", async () => {
+    const input = document.createElement("input");
+    document.body.append(input);
+
+    const events = await composeHangul(input, "김태희", {
+      profile: "android-chrome",
+      settle: "macrotask",
+    });
+
+    expect(input.value).toBe("김태희");
+    expect(toCriticalEvents(events)).toEqual(goldenCritical(androidFixedGolden.events));
+
+    input.remove();
+  });
+
+  it("android-chrome broken: deferred writeback matches delayed-update broken golden", async () => {
+    const input = document.createElement("input");
+    document.body.append(input);
+    attachStaleDeferredWriteback(input);
+
+    const events = await composeHangul(input, "김태희", {
+      profile: "android-chrome",
+      settle: "macrotask",
+      deferredUpdateRace: true,
+    });
+
+    expect(input.value).toBe("ㄱㅣㅁㅌㅐㅎㅡㅣ");
+    expect(toCriticalEvents(events)).toEqual(goldenCritical(androidBrokenGolden.events));
 
     input.remove();
   });
