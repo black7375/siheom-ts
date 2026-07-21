@@ -21,6 +21,7 @@ export type {
   EnterDuringCompositionFacet,
   HangulComposeMode,
   HangulKeyEventKey,
+  HanjaConversionMode,
   ImeProfile,
 } from "./profiles";
 export { attachImeRecorder } from "./attachImeRecorder";

@@ -54,3 +54,11 @@ IME-faithful `fill` / `type` that plug into siheom via `overrideSiheom`, startin
 - [x] `createImeActions({ profile })` accepts a profile object (not only an id string)
 - [x] Unknown key descriptors like `{Home}` delegate to user-event
 - [x] Contenteditable targets fall back to user-event type
+
+### Phase 6 — Hanja candidate conversion (`@siheom/ime/hanja`)
+
+- [x] `ImeProfile.hanjaConversion`: `replace` (default / Safari) vs `append` (macos-chrome-apple)
+- [x] `composeHanjaConversion` first syllable matches macos-chrome-apple golden critical path through `김金`
+- [ ] `composeHanjaConversion` first syllable matches macos-safari-apple golden critical path (replace → `金`)
+- [ ] `typeHanja(element, "金泰熙", "김태희")` plays full name on Chrome append and Safari replace profiles
+- [ ] `@siheom/ime/hanja` subpath exports `typeHanja` / `composeHanjaConversion` (main entry does not)

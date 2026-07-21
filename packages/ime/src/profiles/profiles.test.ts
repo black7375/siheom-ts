@@ -24,6 +24,7 @@ describe("IME profiles", () => {
       enterDuringComposition: "chromium-duplicate",
       hangulKeyEventKey: "process",
       hangulComposeMode: "composition",
+      hanjaConversion: "replace",
     });
     expect(resolveProfile("test-custom-ime").enterDuringComposition).toBe("chromium-duplicate");
     expect(getRegisteredProfileIds()).toContain("test-custom-ime");
@@ -34,14 +35,16 @@ describe("IME profiles", () => {
       hangulComposeMode: "replacement",
       hangulKeyEventKey: "jamo",
       enterDuringComposition: "webkit",
+      hanjaConversion: "replace",
     });
   });
 
-  it("resolves macos-chrome-apple with chromium-apple Enter and jamo keydown keys", () => {
+  it("resolves macos-chrome-apple with chromium-apple Enter, jamo keys, and append Hanja", () => {
     expect(resolveProfile("macos-chrome-apple")).toMatchObject({
       enterDuringComposition: "chromium-apple",
       hangulKeyEventKey: "jamo",
       hangulComposeMode: "composition",
+      hanjaConversion: "append",
     });
   });
 
@@ -50,7 +53,12 @@ describe("IME profiles", () => {
       enterDuringComposition: "chromium",
       hangulKeyEventKey: "process",
       hangulComposeMode: "composition",
+      hanjaConversion: "replace",
     });
+  });
+
+  it("defaults linux Hangul profile to replace Hanja conversion", () => {
+    expect(resolveProfile("linux-chrome-ibus-hangul").hanjaConversion).toBe("replace");
   });
 
   it("throws for unknown profile ids", () => {

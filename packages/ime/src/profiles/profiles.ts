@@ -20,11 +20,19 @@ export type HangulComposeMode =
   /** composition with input before keydown (Safari Apple delayed-update fixed) */
   | "safari-composition";
 
+/**
+ * How Hangul→Hanja candidate conversion applies the chosen Hanja to the field.
+ * - `replace` — Safari / typical Chromium: Hangul preedit becomes Hanja in place
+ * - `append` — macOS Chrome Apple: Hanja appends after Hangul (김金); apps may strip
+ */
+export type HanjaConversionMode = "replace" | "append";
+
 export type ImeProfile = {
   id: string;
   enterDuringComposition: EnterDuringCompositionFacet;
   hangulKeyEventKey: HangulKeyEventKey;
   hangulComposeMode: HangulComposeMode;
+  hanjaConversion: HanjaConversionMode;
 };
 
 export const DEFAULT_IME_PROFILE_ID = "linux-chrome-ibus-hangul";
@@ -66,42 +74,49 @@ function registerBuiltins() {
     enterDuringComposition: "webkit",
     hangulKeyEventKey: "process",
     hangulComposeMode: "composition",
+    hanjaConversion: "replace",
   });
   registerProfile({
     id: "macos-safari",
     enterDuringComposition: "webkit",
     hangulKeyEventKey: "process",
     hangulComposeMode: "composition",
+    hanjaConversion: "replace",
   });
   registerProfile({
     id: "macos-safari-apple",
     enterDuringComposition: "webkit",
     hangulKeyEventKey: "jamo",
     hangulComposeMode: "replacement",
+    hanjaConversion: "replace",
   });
   registerProfile({
     id: "macos-chrome-apple",
     enterDuringComposition: "chromium-apple",
     hangulKeyEventKey: "jamo",
     hangulComposeMode: "composition",
+    hanjaConversion: "append",
   });
   registerProfile({
     id: "windows-chrome-ms",
     enterDuringComposition: "chromium-duplicate",
     hangulKeyEventKey: "process",
     hangulComposeMode: "composition",
+    hanjaConversion: "replace",
   });
   registerProfile({
     id: "chromium-enter-229",
     enterDuringComposition: "chromium",
     hangulKeyEventKey: "process",
     hangulComposeMode: "composition",
+    hanjaConversion: "replace",
   });
   registerProfile({
     id: "chromium-cdp",
     enterDuringComposition: "chromium",
     hangulKeyEventKey: "process",
     hangulComposeMode: "composition",
+    hanjaConversion: "replace",
   });
 }
 
