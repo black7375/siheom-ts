@@ -1,15 +1,14 @@
 import {
-  applyPreedit,
-  clearImeSession,
-  commitSafariInsertFromComposition,
   getImeSession,
   ImeTrace,
-  setInputValue,
+  playEventPlan,
+  readMaxLength,
   type ComposedEventRecord,
 } from "../_internal";
 import { composeHangul } from "../composeHangul";
 import { resolveProfile, type ImeProfile } from "../profiles";
 import { composeHanjaConversion } from "./composeHanjaConversion";
+import { planHanjaConfirm } from "./planHanja";
 
 export type TypeHanjaOptions = {
   profile?: string | ImeProfile;
@@ -56,7 +55,7 @@ export async function typeHanja(
         profile,
       }),
     );
-    confirmHanjaCandidate(trace, hangulChar, hanjaChar, profile);
+    playHanjaConfirm(trace, hangulChar, hanjaChar, profile);
   }
 
   return trace.records;
@@ -68,77 +67,37 @@ function hangulProfileForConversion(profile: ImeProfile): ImeProfile {
   return { ...profile, hangulComposeMode: "composition" };
 }
 
-/**
- * Confirm the Hanja candidate and leave the field ready for the next syllable.
- * Append: Enter + preedit pulse at 김金, then compositionend + settle to hanja-only.
- * Replace: OS pulses / Enter / delete+insertFromComposition commit (see Safari golden).
- */
-function confirmHanjaCandidate(
+function playHanjaConfirm(
   trace: ImeTrace,
   hangul: string,
   hanja: string,
   profile: ImeProfile,
 ): void {
-  if (profile.hanjaConversion === "append") {
-    confirmChromeAppendCandidate(trace, hangul, hanja);
-    return;
-  }
-  confirmSafariReplaceCandidate(trace, hangul, hanja);
-}
-
-function confirmChromeAppendCandidate(trace: ImeTrace, hangul: string, hanja: string): void {
   const { element } = trace;
   const session = getImeSession(element);
   const suffix = session?.suffix ?? "";
   const committed = session?.committed ?? "";
-  const committedPrefix = committed.endsWith(hangul)
-    ? committed.slice(0, -hangul.length)
-    : committed;
-
-  const appended = element.value;
-  trace.keydown({
-    key: "Enter",
-    code: "Enter",
-    keyCode: 229,
-    isComposing: true,
-  });
-
-  applyPreedit(trace, hanja, appended, committedPrefix.length + hangul.length + hanja.length);
-
-  const settled = committedPrefix + hanja + suffix;
-  trace.compositionEnd(hanja);
-  setInputValue(element, settled, committedPrefix.length + hanja.length);
-  clearImeSession(element);
-}
-
-function confirmSafariReplaceCandidate(trace: ImeTrace, _hangul: string, hanja: string): void {
-  const { element } = trace;
-  const session = getImeSession(element);
-  const suffix = session?.suffix ?? "";
   const committedPrefix =
-    session?.committed ?? element.value.slice(0, Math.max(0, element.value.length - hanja.length));
-  const settled = committedPrefix + hanja + suffix;
-  const caret = committedPrefix.length + hanja.length;
+    profile.hanjaConversion === "append"
+      ? committed.endsWith(hangul)
+        ? committed.slice(0, -hangul.length)
+        : committed
+      : (session?.committed ??
+        element.value.slice(0, Math.max(0, element.value.length - hanja.length)));
 
-  applyPreedit(trace, hanja, settled, caret);
-  applyPreedit(trace, hanja, settled, caret);
-
-  trace.keydown({
-    key: "Enter",
-    code: "Enter",
-    keyCode: 229,
-    isComposing: true,
-  });
-
-  applyPreedit(trace, hanja, settled, caret);
-  commitSafariInsertFromComposition(trace, hanja, settled);
-
-  trace.keydown({
-    key: "Enter",
-    code: "Enter",
-    keyCode: 229,
-    isComposing: false,
-  });
-
-  clearImeSession(element);
+  playEventPlan(
+    trace,
+    planHanjaConfirm({
+      mode: profile.hanjaConversion,
+      hangul,
+      hanja,
+      committedPrefix,
+      suffix,
+      appendedValue: element.value,
+      facts: {
+        valueBefore: element.value,
+        maxLength: readMaxLength(element),
+      },
+    }),
+  );
 }
