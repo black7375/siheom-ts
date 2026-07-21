@@ -8,6 +8,7 @@ import { composeHangul, type ComposeHangulOptions } from "../composeHangul";
 import { composeHangulContentEditableFirefoxBrokenOn } from "../composeHangul/composeHangulContentEditableFirefoxBroken";
 import { composeHangulContentEditableFirefoxFixedOn } from "../composeHangul/composeHangulContentEditableFirefoxFixed";
 import { composeHangulContentEditableAndroidFirefoxFixedOn } from "../composeHangul/composeHangulContentEditableAndroidFirefoxFixed";
+import { composeHangulAndroidChromeSlatePlaceholderBrokenOn } from "../composeHangul/composeHangulAndroidChromeSlatePlaceholderBroken";
 import { planTypeImeSteps } from "../planTypeImeSteps";
 import { resolveProfile, type ImeProfile } from "../profiles";
 import { isContentEditableComposeTarget } from "../_internal/editableElement";
@@ -113,6 +114,40 @@ async function typeImeText(
         await typeKeySegment(user, element, step.text, profile);
       } else {
         await user.type(element, step.text);
+      }
+    }
+    return;
+  }
+
+  if (
+    profile.hangulComposeMode === "android-chrome-slate-placeholder-broken" &&
+    isContentEditableComposeTarget(element)
+  ) {
+    for (const step of planTypeImeSteps(text)) {
+      if (step.kind === "hangul") {
+        await composeHangulAndroidChromeSlatePlaceholderBrokenOn(element, step.text);
+      } else if (isEditable(element)) {
+        await typeKeySegment(user, element, step.text, profile);
+      } else {
+        await user.type(element, step.text);
+      }
+    }
+    return;
+  }
+
+  if (
+    profile.hangulComposeMode === "android-chrome-slate-plain-control" &&
+    isEditable(element)
+  ) {
+    for (const step of planTypeImeSteps(text)) {
+      if (step.kind === "hangul") {
+        await composeHangul(element, step.text, {
+          commitFinal: step.commitFinal,
+          profile,
+          ...composeOptions,
+        });
+      } else {
+        await typeKeySegment(user, element, step.text, profile);
       }
     }
     return;

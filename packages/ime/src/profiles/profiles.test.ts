@@ -77,6 +77,20 @@ describe("IME profiles", () => {
     });
   });
 
+  it("resolves android-chrome-slate-placeholder-broken with golden replay compose mode", () => {
+    expect(resolveProfile("android-chrome-slate-placeholder-broken")).toMatchObject({
+      hangulComposeMode: "android-chrome-slate-placeholder-broken",
+      hangulKeyEventKey: "unidentified",
+    });
+  });
+
+  it("resolves android-chrome-slate-plain-control with golden replay compose mode", () => {
+    expect(resolveProfile("android-chrome-slate-plain-control")).toMatchObject({
+      hangulComposeMode: "android-chrome-slate-plain-control",
+      hangulKeyEventKey: "unidentified",
+    });
+  });
+
   it("throws for unknown profile ids", () => {
     expect(() => resolveProfile("not-a-real-profile")).toThrow(/Unknown IME profile/);
   });

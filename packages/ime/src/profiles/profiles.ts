@@ -24,7 +24,11 @@ export type HangulComposeMode =
   /** Firefox contenteditable fixed: syllable-boundary commits with deferred compositionend */
   | "contenteditable-firefox-fixed"
   /** AF post-fix v2 golden replay (Lexical plugin on; visible 가나다 on plain input) */
-  | "contenteditable-firefox-af-fixed";
+  | "contenteditable-firefox-af-fixed"
+  /** Slate #5989 — premature compositionend on first syllable (Android Chrome + placeholder) */
+  | "android-chrome-slate-placeholder-broken"
+  /** Plain textarea control baseline for Slate capture (Android Chrome) */
+  | "android-chrome-slate-plain-control";
 
 /**
  * How Hangul→Hanja candidate conversion applies the chosen Hanja to the field.
@@ -168,6 +172,22 @@ function registerBuiltins() {
     hangulKeyEventKey: "process",
     hangulComposeMode: "contenteditable-firefox-af-fixed",
     hanjaConversion: "replace",
+  });
+  registerProfile({
+    id: "android-chrome-slate-placeholder-broken",
+    enterDuringComposition: "webkit",
+    hangulKeyEventKey: "unidentified",
+    hangulComposeMode: "android-chrome-slate-placeholder-broken",
+    hanjaConversion: "replace",
+    hangulCompositionBoundary: "run",
+  });
+  registerProfile({
+    id: "android-chrome-slate-plain-control",
+    enterDuringComposition: "webkit",
+    hangulKeyEventKey: "unidentified",
+    hangulComposeMode: "android-chrome-slate-plain-control",
+    hanjaConversion: "replace",
+    hangulCompositionBoundary: "run",
   });
 }
 

@@ -7,6 +7,8 @@ import androidGolden from "../../fixtures/android-chrome/continuous-hangul.json"
 import ceBrokenGolden from "../../fixtures/android-firefox-contenteditable-broken/continuous-hangul.json";
 import ceFixedGolden from "../../fixtures/linux-firefox-contenteditable-fixed/continuous-hangul.json";
 import ceAfFixedGolden from "../../fixtures/android-firefox-contenteditable-fixed/continuous-hangul.json";
+import slateBrokenGolden from "../../fixtures/android-chrome-slate-placeholder-broken/first-hangul-가.json";
+import slatePlainGolden from "../../fixtures/android-chrome-slate-plain-control/first-hangul-가.json";
 import { attachImeRecorder } from "../attachImeRecorder";
 import { composeEnter } from "../composeEnter";
 import { resolveProfile } from "../profiles";
@@ -139,6 +141,54 @@ describe("composeHangul", () => {
 
     expect(input.value.replace(/\u200b/g, "")).toBe("가나다");
     expect(toCriticalEvents(events)).toEqual(goldenCritical(ceAfFixedGolden.events));
+
+    input.remove();
+  });
+
+  it("android-chrome-slate-placeholder-broken: 가 yields jamo-split ㄱㄱㅏㄱㅏ", async () => {
+    const input = document.createElement("input");
+    document.body.append(input);
+
+    await composeHangul(input, "가", { profile: "android-chrome-slate-placeholder-broken" });
+
+    expect(input.value).toBe("ㄱㄱㅏㄱㅏ");
+    input.remove();
+  });
+
+  it("matches android-chrome-slate-placeholder-broken golden critical fields for 가", async () => {
+    const input = document.createElement("input");
+    document.body.append(input);
+
+    const events = await composeHangul(input, "가", {
+      profile: "android-chrome-slate-placeholder-broken",
+    });
+
+    expect(input.value).toBe("ㄱㄱㅏㄱㅏ");
+    expect(toCriticalEvents(events)).toEqual(goldenCritical(slateBrokenGolden.events));
+
+    input.remove();
+  });
+
+  it("android-chrome-slate-plain-control: 가 yields intact 가", async () => {
+    const input = document.createElement("input");
+    document.body.append(input);
+
+    await composeHangul(input, "가", { profile: "android-chrome-slate-plain-control" });
+
+    expect(input.value).toBe("가");
+    input.remove();
+  });
+
+  it("matches android-chrome-slate-plain-control golden critical fields for 가", async () => {
+    const input = document.createElement("input");
+    document.body.append(input);
+
+    const events = await composeHangul(input, "가", {
+      profile: "android-chrome-slate-plain-control",
+    });
+
+    expect(input.value).toBe("가");
+    expect(toCriticalEvents(events)).toEqual(goldenCritical(slatePlainGolden.events));
 
     input.remove();
   });

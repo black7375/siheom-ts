@@ -6,15 +6,9 @@
 
 | File | Notes |
 | ---- | ----- |
-| (pending) | Re-capture after Logger fix — see below |
+| `broken-가-placeholder.json` | Slate + placeholder: `가` → `ㄱㄱㅏㄱㅏ` ([Slate #5989](https://github.com/ianstormtaylor/slate/issues/5989)) |
+| `fixed-가-plain-control.json` | Plain textarea: `가` intact (second composition session after clear) |
 
-## Capture targets (Logger)
+Emulator profiles: `android-chrome-slate-placeholder-broken` / `android-chrome-slate-plain-control` in `@siheom/ime`.
 
-| Scenario id | Field | Purpose |
-| ----------- | ----- | ------- |
-| `slate-ac-first-hangul-placeholder` | Slate `Editable` + placeholder | [Slate #5989](https://github.com/ianstormtaylor/slate/issues/5989) repro |
-| `slate-ac-plain-control` | plain `<textarea>` | Baseline — Gboard should compose `가` normally |
-
-**Do not use** Slate without placeholder as control on Android: empty Slate editor blocks IME entirely (Slate #4693 class), not a working comparison.
-
-Storybook: **IME / Slate**.
+Storybook: **IME / Slate**. Scenario ids: `slate-ac-first-hangul-placeholder` / `slate-ac-plain-control`.

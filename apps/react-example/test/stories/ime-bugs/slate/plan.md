@@ -15,7 +15,9 @@
 - [x] 트레이스 JSON을 복사/다운로드할 수 있다 (`ImeCaptureShell` 기본 동작)
 - [x] Android Chrome 캡처용 안내 문구가 표시된다
 
-### Fixtures + emulator (phase 2 — after device capture)
+### Fixtures + emulator (phase 2)
 
-- [ ] OS 캡처 JSON이 `fixtures/`에 정리된다
-- [ ] `*.ime.test` (profile replay) — 캡처 이후
+- [x] OS 캡처 JSON이 `fixtures/android-chrome/`에 정리된다
+- [x] `@siheom/ime` `android-chrome-slate-placeholder-broken` / `-plain-control` profiles (golden replay)
+- [x] `composeHangul.test`: broken → `ㄱㄱㅏㄱㅏ`, plain control → `가`
+- [x] `SlateLogger.ime.test`: broken on Slate editor ≠ `가`; plain control textarea = `가`
