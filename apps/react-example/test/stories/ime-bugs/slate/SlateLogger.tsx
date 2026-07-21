@@ -1,20 +1,14 @@
-import { useCallback, useMemo, useState, type MutableRefObject } from "react";
+import { useMemo, useState, type MutableRefObject } from "react";
 import { createEditor, type Descendant } from "slate";
 import { Editable, Slate, withReact } from "slate-react";
 
 import "./slate-custom-types";
 
 import { ImeCaptureShell } from "../../ime-logger/ImeCaptureShell";
-import type { ImeEventRecord } from "../../ime-logger/serializeImeEvent";
 import { CaptureInstructions, ModeToolbar } from "../shared/imeBugLoggerChrome";
 import { CaptureTargetToolbar, type SlateCaptureTarget } from "./CaptureTargetToolbar";
 import {
-  readSlateCompositionSnapshot,
-  readSlateCompositionSnapshotModelOnly,
-} from "./readSlateCompositionSnapshot";
-import {
   createSlateCompositionDebugLog,
-  pushSlateImeDebugEntry,
   type SlateCompositionDebugLog,
 } from "./slateCompositionDebugLog";
 import {
@@ -72,27 +66,10 @@ export function SlateLogger({
     debugLabel: effectiveMode,
   });
 
-  const onSlateImeEvent = useCallback(
-    (_event: Event, record: ImeEventRecord) => {
-      if (!debugLog) {
-        return;
-      }
-      window.setTimeout(() => {
-        pushSlateImeDebugEntry(
-          debugLog,
-          effectiveMode,
-          record,
-          readSlateCompositionSnapshot(editor, slateEditable, { passive: true }),
-        );
-      }, 0);
-    },
-    [debugLog, editor, effectiveMode, slateEditable],
-  );
-
   return (
     <ImeCaptureShell
       title="Slate placeholder Hangul first syllable"
-      description="Android에서 Slate 공식 placeholder + 한글 조합(#5989)을 재현·캡처합니다. JSON 다운로드에 slateDebug(Slate 모델/DOM/fix trace)가 포함됩니다."
+      description="Android에서 Slate 공식 placeholder + 한글 조합(#5989)을 재현·캡처합니다. JSON: events(DOM) + slateDebug.fixTrace(fixed 패치만)."
       scenarioId={
         effectiveTarget === "plain-control"
           ? SCENARIO_IDS["plain-control"]
@@ -103,12 +80,14 @@ export function SlateLogger({
       listenerDeps={[effectiveTarget, effectiveMode]}
       traceExtra={
         slateDebugEnabled && debugLog
-          ? () => ({
-              slateDebug: debugLog.toExport(editor),
+          ? ({ events }) => ({
+              slateDebug: debugLog.toExport(editor, {
+                editable: slateEditable,
+                imeEventCount: events.length,
+              }),
             })
           : undefined
       }
-      onEventRecorded={slateDebugEnabled ? onSlateImeEvent : undefined}
       clearField={(node: HTMLElement | null) => {
         if (node instanceof HTMLTextAreaElement) {
           node.value = "";
@@ -138,9 +117,8 @@ export function SlateLogger({
             mechanism patch.
           </li>
           <li>
-            <strong>JSON 다운로드</strong>: <code>events</code>(DOM) +{" "}
-            <code>slateDebug.entries</code>(Slate snapshot per event) +{" "}
-            <code>slateDebug.fixActions</code>(fixed 패치 결정).
+            <strong>JSON</strong>: <code>events</code>(DOM) + <code>slateDebug.fixTrace</code>
+            (fixed 패치만) + <code>slateDebug.final</code>(다운로드 시점).
           </li>
           <li>Clear → 포커스 → 조합 → JSON 저장 ( MTP / Download ).</li>
         </CaptureInstructions>

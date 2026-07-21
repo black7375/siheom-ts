@@ -69,6 +69,15 @@ function readDomSelection(editable: HTMLElement | null): SlateCompositionSnapsho
   };
 }
 
+/** Small snapshot for JSON export (fix-plugin rows only). */
+export type SlateDebugSnapshotCompact = {
+  slateText: string;
+  isComposingWeak: boolean;
+  isComposingReact: boolean;
+  pendingDiffCount: number;
+  committedHangul: string;
+};
+
 /** Model + weak-map reads only — safe inside IME event handlers. */
 export function readSlateCompositionSnapshotModelOnly(
   editor: Editor,
@@ -100,6 +109,25 @@ export function readSlateCompositionSnapshotModelOnly(
     hasPendingSelection: Boolean(EDITOR_TO_PENDING_SELECTION.get(editor)),
     committedHangul: fix.committedHangul,
     lastFixAction: fix.lastFixAction?.action ?? null,
+  };
+}
+
+export function compactSlateDebugSnapshot(
+  snap: Pick<
+    SlateCompositionSnapshot,
+    | "slateText"
+    | "isComposingWeak"
+    | "isComposingReact"
+    | "pendingDiffCount"
+    | "committedHangul"
+  >,
+): SlateDebugSnapshotCompact {
+  return {
+    slateText: snap.slateText,
+    isComposingWeak: snap.isComposingWeak,
+    isComposingReact: snap.isComposingReact,
+    pendingDiffCount: snap.pendingDiffCount,
+    committedHangul: snap.committedHangul,
   };
 }
 

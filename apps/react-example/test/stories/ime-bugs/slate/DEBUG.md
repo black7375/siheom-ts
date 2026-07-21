@@ -17,24 +17,17 @@ Understand Slate + Android Hangul IME well enough to keep the **official**
 
 ## Side effects (why capture is deferred)
 
-`onEventRecorded` → `readSlateCompositionSnapshot` must **not** run synchronously inside
-`beforeinput` / composition handlers. Invasive reads break Slate Android Firefox IME replay
-and likely real devices:
+`readSlateCompositionSnapshot` must **not** run synchronously inside `beforeinput` handlers.
+Invasive reads (`cloneNode`, `getComputedStyle`, sync `Node.string`) break Slate AF IME.
 
-| Read | Risk |
-| ---- | ---- |
-| `cloneNode(true)` (`readSlatePlainText`) | Clones live contenteditable during composition; races Android IM |
-| `getComputedStyle(placeholder)` | Forces layout mid-composition |
-| `window.getSelection()` | Can desync IME vs Slate selection |
-| Even `Node.string(editor)` sync in `beforeinput` | Observed to race AF golden replay |
+**Export shape (compact):**
 
-**Strategy:**
-
-- IME shell `events[]` still records DOM `value` via existing listener (unchanged).
-- `onEventRecorded` schedules **`setTimeout(0)`** + **`passive`** snapshot (no clone/layout).
-- Fixed-mode **`fix-plugin`** rows log model-only snapshot inline; `detail` already carries
-  `domText` / `slateText` / `committed` for the decisions that matter.
-- Full `slateDocument` clone omitted in passive mode (see export `summary`).
+| Field | Contents |
+| ----- | -------- |
+| `events[]` | DOM IME trace (only copy) |
+| `slateDebug.fixTrace[]` | Fixed-mode patch steps only (`committed-preedit`, `skip-input`, …) |
+| `slateDebug.final` | Passive Slate+DOM read at JSON download |
+| ~~`slateDebug.entries`~~ | Removed — duplicated every `events[]` row |
 
 ## Device capture (Android Firefox)
 
@@ -42,20 +35,20 @@ and likely real devices:
 2. Meta: OS=`android`, Browser=`firefox`, IME=`hangul` (or leave as detected).
 3. **Clear** → focus editor → type repro (e.g. `가나다가나다`).
 4. **JSON 다운로드** — file includes:
-   - `events[]` — DOM IME trace (same as before)
-   - `slateDebug.entries[]` — per-event Slate snapshot (`slateText`, `domText`, `domRaw`, placeholder display, `isComposingWeak` / `isComposingReact`, `pendingDiffCount`, `committedHangul`, `slateDocument`)
-   - `slateDebug.fixActions[]` — fixed-mode patch decisions only
-   - `slateDebug.summary` — last texts + slate/dom mismatch count
+   - `events[]` — DOM IME trace
+   - `slateDebug.fixTrace[]` — fixed-mode patch steps (`action`, `detail`, compact `snap`)
+   - `slateDebug.final` — passive Slate+DOM at download
+   - `slateDebug.summary` — last slate text, committed, step count
 
 ### What to look for in captures
 
 | Signal | Meaning |
 | ------ | ------- |
-| `slateText !== domText` | Slate model vs DOM diverged (explosion precursor) |
-| `isComposingWeak=true`, `isComposingReact=false` | Android placeholder bug path |
-| `placeholderDisplay !== "none"` during composition | Official placeholder still visible |
-| `pendingDiffCount > 0` at compositionend | Android IM flush race |
-| `fix:skip-input` / missing `fix:committed-preedit` | Patch not running on device |
+| `fixTrace[].detail.domText !== detail.slateText` | Model vs DOM diverged at patch decision |
+| `snap.isComposingWeak=true`, `snap.isComposingReact=false` | Android placeholder bug path |
+| `final.placeholderDisplay !== "none"` after typing | Placeholder still visible |
+| `snap.pendingDiffCount > 0` at `composition-end` | Android IM flush race |
+| missing `committed-preedit` / only `committed-sync` | Patch not driving document during compose |
 
 Save to `fixtures/android-firefox/` with descriptive name.
 

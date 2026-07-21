@@ -31,27 +31,27 @@ describe("readSlateCompositionSnapshot", () => {
 });
 
 describe("slateCompositionDebugLog.toExport", () => {
-  it("merges fix-plugin entries and fix action history for device JSON", () => {
+  it("exports compact fix trace without duplicating IME events", () => {
     const editor = withReact(createEditor());
     const log = createSlateCompositionDebugLog();
     const editable = document.createElement("div");
 
     noteSlateFixAction(editor, "committed-preedit", { next: "가" });
-    pushSlateFixDebugEntry(
-      log,
-      "fixed",
-      "committed-preedit",
-      { next: "가" },
-      readSlateCompositionSnapshot(editor, editable),
-    );
+    pushSlateFixDebugEntry(log, "fixed", "committed-preedit", { next: "가" }, {
+      slateText: "",
+      isComposingWeak: true,
+      isComposingReact: false,
+      pendingDiffCount: 0,
+      committedHangul: "",
+    });
 
-    const exported = log.toExport(editor);
+    const exported = log.toExport(editor, { editable, imeEventCount: 42 });
 
-    expect(exported.entryCount).toBe(1);
-    expect(exported.fixActionCount).toBe(1);
-    expect(exported.entries[0]?.event).toBe("fixed:fix:committed-preedit");
-    expect(exported.entries[0]?.snapshot?.committedHangul).toBe("");
-    expect(exported.fixActions[0]?.action).toBe("committed-preedit");
-    expect(exported.summary.lastSlateText).toBe("");
+    expect(exported.imeEventCount).toBe(42);
+    expect(exported.fixTrace).toHaveLength(1);
+    expect(exported.fixTrace[0]?.action).toBe("committed-preedit");
+    expect(exported.fixTrace[0]?.snap?.committedHangul).toBe("");
+    expect(exported.summary.fixStepCount).toBe(1);
+    expect(exported.final?.slateText).toBe("");
   });
 });

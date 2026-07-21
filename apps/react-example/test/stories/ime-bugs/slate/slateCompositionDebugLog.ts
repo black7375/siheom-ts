@@ -1,53 +1,52 @@
-import type { SlateCompositionSnapshot } from "./readSlateCompositionSnapshot";
-import { readSlateFixActionHistory } from "./slateFixDebugState";
+import type { SlateDebugSnapshotCompact } from "./readSlateCompositionSnapshot";
+import {
+  compactSlateDebugSnapshot,
+  readSlateCompositionSnapshot,
+  type SlateCompositionSnapshot,
+} from "./readSlateCompositionSnapshot";
 import type { Editor } from "slate";
 
 export type SlateCompositionDebugEntry = {
   seq: number;
   t: number;
-  source: "dom-capture" | "dom-bubble" | "fix-plugin";
-  event: string;
+  action: string;
   detail: Record<string, unknown>;
-  snapshot?: Partial<SlateCompositionSnapshot>;
+  snap?: SlateDebugSnapshotCompact;
 };
 
 export type SlateCompositionDebugExport = {
-  entryCount: number;
-  fixActionCount: number;
-  entries: SlateCompositionDebugEntry[];
-  fixActions: ReturnType<typeof readSlateFixActionHistory>;
+  /** DOM IME rows live in top-level `events[]` — not duplicated here. */
+  imeEventCount: number | null;
+  fixTrace: SlateCompositionDebugEntry[];
   summary: {
     lastSlateText: string | null;
-    lastDomText: string | null;
     lastCommittedHangul: string | null;
-    mismatchCount: number;
+    fixStepCount: number;
   };
+  /** Passive Slate+DOM read at download time. */
+  final?: Pick<
+    SlateCompositionSnapshot,
+    "slateText" | "domText" | "placeholderPresent" | "placeholderDisplay" | "pendingDiffCount"
+  >;
 };
 
 export type SlateCompositionDebugLog = {
   entries: SlateCompositionDebugEntry[];
   clear(): void;
   dump(): string;
-  toExport(editor?: Editor): SlateCompositionDebugExport;
+  toExport(
+    editor?: Editor,
+    options?: { editable?: HTMLElement | null; imeEventCount?: number },
+  ): SlateCompositionDebugExport;
 };
 
 function summarize(entries: SlateCompositionDebugEntry[]): SlateCompositionDebugExport["summary"] {
-  const withSnap = [...entries].reverse().find((entry) => entry.snapshot);
-  let mismatchCount = 0;
-  for (const entry of entries) {
-    if (!entry.snapshot) {
-      continue;
-    }
-    if (entry.snapshot.slateText !== entry.snapshot.domText) {
-      mismatchCount += 1;
-    }
-  }
+  const last = entries.at(-1);
 
   return {
-    lastSlateText: withSnap?.snapshot?.slateText ?? null,
-    lastDomText: withSnap?.snapshot?.domText ?? null,
-    lastCommittedHangul: withSnap?.snapshot?.committedHangul ?? null,
-    mismatchCount,
+    lastSlateText: last?.snap?.slateText ?? null,
+    lastCommittedHangul: last?.snap?.committedHangul ?? null,
+    fixStepCount: entries.length,
   };
 }
 
@@ -62,57 +61,57 @@ export function createSlateCompositionDebugLog(): SlateCompositionDebugLog {
     dump() {
       return entries
         .map((entry) => {
-          const snap = entry.snapshot
-            ? ` slate="${entry.snapshot.slateText}" dom="${entry.snapshot.domText}" raw=${JSON.stringify(entry.snapshot.domRaw)} ph=${entry.snapshot.placeholderPresent}:${entry.snapshot.placeholderDisplay} weak=${entry.snapshot.isComposingWeak} react=${entry.snapshot.isComposingReact} pending=${entry.snapshot.pendingDiffCount} action=${entry.snapshot.hasPendingAction} committed="${entry.snapshot.committedHangul}" fix=${entry.snapshot.lastFixAction ?? "-"} sel=${JSON.stringify(entry.snapshot.selection)} domSel=${JSON.stringify(entry.snapshot.domSelection)}`
+          const snap = entry.snap
+            ? ` slate="${entry.snap.slateText}" weak=${entry.snap.isComposingWeak} react=${entry.snap.isComposingReact} pending=${entry.snap.pendingDiffCount} committed="${entry.snap.committedHangul}"`
             : "";
-          return `${entry.seq}\t${entry.event}\t${entry.source}\t${JSON.stringify(entry.detail)}${snap}`;
+          return `${entry.seq}\t${entry.action}\t${JSON.stringify(entry.detail)}${snap}`;
         })
         .join("\n");
     },
-    toExport(editor?: Editor) {
-      const exported = {
-        entryCount: entries.length,
-        fixActionCount: editor ? readSlateFixActionHistory(editor).length : 0,
-        entries: [...entries],
-        fixActions: editor ? readSlateFixActionHistory(editor) : [],
-        summary: summarize(entries),
+    toExport(editor, options) {
+      const fixTrace = [...entries];
+      const exported: SlateCompositionDebugExport = {
+        imeEventCount: options?.imeEventCount ?? null,
+        fixTrace,
+        summary: summarize(fixTrace),
       };
+
+      if (editor && options?.editable) {
+        const final = readSlateCompositionSnapshot(editor, options.editable, { passive: true });
+        exported.final = {
+          slateText: final.slateText,
+          domText: final.domText,
+          placeholderPresent: final.placeholderPresent,
+          placeholderDisplay: final.placeholderDisplay,
+          pendingDiffCount: final.pendingDiffCount,
+        };
+      }
+
       return exported;
     },
   };
 }
 
-/** Push a fix-plugin trace row (called from placeholder composition fix hook). */
+/** Push a fix-plugin trace row (fixed mode only). */
 export function pushSlateFixDebugEntry(
   log: SlateCompositionDebugLog,
-  label: string,
+  _label: string,
   action: string,
   detail: Record<string, unknown>,
-  snapshot?: SlateCompositionSnapshot,
+  snapshot?: Pick<
+    SlateCompositionSnapshot,
+    | "slateText"
+    | "isComposingWeak"
+    | "isComposingReact"
+    | "pendingDiffCount"
+    | "committedHangul"
+  >,
 ): void {
   log.entries.push({
     seq: log.entries.length + 1,
     t: performance.now(),
-    source: "fix-plugin",
-    event: `${label}:fix:${action}`,
+    action,
     detail,
-    snapshot,
-  });
-}
-
-/** Push Slate snapshot alongside an IME capture-shell event (no extra DOM listeners). */
-export function pushSlateImeDebugEntry(
-  log: SlateCompositionDebugLog,
-  label: string,
-  record: { type: string; [key: string]: unknown },
-  snapshot?: Partial<SlateCompositionSnapshot>,
-): void {
-  log.entries.push({
-    seq: log.entries.length + 1,
-    t: performance.now(),
-    source: "dom-capture",
-    event: `${label}:${record.type}`,
-    detail: record,
-    snapshot,
+    snap: snapshot ? compactSlateDebugSnapshot(snapshot) : undefined,
   });
 }

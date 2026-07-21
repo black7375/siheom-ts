@@ -25,7 +25,7 @@ export type UseImeEventCaptureOptions<T extends HTMLElement = HTMLElement> = {
   /** Customize clearing the input node; default clears `.value` or `textContent`. */
   clearField?: (input: T | null) => void;
   /** Merged into downloaded/copied JSON (e.g. Slate debug trace). */
-  traceExtra?: () => Record<string, unknown>;
+  traceExtra?: (capture: { events: ImeEventRecord[] }) => Record<string, unknown>;
   /** Called after each logged DOM event (same listener as IME trace — no extra bindings). */
   onEventRecorded?: (event: Event, record: ImeEventRecord) => void;
 };
@@ -110,7 +110,7 @@ export function useImeEventCapture<T extends HTMLElement = HTMLElement>({
       scenarioId,
       source: "os-ime",
     });
-    const extra = traceExtra?.();
+    const extra = traceExtra?.({ events });
     return extra ? { ...base, ...extra } : base;
   }, [os, browser, ime, events, scenarioId, traceExtra]);
 
