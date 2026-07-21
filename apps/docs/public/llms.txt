@@ -11,6 +11,7 @@
 - Countdown example: /examples/countdown · /en/examples/countdown
 - shadcn/ui examples (18 scenarios — Tabs, Dropdown/Context Menu, Command palette, Select/Combobox, Data Table, Calendar, Sheet, Alert, upload+Progress, Input OTP, Sidebar+Breadcrumb, drag-and-drop, Chart, streaming chat): /examples · /en/examples
 - Headless UI guide: /guides/headless-components · /en/guides/headless-components
+- Hangul IME (@siheom/ime): /guides/ime · /en/guides/ime
 
 ## Primary API (@siheom/react)
 
@@ -88,6 +89,16 @@ Full guide: /guides/headless-components · /en/guides/headless-components
 
 - Multi-page E2E is not supported yet; Playwright-based E2E may come later
 - Component/integration tests in real browser are the current focus
+
+## Hangul IME (@siheom/ime)
+
+Full guide: /guides/ime · /en/guides/ime
+
+- `createImeActions({ profile })` → `overrideSiheom({ actions })` replaces `fill`/`type`
+- Default profile: `linux-chrome-ibus-hangul`; also `macos-safari`, `macos-chrome-apple`, `windows-chrome-ms`, …
+- user-event alone does not fire real composition — use `@siheom/ime` for Hangul bugs
+- Common app fixes: no DOM focus on options mid-composition; sync controlled value; swallow Enter after `compositionend`; clamp `maxLength` on input; defer combobox keys + strip Chrome `김金`
+- Reference: `apps/react-example/test/stories/ime-bugs/`
 
 ## Optional
 

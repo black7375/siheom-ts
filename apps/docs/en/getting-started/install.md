@@ -15,6 +15,12 @@ Install one framework package and run tests in a real browser with vitest browse
 | `@siheom/qwik` | Qwik `given.render` |
 | `@siheom/react-native` | `given.render` on top of React Native Testing Library |
 
+Experimental helpers:
+
+| Package | Role |
+| --- | --- |
+| [`@siheom/ime`](/en/guides/ime) | Hangul IME composition emulation (replace `fill`/`type`) |
+
 `@siheom/core` is a dependency of every framework package, so you don't install it separately.
 
 ## Install
@@ -57,4 +63,5 @@ import { actions, assertions, given, query, runSiheom } from "@siheom/react";
 
 - [React quick start](/en/getting-started/react) — Browser mode and your first test
 - Quick starts for [Vue](/en/getting-started/vue), [Svelte](/en/getting-started/svelte), [Solid](/en/getting-started/solid), [Angular](/en/getting-started/angular), [Qwik](/en/getting-started/qwik), [React Native](/en/getting-started/react-native)
+- [@siheom/ime](/en/guides/ime) — Tests that need Hangul composition
 - [Configuration](/en/configuration) — Export surface

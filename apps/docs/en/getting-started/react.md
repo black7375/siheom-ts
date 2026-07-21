@@ -149,5 +149,6 @@ Export these bindings from a test helper module and reuse them across the suite.
 - [Concepts overview](/en/concepts) — given / action / assert and locators
 - [actions API](/en/configuration/actions) — click, fill, type, …
 - [assertions API](/en/configuration/assertions) — visible, a11ySnapshot, …
+- [@siheom/ime](/en/guides/ime) — Replace `fill`/`type` with Hangul IME composition
 - [Example: Counter](/en/examples/counter) — Including a11y snapshots
 - [Comparisons](/en/comparisons) — Testing Library and Playwright

@@ -83,10 +83,11 @@ Unable to find an accessible element with the role "heading" ...
 
 siheom core does not know how to paint UI. A framework package provides **`given.render`**. See [given](/en/concepts/given).
 
-Two experimental packages build on core as well: `@siheom/ime`, which emulates Hangul IME composition, and `@siheom/vitest-browser-react`, a locator-based render on top of `vitest-browser-react`.
+Two experimental packages build on core as well: [`@siheom/ime`](/en/guides/ime), which emulates Hangul IME composition, and `@siheom/vitest-browser-react`, a locator-based render on top of `vitest-browser-react`.
 
 ## Next steps
 
 - [Installation](/en/getting-started/install) — Packages and browser mode deps
 - [React quick start](/en/getting-started/react) — First test
+- [@siheom/ime](/en/guides/ime) — Hangul IME composition emulation
 - [Comparisons](/en/comparisons) — Testing Library, Playwright, Cypress

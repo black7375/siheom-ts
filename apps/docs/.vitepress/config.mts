@@ -18,6 +18,7 @@ const GUIDES = {
 	text: "가이드",
 	items: [
 		{ text: "헤드리스 UI 컴포넌트", link: "/guides/headless-components" },
+		{ text: "@siheom/ime (한글 IME)", link: "/guides/ime" },
 	],
 };
 
@@ -105,6 +106,7 @@ const GUIDES_EN = {
 	text: "Guides",
 	items: [
 		{ text: "Headless UI components", link: "/en/guides/headless-components" },
+		{ text: "@siheom/ime (Hangul IME)", link: "/en/guides/ime" },
 	],
 };
 

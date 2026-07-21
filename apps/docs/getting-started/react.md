@@ -149,5 +149,6 @@ const { runSiheom, given, actions, assertions, query } = extendSiheom(
 - [개념 개요](/concepts) — given / action / assert와 locator
 - [actions API](/configuration/actions) — click, fill, type 등
 - [assertions API](/configuration/assertions) — visible, a11ySnapshot 등
+- [@siheom/ime](/guides/ime) — 한글 IME 조합으로 `fill`/`type` 교체
 - [예제: Counter](/examples/counter) — 접근성 스냅샷까지
 - [비교](/comparisons) — Testing Library·Playwright와의 관계

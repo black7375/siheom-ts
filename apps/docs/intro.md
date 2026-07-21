@@ -83,12 +83,13 @@ Unable to find an accessible element with the role "heading" ...
 
 siheom core는 UI를 어떻게 그리는지 모릅니다. 프레임워크 패키지가 `given.render`를 제공하는 것이 유일한 약속입니다. [given](/concepts/given)을 참고하세요.
 
-core 위에서 실험적으로 쓸 수 있는 보조 패키지도 있습니다: 한글 IME 조합을 흉내 내는 `@siheom/ime`, `vitest-browser-react`의 locator 기반 렌더링을 쓰는 `@siheom/vitest-browser-react`.
+core 위에서 실험적으로 쓸 수 있는 보조 패키지도 있습니다: 한글 IME 조합을 흉내 내는 [`@siheom/ime`](/guides/ime), `vitest-browser-react`의 locator 기반 렌더링을 쓰는 `@siheom/vitest-browser-react`.
 
 ## 다음 단계
 
 - [설치](/getting-started/install) — 패키지와 browser mode 의존성
 - [React 빠른 시작](/getting-started/react) — 첫 시험
+- [@siheom/ime](/guides/ime) — 한글 IME 조합 에뮬레이션
 - [비교](/comparisons) — Testing Library·Playwright·Cypress
 - [우리에게는 프런트 테스트가 필요할지도 모릅니다](https://twinstae.github.io/why-frontend-testing/)
 - [접근성이 이끄는 웹 프론트엔드 테스트 자동화](https://tech.wonderwall.kr/articles/a11ydriventestautomation/)

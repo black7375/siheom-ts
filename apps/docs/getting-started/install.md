@@ -15,6 +15,12 @@
 | `@siheom/qwik` | Qwik `given.render` |
 | `@siheom/react-native` | React Native Testing Library 기반 `given.render` |
 
+실험적 보조 패키지:
+
+| 패키지 | 역할 |
+| --- | --- |
+| [`@siheom/ime`](/guides/ime) | 한글 IME 조합 에뮬레이션 (`fill`/`type` 교체) |
+
 `@siheom/core`는 각 프레임워크 패키지의 의존성이라 따로 설치할 필요가 없습니다.
 
 ## 설치
@@ -57,4 +63,5 @@ import { actions, assertions, given, query, runSiheom } from "@siheom/react";
 
 - [React 빠른 시작](/getting-started/react) — vitest browser mode와 첫 시험
 - [Vue](/getting-started/vue) · [Svelte](/getting-started/svelte) · [Solid](/getting-started/solid) · [Angular](/getting-started/angular) · [Qwik](/getting-started/qwik) · [React Native](/getting-started/react-native) 빠른 시작
+- [@siheom/ime](/guides/ime) — 한글 조합이 필요한 시험
 - [설정과 API](/configuration) — export 목록
