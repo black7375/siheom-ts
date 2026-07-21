@@ -7,13 +7,14 @@ import { measureReplayFidelity } from "@siheom/ime";
 import { SlateLogger } from "./SlateLogger";
 import { readSlatePlainText } from "./readSlatePlainText";
 import exploreGa from "./fixtures/android-firefox/device-explore-ㄱ가나다.json";
+import exploreGaGa from "./fixtures/android-firefox/device-explore-가가나다-v1-patch.json";
 import { EXPECTED_SLATE_ANDROID_HANGUL_PATCH_ID, readSlatePatchProbe } from "./readSlatePatchProbe";
 
 /** First syllable events from AF device capture — orphan ㄱ repro. */
 const FIRST_GA_EVENTS = exploreGa.events.slice(0, 15);
 
-/** Full 가나다 session (through first compositionend). */
-const FIRST_WORD_EVENTS = exploreGa.events.slice(0, 40);
+/** Full 가나다 from v1 patch device capture (가가나다 bug). */
+const GAGA_WORD_EVENTS = exploreGaGa.events.slice(0, 40);
 
 describe("bun patch slate-react: composition anchor (AF Hangul)", () => {
   it("loads patched slate-react in bundle", () => {
@@ -57,11 +58,9 @@ describe("bun patch slate-react: composition anchor (AF Hangul)", () => {
     expect(readSlatePlainText(editorRef.current!)).toBe("가");
   });
 
-  it("full 가나다 replay has no orphan ㄱ prefix (vitest ≠ device gate)", async () => {
-    const { editorRef } = await replay(FIRST_WORD_EVENTS);
-    const text = readSlatePlainText(editorRef.current!);
+  it("full 가나다 replay ends with 가나다 (v1-patch device events)", async () => {
+    const { editorRef } = await replay(GAGA_WORD_EVENTS);
 
-    expect(text).not.toMatch(/^ㄱ/);
-    expect(text.endsWith("가나다")).toBe(true);
+    expect(readSlatePlainText(editorRef.current!)).toBe("가나다");
   });
 });

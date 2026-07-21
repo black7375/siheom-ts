@@ -1,42 +1,57 @@
 diff --git a/dist/index.es.js b/dist/index.es.js
-index 193ea6f4991a60c0fc996579d8d4a52e627725cf..896ae5ddad1105d5aafa8571837a8c143c5b0f96 100644
+index 193ea6f4991a60c0fc996579d8d4a52e627725cf..82f2e59a17ab77519cff5acac7366a1c26b78f05 100644
 --- a/dist/index.es.js
 +++ b/dist/index.es.js
 @@ -108,6 +108,7 @@ var FLUSH_DELAY = 200;
  var debug = function debug() {};
  // Type guard to check if a value is a DataTransfer
  var isDataTransfer = value => (value === null || value === void 0 ? void 0 : value.constructor.name) === 'DataTransfer';
-+var SLATE_ANDROID_HANGUL_PATCH_ID = 'composition-anchor-v1';
++var SLATE_ANDROID_HANGUL_PATCH_ID = 'composition-anchor-v2';
  function createAndroidInputManager(_ref) {
    var {
      editor,
-@@ -120,6 +121,7 @@ function createAndroidInputManager(_ref) {
+@@ -120,6 +121,29 @@ function createAndroidInputManager(_ref) {
    var actionTimeoutId = null;
    var idCounter = 0;
    var insertPositionHint = false;
 +  var compositionAnchor = null;
++  var resolveAndroidHangulCompositionDiff = (path, data) => {
++    if (!compositionAnchor || !Path.equals(compositionAnchor.path, path) || !data) {
++      return null;
++    }
++    var leaf = Node.leaf(editor, path);
++    var pendingDiffs = EDITOR_TO_PENDING_DIFFS.get(editor);
++    var pendingOnPath = pendingDiffs === null || pendingDiffs === void 0 ? void 0 : pendingDiffs.find(change => Path.equals(change.path, path));
++    var effectiveText = pendingOnPath ? applyStringDiff(leaf.text, pendingOnPath.diff) : leaf.text;
++    var committedPrefix = effectiveText.slice(0, compositionAnchor.offset);
++    if (compositionAnchor.offset > 0 && data.startsWith(committedPrefix)) {
++      return {
++        start: 0,
++        end: effectiveText.length,
++        text: data
++      };
++    }
++    return {
++      start: compositionAnchor.offset,
++      end: effectiveText.length,
++      text: data
++    };
++  };
    var applyPendingSelection = () => {
      var pendingSelection = EDITOR_TO_PENDING_SELECTION.get(editor);
      EDITOR_TO_PENDING_SELECTION.delete(editor);
-@@ -246,13 +248,45 @@ function createAndroidInputManager(_ref) {
+@@ -246,13 +270,38 @@ function createAndroidInputManager(_ref) {
      if (compositionEndTimeoutId) {
        clearTimeout(compositionEndTimeoutId);
      }
 +    var endData = _event.data;
 +    if (endData && compositionAnchor && Editor.hasPath(editor, compositionAnchor.path)) {
 +      var path = compositionAnchor.path;
++      var resolved = resolveAndroidHangulCompositionDiff(path, endData);
 +      var leaf = Node.leaf(editor, path);
-+      var composeEnd = leaf.text.length;
-+      if (composeEnd >= compositionAnchor.offset) {
-+        var segment = leaf.text.slice(compositionAnchor.offset, composeEnd);
-+        if (segment !== endData) {
-+          storeDiff(path, {
-+            start: compositionAnchor.offset,
-+            end: composeEnd,
-+            text: endData
-+          });
-+          flush();
-+        }
++      if (resolved && leaf.text !== endData) {
++        storeDiff(path, resolved);
++        flush();
 +      }
 +    }
      compositionEndTimeoutId = setTimeout(() => {
@@ -64,30 +79,22 @@ index 193ea6f4991a60c0fc996579d8d4a52e627725cf..896ae5ddad1105d5aafa8571837a8c14
      if (compositionEndTimeoutId) {
        clearTimeout(compositionEndTimeoutId);
        compositionEndTimeoutId = null;
-@@ -603,6 +637,22 @@ function createAndroidInputManager(_ref) {
+@@ -603,6 +652,14 @@ function createAndroidInputManager(_ref) {
                end: _end.offset,
                text: _text
              };
 +            // COMPAT: Android Firefox Hangul sends cumulative insertCompositionText with a
 +            // collapsed DOM selection after the jamo leaf; replace from composition start.
 +            if (type === 'insertCompositionText' && IS_COMPOSING.get(editor) && compositionAnchor && Path.equals(compositionAnchor.path, _start.path)) {
-+              var _leaf = Node.leaf(editor, _start.path);
-+              var _pendingDiffs = EDITOR_TO_PENDING_DIFFS.get(editor);
-+              var _pendingOnPath = _pendingDiffs === null || _pendingDiffs === void 0 ? void 0 : _pendingDiffs.find(change => Path.equals(change.path, _start.path));
-+              var _effectiveText = _pendingOnPath ? applyStringDiff(_leaf.text, _pendingOnPath.diff) : _leaf.text;
-+              var _composeEnd = Range.isCollapsed(targetRange) ? _effectiveText.length : _end.offset;
-+              if (_composeEnd >= compositionAnchor.offset) {
-+                _diff = {
-+                  start: compositionAnchor.offset,
-+                  end: Math.max(_composeEnd, _start.offset),
-+                  text: _text
-+                };
++              var resolved = resolveAndroidHangulCompositionDiff(_start.path, _text);
++              if (resolved) {
++                _diff = resolved;
 +              }
 +            }
              // COMPAT: Swiftkey has a weird bug where the target range of the 2nd word
              // inserted after a mark placeholder is inserted with an anchor offset off by 1.
              // So writing 'some text' will result in 'some ttext'. Luckily all 'normal' insert
-@@ -638,7 +688,7 @@ function createAndroidInputManager(_ref) {
+@@ -638,7 +695,7 @@ function createAndroidInputManager(_ref) {
                if (currentSelection) {
                  var newPoint = {
                    path: _start.path,
@@ -96,7 +103,7 @@ index 193ea6f4991a60c0fc996579d8d4a52e627725cf..896ae5ddad1105d5aafa8571837a8c14
                  };
                  scheduleAction(() => {
                    Transforms.select(editor, {
-@@ -4112,5 +4162,5 @@ var withReact = function withReact(editor) {
+@@ -4112,5 +4169,5 @@ var withReact = function withReact(editor) {
    return e;
  };
  
@@ -104,44 +111,61 @@ index 193ea6f4991a60c0fc996579d8d4a52e627725cf..896ae5ddad1105d5aafa8571837a8c14
 +export { DefaultElement, DefaultLeaf, DefaultPlaceholder, DefaultText, Editable, ReactEditor, SLATE_ANDROID_HANGUL_PATCH_ID, Slate, defaultScrollSelectionIntoView, useComposing, useEditor, useElement, useElementIf, useFocused, useReadOnly, useSelected, useSlate, useSlateSelection, useSlateSelector, useSlateStatic, useSlateWithV, withReact };
  //# sourceMappingURL=index.es.js.map
 diff --git a/dist/index.js b/dist/index.js
-index aa31a1a118a786fb141a20607e14deec55b4feb6..c756ef515af522d368b8248ffa5ba0650d23a31d 100644
+index aa31a1a118a786fb141a20607e14deec55b4feb6..74ae64921f600b1305b385302fb97d96c616400d 100644
 --- a/dist/index.js
 +++ b/dist/index.js
 @@ -237,6 +237,7 @@ var debug = function debug() {};
  var isDataTransfer = function isDataTransfer(value) {
    return (value === null || value === void 0 ? void 0 : value.constructor.name) === 'DataTransfer';
  };
-+var SLATE_ANDROID_HANGUL_PATCH_ID = 'composition-anchor-v1';
++var SLATE_ANDROID_HANGUL_PATCH_ID = 'composition-anchor-v2';
  function createAndroidInputManager(_ref) {
    var editor = _ref.editor,
      scheduleOnDOMSelectionChange = _ref.scheduleOnDOMSelectionChange,
-@@ -247,6 +248,7 @@ function createAndroidInputManager(_ref) {
+@@ -247,6 +248,31 @@ function createAndroidInputManager(_ref) {
    var actionTimeoutId = null;
    var idCounter = 0;
    var insertPositionHint = false;
 +  var compositionAnchor = null;
++  var resolveAndroidHangulCompositionDiff = function resolveAndroidHangulCompositionDiff(path, data) {
++    if (!compositionAnchor || !slate.Path.equals(compositionAnchor.path, path) || !data) {
++      return null;
++    }
++    var leaf = slate.Node.leaf(editor, path);
++    var pendingDiffs = slateDom.EDITOR_TO_PENDING_DIFFS.get(editor);
++    var pendingOnPath = pendingDiffs === null || pendingDiffs === void 0 ? void 0 : pendingDiffs.find(function (change) {
++      return slate.Path.equals(change.path, path);
++    });
++    var effectiveText = pendingOnPath ? slateDom.applyStringDiff(leaf.text, pendingOnPath.diff) : leaf.text;
++    var committedPrefix = effectiveText.slice(0, compositionAnchor.offset);
++    if (compositionAnchor.offset > 0 && data.startsWith(committedPrefix)) {
++      return {
++        start: 0,
++        end: effectiveText.length,
++        text: data
++      };
++    }
++    return {
++      start: compositionAnchor.offset,
++      end: effectiveText.length,
++      text: data
++    };
++  };
    var applyPendingSelection = function applyPendingSelection() {
      var pendingSelection = slateDom.EDITOR_TO_PENDING_SELECTION.get(editor);
      slateDom.EDITOR_TO_PENDING_SELECTION["delete"](editor);
-@@ -371,13 +373,45 @@ function createAndroidInputManager(_ref) {
+@@ -371,13 +397,38 @@ function createAndroidInputManager(_ref) {
      if (compositionEndTimeoutId) {
        clearTimeout(compositionEndTimeoutId);
      }
 +    var endData = _event.data;
 +    if (endData && compositionAnchor && slate.Editor.hasPath(editor, compositionAnchor.path)) {
 +      var path = compositionAnchor.path;
++      var resolved = resolveAndroidHangulCompositionDiff(path, endData);
 +      var leaf = slate.Node.leaf(editor, path);
-+      var composeEnd = leaf.text.length;
-+      if (composeEnd >= compositionAnchor.offset) {
-+        var segment = leaf.text.slice(compositionAnchor.offset, composeEnd);
-+        if (segment !== endData) {
-+          storeDiff(path, {
-+            start: compositionAnchor.offset,
-+            end: composeEnd,
-+            text: endData
-+          });
-+          flush();
-+        }
++      if (resolved && leaf.text !== endData) {
++        storeDiff(path, resolved);
++        flush();
 +      }
 +    }
      compositionEndTimeoutId = setTimeout(function () {
@@ -169,32 +193,22 @@ index aa31a1a118a786fb141a20607e14deec55b4feb6..c756ef515af522d368b8248ffa5ba065
      if (compositionEndTimeoutId) {
        clearTimeout(compositionEndTimeoutId);
        compositionEndTimeoutId = null;
-@@ -766,6 +800,24 @@ function createAndroidInputManager(_ref) {
+@@ -766,6 +817,14 @@ function createAndroidInputManager(_ref) {
                end: _end.offset,
                text: _text
              };
 +            // COMPAT: Android Firefox Hangul sends cumulative insertCompositionText with a
 +            // collapsed DOM selection after the jamo leaf; replace from composition start.
 +            if (type === 'insertCompositionText' && slateDom.IS_COMPOSING.get(editor) && compositionAnchor && slate.Path.equals(compositionAnchor.path, _start.path)) {
-+              var _leaf = slate.Node.leaf(editor, _start.path);
-+              var _pendingDiffs = slateDom.EDITOR_TO_PENDING_DIFFS.get(editor);
-+              var _pendingOnPath = _pendingDiffs === null || _pendingDiffs === void 0 ? void 0 : _pendingDiffs.find(function (change) {
-+                return slate.Path.equals(change.path, _start.path);
-+              });
-+              var _effectiveText = _pendingOnPath ? slateDom.applyStringDiff(_leaf.text, _pendingOnPath.diff) : _leaf.text;
-+              var _composeEnd = slate.Range.isCollapsed(targetRange) ? _effectiveText.length : _end.offset;
-+              if (_composeEnd >= compositionAnchor.offset) {
-+                _diff = {
-+                  start: compositionAnchor.offset,
-+                  end: Math.max(_composeEnd, _start.offset),
-+                  text: _text
-+                };
++              var resolved = resolveAndroidHangulCompositionDiff(_start.path, _text);
++              if (resolved) {
++                _diff = resolved;
 +              }
 +            }
              // COMPAT: Swiftkey has a weird bug where the target range of the 2nd word
              // inserted after a mark placeholder is inserted with an anchor offset off by 1.
              // So writing 'some text' will result in 'some ttext'. Luckily all 'normal' insert
-@@ -801,7 +853,7 @@ function createAndroidInputManager(_ref) {
+@@ -801,7 +860,7 @@ function createAndroidInputManager(_ref) {
                if (currentSelection) {
                  var newPoint = {
                    path: _start.path,
@@ -203,7 +217,7 @@ index aa31a1a118a786fb141a20607e14deec55b4feb6..c756ef515af522d368b8248ffa5ba065
                  };
                  scheduleAction(function () {
                    slate.Transforms.select(editor, {
-@@ -4584,6 +4636,7 @@ exports.DefaultPlaceholder = DefaultPlaceholder;
+@@ -4584,6 +4643,7 @@ exports.DefaultPlaceholder = DefaultPlaceholder;
  exports.DefaultText = DefaultText;
  exports.Editable = Editable;
  exports.ReactEditor = ReactEditor;
