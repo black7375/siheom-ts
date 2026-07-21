@@ -1,14 +1,15 @@
-import { setInputValue } from "./events";
 import type { ImeTrace } from "./imeTrace";
-import { clearImeSession, getImeSession, setImeSession } from "./session";
+import { playEventPlan } from "./eventPlan";
+import {
+  planChromeCompositionOverflow,
+  planSafariCompositionOverflow,
+  planSafariReplacementOverflow,
+} from "./planMaxLength";
+import { getImeSession, setImeSession } from "./session";
 
 export function readMaxLength(element: HTMLInputElement | HTMLTextAreaElement): number | null {
   const limit = element.maxLength;
   return limit < 0 ? null : limit;
-}
-
-function clampValue(value: string, limit: number): string {
-  return value.slice(0, limit);
 }
 
 /** Chrome / Linux composition: reject overflow with empty input data then compositionend. */
@@ -17,30 +18,9 @@ export function rejectChromeCompositionOverflow(
   preedit: string,
   overflowValue: string,
 ) {
-  const { element } = trace;
-  const limit = readMaxLength(element);
+  const limit = readMaxLength(trace.element);
   if (limit === null) return;
-
-  const clamped = clampValue(overflowValue, limit);
-
-  trace.compositionUpdate(preedit, overflowValue);
-  trace.beforeInput({
-    inputType: "insertCompositionText",
-    data: preedit,
-    isComposing: true,
-    value: overflowValue,
-  });
-
-  setInputValue(element, clamped, clamped.length);
-  trace.input({
-    inputType: "insertCompositionText",
-    data: "",
-    isComposing: true,
-    value: clamped,
-  });
-
-  trace.compositionEnd(preedit, clamped);
-  clearImeSession(element);
+  playEventPlan(trace, planChromeCompositionOverflow(preedit, overflowValue, limit));
 }
 
 /** Safari composition: deleteCompositionText + insertFromComposition("") + compositionend. */
@@ -49,74 +29,14 @@ export function rejectSafariCompositionOverflow(
   preedit: string,
   overflowValue: string,
 ) {
-  const { element } = trace;
-  const limit = readMaxLength(element);
+  const limit = readMaxLength(trace.element);
   if (limit === null) return;
-
-  const clamped = clampValue(overflowValue, limit);
-
-  trace.compositionUpdate(preedit, overflowValue);
-  trace.beforeInput({
-    inputType: "insertCompositionText",
-    data: preedit,
-    isComposing: true,
-    value: overflowValue,
-  });
-  trace.input({
-    inputType: "insertCompositionText",
-    data: preedit,
-    isComposing: true,
-    value: overflowValue,
-  });
-
-  trace.beforeInput({
-    inputType: "deleteCompositionText",
-    data: null,
-    isComposing: true,
-    value: overflowValue,
-  });
-
-  setInputValue(element, clamped, clamped.length);
-  trace.input({
-    inputType: "deleteCompositionText",
-    data: null,
-    isComposing: true,
-    value: clamped,
-  });
-
-  trace.beforeInput({
-    inputType: "insertFromComposition",
-    data: "",
-    isComposing: true,
-    value: clamped,
-  });
-  trace.input({
-    inputType: "insertFromComposition",
-    data: "",
-    isComposing: true,
-    value: clamped,
-  });
-
-  trace.compositionEnd(preedit, clamped);
-  clearImeSession(element);
+  playEventPlan(trace, planSafariCompositionOverflow(preedit, overflowValue, limit));
 }
 
 /** Safari replacement: reject overflow with empty insertText. */
 export function rejectSafariReplacementOverflow(trace: ImeTrace) {
-  const value = trace.element.value;
-
-  trace.beforeInput({
-    inputType: "insertText",
-    data: "",
-    isComposing: false,
-    value,
-  });
-  trace.input({
-    inputType: "insertText",
-    data: "",
-    isComposing: false,
-    value,
-  });
+  playEventPlan(trace, planSafariReplacementOverflow(trace.element.value));
 }
 
 export function markPendingMaxLengthReject(

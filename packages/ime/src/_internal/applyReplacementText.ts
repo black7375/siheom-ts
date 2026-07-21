@@ -1,5 +1,6 @@
-import { setInputValue } from "./events";
+import { playEventPlan } from "./eventPlan";
 import type { ImeTrace } from "./imeTrace";
+import { planReplacementText } from "./planMaxLength";
 
 export type ReplacementInputType = "insertText" | "insertReplacementText";
 
@@ -29,20 +30,8 @@ export function applyReplacementText(
   inputType: ReplacementInputType,
   caret: number = value.length,
 ) {
-  const { element } = trace;
-
-  trace.beforeInput({
-    inputType,
-    data,
-    isComposing: false,
-    value: element.value,
-  });
-
-  setInputValue(element, value, caret);
-  trace.input({
-    inputType,
-    data,
-    isComposing: false,
-    value,
-  });
+  playEventPlan(
+    trace,
+    planReplacementText(data, value, inputType, caret, trace.element.value),
+  );
 }

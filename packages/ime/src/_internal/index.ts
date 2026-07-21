@@ -10,6 +10,19 @@ export {
   planConfirmAndEndComposition,
   type PlanConfirmFacts,
 } from "./planConfirmComposition";
+export {
+  planSafariInsertFromComposition,
+  planSafariSyllableCommit,
+  planSafariSyllableCommitCore,
+  planRestartSafariComposition,
+  type PlanSafariInsertOptions,
+} from "./planSafari";
+export {
+  planChromeCompositionOverflow,
+  planSafariCompositionOverflow,
+  planSafariReplacementOverflow,
+  planReplacementText,
+} from "./planMaxLength";
 export { applyPreedit } from "./applyPreedit";
 export { applyReplacementText, replacementInputType } from "./applyReplacementText";
 export {
