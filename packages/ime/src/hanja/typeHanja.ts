@@ -1,6 +1,7 @@
 import {
   applyPreedit,
   clearImeSession,
+  commitSafariInsertFromComposition,
   dispatch,
   getImeSession,
   setInputValue,
@@ -190,77 +191,4 @@ function confirmSafariReplaceCandidate(
 
   clearImeSession(element);
   return records;
-}
-
-/** Safari: deleteCompositionText then insertFromComposition (no compositionend). */
-function commitSafariInsertFromComposition(
-  element: HTMLInputElement | HTMLTextAreaElement,
-  syllable: string,
-  committedValue: string,
-  records: ComposedEventRecord[],
-) {
-  dispatch(element, "beforeinput", {
-    bubbles: true,
-    cancelable: true,
-    inputType: "deleteCompositionText",
-    data: null,
-    isComposing: true,
-  });
-  records.push(
-    snapshot(element, "beforeinput", {
-      inputType: "deleteCompositionText",
-      data: null,
-      isComposing: true,
-      value: committedValue,
-    }),
-  );
-
-  const cleared = committedValue.slice(0, committedValue.length - syllable.length);
-  setInputValue(element, cleared, cleared.length);
-  dispatch(element, "input", {
-    bubbles: true,
-    inputType: "deleteCompositionText",
-    data: null,
-    isComposing: true,
-  });
-  records.push(
-    snapshot(element, "input", {
-      inputType: "deleteCompositionText",
-      data: null,
-      isComposing: true,
-      value: cleared,
-    }),
-  );
-
-  dispatch(element, "beforeinput", {
-    bubbles: true,
-    cancelable: true,
-    inputType: "insertFromComposition",
-    data: syllable,
-    isComposing: true,
-  });
-  records.push(
-    snapshot(element, "beforeinput", {
-      inputType: "insertFromComposition",
-      data: syllable,
-      isComposing: true,
-      value: cleared,
-    }),
-  );
-
-  setInputValue(element, committedValue, committedValue.length);
-  dispatch(element, "input", {
-    bubbles: true,
-    inputType: "insertFromComposition",
-    data: syllable,
-    isComposing: true,
-  });
-  records.push(
-    snapshot(element, "input", {
-      inputType: "insertFromComposition",
-      data: syllable,
-      isComposing: true,
-      value: committedValue,
-    }),
-  );
 }

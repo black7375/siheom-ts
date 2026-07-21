@@ -21,6 +21,7 @@ export {
 export {
   commitSafariSyllable,
   commitSafariSyllableCore,
+  commitSafariInsertFromComposition,
   restartSafariComposition,
 } from "./commitSafariSyllable";
 export {

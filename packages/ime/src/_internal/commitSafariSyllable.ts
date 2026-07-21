@@ -13,8 +13,8 @@ export function commitSafariSyllable(
   commitSafariSyllableCore(element, syllable, committedValue, records);
 }
 
-/** The delete + insertFromComposition + compositionend block, without the preedit echo. */
-export function commitSafariSyllableCore(
+/** deleteCompositionText + insertFromComposition (no compositionend). */
+export function commitSafariInsertFromComposition(
   element: HTMLInputElement | HTMLTextAreaElement,
   syllable: string,
   committedValue: string,
@@ -84,6 +84,16 @@ export function commitSafariSyllableCore(
       value: committedValue,
     }),
   );
+}
+
+/** The delete + insertFromComposition + compositionend block, without the preedit echo. */
+export function commitSafariSyllableCore(
+  element: HTMLInputElement | HTMLTextAreaElement,
+  syllable: string,
+  committedValue: string,
+  records: ComposedEventRecord[],
+) {
+  commitSafariInsertFromComposition(element, syllable, committedValue, records);
 
   dispatch(element, "compositionend", { bubbles: true, data: syllable });
   records.push(
