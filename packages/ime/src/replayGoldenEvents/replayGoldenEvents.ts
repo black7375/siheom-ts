@@ -32,7 +32,8 @@ function toInputFields(event: ComposedEventRecord): InputEventFields {
   };
 }
 
-function playGoldenEvent(trace: ImeTraceEmitter, event: ComposedEventRecord): void {
+/** @internal Exported for fidelity measurement. */
+export function playGoldenEvent(trace: ImeTraceEmitter, event: ComposedEventRecord): void {
   switch (event.type) {
     case "keydown":
       trace.keydown(toKeyFields(event));

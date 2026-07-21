@@ -36,6 +36,19 @@ export { toCriticalEvents } from "./toCriticalEvents";
 export { replayGoldenEvents } from "./replayGoldenEvents";
 export type { ReplayGoldenEventsOptions } from "./replayGoldenEvents";
 export {
+  measureReplayFidelity,
+  formatFidelityReport,
+} from "./replayGoldenEvents/measureReplayFidelity";
+export type {
+  FidelityReport,
+  FidelityStep,
+  MeasureReplayFidelityOptions,
+} from "./replayGoldenEvents/measureReplayFidelity";
+export {
+  dualTraceFromImeCapture,
+} from "./dualTrace/dualTraceFromImeCapture";
+export type { DualTrace, DualTraceStep, ImeTraceLike } from "./dualTrace/dualTraceFromImeCapture";
+export {
   markImeControlledWriteback,
   consumeImeControlledWriteback,
 } from "./markImeControlledWriteback";
