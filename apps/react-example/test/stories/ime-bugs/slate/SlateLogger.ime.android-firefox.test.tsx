@@ -13,6 +13,7 @@ import { createImeActions, measureReplayFidelity } from "@siheom/ime";
 import { defaultGivens, reactEffects } from "@siheom/react";
 
 import { SlateLogger } from "./SlateLogger";
+import { createSlateCompositionDebugLog } from "./slateCompositionDebugLog";
 import { readSlatePlainText } from "./readSlatePlainText";
 import v3Golden from "./fixtures/android-firefox/mechanism-fix-v3-cumulative-preedit-가나다가나다.json";
 import v4Golden from "./fixtures/android-firefox/mechanism-fix-v4-still-explodes-가나다가나다.json";
@@ -49,6 +50,35 @@ describe("SlateLogger + android-firefox-slate-placeholder-fixed IME", () => {
       expect(editorRef.current).not.toBeNull();
       expect(readSlatePlainText(editorRef.current!)).toBe("가");
     });
+  });
+
+  it("minimal mode records guard-only fixTrace (no committed-preedit drive)", async () => {
+    const editorRef: { current: HTMLElement | null } = { current: null };
+    const debugLog = createSlateCompositionDebugLog();
+    const { runSiheom, actions, given } = runWithSlateIme(
+      "android-firefox-slate-placeholder-broken",
+    );
+
+    await runSiheom(
+      given.render(
+        <SlateLogger
+          mode="minimal"
+          captureTarget="slate-placeholder"
+          editorRef={editorRef}
+          debugLog={debugLog}
+        />,
+      ),
+      actions.type(query.textbox("Slate editor"), "가"),
+    );
+
+    await waitFor(() => {
+      expect(editorRef.current).not.toBeNull();
+      expect(debugLog.entries.some((entry) => entry.action === "composition-start")).toBe(true);
+    });
+
+    const actionsSeen = debugLog.entries.map((entry) => entry.action);
+    expect(actionsSeen).not.toContain("committed-preedit");
+    expect(actionsSeen).not.toContain("normalize-after-flush");
   });
 
   it("fixed mode events-only replay fidelity stays low (not a device gate)", async () => {

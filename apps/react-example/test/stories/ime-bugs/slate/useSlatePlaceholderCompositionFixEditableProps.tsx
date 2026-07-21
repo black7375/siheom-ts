@@ -28,11 +28,15 @@ import {
 
 const ANDROID_IM_FLUSH_MS = 400;
 
+export type SlatePlaceholderFixLevel = "minimal" | "full";
+
 export type UseSlatePlaceholderCompositionFixOptions = {
   editor: Editor | undefined;
   editable: HTMLElement | null;
   debugLog?: SlateCompositionDebugLog;
   debugLabel?: string;
+  /** minimal = placeholder hide + force-render guard only; full = + preedit drive */
+  fixLevel?: SlatePlaceholderFixLevel;
 };
 
 /**
@@ -43,7 +47,9 @@ export function useSlatePlaceholderCompositionFixEditableProps({
   editable,
   debugLog,
   debugLabel = "fixed",
+  fixLevel = "full",
 }: UseSlatePlaceholderCompositionFixOptions) {
+  const drivePreedit = fixLevel === "full";
   const committedHangulRef = useRef("");
   const compositionEndDataRef = useRef<string | null>(null);
 
@@ -136,8 +142,14 @@ export function useSlatePlaceholderCompositionFixEditableProps({
         return;
       }
 
-      compositionEndDataRef.current = event.data;
       noteCompositionEndForGuard(editor);
+
+      if (!drivePreedit) {
+        noteFix("composition-end-minimal", { data: event.data });
+        return;
+      }
+
+      compositionEndDataRef.current = event.data;
       noteFix("composition-end", { data: event.data, committedBefore: committedHangulRef.current });
 
       window.setTimeout(() => {
@@ -153,12 +165,12 @@ export function useSlatePlaceholderCompositionFixEditableProps({
         noteFix("committed-sync", { committed: visible, endData });
       }, ANDROID_IM_FLUSH_MS);
     },
-    [editor, noteFix],
+    [drivePreedit, editor, noteFix],
   );
 
   const onDOMBeforeInput = useCallback(
     (event: InputEvent) => {
-      if (!editor) {
+      if (!editor || !drivePreedit) {
         return;
       }
 
@@ -217,21 +229,31 @@ export function useSlatePlaceholderCompositionFixEditableProps({
         event.preventDefault();
       }
     },
-    [editable, editor, noteFix, syncCommittedFromEditor],
+    [drivePreedit, editable, editor, noteFix, syncCommittedFromEditor],
   );
 
-  return useMemo(
-    () =>
-      editor
-        ? {
-            renderPlaceholder,
-            onCompositionStart,
-            onCompositionEnd,
-            onDOMBeforeInput,
-          }
-        : {},
-    [editor, onCompositionEnd, onCompositionStart, onDOMBeforeInput, renderPlaceholder],
-  );
+  return useMemo(() => {
+    if (!editor) {
+      return {};
+    }
+
+    const props: {
+      renderPlaceholder: typeof renderPlaceholder;
+      onCompositionStart: typeof onCompositionStart;
+      onCompositionEnd: typeof onCompositionEnd;
+      onDOMBeforeInput?: typeof onDOMBeforeInput;
+    } = {
+      renderPlaceholder,
+      onCompositionStart,
+      onCompositionEnd,
+    };
+
+    if (drivePreedit) {
+      props.onDOMBeforeInput = onDOMBeforeInput;
+    }
+
+    return props;
+  }, [drivePreedit, editor, onCompositionEnd, onCompositionStart, onDOMBeforeInput, renderPlaceholder]);
 }
 
 export function clearSlatePlaceholderCompositionFixDebug(editor: Editor): void {

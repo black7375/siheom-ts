@@ -35,7 +35,6 @@
 - [x] Reject post-hoc rewrite (flicker capture)
 - [x] Reject decorative overlay (still explodes; not a real fix) — `decorative-still-explodes-가나다가나다.json`
 - [x] Research notes: `docs/research/slate-placeholder-hangul-mechanism.md`
-- [x] Story always uses Slate `placeholder={…}`; fixed = future mechanism patch slot
-- [x] Debug snapshot: placeholder present/display, selection, `isComposing`
-- [x] Mechanism patch TDD: placeholder hide while composing, force-render guard, composition-data correction (Android)
-- [ ] Device: AC/AF fixed with official placeholder → intact Hangul, no explosion (recapture)
+- [x] Story always uses Slate `placeholder={…}`; broken / minimal / fixed modes
+- [x] `minimal` mode: placeholder hide + force-render guard only (no preedit drive)
+- [ ] Device: compare broken / minimal / fixed on AF → intact Hangul, no explosion

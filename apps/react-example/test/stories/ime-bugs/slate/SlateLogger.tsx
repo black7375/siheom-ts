@@ -5,8 +5,9 @@ import { Editable, Slate, withReact } from "slate-react";
 import "./slate-custom-types";
 
 import { ImeCaptureShell } from "../../ime-logger/ImeCaptureShell";
-import { CaptureInstructions, ModeToolbar } from "../shared/imeBugLoggerChrome";
+import { CaptureInstructions } from "../shared/imeBugLoggerChrome";
 import { CaptureTargetToolbar, type SlateCaptureTarget } from "./CaptureTargetToolbar";
+import { SlateModeToolbar } from "./SlateModeToolbar";
 import {
   createSlateCompositionDebugLog,
   type SlateCompositionDebugLog,
@@ -24,7 +25,20 @@ const SCENARIO_IDS: Record<SlateCaptureTarget, string> = {
   "plain-control": "slate-ac-plain-control",
 };
 
-export type SlateLoggerMode = "broken" | "fixed";
+export type SlateLoggerMode = "broken" | "minimal" | "fixed";
+
+function scenarioIdForMode(mode: SlateLoggerMode, target: SlateCaptureTarget): string {
+  if (target === "plain-control") {
+    return SCENARIO_IDS["plain-control"];
+  }
+  if (mode === "fixed") {
+    return "slate-ac-first-hangul-placeholder-fixed";
+  }
+  if (mode === "minimal") {
+    return "slate-ac-first-hangul-placeholder-minimal";
+  }
+  return SCENARIO_IDS["slate-placeholder"];
+}
 
 export type SlateLoggerProps = {
   mode?: SlateLoggerMode;
@@ -58,25 +72,21 @@ export function SlateLogger({
   );
   const debugLog = debugLogProp ?? internalDebugLog;
 
-  const useFix = effectiveTarget === "slate-placeholder" && effectiveMode === "fixed";
+  const useFix = effectiveTarget === "slate-placeholder" && effectiveMode !== "broken";
+  const fixLevel = effectiveMode === "minimal" ? "minimal" : "full";
   const fixEditableProps = useSlatePlaceholderCompositionFixEditableProps({
     editor: useFix ? editor : undefined,
     editable: slateEditable,
     debugLog: useFix ? (debugLog ?? undefined) : undefined,
     debugLabel: effectiveMode,
+    fixLevel: useFix ? fixLevel : undefined,
   });
 
   return (
     <ImeCaptureShell
       title="Slate placeholder Hangul first syllable"
-      description="Android에서 Slate 공식 placeholder + 한글 조합(#5989)을 재현·캡처합니다. JSON: events(DOM) + slateDebug.fixTrace(fixed 패치만)."
-      scenarioId={
-        effectiveTarget === "plain-control"
-          ? SCENARIO_IDS["plain-control"]
-          : effectiveMode === "fixed"
-            ? "slate-ac-first-hangul-placeholder-fixed"
-            : SCENARIO_IDS["slate-placeholder"]
-      }
+      description="Android Slate #5989 — broken / minimal(guard only) / fixed(full). JSON: events + slateDebug.fixTrace."
+      scenarioId={scenarioIdForMode(effectiveMode, effectiveTarget)}
       listenerDeps={[effectiveTarget, effectiveMode]}
       traceExtra={
         slateDebugEnabled && debugLog
@@ -106,21 +116,20 @@ export function SlateLogger({
               <div className="mt-3 space-y-3">
                 <CaptureTargetToolbar target={captureTarget} onTargetChange={setCaptureTarget} />
                 {effectiveTarget === "slate-placeholder" && modeProp === undefined ? (
-                  <ModeToolbar mode={mode} onModeChange={setMode} />
+                  <SlateModeToolbar mode={mode} onModeChange={setMode} />
                 ) : null}
               </div>
             ) : null
           }
         >
           <li>
-            <strong>Slate + 공식 placeholder</strong>: 「가」/「가나다」. broken = upstream. fixed =
-            mechanism patch.
+            <strong>broken</strong> — upstream. <strong>minimal</strong> — placeholder hide +
+            force-render guard. <strong>fixed</strong> — + preedit drive.
           </li>
           <li>
-            <strong>JSON</strong>: <code>events</code>(DOM) + <code>slateDebug.fixTrace</code>
-            (fixed 패치만) + <code>slateDebug.final</code>(다운로드 시점).
+            Device compare: Clear → 각 모드로 <code>가나다</code> → JSON 저장 (파일명에 scenarioId
+            포함).
           </li>
-          <li>Clear → 포커스 → 조합 → JSON 저장 ( MTP / Download ).</li>
         </CaptureInstructions>
       )}
     >

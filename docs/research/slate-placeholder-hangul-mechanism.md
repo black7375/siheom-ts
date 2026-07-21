@@ -51,15 +51,18 @@ Slate `androidInputManager` comments (0.126):
 4. Chrome #5989 first-syllable jamo split may share (2)+(3); AF stuck-`ㄱ` +
    explosion may be (1)+(4).
 
-## Fix in Story (`fixed` mode)
+## Fix in Story (three modes)
+
+| Mode | Behavior |
+| ---- | -------- |
+| `broken` | Upstream Slate, no patch |
+| `minimal` | Placeholder hide + force-render guard only (no preedit drive) |
+| `fixed` | Minimal + `onDOMBeforeInput` cumulative preedit + composition-end normalize |
 
 See `useSlatePlaceholderCompositionFixEditableProps.tsx` + `slatePlaceholderCompositionFix.ts`.
 
 1. **Placeholder stays official** — `renderPlaceholder` hides via `display:none` while `IS_COMPOSING` (Android never flips React `isComposing`, so `showPlaceholder` stayed true).
 2. **No force-re-render during composition** — wrap `EDITOR_TO_FORCE_RENDER` (MutationObserver wipe / explosion).
-3. **`onDOMBeforeInput` (Android)** — document = cumulative IME `data` when it already includes `committed` (AF sends `가나`, not just `나`); skip deferred duplicate/explosion; `documentAfterCompositionEnd` after flush.
+3. **`onDOMBeforeInput` (full fixed only, Android)** — document = cumulative IME `data` when it already includes `committed`; skip deferred duplicate/explosion; `documentAfterCompositionEnd` after flush.
 
-Device v3 capture (`mechanism-fix-v3-cumulative-preedit-가나다가나다.json`): root bug was
-`committed + data` when `data='가나'` → `가가나`. Fix: `data.startsWith(committed)` → use `data`.
-
-Emulator replays v3 golden → `가나다가나다`. **Device recapture** to confirm.
+Device v4 (`mechanism-fix-v4-still-explodes-가나다가나다.json`): fix-pair drift **0%** — pure function matches device `next`, but driving DOM each step still explodes. **Compare broken / minimal / fixed on device** before more recapture.

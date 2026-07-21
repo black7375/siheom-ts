@@ -25,18 +25,19 @@ Invasive reads (`cloneNode`, `getComputedStyle`, sync `Node.string`) break Slate
 | Field | Contents |
 | ----- | -------- |
 | `events[]` | DOM IME trace (only copy) |
-| `slateDebug.fixTrace[]` | Fixed-mode patch steps only (`committed-preedit`, `skip-input`, …) |
+| `slateDebug.fixTrace[]` | Fix-plugin steps (`composition-start`, `committed-preedit` in full fixed only, …) |
 | `slateDebug.final` | Passive Slate+DOM read at JSON download |
 | ~~`slateDebug.entries`~~ | Removed — duplicated every `events[]` row |
 
 ## Device capture (Android Firefox)
 
-1. Open Storybook / dev build → **SlateLogger** (`slate-placeholder`, **fixed** or **broken**).
-2. Meta: OS=`android`, Browser=`firefox`, IME=`hangul` (or leave as detected).
-3. **Clear** → focus editor → type repro (e.g. `가나다가나다`).
-4. **JSON 다운로드** — file includes:
+1. Open Storybook / dev build → **SlateLogger** (`slate-placeholder`).
+2. Compare **broken → minimal → fixed** in one session (Clear between runs).
+3. Meta: OS=`android`, Browser=`firefox`, IME=`hangul` (or leave as detected).
+4. **Clear** → focus editor → type repro (e.g. `가나다` or `가나다가나다`).
+5. **JSON 다운로드** — scenarioId suffix: `…-placeholder` (broken), `…-minimal`, `…-fixed`.
    - `events[]` — DOM IME trace
-   - `slateDebug.fixTrace[]` — fixed-mode patch steps (`action`, `detail`, compact `snap`)
+   - `slateDebug.fixTrace[]` — patch steps (`action`, `detail`, compact `snap`); minimal has no `committed-preedit`
    - `slateDebug.final` — passive Slate+DOM at download
    - `slateDebug.summary` — last slate text, committed, step count
 

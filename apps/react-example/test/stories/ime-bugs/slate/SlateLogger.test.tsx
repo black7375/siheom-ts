@@ -31,6 +31,13 @@ describe("SlateLogger", () => {
     );
   });
 
+  it("shows Slate fix mode toggle (broken / minimal / fixed)", async () => {
+    await runSiheom(
+      given.render(<SlateLogger />),
+      assertions.visible(query.group("Slate fix 모드")),
+    );
+  });
+
   it("renders plain control textarea when captureTarget is plain-control", async () => {
     await runSiheom(
       given.render(<SlateLogger captureTarget="plain-control" />),
