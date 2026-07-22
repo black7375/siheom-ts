@@ -103,4 +103,4 @@ OS captures under `apps/react-example/.../fixtures/android-chrome/` (virtual key
 - [x] Firefox Enter: Hangul then Enter matches enter-submit / TipTap enter golden critical (post-end `input` then Enter 13)
 - [x] MS continuous-hangul + chromium-duplicate Enter remain green
 - [x] Secondary goldens (`mixed-en-ko` / `backspace-mid` / `arrow-edit-mid`) per Windows profile where critical diverges
-- [ ] Docs: ko/en `ime.md` profile table + 세벌식 / Firefox post-end notes
+- [x] Docs: ko/en `ime.md` profile table + 세벌식 / Firefox post-end notes

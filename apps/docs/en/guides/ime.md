@@ -82,6 +82,7 @@ Pick a profile via options or `SIHEOM_IME_PROFILE`. Default: `linux-chrome-ibus-
 
 ```ts
 createImeActions({ profile: "macos-safari" });
+// process.env.SIHEOM_IME_PROFILE = "windows-chrome-ms"
 ```
 
 ### Low-level API
@@ -119,27 +120,44 @@ Built-ins are registered via `registerProfile` / `resolveProfile` / `getRegister
 | `hangulKeyEventKey` | `key` on keydown/keyup — `"process"` vs jamo (`"jamo"`) |
 | `hangulComposeMode` | Composition events vs Safari `insertReplacementText` |
 | `hanjaConversion` | Hanja **replace** vs Chrome **append** |
+| `hangulKeyboard` | Physical layout — `"dubeolsik"` (default) vs `"sebeolsik-ngs"` (Nalgaeset 3-set) |
+| `postCompositionEndInput` | Extra `insertCompositionText` `input` after `compositionend` (Windows Firefox) |
 
 ### Built-in profiles
 
-| Profile id | Enter facet | key | Compose | Hanja |
-| ---------- | ----------- | --- | ------- | ----- |
-| `linux-chrome-ibus-hangul` (default) | `webkit` | `process` | `composition` | `replace` |
-| `macos-safari` | `webkit` | `process` | `composition` | `replace` |
-| `macos-safari-apple` | `webkit` | `jamo` | `replacement` | `replace` |
-| `macos-chrome-apple` | `chromium-apple` | `jamo` | `composition` | `append` |
-| `windows-chrome-ms` | `chromium-duplicate` | `process` | `composition` | `replace` |
-| `chromium-enter-229` | `chromium` | `process` | `composition` | `replace` |
-| `chromium-cdp` | `chromium` | `process` | `composition` | `replace` |
+| Profile id | Enter facet | key | Compose | Hanja | Keyboard | post-end input |
+| ---------- | ----------- | --- | ------- | ----- | -------- | -------------- |
+| `linux-chrome-ibus-hangul` (default) | `webkit` | `process` | `composition` | `replace` | `dubeolsik` | no |
+| `macos-safari` | `webkit` | `process` | `composition` | `replace` | `dubeolsik` | no |
+| `macos-safari-apple` | `webkit` | `jamo` | `replacement` | `replace` | `dubeolsik` | no |
+| `macos-chrome-apple` | `chromium-apple` | `jamo` | `composition` | `append` | `dubeolsik` | no |
+| `windows-chrome-ms` | `chromium-duplicate` | `process` | `composition` | `replace` | `dubeolsik` | no |
+| `windows-chrome-ngs` | `chromium-duplicate` | `process` | `composition` | `replace` | `sebeolsik-ngs` | no |
+| `windows-firefox-ms` | `webkit` | `process` | `composition` | `replace` | `dubeolsik` | yes |
+| `android-chrome` | `webkit` | `unidentified` | `composition` | `replace` | `dubeolsik` | no |
+| `chromium-enter-229` | `chromium` | `process` | `composition` | `replace` | `dubeolsik` | no |
+| `chromium-cdp` | `chromium` | `process` | `composition` | `replace` | `dubeolsik` | no |
 
 ### Enter confirm order (facets)
 
 When the app submits on Enter in `keydown`, **order** of `compositionend` vs Enter decides whether confirm looks like submit.
 
-- **`webkit`** (Safari, Linux Chrome + ibus-hangul): `compositionend` then `Enter` with `isComposing: false` → `!e.isComposing` **false-submits on confirm**
+- **`webkit`** (Safari, Linux Chrome + ibus-hangul, Windows Firefox + MS): `compositionend` then `Enter` with `isComposing: false` → `!e.isComposing` **false-submits on confirm**
 - **`chromium`**: confirm keydown stays on the 229 / composing side
-- **`chromium-duplicate`**: Windows MS IME — Process 229 → `compositionend` → separate Enter(13)
+- **`chromium-duplicate`**: Windows MS Hangul / Nalgaeset — Process 229 → `compositionend` → separate Enter(13). ArrowLeft likewise uses Process+ArrowLeft 229 before confirm
 - **`chromium-apple`**: macOS Chrome Apple — Enter 229 → confirm update → `compositionend` → later plain Enter
+
+### Windows profile notes
+
+- **`windows-chrome-ms`**: 2-set. Matches continuous-hangul / Enter / backspace / arrow goldens on critical fields.
+- **`windows-chrome-ngs`**: Nalgaeset **3-set**. Distinct choseong/jungseong/jongseong keys; no 2-set batchim look-ahead across syllables (e.g. `태|희` mid-preedit has no `탷`/`흐`). `ㅢ` is a single Digit8 key. Some TipTap enter captures used 2-set codes; Enter fidelity is asserted via `enter-submit` goldens.
+- **`windows-firefox-ms`**: webkit Enter order. Every `compositionend` is followed by an `insertCompositionText` `input` with `isComposing: false`. No-op confirm pulses omit `compositionupdate`.
+
+```ts
+createImeActions({ profile: "windows-chrome-ms" });
+createImeActions({ profile: "windows-chrome-ngs" });
+createImeActions({ profile: "windows-firefox-ms" });
+```
 
 ### Compose modes
 

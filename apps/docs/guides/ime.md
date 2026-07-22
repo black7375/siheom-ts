@@ -123,27 +123,45 @@ import { typeHanja, createHanjaActions } from "@siheom/ime/hanja";
 | `hangulKeyEventKey` | keydown/keyup의 `key` — `"process"` vs 자모(`"jamo"`) |
 | `hangulComposeMode` | composition 이벤트 vs Safari `insertReplacementText` |
 | `hanjaConversion` | 한자 확정 시 한글 **대체**(`replace`) vs Chrome **덧붙임**(`append`) |
+| `hangulKeyboard` | 물리 자판 — `"dubeolsik"`(기본) vs `"sebeolsik-ngs"`(날개셋 세벌식) |
+| `postCompositionEndInput` | `compositionend` 직후 `insertCompositionText` `input` 추가 (Windows Firefox) |
 
 ### 내장 프로필
 
-| Profile id | Enter facet | key | Compose | Hanja |
-| ---------- | ----------- | --- | ------- | ----- |
-| `linux-chrome-ibus-hangul` (기본) | `webkit` | `process` | `composition` | `replace` |
-| `macos-safari` | `webkit` | `process` | `composition` | `replace` |
-| `macos-safari-apple` | `webkit` | `jamo` | `replacement` | `replace` |
-| `macos-chrome-apple` | `chromium-apple` | `jamo` | `composition` | `append` |
-| `windows-chrome-ms` | `chromium-duplicate` | `process` | `composition` | `replace` |
-| `chromium-enter-229` | `chromium` | `process` | `composition` | `replace` |
-| `chromium-cdp` | `chromium` | `process` | `composition` | `replace` |
+| Profile id | Enter facet | key | Compose | Hanja | Keyboard | post-end input |
+| ---------- | ----------- | --- | ------- | ----- | -------- | -------------- |
+| `linux-chrome-ibus-hangul` (기본) | `webkit` | `process` | `composition` | `replace` | `dubeolsik` | no |
+| `macos-safari` | `webkit` | `process` | `composition` | `replace` | `dubeolsik` | no |
+| `macos-safari-apple` | `webkit` | `jamo` | `replacement` | `replace` | `dubeolsik` | no |
+| `macos-chrome-apple` | `chromium-apple` | `jamo` | `composition` | `append` | `dubeolsik` | no |
+| `windows-chrome-ms` | `chromium-duplicate` | `process` | `composition` | `replace` | `dubeolsik` | no |
+| `windows-chrome-ngs` | `chromium-duplicate` | `process` | `composition` | `replace` | `sebeolsik-ngs` | no |
+| `windows-firefox-ms` | `webkit` | `process` | `composition` | `replace` | `dubeolsik` | yes |
+| `android-chrome` | `webkit` | `unidentified` | `composition` | `replace` | `dubeolsik` | no |
+| `chromium-enter-229` | `chromium` | `process` | `composition` | `replace` | `dubeolsik` | no |
+| `chromium-cdp` | `chromium` | `process` | `composition` | `replace` | `dubeolsik` | no |
 
 ### Enter 확정 순서 (facet)
 
 앱이 `keydown`에서 Enter로 submit할 때, **어떤 순서로** `compositionend`와 Enter가 오는지가 버그 여부를 가릅니다.
 
-- **`webkit`** (Safari, Linux Chrome + ibus-hangul): `compositionend` 후 `Enter` with `isComposing: false` → `!e.isComposing`만 보면 **조합 확정 Enter가 submit**으로 오인됨
+- **`webkit`** (Safari, Linux Chrome + ibus-hangul, Windows Firefox + MS): `compositionend` 후 `Enter` with `isComposing: false` → `!e.isComposing`만 보면 **조합 확정 Enter가 submit**으로 오인됨
 - **`chromium`**: 확정 keydown이 `keyCode` 229 / composing 쪽 → 같은 버그 클래스가 덜 드러남
-- **`chromium-duplicate`**: Windows MS IME — Process 229 → `compositionend` → 별도 Enter(13)
+- **`chromium-duplicate`**: Windows MS Hangul / 날개셋 — Process 229 → `compositionend` → 별도 Enter(13). ArrowLeft도 Process+ArrowLeft 229 후 확정
 - **`chromium-apple`**: macOS Chrome Apple — Enter 229 → confirm update → `compositionend` → 이후 일반 Enter
+
+### Windows 프로필 메모
+
+- **`windows-chrome-ms`**: 두벌식. continuous-hangul / Enter / backspace / arrow 골든과 critical 일치.
+- **`windows-chrome-ngs`**: 날개셋 **세벌식**. 초·중·종성 키가 다르고, 음절 경계에서 두벌식처럼 받침을 넘기지 않음(예: `태|희` mid-preedit에 `탷`/`흐` 없음). `ㅢ`는 Digit8 한 키. TipTap enter 픽스처 일부는 2벌식 키로 캡처된 경우가 있어 Enter 검증은 `enter-submit` 골든을 사용.
+- **`windows-firefox-ms`**: Enter는 webkit 순서. 매 `compositionend` 뒤에 `insertCompositionText` `input`(`isComposing: false`)이 옴. 값 변화 없는 confirm pulse에서는 `compositionupdate`를 생략.
+
+```ts
+createImeActions({ profile: "windows-chrome-ms" });
+createImeActions({ profile: "windows-chrome-ngs" });
+createImeActions({ profile: "windows-firefox-ms" });
+// process.env.SIHEOM_IME_PROFILE = "windows-chrome-ngs"
+```
 
 ### Compose mode
 
