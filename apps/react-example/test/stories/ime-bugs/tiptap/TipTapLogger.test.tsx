@@ -24,4 +24,13 @@ describe("TipTapLogger", () => {
       assertions.not.textContent(query.region("이벤트 로그"), "아직 이벤트가 없습니다."),
     );
   });
+
+  it("copies the IME trace JSON after events are recorded", async () => {
+    await runSiheom(
+      given.render(<TipTapLogger />),
+      actions.type(query.textbox("TipTap editor"), "a"),
+      actions.click(query.button("JSON 복사")),
+      assertions.textContent(query.status("캡처 상태"), "클립보드에 복사했습니다."),
+    );
+  });
 });

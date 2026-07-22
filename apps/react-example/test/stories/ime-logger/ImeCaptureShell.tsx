@@ -157,7 +157,7 @@ export function ImeCaptureShell<T extends HTMLElement = HTMLElement>({
       </div>
 
       {status ? (
-        <p className="text-sm text-muted-foreground" role="status">
+        <p className="text-sm text-muted-foreground" role="status" aria-label="캡처 상태">
           {status}
         </p>
       ) : null}
