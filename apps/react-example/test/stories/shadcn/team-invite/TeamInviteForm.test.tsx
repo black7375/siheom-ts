@@ -22,10 +22,10 @@ describe("TeamInviteForm", () => {
           }}
         />,
       ),
-      actions.click(query.label("역할")),
-      actions.click(query.option("멤버")),
       actions.fill(query.combobox("팀원"), "김"),
       actions.click(query.option("김태희")),
+      actions.click(query.label("역할")),
+      actions.click(query.option("멤버")),
       actions.click(query.button("초대하기")),
       assertions.textContent(query.status("초대 결과"), "김태희를 멤버로 초대했습니다"),
     );

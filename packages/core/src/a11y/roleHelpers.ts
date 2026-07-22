@@ -6,7 +6,8 @@ import { elementRoles } from "aria-query";
 
 type ARIAQueryElement = {
   name: string;
-  attributes: Array<{
+  // aria-query omits this for elements with no attribute constraints
+  attributes?: Array<{
     name: string;
     value?: string;
     constraints?: Array<"undefined" | "set">;
@@ -19,7 +20,7 @@ type ElementRoleEntry = {
   specificity: number;
 };
 
-function makeElementSelector({ name, attributes }: ARIAQueryElement): string {
+function makeElementSelector({ name, attributes = [] }: ARIAQueryElement): string {
   return `${name}${attributes
     .map(({ name: attributeName, value, constraints = [] }) => {
       const shouldNotExist = constraints.includes("undefined");
@@ -48,7 +49,7 @@ function buildElementRoleList(elementRolesMap: typeof elementRoles): ElementRole
   const result: ElementRoleEntry[] = [];
 
   for (const [element, roles] of elementRolesMap.entries()) {
-    let { attributes } = element as ARIAQueryElement;
+    let { attributes = [] } = element as ARIAQueryElement;
 
     // Handle type="text" edge case
     // https://github.com/testing-library/dom-testing-library/issues/814
