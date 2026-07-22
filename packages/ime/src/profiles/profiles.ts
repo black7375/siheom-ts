@@ -138,6 +138,22 @@ function registerBuiltins() {
     hangulComposeMode: "composition",
     hanjaConversion: "replace",
   });
+  // 날개셋(Ngs) on Windows Chrome: same Enter facet as MS Hangul (Process 229 → end → Enter 13).
+  registerSyllableProfile({
+    id: "windows-chrome-ngs",
+    enterDuringComposition: "chromium-duplicate",
+    hangulKeyEventKey: "process",
+    hangulComposeMode: "composition",
+    hanjaConversion: "replace",
+  });
+  // Windows Firefox + MS Hangul: compositionend then Enter (webkit order); no Process-Enter 229.
+  registerSyllableProfile({
+    id: "windows-firefox-ms",
+    enterDuringComposition: "webkit",
+    hangulKeyEventKey: "process",
+    hangulComposeMode: "composition",
+    hanjaConversion: "replace",
+  });
   registerSyllableProfile({
     id: "chromium-enter-229",
     enterDuringComposition: "chromium",

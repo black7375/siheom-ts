@@ -24,6 +24,8 @@ export function TipTapLogger({ scenario: scenarioProp, captureApiRef }: TipTapLo
   const [scenario, setScenario] = useState<TipTapScenario>(scenarioProp ?? "enter-newline");
   const effectiveScenario = scenarioProp ?? scenario;
   const editorRef = useRef<Editor | null>(null);
+  /** Survives editor destroy/remount so download still has a final snapshot. */
+  const lastSnapshotRef = useRef<ReturnType<typeof readTipTapCompositionSnapshot> | null>(null);
 
   return (
     <ImeCaptureShell
@@ -33,7 +35,9 @@ export function TipTapLogger({ scenario: scenarioProp, captureApiRef }: TipTapLo
       downloadStem={effectiveScenario === "list-item-start" ? "broken-list-ime" : "broken-enter-김"}
       traceExtra={() => ({
         tiptapDebug: {
-          final: editorRef.current ? readTipTapCompositionSnapshot(editorRef.current) : null,
+          final: editorRef.current
+            ? readTipTapCompositionSnapshot(editorRef.current)
+            : lastSnapshotRef.current,
         },
       })}
       beforeField={(capture) => {
@@ -56,7 +60,8 @@ export function TipTapLogger({ scenario: scenarioProp, captureApiRef }: TipTapLo
             </li>
             <li>
               <strong>list-item-start (#6825):</strong> 빈 bullet 첫 항목 시작에서 IME 입력 이상을
-              확인합니다 (Safari 우선).
+              확인합니다 (Safari 우선). Prefer scenario toolbar seed — do not type <code>- </code>{" "}
+              by hand.
             </li>
             <li>이벤트 로그가 기록되면 JSON 복사 또는 다운로드로 트레이스를 저장합니다.</li>
           </CaptureInstructions>
@@ -69,6 +74,7 @@ export function TipTapLogger({ scenario: scenarioProp, captureApiRef }: TipTapLo
           scenario={effectiveScenario}
           attachInputRef={attachInputRef}
           editorRef={editorRef}
+          lastSnapshotRef={lastSnapshotRef}
         />
       )}
     </ImeCaptureShell>
@@ -110,10 +116,12 @@ function TipTapEditorField({
   scenario,
   attachInputRef,
   editorRef,
+  lastSnapshotRef,
 }: {
   scenario: TipTapScenario;
   attachInputRef: (element: HTMLElement | null) => void;
   editorRef: MutableRefObject<Editor | null>;
+  lastSnapshotRef: MutableRefObject<ReturnType<typeof readTipTapCompositionSnapshot> | null>;
 }) {
   const editor = useEditor({
     extensions: [StarterKit],
@@ -131,7 +139,11 @@ function TipTapEditorField({
         created.chain().focus().toggleBulletList().run();
       }
       editorRef.current = created;
+      lastSnapshotRef.current = readTipTapCompositionSnapshot(created);
       attachInputRef(created.view.dom);
+    },
+    onTransaction: ({ editor: ed }) => {
+      lastSnapshotRef.current = readTipTapCompositionSnapshot(ed);
     },
     onDestroy: () => {
       editorRef.current = null;
