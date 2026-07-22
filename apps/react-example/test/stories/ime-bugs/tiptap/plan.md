@@ -17,7 +17,7 @@ OS별로 재현·캡처하고, 트레이스로 `@siheom/ime` 프로필을 검증
 ### Debug + scenarios (phase 2)
 
 - [x] 캡처 트레이스에 `tiptapDebug.final` 스냅샷이 붙는다 (editorText / composing / nodeType)
-- [ ] 시나리오 모드 `enter-newline` / `list-item-start` (scenarioId·시드 doc)
+- [x] 시나리오 모드 `enter-newline` / `list-item-start` (scenarioId·listItem 시드)
 - [ ] `fixtures/` 빈 셸 + README (windows / macos chrome·safari / linux / android)
 
 ### OS goldens + emulator (phase 3)
