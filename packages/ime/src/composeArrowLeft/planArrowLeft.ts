@@ -4,6 +4,7 @@ import {
   planConfirmAndEndComposition,
   type PlanConfirmFacts,
 } from "../_internal/planConfirmComposition";
+import type { EnterDuringCompositionFacet } from "../profiles";
 
 export type PlanArrowLeftInput = {
   composing: boolean;
@@ -12,6 +13,9 @@ export type PlanArrowLeftInput = {
   caret: number;
   value: string;
   confirmFacts: PlanConfirmFacts;
+  /** Windows Chrome MS/Ngs: Process+ArrowLeft 229 before confirm. */
+  enterFacet?: EnterDuringCompositionFacet;
+  postCompositionEndInput?: boolean;
 };
 
 /** Pure: confirm composition if needed, then ArrowLeft + caret move. */
@@ -22,7 +26,22 @@ export function planArrowLeft(input: PlanArrowLeftInput): EventPlanStep[] {
   let value = input.value;
 
   if (input.composing && input.session) {
-    steps.push(...planConfirmAndEndComposition(input.session, input.confirmFacts));
+    if (input.enterFacet === "chromium-duplicate") {
+      steps.push({
+        kind: "keydown",
+        fields: {
+          key: "Process",
+          code: "ArrowLeft",
+          keyCode: 229,
+          isComposing: true,
+        },
+      });
+    }
+    steps.push(
+      ...planConfirmAndEndComposition(input.session, input.confirmFacts, {
+        postCompositionEndInput: input.postCompositionEndInput,
+      }),
+    );
     caret = input.session.committed.length + input.session.preedit.length;
     value = input.session.committed + input.session.preedit + input.session.suffix;
   }

@@ -1,13 +1,17 @@
 import type { ComposedEventRecord } from "../_internal";
 import { getImeSession, ImeTrace, playEventPlan, readMaxLength } from "../_internal";
+import { resolveProfile, type ImeProfile } from "../profiles";
 import { planArrowLeft } from "./planArrowLeft";
 
 /**
  * ArrowLeft: if composing, confirm+end composition first (ibus-hangul style), then move caret.
+ * Windows Chrome MS/Ngs emit Process+ArrowLeft 229 before confirm.
  */
 export async function composeArrowLeft(
   element: HTMLInputElement | HTMLTextAreaElement,
+  profile?: string | ImeProfile,
 ): Promise<ComposedEventRecord[]> {
+  const resolved = resolveProfile(profile);
   const trace = new ImeTrace(element);
   const session = getImeSession(element);
 
@@ -22,6 +26,8 @@ export async function composeArrowLeft(
         valueBefore: element.value,
         maxLength: readMaxLength(element),
       },
+      enterFacet: resolved.enterDuringComposition,
+      postCompositionEndInput: resolved.postCompositionEndInput,
     }),
   );
 

@@ -11,9 +11,14 @@ export function planPreedit(
   value: string,
   caret: number,
   facts: PlanPreeditFacts,
-  options: { omitCompositionUpdate?: boolean } = {},
+  options: {
+    omitCompositionUpdate?: boolean;
+    /** Windows Firefox uses "" for empty insertCompositionText; others use null. */
+    emptyCompositionData?: null | "";
+  } = {},
 ): EventPlanStep[] {
-  const inputData = preedit === "" ? null : preedit;
+  const emptyData = options.emptyCompositionData === undefined ? null : options.emptyCompositionData;
+  const inputData = preedit === "" ? emptyData : preedit;
   const steps: EventPlanStep[] = [
     ...(options.omitCompositionUpdate
       ? []
@@ -56,7 +61,7 @@ export function planPostCompositionEndInput(data: string): EventPlanStep[] {
       kind: "input",
       fields: {
         inputType: "insertCompositionText",
-        data,
+        data: data === "" ? "" : data,
         isComposing: false,
       },
     },

@@ -99,8 +99,8 @@ OS captures under `apps/react-example/.../fixtures/android-chrome/` (virtual key
 - [x] `ImeProfile.hangulKeyboard` (`dubeolsik` | `sebeolsik-ngs`) + `postCompositionEndInput`; Ngs/Firefox set facets
 - [x] `composeHangul` windows-chrome-ngs `"김태희"` matches Ngs `continuous-hangul` critical fields (세벌식 codes + mid-preedit)
 - [x] Ngs Hangul+Enter matches `enter-submit-broken` critical (TipTap enter fixture used 2-set codes; not used)
-- [ ] `composeHangul` windows-firefox-ms `"김태희"` matches Firefox `continuous-hangul` critical (post-`compositionend` `input`)
-- [ ] Firefox Enter: Hangul then Enter matches enter-submit / TipTap enter golden critical (post-end `input` then Enter 13)
-- [ ] MS continuous-hangul + chromium-duplicate Enter remain green
-- [ ] Secondary goldens (`mixed-en-ko` / `backspace-mid` / `arrow-edit-mid`) per Windows profile where critical diverges
+- [x] `composeHangul` windows-firefox-ms `"김태희"` matches Firefox `continuous-hangul` critical (post-`compositionend` `input`)
+- [x] Firefox Enter: Hangul then Enter matches enter-submit / TipTap enter golden critical (post-end `input` then Enter 13)
+- [x] MS continuous-hangul + chromium-duplicate Enter remain green
+- [x] Secondary goldens (`mixed-en-ko` / `backspace-mid` / `arrow-edit-mid`) per Windows profile where critical diverges
 - [ ] Docs: ko/en `ime.md` profile table + 세벌식 / Firefox post-end notes

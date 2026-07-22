@@ -1,5 +1,6 @@
 import type { ComposedEventRecord } from "../_internal";
 import { getImeSession, ImeTrace, playEventPlan, readMaxLength } from "../_internal";
+import { resolveProfile, type ImeProfile } from "../profiles";
 import { planBackspace } from "./planBackspace";
 
 /**
@@ -7,7 +8,9 @@ import { planBackspace } from "./planBackspace";
  */
 export async function composeBackspace(
   element: HTMLInputElement | HTMLTextAreaElement,
+  profile?: string | ImeProfile,
 ): Promise<ComposedEventRecord[]> {
+  const resolved = resolveProfile(profile);
   const trace = new ImeTrace(element);
   const session = getImeSession(element);
 
@@ -21,6 +24,8 @@ export async function composeBackspace(
       selectionEnd: element.selectionEnd ?? element.value.length,
       valueBefore: element.value,
       maxLength: readMaxLength(element),
+      hangulKeyboard: resolved.hangulKeyboard,
+      postCompositionEndInput: resolved.postCompositionEndInput,
     }),
   );
 

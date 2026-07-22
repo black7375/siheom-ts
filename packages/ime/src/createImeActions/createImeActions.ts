@@ -46,9 +46,9 @@ async function typeKeySegment(
       }
       const name = text.slice(i + 1, end);
       if (/^Backspace$/i.test(name)) {
-        await composeBackspace(element);
+        await composeBackspace(element, profile);
       } else if (/^ArrowLeft$/i.test(name)) {
-        await composeArrowLeft(element);
+        await composeArrowLeft(element, profile);
       } else if (/^Enter$/i.test(name)) {
         await composeEnter(element, profile);
       } else {
