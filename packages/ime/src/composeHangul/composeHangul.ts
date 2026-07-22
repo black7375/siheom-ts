@@ -173,6 +173,7 @@ export async function composeHangul(
   const strokes = planHangulKeystrokes(text, {
     prefix,
     compositionBoundary: profile.hangulCompositionBoundary,
+    hangulKeyboard: profile.hangulKeyboard,
   });
   const trace = new ImeTrace(element);
 

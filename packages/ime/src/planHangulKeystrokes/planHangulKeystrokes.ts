@@ -1,8 +1,9 @@
-import { assemble, canBeChoseong, canBeJongseong, canBeJungseong, combineVowels } from "es-hangul";
+import { assemble, canBeChoseong, canBeJongseong, canBeJungseong, combineVowels, disassembleCompleteCharacter } from "es-hangul";
 
 import { hangulJamos } from "../hangulJamos";
 import { keyForJamo } from "../_internal/jamoKeyMap";
-import type { HangulCompositionBoundary } from "../profiles";
+import { keyForSebeolJamo } from "../_internal/jamoKeyMapSebeol";
+import type { HangulCompositionBoundary, HangulKeyboardLayout } from "../profiles";
 
 export type HangulKeyStroke = {
   jamo: string;
@@ -114,13 +115,96 @@ export type PlanHangulKeystrokesOptions = {
   prefix?: string;
   /** Desktop IMEs commit per syllable; Android keeps one composition for the run. */
   compositionBoundary?: HangulCompositionBoundary;
+  /** Physical keyboard layout (defaults to 2-set). */
+  hangulKeyboard?: HangulKeyboardLayout;
 };
+
+function normalizeJungseong(raw: string): string {
+  if (raw.length <= 1) return raw;
+  const chars = [...raw];
+  let combined = chars[0] ?? "";
+  for (let i = 1; i < chars.length; i++) {
+    const next = chars[i];
+    if (!next) continue;
+    try {
+      combined = combineVowels(combined, next) ?? combined + next;
+    } catch {
+      combined += next;
+    }
+  }
+  return combined;
+}
+
+/**
+ * 날개셋 세벌식: plan per Unicode syllable with role-based keys.
+ * No 2-set batchim look-ahead across syllables (태|희 not 탷→흐).
+ * Compound jungseong like ㅢ is one key (Digit8), matching OS mid-preedit.
+ */
+function planSebeolsikNgs(text: string, prefix: string): HangulKeyStroke[] {
+  const strokes: HangulKeyStroke[] = [];
+  let committed = prefix;
+  let current: SyllableParts = {};
+  let composing = false;
+
+  for (const char of text) {
+    if (!char.trim()) continue;
+    const parts = disassembleCompleteCharacter(char);
+    if (!parts?.choseong) {
+      throw new Error(`Cannot plan 세벌식-ngs for character: ${char}`);
+    }
+
+    const choseong = parts.choseong;
+    const jungseong = parts.jungseong ? normalizeJungseong(parts.jungseong) : undefined;
+    const jongseong = parts.jongseong ? parts.jongseong : undefined;
+    const choMeta = keyForSebeolJamo(choseong, "choseong");
+
+    if (current.choseong && current.jungseong) {
+      const oldText = syllableText(current);
+      const afterCommit = committed + oldText;
+      pushBoundaryStroke(
+        strokes,
+        choMeta,
+        choseong,
+        [oldText, choseong],
+        [afterCommit, afterCommit + choseong],
+        oldText,
+      );
+      committed = afterCommit;
+      current = { choseong };
+      composing = true;
+    } else {
+      current = { choseong };
+      pushSingleStepStroke(strokes, choMeta, choseong, choseong, committed + choseong, composing);
+      composing = true;
+    }
+
+    if (jungseong) {
+      const jungMeta = keyForSebeolJamo(jungseong, "jungseong");
+      current = { ...current, jungseong };
+      const preedit = syllableText(current);
+      pushSingleStepStroke(strokes, jungMeta, jungseong, preedit, committed + preedit, true);
+    }
+
+    if (jongseong) {
+      const jongMeta = keyForSebeolJamo(jongseong, "jongseong");
+      current = { ...current, jongseong };
+      const preedit = syllableText(current);
+      pushSingleStepStroke(strokes, jongMeta, jongseong, preedit, committed + preedit, true);
+    }
+  }
+
+  return strokes;
+}
 
 /** Plan per-keystroke Hangul IME behavior for `text` (2-set style / ibus-hangul-like). */
 export function planHangulKeystrokes(
   text: string,
   options: PlanHangulKeystrokesOptions = {},
 ): HangulKeyStroke[] {
+  if (options.hangulKeyboard === "sebeolsik-ngs") {
+    return planSebeolsikNgs(text, options.prefix ?? "");
+  }
+
   const jamos = hangulJamos(text);
   const strokes: HangulKeyStroke[] = [];
   const boundary = options.compositionBoundary ?? "syllable";

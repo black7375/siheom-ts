@@ -96,9 +96,9 @@ OS captures under `apps/react-example/.../fixtures/android-chrome/` (virtual key
 
 ### Phase 9 — Windows full fidelity (MS / Ngs / Firefox)
 
-- [ ] `ImeProfile.hangulKeyboard` (`dubeolsik` | `sebeolsik-ngs`) + `postCompositionEndInput`; Ngs/Firefox set facets
-- [ ] `composeHangul` windows-chrome-ngs `"김태희"` matches Ngs `continuous-hangul` critical fields (세벌식 codes + mid-preedit)
-- [ ] Ngs TipTap enter golden still matches after sebeolsik planner
+- [x] `ImeProfile.hangulKeyboard` (`dubeolsik` | `sebeolsik-ngs`) + `postCompositionEndInput`; Ngs/Firefox set facets
+- [x] `composeHangul` windows-chrome-ngs `"김태희"` matches Ngs `continuous-hangul` critical fields (세벌식 codes + mid-preedit)
+- [x] Ngs Hangul+Enter matches `enter-submit-broken` critical (TipTap enter fixture used 2-set codes; not used)
 - [ ] `composeHangul` windows-firefox-ms `"김태희"` matches Firefox `continuous-hangul` critical (post-`compositionend` `input`)
 - [ ] Firefox Enter: Hangul then Enter matches enter-submit / TipTap enter golden critical (post-end `input` then Enter 13)
 - [ ] MS continuous-hangul + chromium-duplicate Enter remain green

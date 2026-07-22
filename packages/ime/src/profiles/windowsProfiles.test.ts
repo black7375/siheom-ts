@@ -8,7 +8,8 @@ import { resolveProfile } from "../profiles";
 import { toCriticalEvents } from "../toCriticalEvents";
 
 import msContinuous from "../../fixtures/windows-chrome-ms/continuous-hangul.json";
-import ngsTipTapEnter from "../../fixtures/windows-chrome-ngs/tiptap-broken-enter-김.json";
+import ngsContinuous from "../../fixtures/windows-chrome-ngs/continuous-hangul.json";
+import ngsEnterSubmit from "../../fixtures/windows-chrome-ngs/enter-submit-broken.json";
 
 function withRecordedInput(
   run: (input: HTMLInputElement, recorder: ReturnType<typeof attachImeRecorder>) => Promise<void>,
@@ -68,17 +69,19 @@ describe("Windows IME profiles (MS / Ngs / Firefox)", () => {
     input.remove();
   });
 
-  it("windows-chrome-ngs composes 김태희 to the final value (세벌식 mid-preedit differs from 2-set planner)", async () => {
+  it("matches windows-chrome-ngs continuous-hangul critical fields for 김태희", async () => {
     const input = document.createElement("input");
     document.body.append(input);
 
-    await composeHangul(input, "김태희", { profile: "windows-chrome-ngs" });
+    const events = await composeHangul(input, "김태희", { profile: "windows-chrome-ngs" });
     expect(input.value).toBe("김태희");
+    expect(toCriticalEvents(events)).toEqual(goldenCritical(ngsContinuous.events));
 
     input.remove();
   });
 
-  it("windows-chrome-ngs TipTap enter: Hangul then Enter matches OS golden critical path", async () => {
+  // TipTap enter fixture for Ngs was captured with 2-set codes; use enter-submit (세벌식) golden.
+  it("windows-chrome-ngs enter-submit: Hangul then Enter matches OS golden critical path", async () => {
     await withRecordedInput(async (input, recorder) => {
       await composeHangul(input, "김", {
         commitFinal: false,
@@ -87,7 +90,7 @@ describe("Windows IME profiles (MS / Ngs / Firefox)", () => {
       await composeEnter(input, resolveProfile("windows-chrome-ngs"));
 
       expect(input.value).toBe("김");
-      expect(toCriticalEvents(recorder.events)).toEqual(goldenCritical(ngsTipTapEnter.events));
+      expect(toCriticalEvents(recorder.events)).toEqual(goldenCritical(ngsEnterSubmit.events));
     })();
   });
 
