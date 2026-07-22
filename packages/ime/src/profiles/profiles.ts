@@ -56,6 +56,13 @@ export type HanjaConversionMode = "replace" | "append";
  */
 export type HangulCompositionBoundary = "syllable" | "run";
 
+/**
+ * Physical Hangul keyboard layout for key `code` / mid-preedit planning.
+ * - `dubeolsik` — 2-set (MS Hangul, ibus, Apple, …)
+ * - `sebeolsik-ngs` — 날개셋 세벌식 (choseong/jungseong/jongseong on distinct keys)
+ */
+export type HangulKeyboardLayout = "dubeolsik" | "sebeolsik-ngs";
+
 export type ImeProfile = {
   id: string;
   enterDuringComposition: EnterDuringCompositionFacet;
@@ -63,14 +70,24 @@ export type ImeProfile = {
   hangulComposeMode: HangulComposeMode;
   hanjaConversion: HanjaConversionMode;
   hangulCompositionBoundary: HangulCompositionBoundary;
+  hangulKeyboard: HangulKeyboardLayout;
+  /** Windows Firefox: emit insertCompositionText `input` after compositionend. */
+  postCompositionEndInput: boolean;
 };
 
 export const DEFAULT_IME_PROFILE_ID = "linux-chrome-ibus-hangul";
 
 const registry = new Map<string, ImeProfile>();
 
-export function registerProfile(profile: ImeProfile): void {
-  registry.set(profile.id, profile);
+type ProfileRegistration = Omit<ImeProfile, "hangulKeyboard" | "postCompositionEndInput"> &
+  Partial<Pick<ImeProfile, "hangulKeyboard" | "postCompositionEndInput">>;
+
+export function registerProfile(profile: ProfileRegistration): void {
+  registry.set(profile.id, {
+    hangulKeyboard: "dubeolsik",
+    postCompositionEndInput: false,
+    ...profile,
+  });
 }
 
 function envProfileId(): string | undefined {
@@ -96,7 +113,9 @@ export function getRegisteredProfileIds(): string[] {
   return [...registry.keys()];
 }
 
-function registerSyllableProfile(profile: Omit<ImeProfile, "hangulCompositionBoundary">): void {
+function registerSyllableProfile(
+  profile: Omit<ProfileRegistration, "hangulCompositionBoundary">,
+): void {
   registerProfile({ ...profile, hangulCompositionBoundary: "syllable" });
 }
 
@@ -139,20 +158,24 @@ function registerBuiltins() {
     hanjaConversion: "replace",
   });
   // 날개셋(Ngs) on Windows Chrome: same Enter facet as MS Hangul (Process 229 → end → Enter 13).
+  // 세벌식: distinct choseong/jungseong/jongseong keys; no 2-set batchim look-ahead across syllables.
   registerSyllableProfile({
     id: "windows-chrome-ngs",
     enterDuringComposition: "chromium-duplicate",
     hangulKeyEventKey: "process",
     hangulComposeMode: "composition",
     hanjaConversion: "replace",
+    hangulKeyboard: "sebeolsik-ngs",
   });
   // Windows Firefox + MS Hangul: compositionend then Enter (webkit order); no Process-Enter 229.
+  // Extra insertCompositionText `input` after each compositionend (isComposing: false).
   registerSyllableProfile({
     id: "windows-firefox-ms",
     enterDuringComposition: "webkit",
     hangulKeyEventKey: "process",
     hangulComposeMode: "composition",
     hanjaConversion: "replace",
+    postCompositionEndInput: true,
   });
   registerSyllableProfile({
     id: "chromium-enter-229",

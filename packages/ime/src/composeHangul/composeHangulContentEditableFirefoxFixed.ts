@@ -142,6 +142,8 @@ export async function composeHangulContentEditableFirefoxFixed(
       hangulComposeMode: "contenteditable-firefox-fixed",
       hanjaConversion: "replace",
       hangulCompositionBoundary: "syllable",
+      hangulKeyboard: "dubeolsik",
+      postCompositionEndInput: false,
     },
   );
 }
@@ -164,6 +166,8 @@ export async function composeHangulContentEditableFirefoxFixedOnContentEditable(
       hangulComposeMode: "contenteditable-firefox-fixed",
       hanjaConversion: "replace",
       hangulCompositionBoundary: "syllable",
+      hangulKeyboard: "dubeolsik",
+      postCompositionEndInput: false,
     },
   );
 }

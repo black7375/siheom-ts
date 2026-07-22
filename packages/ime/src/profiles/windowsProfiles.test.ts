@@ -28,14 +28,22 @@ function withRecordedInput(
 
 describe("Windows IME profiles (MS / Ngs / Firefox)", () => {
   it("resolves windows-chrome-ms and windows-chrome-ngs as chromium-duplicate composition", () => {
-    for (const id of ["windows-chrome-ms", "windows-chrome-ngs"] as const) {
-      expect(resolveProfile(id)).toMatchObject({
-        enterDuringComposition: "chromium-duplicate",
-        hangulKeyEventKey: "process",
-        hangulComposeMode: "composition",
-        hangulCompositionBoundary: "syllable",
-      });
-    }
+    expect(resolveProfile("windows-chrome-ms")).toMatchObject({
+      enterDuringComposition: "chromium-duplicate",
+      hangulKeyEventKey: "process",
+      hangulComposeMode: "composition",
+      hangulCompositionBoundary: "syllable",
+      hangulKeyboard: "dubeolsik",
+      postCompositionEndInput: false,
+    });
+    expect(resolveProfile("windows-chrome-ngs")).toMatchObject({
+      enterDuringComposition: "chromium-duplicate",
+      hangulKeyEventKey: "process",
+      hangulComposeMode: "composition",
+      hangulCompositionBoundary: "syllable",
+      hangulKeyboard: "sebeolsik-ngs",
+      postCompositionEndInput: false,
+    });
   });
 
   it("resolves windows-firefox-ms as webkit Enter (compositionend then Enter 13)", () => {
@@ -44,6 +52,8 @@ describe("Windows IME profiles (MS / Ngs / Firefox)", () => {
       hangulKeyEventKey: "process",
       hangulComposeMode: "composition",
       hangulCompositionBoundary: "syllable",
+      hangulKeyboard: "dubeolsik",
+      postCompositionEndInput: true,
     });
   });
 

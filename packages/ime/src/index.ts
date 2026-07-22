@@ -36,6 +36,7 @@ export type {
   EnterDuringCompositionFacet,
   HangulComposeMode,
   HangulCompositionBoundary,
+  HangulKeyboardLayout,
   HangulKeyEventKey,
   HanjaConversionMode,
   ImeProfile,

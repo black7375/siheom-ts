@@ -93,3 +93,14 @@ OS captures under `apps/react-example/.../fixtures/android-chrome/` (virtual key
 - [x] `windows-chrome-ngs`: same Enter facet as MS (`chromium-duplicate`); 세벌식 mid-preedit/`code` not modeled in 2-set planner
 - [x] `windows-firefox-ms`: `webkit` Enter (compositionend → Enter 13; no Process+Enter 229)
 - [x] `windowsProfiles.test.ts`: continuous-hangul (MS), TipTap enter golden (Ngs), Firefox Enter order
+
+### Phase 9 — Windows full fidelity (MS / Ngs / Firefox)
+
+- [ ] `ImeProfile.hangulKeyboard` (`dubeolsik` | `sebeolsik-ngs`) + `postCompositionEndInput`; Ngs/Firefox set facets
+- [ ] `composeHangul` windows-chrome-ngs `"김태희"` matches Ngs `continuous-hangul` critical fields (세벌식 codes + mid-preedit)
+- [ ] Ngs TipTap enter golden still matches after sebeolsik planner
+- [ ] `composeHangul` windows-firefox-ms `"김태희"` matches Firefox `continuous-hangul` critical (post-`compositionend` `input`)
+- [ ] Firefox Enter: Hangul then Enter matches enter-submit / TipTap enter golden critical (post-end `input` then Enter 13)
+- [ ] MS continuous-hangul + chromium-duplicate Enter remain green
+- [ ] Secondary goldens (`mixed-en-ko` / `backspace-mid` / `arrow-edit-mid`) per Windows profile where critical diverges
+- [ ] Docs: ko/en `ime.md` profile table + 세벌식 / Firefox post-end notes
