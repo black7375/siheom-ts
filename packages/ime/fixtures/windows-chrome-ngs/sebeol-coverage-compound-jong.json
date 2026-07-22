@@ -1,0 +1,4161 @@
+{
+  "profileId": "windows-chrome-ngs",
+  "os": "windows",
+  "browser": "chrome",
+  "ime": "ngs",
+  "capturedAt": "2026-07-22T08:16:31.751Z",
+  "scenarioId": "continuous-hangul",
+  "source": "os-ime",
+  "events": [
+    {
+      "type": "keydown",
+      "key": "Process",
+      "code": "KeyK",
+      "keyCode": 229,
+      "isComposing": false,
+      "inputType": null,
+      "data": null,
+      "value": ""
+    },
+    {
+      "type": "compositionstart",
+      "key": null,
+      "code": null,
+      "keyCode": null,
+      "isComposing": null,
+      "inputType": null,
+      "data": "",
+      "value": ""
+    },
+    {
+      "type": "compositionupdate",
+      "key": null,
+      "code": null,
+      "keyCode": null,
+      "isComposing": null,
+      "inputType": null,
+      "data": "ㄱ",
+      "value": ""
+    },
+    {
+      "type": "beforeinput",
+      "key": null,
+      "code": null,
+      "keyCode": null,
+      "isComposing": true,
+      "inputType": "insertCompositionText",
+      "data": "ㄱ",
+      "value": ""
+    },
+    {
+      "type": "input",
+      "key": null,
+      "code": null,
+      "keyCode": null,
+      "isComposing": true,
+      "inputType": "insertCompositionText",
+      "data": "ㄱ",
+      "value": "ㄱ"
+    },
+    {
+      "type": "keydown",
+      "key": "Process",
+      "code": "Slash",
+      "keyCode": 229,
+      "isComposing": true,
+      "inputType": null,
+      "data": null,
+      "value": "ㄱ"
+    },
+    {
+      "type": "compositionupdate",
+      "key": null,
+      "code": null,
+      "keyCode": null,
+      "isComposing": null,
+      "inputType": null,
+      "data": "고",
+      "value": "ㄱ"
+    },
+    {
+      "type": "beforeinput",
+      "key": null,
+      "code": null,
+      "keyCode": null,
+      "isComposing": true,
+      "inputType": "insertCompositionText",
+      "data": "고",
+      "value": "ㄱ"
+    },
+    {
+      "type": "input",
+      "key": null,
+      "code": null,
+      "keyCode": null,
+      "isComposing": true,
+      "inputType": "insertCompositionText",
+      "data": "고",
+      "value": "고"
+    },
+    {
+      "type": "keydown",
+      "key": "Process",
+      "code": "KeyF",
+      "keyCode": 229,
+      "isComposing": true,
+      "inputType": null,
+      "data": null,
+      "value": "고"
+    },
+    {
+      "type": "compositionupdate",
+      "key": null,
+      "code": null,
+      "keyCode": null,
+      "isComposing": null,
+      "inputType": null,
+      "data": "과",
+      "value": "고"
+    },
+    {
+      "type": "beforeinput",
+      "key": null,
+      "code": null,
+      "keyCode": null,
+      "isComposing": true,
+      "inputType": "insertCompositionText",
+      "data": "과",
+      "value": "고"
+    },
+    {
+      "type": "input",
+      "key": null,
+      "code": null,
+      "keyCode": null,
+      "isComposing": true,
+      "inputType": "insertCompositionText",
+      "data": "과",
+      "value": "과"
+    },
+    {
+      "type": "keyup",
+      "key": "Process",
+      "code": "KeyK",
+      "keyCode": 229,
+      "isComposing": true,
+      "inputType": null,
+      "data": null,
+      "value": "과"
+    },
+    {
+      "type": "keyup",
+      "key": "k",
+      "code": "KeyK",
+      "keyCode": 75,
+      "isComposing": true,
+      "inputType": null,
+      "data": null,
+      "value": "과"
+    },
+    {
+      "type": "keyup",
+      "key": "Process",
+      "code": "Slash",
+      "keyCode": 229,
+      "isComposing": true,
+      "inputType": null,
+      "data": null,
+      "value": "과"
+    },
+    {
+      "type": "keyup",
+      "key": "/",
+      "code": "Slash",
+      "keyCode": 191,
+      "isComposing": true,
+      "inputType": null,
+      "data": null,
+      "value": "과"
+    },
+    {
+      "type": "keyup",
+      "key": "Process",
+      "code": "KeyF",
+      "keyCode": 229,
+      "isComposing": true,
+      "inputType": null,
+      "data": null,
+      "value": "과"
+    },
+    {
+      "type": "keyup",
+      "key": "f",
+      "code": "KeyF",
+      "keyCode": 70,
+      "isComposing": true,
+      "inputType": null,
+      "data": null,
+      "value": "과"
+    },
+    {
+      "type": "keydown",
+      "key": "Process",
+      "code": "KeyK",
+      "keyCode": 229,
+      "isComposing": true,
+      "inputType": null,
+      "data": null,
+      "value": "과"
+    },
+    {
+      "type": "compositionupdate",
+      "key": null,
+      "code": null,
+      "keyCode": null,
+      "isComposing": null,
+      "inputType": null,
+      "data": "과",
+      "value": "과"
+    },
+    {
+      "type": "beforeinput",
+      "key": null,
+      "code": null,
+      "keyCode": null,
+      "isComposing": true,
+      "inputType": "insertCompositionText",
+      "data": "과",
+      "value": "과"
+    },
+    {
+      "type": "input",
+      "key": null,
+      "code": null,
+      "keyCode": null,
+      "isComposing": true,
+      "inputType": "insertCompositionText",
+      "data": "과",
+      "value": "과"
+    },
+    {
+      "type": "compositionend",
+      "key": null,
+      "code": null,
+      "keyCode": null,
+      "isComposing": null,
+      "inputType": null,
+      "data": "과",
+      "value": "과"
+    },
+    {
+      "type": "compositionstart",
+      "key": null,
+      "code": null,
+      "keyCode": null,
+      "isComposing": null,
+      "inputType": null,
+      "data": "",
+      "value": "과"
+    },
+    {
+      "type": "compositionupdate",
+      "key": null,
+      "code": null,
+      "keyCode": null,
+      "isComposing": null,
+      "inputType": null,
+      "data": "ㄱ",
+      "value": "과"
+    },
+    {
+      "type": "beforeinput",
+      "key": null,
+      "code": null,
+      "keyCode": null,
+      "isComposing": true,
+      "inputType": "insertCompositionText",
+      "data": "ㄱ",
+      "value": "과"
+    },
+    {
+      "type": "input",
+      "key": null,
+      "code": null,
+      "keyCode": null,
+      "isComposing": true,
+      "inputType": "insertCompositionText",
+      "data": "ㄱ",
+      "value": "과ㄱ"
+    },
+    {
+      "type": "keydown",
+      "key": "Process",
+      "code": "Slash",
+      "keyCode": 229,
+      "isComposing": true,
+      "inputType": null,
+      "data": null,
+      "value": "과ㄱ"
+    },
+    {
+      "type": "compositionupdate",
+      "key": null,
+      "code": null,
+      "keyCode": null,
+      "isComposing": null,
+      "inputType": null,
+      "data": "고",
+      "value": "과ㄱ"
+    },
+    {
+      "type": "beforeinput",
+      "key": null,
+      "code": null,
+      "keyCode": null,
+      "isComposing": true,
+      "inputType": "insertCompositionText",
+      "data": "고",
+      "value": "과ㄱ"
+    },
+    {
+      "type": "input",
+      "key": null,
+      "code": null,
+      "keyCode": null,
+      "isComposing": true,
+      "inputType": "insertCompositionText",
+      "data": "고",
+      "value": "과고"
+    },
+    {
+      "type": "keyup",
+      "key": "Process",
+      "code": "KeyK",
+      "keyCode": 229,
+      "isComposing": true,
+      "inputType": null,
+      "data": null,
+      "value": "과고"
+    },
+    {
+      "type": "keyup",
+      "key": "k",
+      "code": "KeyK",
+      "keyCode": 75,
+      "isComposing": true,
+      "inputType": null,
+      "data": null,
+      "value": "과고"
+    },
+    {
+      "type": "keydown",
+      "key": "Process",
+      "code": "KeyT",
+      "keyCode": 229,
+      "isComposing": true,
+      "inputType": null,
+      "data": null,
+      "value": "과고"
+    },
+    {
+      "type": "compositionupdate",
+      "key": null,
+      "code": null,
+      "keyCode": null,
+      "isComposing": null,
+      "inputType": null,
+      "data": "괘",
+      "value": "과고"
+    },
+    {
+      "type": "beforeinput",
+      "key": null,
+      "code": null,
+      "keyCode": null,
+      "isComposing": true,
+      "inputType": "insertCompositionText",
+      "data": "괘",
+      "value": "과고"
+    },
+    {
+      "type": "input",
+      "key": null,
+      "code": null,
+      "keyCode": null,
+      "isComposing": true,
+      "inputType": "insertCompositionText",
+      "data": "괘",
+      "value": "과괘"
+    },
+    {
+      "type": "keyup",
+      "key": "Process",
+      "code": "Slash",
+      "keyCode": 229,
+      "isComposing": true,
+      "inputType": null,
+      "data": null,
+      "value": "과괘"
+    },
+    {
+      "type": "keyup",
+      "key": "/",
+      "code": "Slash",
+      "keyCode": 191,
+      "isComposing": true,
+      "inputType": null,
+      "data": null,
+      "value": "과괘"
+    },
+    {
+      "type": "keyup",
+      "key": "Process",
+      "code": "KeyT",
+      "keyCode": 229,
+      "isComposing": true,
+      "inputType": null,
+      "data": null,
+      "value": "과괘"
+    },
+    {
+      "type": "keyup",
+      "key": "t",
+      "code": "KeyT",
+      "keyCode": 84,
+      "isComposing": true,
+      "inputType": null,
+      "data": null,
+      "value": "과괘"
+    },
+    {
+      "type": "keydown",
+      "key": "Process",
+      "code": "KeyK",
+      "keyCode": 229,
+      "isComposing": true,
+      "inputType": null,
+      "data": null,
+      "value": "과괘"
+    },
+    {
+      "type": "compositionupdate",
+      "key": null,
+      "code": null,
+      "keyCode": null,
+      "isComposing": null,
+      "inputType": null,
+      "data": "괘",
+      "value": "과괘"
+    },
+    {
+      "type": "beforeinput",
+      "key": null,
+      "code": null,
+      "keyCode": null,
+      "isComposing": true,
+      "inputType": "insertCompositionText",
+      "data": "괘",
+      "value": "과괘"
+    },
+    {
+      "type": "input",
+      "key": null,
+      "code": null,
+      "keyCode": null,
+      "isComposing": true,
+      "inputType": "insertCompositionText",
+      "data": "괘",
+      "value": "과괘"
+    },
+    {
+      "type": "compositionend",
+      "key": null,
+      "code": null,
+      "keyCode": null,
+      "isComposing": null,
+      "inputType": null,
+      "data": "괘",
+      "value": "과괘"
+    },
+    {
+      "type": "compositionstart",
+      "key": null,
+      "code": null,
+      "keyCode": null,
+      "isComposing": null,
+      "inputType": null,
+      "data": "",
+      "value": "과괘"
+    },
+    {
+      "type": "compositionupdate",
+      "key": null,
+      "code": null,
+      "keyCode": null,
+      "isComposing": null,
+      "inputType": null,
+      "data": "ㄱ",
+      "value": "과괘"
+    },
+    {
+      "type": "beforeinput",
+      "key": null,
+      "code": null,
+      "keyCode": null,
+      "isComposing": true,
+      "inputType": "insertCompositionText",
+      "data": "ㄱ",
+      "value": "과괘"
+    },
+    {
+      "type": "input",
+      "key": null,
+      "code": null,
+      "keyCode": null,
+      "isComposing": true,
+      "inputType": "insertCompositionText",
+      "data": "ㄱ",
+      "value": "과괘ㄱ"
+    },
+    {
+      "type": "keydown",
+      "key": "Process",
+      "code": "Slash",
+      "keyCode": 229,
+      "isComposing": true,
+      "inputType": null,
+      "data": null,
+      "value": "과괘ㄱ"
+    },
+    {
+      "type": "compositionupdate",
+      "key": null,
+      "code": null,
+      "keyCode": null,
+      "isComposing": null,
+      "inputType": null,
+      "data": "고",
+      "value": "과괘ㄱ"
+    },
+    {
+      "type": "beforeinput",
+      "key": null,
+      "code": null,
+      "keyCode": null,
+      "isComposing": true,
+      "inputType": "insertCompositionText",
+      "data": "고",
+      "value": "과괘ㄱ"
+    },
+    {
+      "type": "input",
+      "key": null,
+      "code": null,
+      "keyCode": null,
+      "isComposing": true,
+      "inputType": "insertCompositionText",
+      "data": "고",
+      "value": "과괘고"
+    },
+    {
+      "type": "keyup",
+      "key": "Process",
+      "code": "KeyK",
+      "keyCode": 229,
+      "isComposing": true,
+      "inputType": null,
+      "data": null,
+      "value": "과괘고"
+    },
+    {
+      "type": "keyup",
+      "key": "k",
+      "code": "KeyK",
+      "keyCode": 75,
+      "isComposing": true,
+      "inputType": null,
+      "data": null,
+      "value": "과괘고"
+    },
+    {
+      "type": "keydown",
+      "key": "Process",
+      "code": "KeyD",
+      "keyCode": 229,
+      "isComposing": true,
+      "inputType": null,
+      "data": null,
+      "value": "과괘고"
+    },
+    {
+      "type": "compositionupdate",
+      "key": null,
+      "code": null,
+      "keyCode": null,
+      "isComposing": null,
+      "inputType": null,
+      "data": "괴",
+      "value": "과괘고"
+    },
+    {
+      "type": "beforeinput",
+      "key": null,
+      "code": null,
+      "keyCode": null,
+      "isComposing": true,
+      "inputType": "insertCompositionText",
+      "data": "괴",
+      "value": "과괘고"
+    },
+    {
+      "type": "input",
+      "key": null,
+      "code": null,
+      "keyCode": null,
+      "isComposing": true,
+      "inputType": "insertCompositionText",
+      "data": "괴",
+      "value": "과괘괴"
+    },
+    {
+      "type": "keyup",
+      "key": "Process",
+      "code": "Slash",
+      "keyCode": 229,
+      "isComposing": true,
+      "inputType": null,
+      "data": null,
+      "value": "과괘괴"
+    },
+    {
+      "type": "keyup",
+      "key": "/",
+      "code": "Slash",
+      "keyCode": 191,
+      "isComposing": true,
+      "inputType": null,
+      "data": null,
+      "value": "과괘괴"
+    },
+    {
+      "type": "keyup",
+      "key": "Process",
+      "code": "KeyD",
+      "keyCode": 229,
+      "isComposing": true,
+      "inputType": null,
+      "data": null,
+      "value": "과괘괴"
+    },
+    {
+      "type": "keyup",
+      "key": "d",
+      "code": "KeyD",
+      "keyCode": 68,
+      "isComposing": true,
+      "inputType": null,
+      "data": null,
+      "value": "과괘괴"
+    },
+    {
+      "type": "keydown",
+      "key": "Process",
+      "code": "KeyK",
+      "keyCode": 229,
+      "isComposing": true,
+      "inputType": null,
+      "data": null,
+      "value": "과괘괴"
+    },
+    {
+      "type": "compositionupdate",
+      "key": null,
+      "code": null,
+      "keyCode": null,
+      "isComposing": null,
+      "inputType": null,
+      "data": "괴",
+      "value": "과괘괴"
+    },
+    {
+      "type": "beforeinput",
+      "key": null,
+      "code": null,
+      "keyCode": null,
+      "isComposing": true,
+      "inputType": "insertCompositionText",
+      "data": "괴",
+      "value": "과괘괴"
+    },
+    {
+      "type": "input",
+      "key": null,
+      "code": null,
+      "keyCode": null,
+      "isComposing": true,
+      "inputType": "insertCompositionText",
+      "data": "괴",
+      "value": "과괘괴"
+    },
+    {
+      "type": "compositionend",
+      "key": null,
+      "code": null,
+      "keyCode": null,
+      "isComposing": null,
+      "inputType": null,
+      "data": "괴",
+      "value": "과괘괴"
+    },
+    {
+      "type": "compositionstart",
+      "key": null,
+      "code": null,
+      "keyCode": null,
+      "isComposing": null,
+      "inputType": null,
+      "data": "",
+      "value": "과괘괴"
+    },
+    {
+      "type": "compositionupdate",
+      "key": null,
+      "code": null,
+      "keyCode": null,
+      "isComposing": null,
+      "inputType": null,
+      "data": "ㄱ",
+      "value": "과괘괴"
+    },
+    {
+      "type": "beforeinput",
+      "key": null,
+      "code": null,
+      "keyCode": null,
+      "isComposing": true,
+      "inputType": "insertCompositionText",
+      "data": "ㄱ",
+      "value": "과괘괴"
+    },
+    {
+      "type": "input",
+      "key": null,
+      "code": null,
+      "keyCode": null,
+      "isComposing": true,
+      "inputType": "insertCompositionText",
+      "data": "ㄱ",
+      "value": "과괘괴ㄱ"
+    },
+    {
+      "type": "keyup",
+      "key": "Process",
+      "code": "KeyK",
+      "keyCode": 229,
+      "isComposing": true,
+      "inputType": null,
+      "data": null,
+      "value": "과괘괴ㄱ"
+    },
+    {
+      "type": "keyup",
+      "key": "k",
+      "code": "KeyK",
+      "keyCode": 75,
+      "isComposing": true,
+      "inputType": null,
+      "data": null,
+      "value": "과괘괴ㄱ"
+    },
+    {
+      "type": "keydown",
+      "key": "Process",
+      "code": "Digit9",
+      "keyCode": 229,
+      "isComposing": true,
+      "inputType": null,
+      "data": null,
+      "value": "과괘괴ㄱ"
+    },
+    {
+      "type": "compositionupdate",
+      "key": null,
+      "code": null,
+      "keyCode": null,
+      "isComposing": null,
+      "inputType": null,
+      "data": "구",
+      "value": "과괘괴ㄱ"
+    },
+    {
+      "type": "beforeinput",
+      "key": null,
+      "code": null,
+      "keyCode": null,
+      "isComposing": true,
+      "inputType": "insertCompositionText",
+      "data": "구",
+      "value": "과괘괴ㄱ"
+    },
+    {
+      "type": "input",
+      "key": null,
+      "code": null,
+      "keyCode": null,
+      "isComposing": true,
+      "inputType": "insertCompositionText",
+      "data": "구",
+      "value": "과괘괴구"
+    },
+    {
+      "type": "keydown",
+      "key": "Process",
+      "code": "KeyR",
+      "keyCode": 229,
+      "isComposing": true,
+      "inputType": null,
+      "data": null,
+      "value": "과괘괴구"
+    },
+    {
+      "type": "compositionupdate",
+      "key": null,
+      "code": null,
+      "keyCode": null,
+      "isComposing": null,
+      "inputType": null,
+      "data": "궈",
+      "value": "과괘괴구"
+    },
+    {
+      "type": "beforeinput",
+      "key": null,
+      "code": null,
+      "keyCode": null,
+      "isComposing": true,
+      "inputType": "insertCompositionText",
+      "data": "궈",
+      "value": "과괘괴구"
+    },
+    {
+      "type": "input",
+      "key": null,
+      "code": null,
+      "keyCode": null,
+      "isComposing": true,
+      "inputType": "insertCompositionText",
+      "data": "궈",
+      "value": "과괘괴궈"
+    },
+    {
+      "type": "keyup",
+      "key": "Process",
+      "code": "Digit9",
+      "keyCode": 229,
+      "isComposing": true,
+      "inputType": null,
+      "data": null,
+      "value": "과괘괴궈"
+    },
+    {
+      "type": "keyup",
+      "key": "9",
+      "code": "Digit9",
+      "keyCode": 57,
+      "isComposing": true,
+      "inputType": null,
+      "data": null,
+      "value": "과괘괴궈"
+    },
+    {
+      "type": "keyup",
+      "key": "Process",
+      "code": "KeyR",
+      "keyCode": 229,
+      "isComposing": true,
+      "inputType": null,
+      "data": null,
+      "value": "과괘괴궈"
+    },
+    {
+      "type": "keyup",
+      "key": "r",
+      "code": "KeyR",
+      "keyCode": 82,
+      "isComposing": true,
+      "inputType": null,
+      "data": null,
+      "value": "과괘괴궈"
+    },
+    {
+      "type": "keydown",
+      "key": "Process",
+      "code": "KeyK",
+      "keyCode": 229,
+      "isComposing": true,
+      "inputType": null,
+      "data": null,
+      "value": "과괘괴궈"
+    },
+    {
+      "type": "compositionupdate",
+      "key": null,
+      "code": null,
+      "keyCode": null,
+      "isComposing": null,
+      "inputType": null,
+      "data": "궈",
+      "value": "과괘괴궈"
+    },
+    {
+      "type": "beforeinput",
+      "key": null,
+      "code": null,
+      "keyCode": null,
+      "isComposing": true,
+      "inputType": "insertCompositionText",
+      "data": "궈",
+      "value": "과괘괴궈"
+    },
+    {
+      "type": "input",
+      "key": null,
+      "code": null,
+      "keyCode": null,
+      "isComposing": true,
+      "inputType": "insertCompositionText",
+      "data": "궈",
+      "value": "과괘괴궈"
+    },
+    {
+      "type": "compositionend",
+      "key": null,
+      "code": null,
+      "keyCode": null,
+      "isComposing": null,
+      "inputType": null,
+      "data": "궈",
+      "value": "과괘괴궈"
+    },
+    {
+      "type": "compositionstart",
+      "key": null,
+      "code": null,
+      "keyCode": null,
+      "isComposing": null,
+      "inputType": null,
+      "data": "",
+      "value": "과괘괴궈"
+    },
+    {
+      "type": "compositionupdate",
+      "key": null,
+      "code": null,
+      "keyCode": null,
+      "isComposing": null,
+      "inputType": null,
+      "data": "ㄱ",
+      "value": "과괘괴궈"
+    },
+    {
+      "type": "beforeinput",
+      "key": null,
+      "code": null,
+      "keyCode": null,
+      "isComposing": true,
+      "inputType": "insertCompositionText",
+      "data": "ㄱ",
+      "value": "과괘괴궈"
+    },
+    {
+      "type": "input",
+      "key": null,
+      "code": null,
+      "keyCode": null,
+      "isComposing": true,
+      "inputType": "insertCompositionText",
+      "data": "ㄱ",
+      "value": "과괘괴궈ㄱ"
+    },
+    {
+      "type": "keyup",
+      "key": "Process",
+      "code": "KeyK",
+      "keyCode": 229,
+      "isComposing": true,
+      "inputType": null,
+      "data": null,
+      "value": "과괘괴궈ㄱ"
+    },
+    {
+      "type": "keyup",
+      "key": "k",
+      "code": "KeyK",
+      "keyCode": 75,
+      "isComposing": true,
+      "inputType": null,
+      "data": null,
+      "value": "과괘괴궈ㄱ"
+    },
+    {
+      "type": "keydown",
+      "key": "Process",
+      "code": "Digit9",
+      "keyCode": 229,
+      "isComposing": true,
+      "inputType": null,
+      "data": null,
+      "value": "과괘괴궈ㄱ"
+    },
+    {
+      "type": "compositionupdate",
+      "key": null,
+      "code": null,
+      "keyCode": null,
+      "isComposing": null,
+      "inputType": null,
+      "data": "구",
+      "value": "과괘괴궈ㄱ"
+    },
+    {
+      "type": "beforeinput",
+      "key": null,
+      "code": null,
+      "keyCode": null,
+      "isComposing": true,
+      "inputType": "insertCompositionText",
+      "data": "구",
+      "value": "과괘괴궈ㄱ"
+    },
+    {
+      "type": "input",
+      "key": null,
+      "code": null,
+      "keyCode": null,
+      "isComposing": true,
+      "inputType": "insertCompositionText",
+      "data": "구",
+      "value": "과괘괴궈구"
+    },
+    {
+      "type": "keydown",
+      "key": "Process",
+      "code": "KeyC",
+      "keyCode": 229,
+      "isComposing": true,
+      "inputType": null,
+      "data": null,
+      "value": "과괘괴궈구"
+    },
+    {
+      "type": "compositionupdate",
+      "key": null,
+      "code": null,
+      "keyCode": null,
+      "isComposing": null,
+      "inputType": null,
+      "data": "궤",
+      "value": "과괘괴궈구"
+    },
+    {
+      "type": "beforeinput",
+      "key": null,
+      "code": null,
+      "keyCode": null,
+      "isComposing": true,
+      "inputType": "insertCompositionText",
+      "data": "궤",
+      "value": "과괘괴궈구"
+    },
+    {
+      "type": "input",
+      "key": null,
+      "code": null,
+      "keyCode": null,
+      "isComposing": true,
+      "inputType": "insertCompositionText",
+      "data": "궤",
+      "value": "과괘괴궈궤"
+    },
+    {
+      "type": "keyup",
+      "key": "Process",
+      "code": "Digit9",
+      "keyCode": 229,
+      "isComposing": true,
+      "inputType": null,
+      "data": null,
+      "value": "과괘괴궈궤"
+    },
+    {
+      "type": "keyup",
+      "key": "9",
+      "code": "Digit9",
+      "keyCode": 57,
+      "isComposing": true,
+      "inputType": null,
+      "data": null,
+      "value": "과괘괴궈궤"
+    },
+    {
+      "type": "keyup",
+      "key": "Process",
+      "code": "KeyC",
+      "keyCode": 229,
+      "isComposing": true,
+      "inputType": null,
+      "data": null,
+      "value": "과괘괴궈궤"
+    },
+    {
+      "type": "keyup",
+      "key": "c",
+      "code": "KeyC",
+      "keyCode": 67,
+      "isComposing": true,
+      "inputType": null,
+      "data": null,
+      "value": "과괘괴궈궤"
+    },
+    {
+      "type": "keydown",
+      "key": "Process",
+      "code": "KeyK",
+      "keyCode": 229,
+      "isComposing": true,
+      "inputType": null,
+      "data": null,
+      "value": "과괘괴궈궤"
+    },
+    {
+      "type": "compositionupdate",
+      "key": null,
+      "code": null,
+      "keyCode": null,
+      "isComposing": null,
+      "inputType": null,
+      "data": "궤",
+      "value": "과괘괴궈궤"
+    },
+    {
+      "type": "beforeinput",
+      "key": null,
+      "code": null,
+      "keyCode": null,
+      "isComposing": true,
+      "inputType": "insertCompositionText",
+      "data": "궤",
+      "value": "과괘괴궈궤"
+    },
+    {
+      "type": "input",
+      "key": null,
+      "code": null,
+      "keyCode": null,
+      "isComposing": true,
+      "inputType": "insertCompositionText",
+      "data": "궤",
+      "value": "과괘괴궈궤"
+    },
+    {
+      "type": "compositionend",
+      "key": null,
+      "code": null,
+      "keyCode": null,
+      "isComposing": null,
+      "inputType": null,
+      "data": "궤",
+      "value": "과괘괴궈궤"
+    },
+    {
+      "type": "compositionstart",
+      "key": null,
+      "code": null,
+      "keyCode": null,
+      "isComposing": null,
+      "inputType": null,
+      "data": "",
+      "value": "과괘괴궈궤"
+    },
+    {
+      "type": "compositionupdate",
+      "key": null,
+      "code": null,
+      "keyCode": null,
+      "isComposing": null,
+      "inputType": null,
+      "data": "ㄱ",
+      "value": "과괘괴궈궤"
+    },
+    {
+      "type": "beforeinput",
+      "key": null,
+      "code": null,
+      "keyCode": null,
+      "isComposing": true,
+      "inputType": "insertCompositionText",
+      "data": "ㄱ",
+      "value": "과괘괴궈궤"
+    },
+    {
+      "type": "input",
+      "key": null,
+      "code": null,
+      "keyCode": null,
+      "isComposing": true,
+      "inputType": "insertCompositionText",
+      "data": "ㄱ",
+      "value": "과괘괴궈궤ㄱ"
+    },
+    {
+      "type": "keyup",
+      "key": "Process",
+      "code": "KeyK",
+      "keyCode": 229,
+      "isComposing": true,
+      "inputType": null,
+      "data": null,
+      "value": "과괘괴궈궤ㄱ"
+    },
+    {
+      "type": "keyup",
+      "key": "k",
+      "code": "KeyK",
+      "keyCode": 75,
+      "isComposing": true,
+      "inputType": null,
+      "data": null,
+      "value": "과괘괴궈궤ㄱ"
+    },
+    {
+      "type": "keydown",
+      "key": "Process",
+      "code": "Digit9",
+      "keyCode": 229,
+      "isComposing": true,
+      "inputType": null,
+      "data": null,
+      "value": "과괘괴궈궤ㄱ"
+    },
+    {
+      "type": "compositionupdate",
+      "key": null,
+      "code": null,
+      "keyCode": null,
+      "isComposing": null,
+      "inputType": null,
+      "data": "구",
+      "value": "과괘괴궈궤ㄱ"
+    },
+    {
+      "type": "beforeinput",
+      "key": null,
+      "code": null,
+      "keyCode": null,
+      "isComposing": true,
+      "inputType": "insertCompositionText",
+      "data": "구",
+      "value": "과괘괴궈궤ㄱ"
+    },
+    {
+      "type": "input",
+      "key": null,
+      "code": null,
+      "keyCode": null,
+      "isComposing": true,
+      "inputType": "insertCompositionText",
+      "data": "구",
+      "value": "과괘괴궈궤구"
+    },
+    {
+      "type": "keyup",
+      "key": "Process",
+      "code": "Digit9",
+      "keyCode": 229,
+      "isComposing": true,
+      "inputType": null,
+      "data": null,
+      "value": "과괘괴궈궤구"
+    },
+    {
+      "type": "keyup",
+      "key": "9",
+      "code": "Digit9",
+      "keyCode": 57,
+      "isComposing": true,
+      "inputType": null,
+      "data": null,
+      "value": "과괘괴궈궤구"
+    },
+    {
+      "type": "keydown",
+      "key": "Process",
+      "code": "KeyD",
+      "keyCode": 229,
+      "isComposing": true,
+      "inputType": null,
+      "data": null,
+      "value": "과괘괴궈궤구"
+    },
+    {
+      "type": "compositionupdate",
+      "key": null,
+      "code": null,
+      "keyCode": null,
+      "isComposing": null,
+      "inputType": null,
+      "data": "귀",
+      "value": "과괘괴궈궤구"
+    },
+    {
+      "type": "beforeinput",
+      "key": null,
+      "code": null,
+      "keyCode": null,
+      "isComposing": true,
+      "inputType": "insertCompositionText",
+      "data": "귀",
+      "value": "과괘괴궈궤구"
+    },
+    {
+      "type": "input",
+      "key": null,
+      "code": null,
+      "keyCode": null,
+      "isComposing": true,
+      "inputType": "insertCompositionText",
+      "data": "귀",
+      "value": "과괘괴궈궤귀"
+    },
+    {
+      "type": "keyup",
+      "key": "Process",
+      "code": "KeyD",
+      "keyCode": 229,
+      "isComposing": true,
+      "inputType": null,
+      "data": null,
+      "value": "과괘괴궈궤귀"
+    },
+    {
+      "type": "keyup",
+      "key": "d",
+      "code": "KeyD",
+      "keyCode": 68,
+      "isComposing": true,
+      "inputType": null,
+      "data": null,
+      "value": "과괘괴궈궤귀"
+    },
+    {
+      "type": "keydown",
+      "key": "Process",
+      "code": "KeyJ",
+      "keyCode": 229,
+      "isComposing": true,
+      "inputType": null,
+      "data": null,
+      "value": "과괘괴궈궤귀"
+    },
+    {
+      "type": "compositionupdate",
+      "key": null,
+      "code": null,
+      "keyCode": null,
+      "isComposing": null,
+      "inputType": null,
+      "data": "귀",
+      "value": "과괘괴궈궤귀"
+    },
+    {
+      "type": "beforeinput",
+      "key": null,
+      "code": null,
+      "keyCode": null,
+      "isComposing": true,
+      "inputType": "insertCompositionText",
+      "data": "귀",
+      "value": "과괘괴궈궤귀"
+    },
+    {
+      "type": "input",
+      "key": null,
+      "code": null,
+      "keyCode": null,
+      "isComposing": true,
+      "inputType": "insertCompositionText",
+      "data": "귀",
+      "value": "과괘괴궈궤귀"
+    },
+    {
+      "type": "compositionend",
+      "key": null,
+      "code": null,
+      "keyCode": null,
+      "isComposing": null,
+      "inputType": null,
+      "data": "귀",
+      "value": "과괘괴궈궤귀"
+    },
+    {
+      "type": "compositionstart",
+      "key": null,
+      "code": null,
+      "keyCode": null,
+      "isComposing": null,
+      "inputType": null,
+      "data": "",
+      "value": "과괘괴궈궤귀"
+    },
+    {
+      "type": "compositionupdate",
+      "key": null,
+      "code": null,
+      "keyCode": null,
+      "isComposing": null,
+      "inputType": null,
+      "data": "ㅇ",
+      "value": "과괘괴궈궤귀"
+    },
+    {
+      "type": "beforeinput",
+      "key": null,
+      "code": null,
+      "keyCode": null,
+      "isComposing": true,
+      "inputType": "insertCompositionText",
+      "data": "ㅇ",
+      "value": "과괘괴궈궤귀"
+    },
+    {
+      "type": "input",
+      "key": null,
+      "code": null,
+      "keyCode": null,
+      "isComposing": true,
+      "inputType": "insertCompositionText",
+      "data": "ㅇ",
+      "value": "과괘괴궈궤귀ㅇ"
+    },
+    {
+      "type": "keyup",
+      "key": "Process",
+      "code": "KeyJ",
+      "keyCode": 229,
+      "isComposing": true,
+      "inputType": null,
+      "data": null,
+      "value": "과괘괴궈궤귀ㅇ"
+    },
+    {
+      "type": "keyup",
+      "key": "j",
+      "code": "KeyJ",
+      "keyCode": 74,
+      "isComposing": true,
+      "inputType": null,
+      "data": null,
+      "value": "과괘괴궈궤귀ㅇ"
+    },
+    {
+      "type": "keydown",
+      "key": "Process",
+      "code": "Digit8",
+      "keyCode": 229,
+      "isComposing": true,
+      "inputType": null,
+      "data": null,
+      "value": "과괘괴궈궤귀ㅇ"
+    },
+    {
+      "type": "compositionupdate",
+      "key": null,
+      "code": null,
+      "keyCode": null,
+      "isComposing": null,
+      "inputType": null,
+      "data": "의",
+      "value": "과괘괴궈궤귀ㅇ"
+    },
+    {
+      "type": "beforeinput",
+      "key": null,
+      "code": null,
+      "keyCode": null,
+      "isComposing": true,
+      "inputType": "insertCompositionText",
+      "data": "의",
+      "value": "과괘괴궈궤귀ㅇ"
+    },
+    {
+      "type": "input",
+      "key": null,
+      "code": null,
+      "keyCode": null,
+      "isComposing": true,
+      "inputType": "insertCompositionText",
+      "data": "의",
+      "value": "과괘괴궈궤귀의"
+    },
+    {
+      "type": "keyup",
+      "key": "Process",
+      "code": "Digit8",
+      "keyCode": 229,
+      "isComposing": true,
+      "inputType": null,
+      "data": null,
+      "value": "과괘괴궈궤귀의"
+    },
+    {
+      "type": "keyup",
+      "key": "8",
+      "code": "Digit8",
+      "keyCode": 56,
+      "isComposing": true,
+      "inputType": null,
+      "data": null,
+      "value": "과괘괴궈궤귀의"
+    },
+    {
+      "type": "keydown",
+      "key": "Process",
+      "code": "KeyK",
+      "keyCode": 229,
+      "isComposing": true,
+      "inputType": null,
+      "data": null,
+      "value": "과괘괴궈궤귀의"
+    },
+    {
+      "type": "compositionupdate",
+      "key": null,
+      "code": null,
+      "keyCode": null,
+      "isComposing": null,
+      "inputType": null,
+      "data": "의",
+      "value": "과괘괴궈궤귀의"
+    },
+    {
+      "type": "beforeinput",
+      "key": null,
+      "code": null,
+      "keyCode": null,
+      "isComposing": true,
+      "inputType": "insertCompositionText",
+      "data": "의",
+      "value": "과괘괴궈궤귀의"
+    },
+    {
+      "type": "input",
+      "key": null,
+      "code": null,
+      "keyCode": null,
+      "isComposing": true,
+      "inputType": "insertCompositionText",
+      "data": "의",
+      "value": "과괘괴궈궤귀의"
+    },
+    {
+      "type": "compositionend",
+      "key": null,
+      "code": null,
+      "keyCode": null,
+      "isComposing": null,
+      "inputType": null,
+      "data": "의",
+      "value": "과괘괴궈궤귀의"
+    },
+    {
+      "type": "compositionstart",
+      "key": null,
+      "code": null,
+      "keyCode": null,
+      "isComposing": null,
+      "inputType": null,
+      "data": "",
+      "value": "과괘괴궈궤귀의"
+    },
+    {
+      "type": "compositionupdate",
+      "key": null,
+      "code": null,
+      "keyCode": null,
+      "isComposing": null,
+      "inputType": null,
+      "data": "ㄱ",
+      "value": "과괘괴궈궤귀의"
+    },
+    {
+      "type": "beforeinput",
+      "key": null,
+      "code": null,
+      "keyCode": null,
+      "isComposing": true,
+      "inputType": "insertCompositionText",
+      "data": "ㄱ",
+      "value": "과괘괴궈궤귀의"
+    },
+    {
+      "type": "input",
+      "key": null,
+      "code": null,
+      "keyCode": null,
+      "isComposing": true,
+      "inputType": "insertCompositionText",
+      "data": "ㄱ",
+      "value": "과괘괴궈궤귀의ㄱ"
+    },
+    {
+      "type": "keydown",
+      "key": "Process",
+      "code": "KeyF",
+      "keyCode": 229,
+      "isComposing": true,
+      "inputType": null,
+      "data": null,
+      "value": "과괘괴궈궤귀의ㄱ"
+    },
+    {
+      "type": "compositionupdate",
+      "key": null,
+      "code": null,
+      "keyCode": null,
+      "isComposing": null,
+      "inputType": null,
+      "data": "가",
+      "value": "과괘괴궈궤귀의ㄱ"
+    },
+    {
+      "type": "beforeinput",
+      "key": null,
+      "code": null,
+      "keyCode": null,
+      "isComposing": true,
+      "inputType": "insertCompositionText",
+      "data": "가",
+      "value": "과괘괴궈궤귀의ㄱ"
+    },
+    {
+      "type": "input",
+      "key": null,
+      "code": null,
+      "keyCode": null,
+      "isComposing": true,
+      "inputType": "insertCompositionText",
+      "data": "가",
+      "value": "과괘괴궈궤귀의가"
+    },
+    {
+      "type": "keyup",
+      "key": "Process",
+      "code": "KeyK",
+      "keyCode": 229,
+      "isComposing": true,
+      "inputType": null,
+      "data": null,
+      "value": "과괘괴궈궤귀의가"
+    },
+    {
+      "type": "keyup",
+      "key": "k",
+      "code": "KeyK",
+      "keyCode": 75,
+      "isComposing": true,
+      "inputType": null,
+      "data": null,
+      "value": "과괘괴궈궤귀의가"
+    },
+    {
+      "type": "keyup",
+      "key": "Process",
+      "code": "KeyF",
+      "keyCode": 229,
+      "isComposing": true,
+      "inputType": null,
+      "data": null,
+      "value": "과괘괴궈궤귀의가"
+    },
+    {
+      "type": "keyup",
+      "key": "f",
+      "code": "KeyF",
+      "keyCode": 70,
+      "isComposing": true,
+      "inputType": null,
+      "data": null,
+      "value": "과괘괴궈궤귀의가"
+    },
+    {
+      "type": "keydown",
+      "key": "Process",
+      "code": "KeyX",
+      "keyCode": 229,
+      "isComposing": true,
+      "inputType": null,
+      "data": null,
+      "value": "과괘괴궈궤귀의가"
+    },
+    {
+      "type": "compositionupdate",
+      "key": null,
+      "code": null,
+      "keyCode": null,
+      "isComposing": null,
+      "inputType": null,
+      "data": "각",
+      "value": "과괘괴궈궤귀의가"
+    },
+    {
+      "type": "beforeinput",
+      "key": null,
+      "code": null,
+      "keyCode": null,
+      "isComposing": true,
+      "inputType": "insertCompositionText",
+      "data": "각",
+      "value": "과괘괴궈궤귀의가"
+    },
+    {
+      "type": "input",
+      "key": null,
+      "code": null,
+      "keyCode": null,
+      "isComposing": true,
+      "inputType": "insertCompositionText",
+      "data": "각",
+      "value": "과괘괴궈궤귀의각"
+    },
+    {
+      "type": "keyup",
+      "key": "Process",
+      "code": "KeyX",
+      "keyCode": 229,
+      "isComposing": true,
+      "inputType": null,
+      "data": null,
+      "value": "과괘괴궈궤귀의각"
+    },
+    {
+      "type": "keyup",
+      "key": "x",
+      "code": "KeyX",
+      "keyCode": 88,
+      "isComposing": true,
+      "inputType": null,
+      "data": null,
+      "value": "과괘괴궈궤귀의각"
+    },
+    {
+      "type": "keydown",
+      "key": "Process",
+      "code": "KeyK",
+      "keyCode": 229,
+      "isComposing": true,
+      "inputType": null,
+      "data": null,
+      "value": "과괘괴궈궤귀의각"
+    },
+    {
+      "type": "compositionupdate",
+      "key": null,
+      "code": null,
+      "keyCode": null,
+      "isComposing": null,
+      "inputType": null,
+      "data": "각",
+      "value": "과괘괴궈궤귀의각"
+    },
+    {
+      "type": "beforeinput",
+      "key": null,
+      "code": null,
+      "keyCode": null,
+      "isComposing": true,
+      "inputType": "insertCompositionText",
+      "data": "각",
+      "value": "과괘괴궈궤귀의각"
+    },
+    {
+      "type": "input",
+      "key": null,
+      "code": null,
+      "keyCode": null,
+      "isComposing": true,
+      "inputType": "insertCompositionText",
+      "data": "각",
+      "value": "과괘괴궈궤귀의각"
+    },
+    {
+      "type": "compositionend",
+      "key": null,
+      "code": null,
+      "keyCode": null,
+      "isComposing": null,
+      "inputType": null,
+      "data": "각",
+      "value": "과괘괴궈궤귀의각"
+    },
+    {
+      "type": "compositionstart",
+      "key": null,
+      "code": null,
+      "keyCode": null,
+      "isComposing": null,
+      "inputType": null,
+      "data": "",
+      "value": "과괘괴궈궤귀의각"
+    },
+    {
+      "type": "compositionupdate",
+      "key": null,
+      "code": null,
+      "keyCode": null,
+      "isComposing": null,
+      "inputType": null,
+      "data": "ㄱ",
+      "value": "과괘괴궈궤귀의각"
+    },
+    {
+      "type": "beforeinput",
+      "key": null,
+      "code": null,
+      "keyCode": null,
+      "isComposing": true,
+      "inputType": "insertCompositionText",
+      "data": "ㄱ",
+      "value": "과괘괴궈궤귀의각"
+    },
+    {
+      "type": "input",
+      "key": null,
+      "code": null,
+      "keyCode": null,
+      "isComposing": true,
+      "inputType": "insertCompositionText",
+      "data": "ㄱ",
+      "value": "과괘괴궈궤귀의각ㄱ"
+    },
+    {
+      "type": "keyup",
+      "key": "Process",
+      "code": "KeyK",
+      "keyCode": 229,
+      "isComposing": true,
+      "inputType": null,
+      "data": null,
+      "value": "과괘괴궈궤귀의각ㄱ"
+    },
+    {
+      "type": "keyup",
+      "key": "k",
+      "code": "KeyK",
+      "keyCode": 75,
+      "isComposing": true,
+      "inputType": null,
+      "data": null,
+      "value": "과괘괴궈궤귀의각ㄱ"
+    },
+    {
+      "type": "keydown",
+      "key": "Process",
+      "code": "KeyF",
+      "keyCode": 229,
+      "isComposing": true,
+      "inputType": null,
+      "data": null,
+      "value": "과괘괴궈궤귀의각ㄱ"
+    },
+    {
+      "type": "compositionupdate",
+      "key": null,
+      "code": null,
+      "keyCode": null,
+      "isComposing": null,
+      "inputType": null,
+      "data": "가",
+      "value": "과괘괴궈궤귀의각ㄱ"
+    },
+    {
+      "type": "beforeinput",
+      "key": null,
+      "code": null,
+      "keyCode": null,
+      "isComposing": true,
+      "inputType": "insertCompositionText",
+      "data": "가",
+      "value": "과괘괴궈궤귀의각ㄱ"
+    },
+    {
+      "type": "input",
+      "key": null,
+      "code": null,
+      "keyCode": null,
+      "isComposing": true,
+      "inputType": "insertCompositionText",
+      "data": "가",
+      "value": "과괘괴궈궤귀의각가"
+    },
+    {
+      "type": "keyup",
+      "key": "Process",
+      "code": "KeyF",
+      "keyCode": 229,
+      "isComposing": true,
+      "inputType": null,
+      "data": null,
+      "value": "과괘괴궈궤귀의각가"
+    },
+    {
+      "type": "keyup",
+      "key": "f",
+      "code": "KeyF",
+      "keyCode": 70,
+      "isComposing": true,
+      "inputType": null,
+      "data": null,
+      "value": "과괘괴궈궤귀의각가"
+    },
+    {
+      "type": "keydown",
+      "key": "Process",
+      "code": "ShiftRight",
+      "keyCode": 229,
+      "isComposing": true,
+      "inputType": null,
+      "data": null,
+      "value": "과괘괴궈궤귀의각가"
+    },
+    {
+      "type": "keydown",
+      "key": "Shift",
+      "code": "ShiftRight",
+      "keyCode": 16,
+      "isComposing": true,
+      "inputType": null,
+      "data": null,
+      "value": "과괘괴궈궤귀의각가"
+    },
+    {
+      "type": "keydown",
+      "key": "Process",
+      "code": "KeyX",
+      "keyCode": 229,
+      "isComposing": true,
+      "inputType": null,
+      "data": null,
+      "value": "과괘괴궈궤귀의각가"
+    },
+    {
+      "type": "compositionupdate",
+      "key": null,
+      "code": null,
+      "keyCode": null,
+      "isComposing": null,
+      "inputType": null,
+      "data": "갂",
+      "value": "과괘괴궈궤귀의각가"
+    },
+    {
+      "type": "beforeinput",
+      "key": null,
+      "code": null,
+      "keyCode": null,
+      "isComposing": true,
+      "inputType": "insertCompositionText",
+      "data": "갂",
+      "value": "과괘괴궈궤귀의각가"
+    },
+    {
+      "type": "input",
+      "key": null,
+      "code": null,
+      "keyCode": null,
+      "isComposing": true,
+      "inputType": "insertCompositionText",
+      "data": "갂",
+      "value": "과괘괴궈궤귀의각갂"
+    },
+    {
+      "type": "keyup",
+      "key": "Process",
+      "code": "ShiftRight",
+      "keyCode": 229,
+      "isComposing": true,
+      "inputType": null,
+      "data": null,
+      "value": "과괘괴궈궤귀의각갂"
+    },
+    {
+      "type": "keyup",
+      "key": "Shift",
+      "code": "ShiftRight",
+      "keyCode": 16,
+      "isComposing": true,
+      "inputType": null,
+      "data": null,
+      "value": "과괘괴궈궤귀의각갂"
+    },
+    {
+      "type": "keyup",
+      "key": "Process",
+      "code": "KeyX",
+      "keyCode": 229,
+      "isComposing": true,
+      "inputType": null,
+      "data": null,
+      "value": "과괘괴궈궤귀의각갂"
+    },
+    {
+      "type": "keyup",
+      "key": "x",
+      "code": "KeyX",
+      "keyCode": 88,
+      "isComposing": true,
+      "inputType": null,
+      "data": null,
+      "value": "과괘괴궈궤귀의각갂"
+    },
+    {
+      "type": "keydown",
+      "key": "Process",
+      "code": "KeyK",
+      "keyCode": 229,
+      "isComposing": true,
+      "inputType": null,
+      "data": null,
+      "value": "과괘괴궈궤귀의각갂"
+    },
+    {
+      "type": "compositionupdate",
+      "key": null,
+      "code": null,
+      "keyCode": null,
+      "isComposing": null,
+      "inputType": null,
+      "data": "갂",
+      "value": "과괘괴궈궤귀의각갂"
+    },
+    {
+      "type": "beforeinput",
+      "key": null,
+      "code": null,
+      "keyCode": null,
+      "isComposing": true,
+      "inputType": "insertCompositionText",
+      "data": "갂",
+      "value": "과괘괴궈궤귀의각갂"
+    },
+    {
+      "type": "input",
+      "key": null,
+      "code": null,
+      "keyCode": null,
+      "isComposing": true,
+      "inputType": "insertCompositionText",
+      "data": "갂",
+      "value": "과괘괴궈궤귀의각갂"
+    },
+    {
+      "type": "compositionend",
+      "key": null,
+      "code": null,
+      "keyCode": null,
+      "isComposing": null,
+      "inputType": null,
+      "data": "갂",
+      "value": "과괘괴궈궤귀의각갂"
+    },
+    {
+      "type": "compositionstart",
+      "key": null,
+      "code": null,
+      "keyCode": null,
+      "isComposing": null,
+      "inputType": null,
+      "data": "",
+      "value": "과괘괴궈궤귀의각갂"
+    },
+    {
+      "type": "compositionupdate",
+      "key": null,
+      "code": null,
+      "keyCode": null,
+      "isComposing": null,
+      "inputType": null,
+      "data": "ㄱ",
+      "value": "과괘괴궈궤귀의각갂"
+    },
+    {
+      "type": "beforeinput",
+      "key": null,
+      "code": null,
+      "keyCode": null,
+      "isComposing": true,
+      "inputType": "insertCompositionText",
+      "data": "ㄱ",
+      "value": "과괘괴궈궤귀의각갂"
+    },
+    {
+      "type": "input",
+      "key": null,
+      "code": null,
+      "keyCode": null,
+      "isComposing": true,
+      "inputType": "insertCompositionText",
+      "data": "ㄱ",
+      "value": "과괘괴궈궤귀의각갂ㄱ"
+    },
+    {
+      "type": "keydown",
+      "key": "Process",
+      "code": "KeyF",
+      "keyCode": 229,
+      "isComposing": true,
+      "inputType": null,
+      "data": null,
+      "value": "과괘괴궈궤귀의각갂ㄱ"
+    },
+    {
+      "type": "compositionupdate",
+      "key": null,
+      "code": null,
+      "keyCode": null,
+      "isComposing": null,
+      "inputType": null,
+      "data": "가",
+      "value": "과괘괴궈궤귀의각갂ㄱ"
+    },
+    {
+      "type": "beforeinput",
+      "key": null,
+      "code": null,
+      "keyCode": null,
+      "isComposing": true,
+      "inputType": "insertCompositionText",
+      "data": "가",
+      "value": "과괘괴궈궤귀의각갂ㄱ"
+    },
+    {
+      "type": "input",
+      "key": null,
+      "code": null,
+      "keyCode": null,
+      "isComposing": true,
+      "inputType": "insertCompositionText",
+      "data": "가",
+      "value": "과괘괴궈궤귀의각갂가"
+    },
+    {
+      "type": "keyup",
+      "key": "Process",
+      "code": "KeyK",
+      "keyCode": 229,
+      "isComposing": true,
+      "inputType": null,
+      "data": null,
+      "value": "과괘괴궈궤귀의각갂가"
+    },
+    {
+      "type": "keyup",
+      "key": "k",
+      "code": "KeyK",
+      "keyCode": 75,
+      "isComposing": true,
+      "inputType": null,
+      "data": null,
+      "value": "과괘괴궈궤귀의각갂가"
+    },
+    {
+      "type": "keydown",
+      "key": "Process",
+      "code": "KeyS",
+      "keyCode": 229,
+      "isComposing": true,
+      "inputType": null,
+      "data": null,
+      "value": "과괘괴궈궤귀의각갂가"
+    },
+    {
+      "type": "compositionupdate",
+      "key": null,
+      "code": null,
+      "keyCode": null,
+      "isComposing": null,
+      "inputType": null,
+      "data": "간",
+      "value": "과괘괴궈궤귀의각갂가"
+    },
+    {
+      "type": "beforeinput",
+      "key": null,
+      "code": null,
+      "keyCode": null,
+      "isComposing": true,
+      "inputType": "insertCompositionText",
+      "data": "간",
+      "value": "과괘괴궈궤귀의각갂가"
+    },
+    {
+      "type": "input",
+      "key": null,
+      "code": null,
+      "keyCode": null,
+      "isComposing": true,
+      "inputType": "insertCompositionText",
+      "data": "간",
+      "value": "과괘괴궈궤귀의각갂간"
+    },
+    {
+      "type": "keyup",
+      "key": "Process",
+      "code": "KeyF",
+      "keyCode": 229,
+      "isComposing": true,
+      "inputType": null,
+      "data": null,
+      "value": "과괘괴궈궤귀의각갂간"
+    },
+    {
+      "type": "keyup",
+      "key": "f",
+      "code": "KeyF",
+      "keyCode": 70,
+      "isComposing": true,
+      "inputType": null,
+      "data": null,
+      "value": "과괘괴궈궤귀의각갂간"
+    },
+    {
+      "type": "keyup",
+      "key": "Process",
+      "code": "KeyS",
+      "keyCode": 229,
+      "isComposing": true,
+      "inputType": null,
+      "data": null,
+      "value": "과괘괴궈궤귀의각갂간"
+    },
+    {
+      "type": "keyup",
+      "key": "s",
+      "code": "KeyS",
+      "keyCode": 83,
+      "isComposing": true,
+      "inputType": null,
+      "data": null,
+      "value": "과괘괴궈궤귀의각갂간"
+    },
+    {
+      "type": "keydown",
+      "key": "Process",
+      "code": "KeyK",
+      "keyCode": 229,
+      "isComposing": true,
+      "inputType": null,
+      "data": null,
+      "value": "과괘괴궈궤귀의각갂간"
+    },
+    {
+      "type": "compositionupdate",
+      "key": null,
+      "code": null,
+      "keyCode": null,
+      "isComposing": null,
+      "inputType": null,
+      "data": "간",
+      "value": "과괘괴궈궤귀의각갂간"
+    },
+    {
+      "type": "beforeinput",
+      "key": null,
+      "code": null,
+      "keyCode": null,
+      "isComposing": true,
+      "inputType": "insertCompositionText",
+      "data": "간",
+      "value": "과괘괴궈궤귀의각갂간"
+    },
+    {
+      "type": "input",
+      "key": null,
+      "code": null,
+      "keyCode": null,
+      "isComposing": true,
+      "inputType": "insertCompositionText",
+      "data": "간",
+      "value": "과괘괴궈궤귀의각갂간"
+    },
+    {
+      "type": "compositionend",
+      "key": null,
+      "code": null,
+      "keyCode": null,
+      "isComposing": null,
+      "inputType": null,
+      "data": "간",
+      "value": "과괘괴궈궤귀의각갂간"
+    },
+    {
+      "type": "compositionstart",
+      "key": null,
+      "code": null,
+      "keyCode": null,
+      "isComposing": null,
+      "inputType": null,
+      "data": "",
+      "value": "과괘괴궈궤귀의각갂간"
+    },
+    {
+      "type": "compositionupdate",
+      "key": null,
+      "code": null,
+      "keyCode": null,
+      "isComposing": null,
+      "inputType": null,
+      "data": "ㄱ",
+      "value": "과괘괴궈궤귀의각갂간"
+    },
+    {
+      "type": "beforeinput",
+      "key": null,
+      "code": null,
+      "keyCode": null,
+      "isComposing": true,
+      "inputType": "insertCompositionText",
+      "data": "ㄱ",
+      "value": "과괘괴궈궤귀의각갂간"
+    },
+    {
+      "type": "input",
+      "key": null,
+      "code": null,
+      "keyCode": null,
+      "isComposing": true,
+      "inputType": "insertCompositionText",
+      "data": "ㄱ",
+      "value": "과괘괴궈궤귀의각갂간ㄱ"
+    },
+    {
+      "type": "keyup",
+      "key": "Process",
+      "code": "KeyK",
+      "keyCode": 229,
+      "isComposing": true,
+      "inputType": null,
+      "data": null,
+      "value": "과괘괴궈궤귀의각갂간ㄱ"
+    },
+    {
+      "type": "keyup",
+      "key": "k",
+      "code": "KeyK",
+      "keyCode": 75,
+      "isComposing": true,
+      "inputType": null,
+      "data": null,
+      "value": "과괘괴궈궤귀의각갂간ㄱ"
+    },
+    {
+      "type": "keydown",
+      "key": "Process",
+      "code": "KeyF",
+      "keyCode": 229,
+      "isComposing": true,
+      "inputType": null,
+      "data": null,
+      "value": "과괘괴궈궤귀의각갂간ㄱ"
+    },
+    {
+      "type": "compositionupdate",
+      "key": null,
+      "code": null,
+      "keyCode": null,
+      "isComposing": null,
+      "inputType": null,
+      "data": "가",
+      "value": "과괘괴궈궤귀의각갂간ㄱ"
+    },
+    {
+      "type": "beforeinput",
+      "key": null,
+      "code": null,
+      "keyCode": null,
+      "isComposing": true,
+      "inputType": "insertCompositionText",
+      "data": "가",
+      "value": "과괘괴궈궤귀의각갂간ㄱ"
+    },
+    {
+      "type": "input",
+      "key": null,
+      "code": null,
+      "keyCode": null,
+      "isComposing": true,
+      "inputType": "insertCompositionText",
+      "data": "가",
+      "value": "과괘괴궈궤귀의각갂간가"
+    },
+    {
+      "type": "keydown",
+      "key": "Process",
+      "code": "Digit1",
+      "keyCode": 229,
+      "isComposing": true,
+      "inputType": null,
+      "data": null,
+      "value": "과괘괴궈궤귀의각갂간가"
+    },
+    {
+      "type": "compositionupdate",
+      "key": null,
+      "code": null,
+      "keyCode": null,
+      "isComposing": null,
+      "inputType": null,
+      "data": "갇",
+      "value": "과괘괴궈궤귀의각갂간가"
+    },
+    {
+      "type": "beforeinput",
+      "key": null,
+      "code": null,
+      "keyCode": null,
+      "isComposing": true,
+      "inputType": "insertCompositionText",
+      "data": "갇",
+      "value": "과괘괴궈궤귀의각갂간가"
+    },
+    {
+      "type": "input",
+      "key": null,
+      "code": null,
+      "keyCode": null,
+      "isComposing": true,
+      "inputType": "insertCompositionText",
+      "data": "갇",
+      "value": "과괘괴궈궤귀의각갂간갇"
+    },
+    {
+      "type": "keyup",
+      "key": "Process",
+      "code": "KeyF",
+      "keyCode": 229,
+      "isComposing": true,
+      "inputType": null,
+      "data": null,
+      "value": "과괘괴궈궤귀의각갂간갇"
+    },
+    {
+      "type": "keyup",
+      "key": "f",
+      "code": "KeyF",
+      "keyCode": 70,
+      "isComposing": true,
+      "inputType": null,
+      "data": null,
+      "value": "과괘괴궈궤귀의각갂간갇"
+    },
+    {
+      "type": "keyup",
+      "key": "Process",
+      "code": "Digit1",
+      "keyCode": 229,
+      "isComposing": true,
+      "inputType": null,
+      "data": null,
+      "value": "과괘괴궈궤귀의각갂간갇"
+    },
+    {
+      "type": "keyup",
+      "key": "1",
+      "code": "Digit1",
+      "keyCode": 49,
+      "isComposing": true,
+      "inputType": null,
+      "data": null,
+      "value": "과괘괴궈궤귀의각갂간갇"
+    },
+    {
+      "type": "keydown",
+      "key": "Process",
+      "code": "KeyK",
+      "keyCode": 229,
+      "isComposing": true,
+      "inputType": null,
+      "data": null,
+      "value": "과괘괴궈궤귀의각갂간갇"
+    },
+    {
+      "type": "compositionupdate",
+      "key": null,
+      "code": null,
+      "keyCode": null,
+      "isComposing": null,
+      "inputType": null,
+      "data": "갇",
+      "value": "과괘괴궈궤귀의각갂간갇"
+    },
+    {
+      "type": "beforeinput",
+      "key": null,
+      "code": null,
+      "keyCode": null,
+      "isComposing": true,
+      "inputType": "insertCompositionText",
+      "data": "갇",
+      "value": "과괘괴궈궤귀의각갂간갇"
+    },
+    {
+      "type": "input",
+      "key": null,
+      "code": null,
+      "keyCode": null,
+      "isComposing": true,
+      "inputType": "insertCompositionText",
+      "data": "갇",
+      "value": "과괘괴궈궤귀의각갂간갇"
+    },
+    {
+      "type": "compositionend",
+      "key": null,
+      "code": null,
+      "keyCode": null,
+      "isComposing": null,
+      "inputType": null,
+      "data": "갇",
+      "value": "과괘괴궈궤귀의각갂간갇"
+    },
+    {
+      "type": "compositionstart",
+      "key": null,
+      "code": null,
+      "keyCode": null,
+      "isComposing": null,
+      "inputType": null,
+      "data": "",
+      "value": "과괘괴궈궤귀의각갂간갇"
+    },
+    {
+      "type": "compositionupdate",
+      "key": null,
+      "code": null,
+      "keyCode": null,
+      "isComposing": null,
+      "inputType": null,
+      "data": "ㄱ",
+      "value": "과괘괴궈궤귀의각갂간갇"
+    },
+    {
+      "type": "beforeinput",
+      "key": null,
+      "code": null,
+      "keyCode": null,
+      "isComposing": true,
+      "inputType": "insertCompositionText",
+      "data": "ㄱ",
+      "value": "과괘괴궈궤귀의각갂간갇"
+    },
+    {
+      "type": "input",
+      "key": null,
+      "code": null,
+      "keyCode": null,
+      "isComposing": true,
+      "inputType": "insertCompositionText",
+      "data": "ㄱ",
+      "value": "과괘괴궈궤귀의각갂간갇ㄱ"
+    },
+    {
+      "type": "keyup",
+      "key": "Process",
+      "code": "KeyK",
+      "keyCode": 229,
+      "isComposing": true,
+      "inputType": null,
+      "data": null,
+      "value": "과괘괴궈궤귀의각갂간갇ㄱ"
+    },
+    {
+      "type": "keyup",
+      "key": "k",
+      "code": "KeyK",
+      "keyCode": 75,
+      "isComposing": true,
+      "inputType": null,
+      "data": null,
+      "value": "과괘괴궈궤귀의각갂간갇ㄱ"
+    },
+    {
+      "type": "keydown",
+      "key": "Process",
+      "code": "KeyF",
+      "keyCode": 229,
+      "isComposing": true,
+      "inputType": null,
+      "data": null,
+      "value": "과괘괴궈궤귀의각갂간갇ㄱ"
+    },
+    {
+      "type": "compositionupdate",
+      "key": null,
+      "code": null,
+      "keyCode": null,
+      "isComposing": null,
+      "inputType": null,
+      "data": "가",
+      "value": "과괘괴궈궤귀의각갂간갇ㄱ"
+    },
+    {
+      "type": "beforeinput",
+      "key": null,
+      "code": null,
+      "keyCode": null,
+      "isComposing": true,
+      "inputType": "insertCompositionText",
+      "data": "가",
+      "value": "과괘괴궈궤귀의각갂간갇ㄱ"
+    },
+    {
+      "type": "input",
+      "key": null,
+      "code": null,
+      "keyCode": null,
+      "isComposing": true,
+      "inputType": "insertCompositionText",
+      "data": "가",
+      "value": "과괘괴궈궤귀의각갂간갇가"
+    },
+    {
+      "type": "keydown",
+      "key": "Process",
+      "code": "KeyW",
+      "keyCode": 229,
+      "isComposing": true,
+      "inputType": null,
+      "data": null,
+      "value": "과괘괴궈궤귀의각갂간갇가"
+    },
+    {
+      "type": "compositionupdate",
+      "key": null,
+      "code": null,
+      "keyCode": null,
+      "isComposing": null,
+      "inputType": null,
+      "data": "갈",
+      "value": "과괘괴궈궤귀의각갂간갇가"
+    },
+    {
+      "type": "beforeinput",
+      "key": null,
+      "code": null,
+      "keyCode": null,
+      "isComposing": true,
+      "inputType": "insertCompositionText",
+      "data": "갈",
+      "value": "과괘괴궈궤귀의각갂간갇가"
+    },
+    {
+      "type": "input",
+      "key": null,
+      "code": null,
+      "keyCode": null,
+      "isComposing": true,
+      "inputType": "insertCompositionText",
+      "data": "갈",
+      "value": "과괘괴궈궤귀의각갂간갇갈"
+    },
+    {
+      "type": "keyup",
+      "key": "Process",
+      "code": "KeyF",
+      "keyCode": 229,
+      "isComposing": true,
+      "inputType": null,
+      "data": null,
+      "value": "과괘괴궈궤귀의각갂간갇갈"
+    },
+    {
+      "type": "keyup",
+      "key": "f",
+      "code": "KeyF",
+      "keyCode": 70,
+      "isComposing": true,
+      "inputType": null,
+      "data": null,
+      "value": "과괘괴궈궤귀의각갂간갇갈"
+    },
+    {
+      "type": "keyup",
+      "key": "Process",
+      "code": "KeyW",
+      "keyCode": 229,
+      "isComposing": true,
+      "inputType": null,
+      "data": null,
+      "value": "과괘괴궈궤귀의각갂간갇갈"
+    },
+    {
+      "type": "keyup",
+      "key": "w",
+      "code": "KeyW",
+      "keyCode": 87,
+      "isComposing": true,
+      "inputType": null,
+      "data": null,
+      "value": "과괘괴궈궤귀의각갂간갇갈"
+    },
+    {
+      "type": "keydown",
+      "key": "Process",
+      "code": "KeyK",
+      "keyCode": 229,
+      "isComposing": true,
+      "inputType": null,
+      "data": null,
+      "value": "과괘괴궈궤귀의각갂간갇갈"
+    },
+    {
+      "type": "compositionupdate",
+      "key": null,
+      "code": null,
+      "keyCode": null,
+      "isComposing": null,
+      "inputType": null,
+      "data": "갈",
+      "value": "과괘괴궈궤귀의각갂간갇갈"
+    },
+    {
+      "type": "beforeinput",
+      "key": null,
+      "code": null,
+      "keyCode": null,
+      "isComposing": true,
+      "inputType": "insertCompositionText",
+      "data": "갈",
+      "value": "과괘괴궈궤귀의각갂간갇갈"
+    },
+    {
+      "type": "input",
+      "key": null,
+      "code": null,
+      "keyCode": null,
+      "isComposing": true,
+      "inputType": "insertCompositionText",
+      "data": "갈",
+      "value": "과괘괴궈궤귀의각갂간갇갈"
+    },
+    {
+      "type": "compositionend",
+      "key": null,
+      "code": null,
+      "keyCode": null,
+      "isComposing": null,
+      "inputType": null,
+      "data": "갈",
+      "value": "과괘괴궈궤귀의각갂간갇갈"
+    },
+    {
+      "type": "compositionstart",
+      "key": null,
+      "code": null,
+      "keyCode": null,
+      "isComposing": null,
+      "inputType": null,
+      "data": "",
+      "value": "과괘괴궈궤귀의각갂간갇갈"
+    },
+    {
+      "type": "compositionupdate",
+      "key": null,
+      "code": null,
+      "keyCode": null,
+      "isComposing": null,
+      "inputType": null,
+      "data": "ㄱ",
+      "value": "과괘괴궈궤귀의각갂간갇갈"
+    },
+    {
+      "type": "beforeinput",
+      "key": null,
+      "code": null,
+      "keyCode": null,
+      "isComposing": true,
+      "inputType": "insertCompositionText",
+      "data": "ㄱ",
+      "value": "과괘괴궈궤귀의각갂간갇갈"
+    },
+    {
+      "type": "input",
+      "key": null,
+      "code": null,
+      "keyCode": null,
+      "isComposing": true,
+      "inputType": "insertCompositionText",
+      "data": "ㄱ",
+      "value": "과괘괴궈궤귀의각갂간갇갈ㄱ"
+    },
+    {
+      "type": "keydown",
+      "key": "Process",
+      "code": "KeyF",
+      "keyCode": 229,
+      "isComposing": true,
+      "inputType": null,
+      "data": null,
+      "value": "과괘괴궈궤귀의각갂간갇갈ㄱ"
+    },
+    {
+      "type": "compositionupdate",
+      "key": null,
+      "code": null,
+      "keyCode": null,
+      "isComposing": null,
+      "inputType": null,
+      "data": "가",
+      "value": "과괘괴궈궤귀의각갂간갇갈ㄱ"
+    },
+    {
+      "type": "beforeinput",
+      "key": null,
+      "code": null,
+      "keyCode": null,
+      "isComposing": true,
+      "inputType": "insertCompositionText",
+      "data": "가",
+      "value": "과괘괴궈궤귀의각갂간갇갈ㄱ"
+    },
+    {
+      "type": "input",
+      "key": null,
+      "code": null,
+      "keyCode": null,
+      "isComposing": true,
+      "inputType": "insertCompositionText",
+      "data": "가",
+      "value": "과괘괴궈궤귀의각갂간갇갈가"
+    },
+    {
+      "type": "keyup",
+      "key": "Process",
+      "code": "KeyK",
+      "keyCode": 229,
+      "isComposing": true,
+      "inputType": null,
+      "data": null,
+      "value": "과괘괴궈궤귀의각갂간갇갈가"
+    },
+    {
+      "type": "keyup",
+      "key": "k",
+      "code": "KeyK",
+      "keyCode": 75,
+      "isComposing": true,
+      "inputType": null,
+      "data": null,
+      "value": "과괘괴궈궤귀의각갂간갇갈가"
+    },
+    {
+      "type": "keyup",
+      "key": "Process",
+      "code": "KeyF",
+      "keyCode": 229,
+      "isComposing": true,
+      "inputType": null,
+      "data": null,
+      "value": "과괘괴궈궤귀의각갂간갇갈가"
+    },
+    {
+      "type": "keyup",
+      "key": "f",
+      "code": "KeyF",
+      "keyCode": 70,
+      "isComposing": true,
+      "inputType": null,
+      "data": null,
+      "value": "과괘괴궈궤귀의각갂간갇갈가"
+    },
+    {
+      "type": "keydown",
+      "key": "Process",
+      "code": "KeyZ",
+      "keyCode": 229,
+      "isComposing": true,
+      "inputType": null,
+      "data": null,
+      "value": "과괘괴궈궤귀의각갂간갇갈가"
+    },
+    {
+      "type": "compositionupdate",
+      "key": null,
+      "code": null,
+      "keyCode": null,
+      "isComposing": null,
+      "inputType": null,
+      "data": "감",
+      "value": "과괘괴궈궤귀의각갂간갇갈가"
+    },
+    {
+      "type": "beforeinput",
+      "key": null,
+      "code": null,
+      "keyCode": null,
+      "isComposing": true,
+      "inputType": "insertCompositionText",
+      "data": "감",
+      "value": "과괘괴궈궤귀의각갂간갇갈가"
+    },
+    {
+      "type": "input",
+      "key": null,
+      "code": null,
+      "keyCode": null,
+      "isComposing": true,
+      "inputType": "insertCompositionText",
+      "data": "감",
+      "value": "과괘괴궈궤귀의각갂간갇갈감"
+    },
+    {
+      "type": "keyup",
+      "key": "Process",
+      "code": "KeyZ",
+      "keyCode": 229,
+      "isComposing": true,
+      "inputType": null,
+      "data": null,
+      "value": "과괘괴궈궤귀의각갂간갇갈감"
+    },
+    {
+      "type": "keyup",
+      "key": "z",
+      "code": "KeyZ",
+      "keyCode": 90,
+      "isComposing": true,
+      "inputType": null,
+      "data": null,
+      "value": "과괘괴궈궤귀의각갂간갇갈감"
+    },
+    {
+      "type": "keydown",
+      "key": "Process",
+      "code": "KeyK",
+      "keyCode": 229,
+      "isComposing": true,
+      "inputType": null,
+      "data": null,
+      "value": "과괘괴궈궤귀의각갂간갇갈감"
+    },
+    {
+      "type": "compositionupdate",
+      "key": null,
+      "code": null,
+      "keyCode": null,
+      "isComposing": null,
+      "inputType": null,
+      "data": "감",
+      "value": "과괘괴궈궤귀의각갂간갇갈감"
+    },
+    {
+      "type": "beforeinput",
+      "key": null,
+      "code": null,
+      "keyCode": null,
+      "isComposing": true,
+      "inputType": "insertCompositionText",
+      "data": "감",
+      "value": "과괘괴궈궤귀의각갂간갇갈감"
+    },
+    {
+      "type": "input",
+      "key": null,
+      "code": null,
+      "keyCode": null,
+      "isComposing": true,
+      "inputType": "insertCompositionText",
+      "data": "감",
+      "value": "과괘괴궈궤귀의각갂간갇갈감"
+    },
+    {
+      "type": "compositionend",
+      "key": null,
+      "code": null,
+      "keyCode": null,
+      "isComposing": null,
+      "inputType": null,
+      "data": "감",
+      "value": "과괘괴궈궤귀의각갂간갇갈감"
+    },
+    {
+      "type": "compositionstart",
+      "key": null,
+      "code": null,
+      "keyCode": null,
+      "isComposing": null,
+      "inputType": null,
+      "data": "",
+      "value": "과괘괴궈궤귀의각갂간갇갈감"
+    },
+    {
+      "type": "compositionupdate",
+      "key": null,
+      "code": null,
+      "keyCode": null,
+      "isComposing": null,
+      "inputType": null,
+      "data": "ㄱ",
+      "value": "과괘괴궈궤귀의각갂간갇갈감"
+    },
+    {
+      "type": "beforeinput",
+      "key": null,
+      "code": null,
+      "keyCode": null,
+      "isComposing": true,
+      "inputType": "insertCompositionText",
+      "data": "ㄱ",
+      "value": "과괘괴궈궤귀의각갂간갇갈감"
+    },
+    {
+      "type": "input",
+      "key": null,
+      "code": null,
+      "keyCode": null,
+      "isComposing": true,
+      "inputType": "insertCompositionText",
+      "data": "ㄱ",
+      "value": "과괘괴궈궤귀의각갂간갇갈감ㄱ"
+    },
+    {
+      "type": "keydown",
+      "key": "Process",
+      "code": "KeyF",
+      "keyCode": 229,
+      "isComposing": true,
+      "inputType": null,
+      "data": null,
+      "value": "과괘괴궈궤귀의각갂간갇갈감ㄱ"
+    },
+    {
+      "type": "compositionupdate",
+      "key": null,
+      "code": null,
+      "keyCode": null,
+      "isComposing": null,
+      "inputType": null,
+      "data": "가",
+      "value": "과괘괴궈궤귀의각갂간갇갈감ㄱ"
+    },
+    {
+      "type": "beforeinput",
+      "key": null,
+      "code": null,
+      "keyCode": null,
+      "isComposing": true,
+      "inputType": "insertCompositionText",
+      "data": "가",
+      "value": "과괘괴궈궤귀의각갂간갇갈감ㄱ"
+    },
+    {
+      "type": "input",
+      "key": null,
+      "code": null,
+      "keyCode": null,
+      "isComposing": true,
+      "inputType": "insertCompositionText",
+      "data": "가",
+      "value": "과괘괴궈궤귀의각갂간갇갈감가"
+    },
+    {
+      "type": "keyup",
+      "key": "Process",
+      "code": "KeyK",
+      "keyCode": 229,
+      "isComposing": true,
+      "inputType": null,
+      "data": null,
+      "value": "과괘괴궈궤귀의각갂간갇갈감가"
+    },
+    {
+      "type": "keyup",
+      "key": "k",
+      "code": "KeyK",
+      "keyCode": 75,
+      "isComposing": true,
+      "inputType": null,
+      "data": null,
+      "value": "과괘괴궈궤귀의각갂간갇갈감가"
+    },
+    {
+      "type": "keydown",
+      "key": "Process",
+      "code": "Digit3",
+      "keyCode": 229,
+      "isComposing": true,
+      "inputType": null,
+      "data": null,
+      "value": "과괘괴궈궤귀의각갂간갇갈감가"
+    },
+    {
+      "type": "compositionupdate",
+      "key": null,
+      "code": null,
+      "keyCode": null,
+      "isComposing": null,
+      "inputType": null,
+      "data": "갑",
+      "value": "과괘괴궈궤귀의각갂간갇갈감가"
+    },
+    {
+      "type": "beforeinput",
+      "key": null,
+      "code": null,
+      "keyCode": null,
+      "isComposing": true,
+      "inputType": "insertCompositionText",
+      "data": "갑",
+      "value": "과괘괴궈궤귀의각갂간갇갈감가"
+    },
+    {
+      "type": "input",
+      "key": null,
+      "code": null,
+      "keyCode": null,
+      "isComposing": true,
+      "inputType": "insertCompositionText",
+      "data": "갑",
+      "value": "과괘괴궈궤귀의각갂간갇갈감갑"
+    },
+    {
+      "type": "keyup",
+      "key": "Process",
+      "code": "Digit3",
+      "keyCode": 229,
+      "isComposing": true,
+      "inputType": null,
+      "data": null,
+      "value": "과괘괴궈궤귀의각갂간갇갈감갑"
+    },
+    {
+      "type": "keyup",
+      "key": "3",
+      "code": "Digit3",
+      "keyCode": 51,
+      "isComposing": true,
+      "inputType": null,
+      "data": null,
+      "value": "과괘괴궈궤귀의각갂간갇갈감갑"
+    },
+    {
+      "type": "keyup",
+      "key": "Process",
+      "code": "KeyF",
+      "keyCode": 229,
+      "isComposing": true,
+      "inputType": null,
+      "data": null,
+      "value": "과괘괴궈궤귀의각갂간갇갈감갑"
+    },
+    {
+      "type": "keyup",
+      "key": "f",
+      "code": "KeyF",
+      "keyCode": 70,
+      "isComposing": true,
+      "inputType": null,
+      "data": null,
+      "value": "과괘괴궈궤귀의각갂간갇갈감갑"
+    },
+    {
+      "type": "keydown",
+      "key": "Process",
+      "code": "KeyK",
+      "keyCode": 229,
+      "isComposing": true,
+      "inputType": null,
+      "data": null,
+      "value": "과괘괴궈궤귀의각갂간갇갈감갑"
+    },
+    {
+      "type": "compositionupdate",
+      "key": null,
+      "code": null,
+      "keyCode": null,
+      "isComposing": null,
+      "inputType": null,
+      "data": "갑",
+      "value": "과괘괴궈궤귀의각갂간갇갈감갑"
+    },
+    {
+      "type": "beforeinput",
+      "key": null,
+      "code": null,
+      "keyCode": null,
+      "isComposing": true,
+      "inputType": "insertCompositionText",
+      "data": "갑",
+      "value": "과괘괴궈궤귀의각갂간갇갈감갑"
+    },
+    {
+      "type": "input",
+      "key": null,
+      "code": null,
+      "keyCode": null,
+      "isComposing": true,
+      "inputType": "insertCompositionText",
+      "data": "갑",
+      "value": "과괘괴궈궤귀의각갂간갇갈감갑"
+    },
+    {
+      "type": "compositionend",
+      "key": null,
+      "code": null,
+      "keyCode": null,
+      "isComposing": null,
+      "inputType": null,
+      "data": "갑",
+      "value": "과괘괴궈궤귀의각갂간갇갈감갑"
+    },
+    {
+      "type": "compositionstart",
+      "key": null,
+      "code": null,
+      "keyCode": null,
+      "isComposing": null,
+      "inputType": null,
+      "data": "",
+      "value": "과괘괴궈궤귀의각갂간갇갈감갑"
+    },
+    {
+      "type": "compositionupdate",
+      "key": null,
+      "code": null,
+      "keyCode": null,
+      "isComposing": null,
+      "inputType": null,
+      "data": "ㄱ",
+      "value": "과괘괴궈궤귀의각갂간갇갈감갑"
+    },
+    {
+      "type": "beforeinput",
+      "key": null,
+      "code": null,
+      "keyCode": null,
+      "isComposing": true,
+      "inputType": "insertCompositionText",
+      "data": "ㄱ",
+      "value": "과괘괴궈궤귀의각갂간갇갈감갑"
+    },
+    {
+      "type": "input",
+      "key": null,
+      "code": null,
+      "keyCode": null,
+      "isComposing": true,
+      "inputType": "insertCompositionText",
+      "data": "ㄱ",
+      "value": "과괘괴궈궤귀의각갂간갇갈감갑ㄱ"
+    },
+    {
+      "type": "keyup",
+      "key": "Process",
+      "code": "KeyK",
+      "keyCode": 229,
+      "isComposing": true,
+      "inputType": null,
+      "data": null,
+      "value": "과괘괴궈궤귀의각갂간갇갈감갑ㄱ"
+    },
+    {
+      "type": "keyup",
+      "key": "k",
+      "code": "KeyK",
+      "keyCode": 75,
+      "isComposing": true,
+      "inputType": null,
+      "data": null,
+      "value": "과괘괴궈궤귀의각갂간갇갈감갑ㄱ"
+    },
+    {
+      "type": "keydown",
+      "key": "Process",
+      "code": "KeyF",
+      "keyCode": 229,
+      "isComposing": true,
+      "inputType": null,
+      "data": null,
+      "value": "과괘괴궈궤귀의각갂간갇갈감갑ㄱ"
+    },
+    {
+      "type": "compositionupdate",
+      "key": null,
+      "code": null,
+      "keyCode": null,
+      "isComposing": null,
+      "inputType": null,
+      "data": "가",
+      "value": "과괘괴궈궤귀의각갂간갇갈감갑ㄱ"
+    },
+    {
+      "type": "beforeinput",
+      "key": null,
+      "code": null,
+      "keyCode": null,
+      "isComposing": true,
+      "inputType": "insertCompositionText",
+      "data": "가",
+      "value": "과괘괴궈궤귀의각갂간갇갈감갑ㄱ"
+    },
+    {
+      "type": "input",
+      "key": null,
+      "code": null,
+      "keyCode": null,
+      "isComposing": true,
+      "inputType": "insertCompositionText",
+      "data": "가",
+      "value": "과괘괴궈궤귀의각갂간갇갈감갑가"
+    },
+    {
+      "type": "keyup",
+      "key": "Process",
+      "code": "KeyF",
+      "keyCode": 229,
+      "isComposing": true,
+      "inputType": null,
+      "data": null,
+      "value": "과괘괴궈궤귀의각갂간갇갈감갑가"
+    },
+    {
+      "type": "keyup",
+      "key": "f",
+      "code": "KeyF",
+      "keyCode": 70,
+      "isComposing": true,
+      "inputType": null,
+      "data": null,
+      "value": "과괘괴궈궤귀의각갂간갇갈감갑가"
+    },
+    {
+      "type": "keydown",
+      "key": "Process",
+      "code": "Digit3",
+      "keyCode": 229,
+      "isComposing": true,
+      "inputType": null,
+      "data": null,
+      "value": "과괘괴궈궤귀의각갂간갇갈감갑가"
+    },
+    {
+      "type": "compositionupdate",
+      "key": null,
+      "code": null,
+      "keyCode": null,
+      "isComposing": null,
+      "inputType": null,
+      "data": "갑",
+      "value": "과괘괴궈궤귀의각갂간갇갈감갑가"
+    },
+    {
+      "type": "beforeinput",
+      "key": null,
+      "code": null,
+      "keyCode": null,
+      "isComposing": true,
+      "inputType": "insertCompositionText",
+      "data": "갑",
+      "value": "과괘괴궈궤귀의각갂간갇갈감갑가"
+    },
+    {
+      "type": "input",
+      "key": null,
+      "code": null,
+      "keyCode": null,
+      "isComposing": true,
+      "inputType": "insertCompositionText",
+      "data": "갑",
+      "value": "과괘괴궈궤귀의각갂간갇갈감갑갑"
+    },
+    {
+      "type": "keydown",
+      "key": "Process",
+      "code": "KeyQ",
+      "keyCode": 229,
+      "isComposing": true,
+      "inputType": null,
+      "data": null,
+      "value": "과괘괴궈궤귀의각갂간갇갈감갑갑"
+    },
+    {
+      "type": "compositionupdate",
+      "key": null,
+      "code": null,
+      "keyCode": null,
+      "isComposing": null,
+      "inputType": null,
+      "data": "값",
+      "value": "과괘괴궈궤귀의각갂간갇갈감갑갑"
+    },
+    {
+      "type": "beforeinput",
+      "key": null,
+      "code": null,
+      "keyCode": null,
+      "isComposing": true,
+      "inputType": "insertCompositionText",
+      "data": "값",
+      "value": "과괘괴궈궤귀의각갂간갇갈감갑갑"
+    },
+    {
+      "type": "input",
+      "key": null,
+      "code": null,
+      "keyCode": null,
+      "isComposing": true,
+      "inputType": "insertCompositionText",
+      "data": "값",
+      "value": "과괘괴궈궤귀의각갂간갇갈감갑값"
+    },
+    {
+      "type": "keyup",
+      "key": "Process",
+      "code": "Digit3",
+      "keyCode": 229,
+      "isComposing": true,
+      "inputType": null,
+      "data": null,
+      "value": "과괘괴궈궤귀의각갂간갇갈감갑값"
+    },
+    {
+      "type": "keyup",
+      "key": "3",
+      "code": "Digit3",
+      "keyCode": 51,
+      "isComposing": true,
+      "inputType": null,
+      "data": null,
+      "value": "과괘괴궈궤귀의각갂간갇갈감갑값"
+    },
+    {
+      "type": "keyup",
+      "key": "Process",
+      "code": "KeyQ",
+      "keyCode": 229,
+      "isComposing": true,
+      "inputType": null,
+      "data": null,
+      "value": "과괘괴궈궤귀의각갂간갇갈감갑값"
+    },
+    {
+      "type": "keyup",
+      "key": "q",
+      "code": "KeyQ",
+      "keyCode": 81,
+      "isComposing": true,
+      "inputType": null,
+      "data": null,
+      "value": "과괘괴궈궤귀의각갂간갇갈감갑값"
+    },
+    {
+      "type": "keydown",
+      "key": "Process",
+      "code": "KeyK",
+      "keyCode": 229,
+      "isComposing": true,
+      "inputType": null,
+      "data": null,
+      "value": "과괘괴궈궤귀의각갂간갇갈감갑값"
+    },
+    {
+      "type": "compositionupdate",
+      "key": null,
+      "code": null,
+      "keyCode": null,
+      "isComposing": null,
+      "inputType": null,
+      "data": "값",
+      "value": "과괘괴궈궤귀의각갂간갇갈감갑값"
+    },
+    {
+      "type": "beforeinput",
+      "key": null,
+      "code": null,
+      "keyCode": null,
+      "isComposing": true,
+      "inputType": "insertCompositionText",
+      "data": "값",
+      "value": "과괘괴궈궤귀의각갂간갇갈감갑값"
+    },
+    {
+      "type": "input",
+      "key": null,
+      "code": null,
+      "keyCode": null,
+      "isComposing": true,
+      "inputType": "insertCompositionText",
+      "data": "값",
+      "value": "과괘괴궈궤귀의각갂간갇갈감갑값"
+    },
+    {
+      "type": "compositionend",
+      "key": null,
+      "code": null,
+      "keyCode": null,
+      "isComposing": null,
+      "inputType": null,
+      "data": "값",
+      "value": "과괘괴궈궤귀의각갂간갇갈감갑값"
+    },
+    {
+      "type": "compositionstart",
+      "key": null,
+      "code": null,
+      "keyCode": null,
+      "isComposing": null,
+      "inputType": null,
+      "data": "",
+      "value": "과괘괴궈궤귀의각갂간갇갈감갑값"
+    },
+    {
+      "type": "compositionupdate",
+      "key": null,
+      "code": null,
+      "keyCode": null,
+      "isComposing": null,
+      "inputType": null,
+      "data": "ㄱ",
+      "value": "과괘괴궈궤귀의각갂간갇갈감갑값"
+    },
+    {
+      "type": "beforeinput",
+      "key": null,
+      "code": null,
+      "keyCode": null,
+      "isComposing": true,
+      "inputType": "insertCompositionText",
+      "data": "ㄱ",
+      "value": "과괘괴궈궤귀의각갂간갇갈감갑값"
+    },
+    {
+      "type": "input",
+      "key": null,
+      "code": null,
+      "keyCode": null,
+      "isComposing": true,
+      "inputType": "insertCompositionText",
+      "data": "ㄱ",
+      "value": "과괘괴궈궤귀의각갂간갇갈감갑값ㄱ"
+    },
+    {
+      "type": "keyup",
+      "key": "Process",
+      "code": "KeyK",
+      "keyCode": 229,
+      "isComposing": true,
+      "inputType": null,
+      "data": null,
+      "value": "과괘괴궈궤귀의각갂간갇갈감갑값ㄱ"
+    },
+    {
+      "type": "keyup",
+      "key": "k",
+      "code": "KeyK",
+      "keyCode": 75,
+      "isComposing": true,
+      "inputType": null,
+      "data": null,
+      "value": "과괘괴궈궤귀의각갂간갇갈감갑값ㄱ"
+    },
+    {
+      "type": "keydown",
+      "key": "Process",
+      "code": "KeyF",
+      "keyCode": 229,
+      "isComposing": true,
+      "inputType": null,
+      "data": null,
+      "value": "과괘괴궈궤귀의각갂간갇갈감갑값ㄱ"
+    },
+    {
+      "type": "compositionupdate",
+      "key": null,
+      "code": null,
+      "keyCode": null,
+      "isComposing": null,
+      "inputType": null,
+      "data": "가",
+      "value": "과괘괴궈궤귀의각갂간갇갈감갑값ㄱ"
+    },
+    {
+      "type": "beforeinput",
+      "key": null,
+      "code": null,
+      "keyCode": null,
+      "isComposing": true,
+      "inputType": "insertCompositionText",
+      "data": "가",
+      "value": "과괘괴궈궤귀의각갂간갇갈감갑값ㄱ"
+    },
+    {
+      "type": "input",
+      "key": null,
+      "code": null,
+      "keyCode": null,
+      "isComposing": true,
+      "inputType": "insertCompositionText",
+      "data": "가",
+      "value": "과괘괴궈궤귀의각갂간갇갈감갑값가"
+    },
+    {
+      "type": "keydown",
+      "key": "Process",
+      "code": "KeyQ",
+      "keyCode": 229,
+      "isComposing": true,
+      "inputType": null,
+      "data": null,
+      "value": "과괘괴궈궤귀의각갂간갇갈감갑값가"
+    },
+    {
+      "type": "compositionupdate",
+      "key": null,
+      "code": null,
+      "keyCode": null,
+      "isComposing": null,
+      "inputType": null,
+      "data": "갓",
+      "value": "과괘괴궈궤귀의각갂간갇갈감갑값가"
+    },
+    {
+      "type": "beforeinput",
+      "key": null,
+      "code": null,
+      "keyCode": null,
+      "isComposing": true,
+      "inputType": "insertCompositionText",
+      "data": "갓",
+      "value": "과괘괴궈궤귀의각갂간갇갈감갑값가"
+    },
+    {
+      "type": "input",
+      "key": null,
+      "code": null,
+      "keyCode": null,
+      "isComposing": true,
+      "inputType": "insertCompositionText",
+      "data": "갓",
+      "value": "과괘괴궈궤귀의각갂간갇갈감갑값갓"
+    },
+    {
+      "type": "keyup",
+      "key": "Process",
+      "code": "KeyF",
+      "keyCode": 229,
+      "isComposing": true,
+      "inputType": null,
+      "data": null,
+      "value": "과괘괴궈궤귀의각갂간갇갈감갑값갓"
+    },
+    {
+      "type": "keyup",
+      "key": "f",
+      "code": "KeyF",
+      "keyCode": 70,
+      "isComposing": true,
+      "inputType": null,
+      "data": null,
+      "value": "과괘괴궈궤귀의각갂간갇갈감갑값갓"
+    },
+    {
+      "type": "keyup",
+      "key": "Process",
+      "code": "KeyQ",
+      "keyCode": 229,
+      "isComposing": true,
+      "inputType": null,
+      "data": null,
+      "value": "과괘괴궈궤귀의각갂간갇갈감갑값갓"
+    },
+    {
+      "type": "keyup",
+      "key": "q",
+      "code": "KeyQ",
+      "keyCode": 81,
+      "isComposing": true,
+      "inputType": null,
+      "data": null,
+      "value": "과괘괴궈궤귀의각갂간갇갈감갑값갓"
+    },
+    {
+      "type": "keydown",
+      "key": "Process",
+      "code": "KeyK",
+      "keyCode": 229,
+      "isComposing": true,
+      "inputType": null,
+      "data": null,
+      "value": "과괘괴궈궤귀의각갂간갇갈감갑값갓"
+    },
+    {
+      "type": "compositionupdate",
+      "key": null,
+      "code": null,
+      "keyCode": null,
+      "isComposing": null,
+      "inputType": null,
+      "data": "갓",
+      "value": "과괘괴궈궤귀의각갂간갇갈감갑값갓"
+    },
+    {
+      "type": "beforeinput",
+      "key": null,
+      "code": null,
+      "keyCode": null,
+      "isComposing": true,
+      "inputType": "insertCompositionText",
+      "data": "갓",
+      "value": "과괘괴궈궤귀의각갂간갇갈감갑값갓"
+    },
+    {
+      "type": "input",
+      "key": null,
+      "code": null,
+      "keyCode": null,
+      "isComposing": true,
+      "inputType": "insertCompositionText",
+      "data": "갓",
+      "value": "과괘괴궈궤귀의각갂간갇갈감갑값갓"
+    },
+    {
+      "type": "compositionend",
+      "key": null,
+      "code": null,
+      "keyCode": null,
+      "isComposing": null,
+      "inputType": null,
+      "data": "갓",
+      "value": "과괘괴궈궤귀의각갂간갇갈감갑값갓"
+    },
+    {
+      "type": "compositionstart",
+      "key": null,
+      "code": null,
+      "keyCode": null,
+      "isComposing": null,
+      "inputType": null,
+      "data": "",
+      "value": "과괘괴궈궤귀의각갂간갇갈감갑값갓"
+    },
+    {
+      "type": "compositionupdate",
+      "key": null,
+      "code": null,
+      "keyCode": null,
+      "isComposing": null,
+      "inputType": null,
+      "data": "ㄱ",
+      "value": "과괘괴궈궤귀의각갂간갇갈감갑값갓"
+    },
+    {
+      "type": "beforeinput",
+      "key": null,
+      "code": null,
+      "keyCode": null,
+      "isComposing": true,
+      "inputType": "insertCompositionText",
+      "data": "ㄱ",
+      "value": "과괘괴궈궤귀의각갂간갇갈감갑값갓"
+    },
+    {
+      "type": "input",
+      "key": null,
+      "code": null,
+      "keyCode": null,
+      "isComposing": true,
+      "inputType": "insertCompositionText",
+      "data": "ㄱ",
+      "value": "과괘괴궈궤귀의각갂간갇갈감갑값갓ㄱ"
+    },
+    {
+      "type": "keydown",
+      "key": "Process",
+      "code": "KeyF",
+      "keyCode": 229,
+      "isComposing": true,
+      "inputType": null,
+      "data": null,
+      "value": "과괘괴궈궤귀의각갂간갇갈감갑값갓ㄱ"
+    },
+    {
+      "type": "compositionupdate",
+      "key": null,
+      "code": null,
+      "keyCode": null,
+      "isComposing": null,
+      "inputType": null,
+      "data": "가",
+      "value": "과괘괴궈궤귀의각갂간갇갈감갑값갓ㄱ"
+    },
+    {
+      "type": "beforeinput",
+      "key": null,
+      "code": null,
+      "keyCode": null,
+      "isComposing": true,
+      "inputType": "insertCompositionText",
+      "data": "가",
+      "value": "과괘괴궈궤귀의각갂간갇갈감갑값갓ㄱ"
+    },
+    {
+      "type": "input",
+      "key": null,
+      "code": null,
+      "keyCode": null,
+      "isComposing": true,
+      "inputType": "insertCompositionText",
+      "data": "가",
+      "value": "과괘괴궈궤귀의각갂간갇갈감갑값갓가"
+    },
+    {
+      "type": "keyup",
+      "key": "Process",
+      "code": "KeyK",
+      "keyCode": 229,
+      "isComposing": true,
+      "inputType": null,
+      "data": null,
+      "value": "과괘괴궈궤귀의각갂간갇갈감갑값갓가"
+    },
+    {
+      "type": "keyup",
+      "key": "k",
+      "code": "KeyK",
+      "keyCode": 75,
+      "isComposing": true,
+      "inputType": null,
+      "data": null,
+      "value": "과괘괴궈궤귀의각갂간갇갈감갑값갓가"
+    },
+    {
+      "type": "keyup",
+      "key": "Process",
+      "code": "KeyF",
+      "keyCode": 229,
+      "isComposing": true,
+      "inputType": null,
+      "data": null,
+      "value": "과괘괴궈궤귀의각갂간갇갈감갑값갓가"
+    },
+    {
+      "type": "keyup",
+      "key": "f",
+      "code": "KeyF",
+      "keyCode": 70,
+      "isComposing": true,
+      "inputType": null,
+      "data": null,
+      "value": "과괘괴궈궤귀의각갂간갇갈감갑값갓가"
+    },
+    {
+      "type": "keydown",
+      "key": "Process",
+      "code": "Digit2",
+      "keyCode": 229,
+      "isComposing": true,
+      "inputType": null,
+      "data": null,
+      "value": "과괘괴궈궤귀의각갂간갇갈감갑값갓가"
+    },
+    {
+      "type": "compositionupdate",
+      "key": null,
+      "code": null,
+      "keyCode": null,
+      "isComposing": null,
+      "inputType": null,
+      "data": "갔",
+      "value": "과괘괴궈궤귀의각갂간갇갈감갑값갓가"
+    },
+    {
+      "type": "beforeinput",
+      "key": null,
+      "code": null,
+      "keyCode": null,
+      "isComposing": true,
+      "inputType": "insertCompositionText",
+      "data": "갔",
+      "value": "과괘괴궈궤귀의각갂간갇갈감갑값갓가"
+    },
+    {
+      "type": "input",
+      "key": null,
+      "code": null,
+      "keyCode": null,
+      "isComposing": true,
+      "inputType": "insertCompositionText",
+      "data": "갔",
+      "value": "과괘괴궈궤귀의각갂간갇갈감갑값갓갔"
+    },
+    {
+      "type": "keyup",
+      "key": "Process",
+      "code": "Digit2",
+      "keyCode": 229,
+      "isComposing": true,
+      "inputType": null,
+      "data": null,
+      "value": "과괘괴궈궤귀의각갂간갇갈감갑값갓갔"
+    },
+    {
+      "type": "keyup",
+      "key": "2",
+      "code": "Digit2",
+      "keyCode": 50,
+      "isComposing": true,
+      "inputType": null,
+      "data": null,
+      "value": "과괘괴궈궤귀의각갂간갇갈감갑값갓갔"
+    },
+    {
+      "type": "keydown",
+      "key": "Process",
+      "code": "KeyK",
+      "keyCode": 229,
+      "isComposing": true,
+      "inputType": null,
+      "data": null,
+      "value": "과괘괴궈궤귀의각갂간갇갈감갑값갓갔"
+    },
+    {
+      "type": "compositionupdate",
+      "key": null,
+      "code": null,
+      "keyCode": null,
+      "isComposing": null,
+      "inputType": null,
+      "data": "갔",
+      "value": "과괘괴궈궤귀의각갂간갇갈감갑값갓갔"
+    },
+    {
+      "type": "beforeinput",
+      "key": null,
+      "code": null,
+      "keyCode": null,
+      "isComposing": true,
+      "inputType": "insertCompositionText",
+      "data": "갔",
+      "value": "과괘괴궈궤귀의각갂간갇갈감갑값갓갔"
+    },
+    {
+      "type": "input",
+      "key": null,
+      "code": null,
+      "keyCode": null,
+      "isComposing": true,
+      "inputType": "insertCompositionText",
+      "data": "갔",
+      "value": "과괘괴궈궤귀의각갂간갇갈감갑값갓갔"
+    },
+    {
+      "type": "compositionend",
+      "key": null,
+      "code": null,
+      "keyCode": null,
+      "isComposing": null,
+      "inputType": null,
+      "data": "갔",
+      "value": "과괘괴궈궤귀의각갂간갇갈감갑값갓갔"
+    },
+    {
+      "type": "compositionstart",
+      "key": null,
+      "code": null,
+      "keyCode": null,
+      "isComposing": null,
+      "inputType": null,
+      "data": "",
+      "value": "과괘괴궈궤귀의각갂간갇갈감갑값갓갔"
+    },
+    {
+      "type": "compositionupdate",
+      "key": null,
+      "code": null,
+      "keyCode": null,
+      "isComposing": null,
+      "inputType": null,
+      "data": "ㄱ",
+      "value": "과괘괴궈궤귀의각갂간갇갈감갑값갓갔"
+    },
+    {
+      "type": "beforeinput",
+      "key": null,
+      "code": null,
+      "keyCode": null,
+      "isComposing": true,
+      "inputType": "insertCompositionText",
+      "data": "ㄱ",
+      "value": "과괘괴궈궤귀의각갂간갇갈감갑값갓갔"
+    },
+    {
+      "type": "input",
+      "key": null,
+      "code": null,
+      "keyCode": null,
+      "isComposing": true,
+      "inputType": "insertCompositionText",
+      "data": "ㄱ",
+      "value": "과괘괴궈궤귀의각갂간갇갈감갑값갓갔ㄱ"
+    },
+    {
+      "type": "keydown",
+      "key": "Process",
+      "code": "KeyF",
+      "keyCode": 229,
+      "isComposing": true,
+      "inputType": null,
+      "data": null,
+      "value": "과괘괴궈궤귀의각갂간갇갈감갑값갓갔ㄱ"
+    },
+    {
+      "type": "compositionupdate",
+      "key": null,
+      "code": null,
+      "keyCode": null,
+      "isComposing": null,
+      "inputType": null,
+      "data": "가",
+      "value": "과괘괴궈궤귀의각갂간갇갈감갑값갓갔ㄱ"
+    },
+    {
+      "type": "beforeinput",
+      "key": null,
+      "code": null,
+      "keyCode": null,
+      "isComposing": true,
+      "inputType": "insertCompositionText",
+      "data": "가",
+      "value": "과괘괴궈궤귀의각갂간갇갈감갑값갓갔ㄱ"
+    },
+    {
+      "type": "input",
+      "key": null,
+      "code": null,
+      "keyCode": null,
+      "isComposing": true,
+      "inputType": "insertCompositionText",
+      "data": "가",
+      "value": "과괘괴궈궤귀의각갂간갇갈감갑값갓갔가"
+    },
+    {
+      "type": "keyup",
+      "key": "Process",
+      "code": "KeyK",
+      "keyCode": 229,
+      "isComposing": true,
+      "inputType": null,
+      "data": null,
+      "value": "과괘괴궈궤귀의각갂간갇갈감갑값갓갔가"
+    },
+    {
+      "type": "keyup",
+      "key": "k",
+      "code": "KeyK",
+      "keyCode": 75,
+      "isComposing": true,
+      "inputType": null,
+      "data": null,
+      "value": "과괘괴궈궤귀의각갂간갇갈감갑값갓갔가"
+    },
+    {
+      "type": "keydown",
+      "key": "Process",
+      "code": "KeyA",
+      "keyCode": 229,
+      "isComposing": true,
+      "inputType": null,
+      "data": null,
+      "value": "과괘괴궈궤귀의각갂간갇갈감갑값갓갔가"
+    },
+    {
+      "type": "compositionupdate",
+      "key": null,
+      "code": null,
+      "keyCode": null,
+      "isComposing": null,
+      "inputType": null,
+      "data": "강",
+      "value": "과괘괴궈궤귀의각갂간갇갈감갑값갓갔가"
+    },
+    {
+      "type": "beforeinput",
+      "key": null,
+      "code": null,
+      "keyCode": null,
+      "isComposing": true,
+      "inputType": "insertCompositionText",
+      "data": "강",
+      "value": "과괘괴궈궤귀의각갂간갇갈감갑값갓갔가"
+    },
+    {
+      "type": "input",
+      "key": null,
+      "code": null,
+      "keyCode": null,
+      "isComposing": true,
+      "inputType": "insertCompositionText",
+      "data": "강",
+      "value": "과괘괴궈궤귀의각갂간갇갈감갑값갓갔강"
+    },
+    {
+      "type": "keyup",
+      "key": "Process",
+      "code": "KeyF",
+      "keyCode": 229,
+      "isComposing": true,
+      "inputType": null,
+      "data": null,
+      "value": "과괘괴궈궤귀의각갂간갇갈감갑값갓갔강"
+    },
+    {
+      "type": "keyup",
+      "key": "f",
+      "code": "KeyF",
+      "keyCode": 70,
+      "isComposing": true,
+      "inputType": null,
+      "data": null,
+      "value": "과괘괴궈궤귀의각갂간갇갈감갑값갓갔강"
+    },
+    {
+      "type": "keyup",
+      "key": "Process",
+      "code": "KeyA",
+      "keyCode": 229,
+      "isComposing": true,
+      "inputType": null,
+      "data": null,
+      "value": "과괘괴궈궤귀의각갂간갇갈감갑값갓갔강"
+    },
+    {
+      "type": "keyup",
+      "key": "a",
+      "code": "KeyA",
+      "keyCode": 65,
+      "isComposing": true,
+      "inputType": null,
+      "data": null,
+      "value": "과괘괴궈궤귀의각갂간갇갈감갑값갓갔강"
+    },
+    {
+      "type": "compositionend",
+      "key": null,
+      "code": null,
+      "keyCode": null,
+      "isComposing": null,
+      "inputType": null,
+      "data": "강",
+      "value": "과괘괴궈궤귀의각갂간갇갈감갑값갓갔강"
+    }
+  ]
+}

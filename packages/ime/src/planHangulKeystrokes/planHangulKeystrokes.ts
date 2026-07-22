@@ -2,7 +2,7 @@ import { assemble, canBeChoseong, canBeJongseong, canBeJungseong, combineVowels,
 
 import { hangulJamos } from "../hangulJamos";
 import { keyForJamo } from "../_internal/jamoKeyMap";
-import { keyForSebeolJamo } from "../_internal/jamoKeyMapSebeol";
+import { keyForSebeolJamo, SEBEOL_COMPOUND_JUNGSEONG_SEQ } from "../_internal/jamoKeyMapSebeol";
 import type { HangulCompositionBoundary, HangulKeyboardLayout } from "../profiles";
 
 export type HangulKeyStroke = {
@@ -138,7 +138,7 @@ function normalizeJungseong(raw: string): string {
 /**
  * 날개셋 세벌식: plan per Unicode syllable with role-based keys.
  * No 2-set batchim look-ahead across syllables (태|희 not 탷→흐).
- * Compound jungseong like ㅢ is one key (Digit8), matching OS mid-preedit.
+ * ㅢ is one key (Digit8); ㅘ/ㅝ/… expand to two keys (Slash/Digit9 head + vowel).
  */
 function planSebeolsikNgs(text: string, prefix: string): HangulKeyStroke[] {
   const strokes: HangulKeyStroke[] = [];
@@ -179,10 +179,24 @@ function planSebeolsikNgs(text: string, prefix: string): HangulKeyStroke[] {
     }
 
     if (jungseong) {
-      const jungMeta = keyForSebeolJamo(jungseong, "jungseong");
-      current = { ...current, jungseong };
-      const preedit = syllableText(current);
-      pushSingleStepStroke(strokes, jungMeta, jungseong, preedit, committed + preedit, true);
+      const compoundSeq = SEBEOL_COMPOUND_JUNGSEONG_SEQ[jungseong];
+      if (compoundSeq) {
+        const [head, tail] = compoundSeq;
+        const headMeta = keyForSebeolJamo(head, "jungseong", { compoundHead: true });
+        current = { ...current, jungseong: head };
+        const midPreedit = syllableText(current);
+        pushSingleStepStroke(strokes, headMeta, head, midPreedit, committed + midPreedit, true);
+
+        const tailMeta = keyForSebeolJamo(tail, "jungseong");
+        current = { ...current, jungseong };
+        const preedit = syllableText(current);
+        pushSingleStepStroke(strokes, tailMeta, jungseong, preedit, committed + preedit, true);
+      } else {
+        const jungMeta = keyForSebeolJamo(jungseong, "jungseong");
+        current = { ...current, jungseong };
+        const preedit = syllableText(current);
+        pushSingleStepStroke(strokes, jungMeta, jungseong, preedit, committed + preedit, true);
+      }
     }
 
     if (jongseong) {
