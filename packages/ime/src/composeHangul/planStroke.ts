@@ -62,15 +62,36 @@ export function planChromeStrokeHead(
   stroke: HangulKeyStroke,
   profile: ImeProfile,
 ): EventPlanStep[] {
-  const steps: EventPlanStep[] = [
-    {
-      kind: "keydown",
-      fields: {
-        ...hangulKeydownFields(profile, stroke),
-        isComposing: stroke.keydownIsComposing,
+  const steps: EventPlanStep[] = [];
+  if (stroke.shiftLeadIn) {
+    steps.push(
+      {
+        kind: "keydown",
+        fields: {
+          key: "Process",
+          code: "ShiftRight",
+          keyCode: 229,
+          isComposing: true,
+        },
       },
+      {
+        kind: "keydown",
+        fields: {
+          key: "Shift",
+          code: "ShiftRight",
+          keyCode: 16,
+          isComposing: true,
+        },
+      },
+    );
+  }
+  steps.push({
+    kind: "keydown",
+    fields: {
+      ...hangulKeydownFields(profile, stroke),
+      isComposing: stroke.keydownIsComposing,
     },
-  ];
+  });
   if (stroke.compositionStart) {
     steps.push({ kind: "compositionstart" });
   }

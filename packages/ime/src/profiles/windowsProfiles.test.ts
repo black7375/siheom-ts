@@ -24,6 +24,10 @@ import ngsEnterSubmit from "../../fixtures/windows-chrome-ngs/enter-submit-broke
 import ngsMixed from "../../fixtures/windows-chrome-ngs/mixed-en-ko.json";
 import ngsBackspace from "../../fixtures/windows-chrome-ngs/backspace-mid.json";
 import ngsArrow from "../../fixtures/windows-chrome-ngs/arrow-edit-mid.json";
+import ngsCoverageChosung from "../../fixtures/windows-chrome-ngs/sebeol-coverage-chosung.json";
+import ngsCoverageJungseong from "../../fixtures/windows-chrome-ngs/sebeol-coverage-jungseong.json";
+import ngsCoverageCompoundJong from "../../fixtures/windows-chrome-ngs/sebeol-coverage-compound-jong.json";
+import ngsCoverageYa from "../../fixtures/windows-chrome-ngs/sebeol-coverage-ya.json";
 import firefoxContinuous from "../../fixtures/windows-firefox-ms/continuous-hangul.json";
 import firefoxEnterSubmit from "../../fixtures/windows-firefox-ms/enter-submit-broken.json";
 import firefoxMixed from "../../fixtures/windows-firefox-ms/mixed-en-ko.json";
@@ -128,6 +132,41 @@ describe("Windows IME profiles (MS / Ngs / Firefox)", () => {
 
     input.remove();
   });
+
+  it.each([
+    {
+      label: "chosung",
+      text: "가나다라마바사아자차카타파하",
+      golden: ngsCoverageChosung,
+    },
+    {
+      label: "jungseong",
+      text: "개걔거게겨고교구규그기",
+      golden: ngsCoverageJungseong,
+    },
+    {
+      label: "compound-jong",
+      text: "과괘괴궈궤귀의각갂간갇갈감갑값갓갔강",
+      golden: ngsCoverageCompoundJong,
+    },
+    {
+      label: "ya",
+      text: "갸",
+      golden: ngsCoverageYa,
+    },
+  ] as const)(
+    "matches windows-chrome-ngs sebeol coverage $label critical fields",
+    async ({ text, golden }) => {
+      const input = document.createElement("input");
+      document.body.append(input);
+
+      const events = await composeHangul(input, text, { profile: "windows-chrome-ngs" });
+      expect(input.value).toBe(text);
+      expect(toCriticalEvents(events)).toEqual(goldenCritical(golden.events));
+
+      input.remove();
+    },
+  );
 
   // TipTap enter fixture for Ngs was captured with 2-set codes; use enter-submit (세벌식) golden.
   it("windows-chrome-ngs enter-submit: Hangul then Enter matches OS golden critical path", async () => {

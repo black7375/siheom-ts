@@ -24,8 +24,8 @@ export function hangulKeyupFields(
   if (profile.hangulKeyEventKey === "unidentified") {
     return { ...UNIDENTIFIED_KEY, isComposing };
   }
-  const meta = keyForJamo(stroke.jamo);
   if (profile.hangulKeyEventKey === "jamo") {
+    const meta = keyForJamo(stroke.jamo);
     return {
       key: stroke.jamo,
       code: stroke.code,
@@ -36,7 +36,7 @@ export function hangulKeyupFields(
   return {
     key: stroke.key,
     code: stroke.code,
-    keyCode: stroke.key.charCodeAt(0),
+    keyCode: stroke.keyCode ?? stroke.key.charCodeAt(0),
     isComposing,
   };
 }
@@ -45,4 +45,6 @@ type JamoStroke = {
   jamo: string;
   code: string;
   key: string;
+  /** Physical keyCode when known (세벌식 maps); avoids 2-set lookup for process keyups. */
+  keyCode?: number;
 };

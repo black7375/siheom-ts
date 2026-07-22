@@ -65,6 +65,12 @@ export const SEBEOL_COMPOUND_JUNGSEONG_SEQ: Record<string, [string, string]> = {
   ㅟ: ["ㅜ", "ㅣ"],
 };
 
+/** Compound jongseong typed as two keys (값 = 갑→값). */
+export const SEBEOL_COMPOUND_JONGSEONG_SEQ: Record<string, [string, string]> = {
+  ㅄ: ["ㅂ", "ㅅ"],
+  "ㅂㅅ": ["ㅂ", "ㅅ"],
+};
+
 /** Jongseong (left hand). `ㅂㅅ` is es-hangul's form of ㅄ. */
 const SEBEOL_JONGSEONG: Record<string, PhysicalKey> = {
   ㄱ: { code: "KeyX", key: "x", keyCode: 88 },

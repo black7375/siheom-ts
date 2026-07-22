@@ -2,13 +2,21 @@ import { assemble, canBeChoseong, canBeJongseong, canBeJungseong, combineVowels,
 
 import { hangulJamos } from "../hangulJamos";
 import { keyForJamo } from "../_internal/jamoKeyMap";
-import { keyForSebeolJamo, SEBEOL_COMPOUND_JUNGSEONG_SEQ } from "../_internal/jamoKeyMapSebeol";
+import {
+  keyForSebeolJamo,
+  SEBEOL_COMPOUND_JONGSEONG_SEQ,
+  SEBEOL_COMPOUND_JUNGSEONG_SEQ,
+} from "../_internal/jamoKeyMapSebeol";
 import type { HangulCompositionBoundary, HangulKeyboardLayout } from "../profiles";
 
 export type HangulKeyStroke = {
   jamo: string;
   code: string;
   key: string;
+  /** Physical KeyboardEvent.keyCode when known (세벌식 maps). */
+  keyCode?: number;
+  /** OS: Process+Shift then Shift before shifted jamo keys (ㅒ, 종성 ㄲ, …). */
+  shiftLeadIn?: boolean;
   /** isComposing on keydown (false only for the first key of a composition session) */
   keydownIsComposing: boolean;
   /** Fire compositionstart before applying preedit updates for this key */
@@ -40,7 +48,7 @@ function syllableText(parts: SyllableParts): string {
 
 function pushBoundaryStroke(
   strokes: HangulKeyStroke[],
-  meta: { code: string; key: string },
+  meta: { code: string; key: string; keyCode?: number },
   jamo: string,
   preeditSteps: [string, string],
   valuesAfterSteps: [string, string],
@@ -50,6 +58,8 @@ function pushBoundaryStroke(
     jamo,
     code: meta.code,
     key: meta.key,
+    keyCode: meta.keyCode,
+    shiftLeadIn: isShiftedPhysicalKey(meta.key),
     keydownIsComposing: true,
     compositionStart: false,
     preeditSteps,
@@ -58,9 +68,13 @@ function pushBoundaryStroke(
   });
 }
 
+function isShiftedPhysicalKey(key: string): boolean {
+  return key.length === 1 && key !== key.toLowerCase();
+}
+
 function pushSingleStepStroke(
   strokes: HangulKeyStroke[],
-  meta: { code: string; key: string },
+  meta: { code: string; key: string; keyCode?: number },
   jamo: string,
   preedit: string,
   value: string,
@@ -70,6 +84,8 @@ function pushSingleStepStroke(
     jamo,
     code: meta.code,
     key: meta.key,
+    keyCode: meta.keyCode,
+    shiftLeadIn: isShiftedPhysicalKey(meta.key),
     keydownIsComposing: composing,
     compositionStart: !composing,
     preeditSteps: [preedit],
@@ -200,10 +216,24 @@ function planSebeolsikNgs(text: string, prefix: string): HangulKeyStroke[] {
     }
 
     if (jongseong) {
-      const jongMeta = keyForSebeolJamo(jongseong, "jongseong");
-      current = { ...current, jongseong };
-      const preedit = syllableText(current);
-      pushSingleStepStroke(strokes, jongMeta, jongseong, preedit, committed + preedit, true);
+      const compoundJong = SEBEOL_COMPOUND_JONGSEONG_SEQ[jongseong];
+      if (compoundJong) {
+        const [head, tail] = compoundJong;
+        const headMeta = keyForSebeolJamo(head, "jongseong");
+        current = { ...current, jongseong: head };
+        const midPreedit = syllableText(current);
+        pushSingleStepStroke(strokes, headMeta, head, midPreedit, committed + midPreedit, true);
+
+        const tailMeta = keyForSebeolJamo(tail, "jongseong");
+        current = { ...current, jongseong };
+        const preedit = syllableText(current);
+        pushSingleStepStroke(strokes, tailMeta, jongseong, preedit, committed + preedit, true);
+      } else {
+        const jongMeta = keyForSebeolJamo(jongseong, "jongseong");
+        current = { ...current, jongseong };
+        const preedit = syllableText(current);
+        pushSingleStepStroke(strokes, jongMeta, jongseong, preedit, committed + preedit, true);
+      }
     }
   }
 
