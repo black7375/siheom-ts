@@ -3,7 +3,7 @@ import type { ImeProfile } from "../profiles";
 import type { EventPlanStep } from "../_internal/eventPlan";
 import { hangulKeydownFields, hangulKeyupFields } from "../_internal/hangulKeyEvent";
 import { keyForJamo } from "../_internal/jamoKeyMap";
-import { planPreedit } from "../_internal/planPreedit";
+import { planPostCompositionEndInput, planPreedit } from "../_internal/planPreedit";
 import {
   planChromeCompositionOverflow,
   planSafariCompositionOverflow,
@@ -83,10 +83,11 @@ export function planChromePreeditStep(
   caret: number,
   suffix: string,
   facts: { valueBefore: string; maxLength: number | null },
+  options: { omitCompositionUpdate?: boolean } = {},
 ): EventPlanStep[] {
   return [
     sessionForPreedit(preedit, value, caret, suffix),
-    ...planPreedit(preedit, value, caret, facts),
+    ...planPreedit(preedit, value, caret, facts, options),
   ];
 }
 
@@ -94,10 +95,13 @@ export function planBoundaryCommitAfterStep(
   stroke: HangulKeyStroke,
   value: string,
   stepIndex: number,
+  postCompositionEndInput = false,
 ): EventPlanStep[] {
   if (stepIndex !== 0 || stroke.commitAfterFirstStep === undefined) return [];
+  const data = stroke.commitAfterFirstStep;
   return [
-    { kind: "compositionend", data: stroke.commitAfterFirstStep, value },
+    { kind: "compositionend", data, value },
+    ...(postCompositionEndInput ? planPostCompositionEndInput(data) : []),
     { kind: "compositionstart" },
   ];
 }
@@ -193,8 +197,30 @@ export function planIsolatedJamo(
   return steps;
 }
 
-export function planEndComposition(data: string): EventPlanStep[] {
-  return [{ kind: "compositionend", data }, { kind: "clearSession" }];
+export function planEndComposition(
+  data: string,
+  options: {
+    postCompositionEndInput?: boolean;
+    confirmPulse?: boolean;
+    valueBefore?: string;
+    maxLength?: number | null;
+  } = {},
+): EventPlanStep[] {
+  const valueBefore = options.valueBefore ?? "";
+  const pulse =
+    options.confirmPulse && options.postCompositionEndInput
+      ? planPreedit(data, valueBefore, valueBefore.length, {
+          valueBefore,
+          maxLength: options.maxLength ?? null,
+        }, { omitCompositionUpdate: true })
+      : [];
+
+  return [
+    ...pulse,
+    { kind: "compositionend", data },
+    ...(options.postCompositionEndInput ? planPostCompositionEndInput(data) : []),
+    { kind: "clearSession" },
+  ];
 }
 
 /** Safari: compositionstart (optional) then per-step handled by shell. */

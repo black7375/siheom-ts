@@ -36,6 +36,7 @@ export async function composeEnter(
         valueBefore: element.value,
         maxLength: readMaxLength(element),
       },
+      postCompositionEndInput: profile.postCompositionEndInput,
       ...enterPresentation(profile),
     }),
   );

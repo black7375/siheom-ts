@@ -15,6 +15,8 @@ export type PlanEnterInput = {
   enterKeyCode?: string;
   /** Linux ibus pulses preedit before compositionend; Android Enter skips the pulse. */
   confirmPulse?: boolean;
+  /** Windows Firefox: insertCompositionText input after compositionend. */
+  postCompositionEndInput?: boolean;
 };
 
 function plainEnterKeydown(code: string): EventPlanStep {
@@ -43,6 +45,7 @@ export function planEnter(input: PlanEnterInput): EventPlanStep[] {
 
   const confirm = planConfirmAndEndComposition(input.session, input.confirmFacts, {
     pulse: input.confirmPulse,
+    postCompositionEndInput: input.postCompositionEndInput,
   });
 
   switch (input.facet) {

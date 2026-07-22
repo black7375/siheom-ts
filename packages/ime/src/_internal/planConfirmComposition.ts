@@ -1,6 +1,6 @@
 import type { ImeComposeSession } from "./session";
 import type { EventPlanStep } from "./eventPlan";
-import { planPreedit } from "./planPreedit";
+import { planPostCompositionEndInput, planPreedit } from "./planPreedit";
 
 export type PlanConfirmFacts = {
   valueBefore: string;
@@ -11,17 +11,22 @@ export type PlanConfirmFacts = {
 export function planConfirmAndEndComposition(
   session: ImeComposeSession,
   facts: PlanConfirmFacts,
-  options: { pulse?: boolean } = {},
+  options: { pulse?: boolean; postCompositionEndInput?: boolean } = {},
 ): EventPlanStep[] {
   if (!session.composing) return [];
 
   const caret = session.committed.length + session.preedit.length;
   const value = session.committed + session.preedit + session.suffix;
   const pulse = options.pulse !== false;
+  const omitCompositionUpdate =
+    Boolean(options.postCompositionEndInput) && facts.valueBefore === value;
 
   return [
-    ...(pulse ? planPreedit(session.preedit, value, caret, facts) : []),
+    ...(pulse
+      ? planPreedit(session.preedit, value, caret, facts, { omitCompositionUpdate })
+      : []),
     { kind: "compositionend", data: session.preedit, value },
+    ...(options.postCompositionEndInput ? planPostCompositionEndInput(session.preedit) : []),
     { kind: "clearSession" },
     { kind: "setValue", value, caret },
   ];

@@ -106,7 +106,7 @@ async function playStrokeRespectingBlur(
     const value = stroke.valuesAfterSteps[i] ?? element.value;
     const caret = carets[i] ?? value.length - suffix.length;
 
-    playPreeditStep(trace, preedit, value, caret, suffix);
+    playPreeditStep(trace, preedit, value, caret, suffix, profile);
     await settleAfterPreedit(settle);
 
     const writeback = deferredUpdateRace && consumeImeControlledWriteback(element);
@@ -128,7 +128,10 @@ async function playStrokeRespectingBlur(
       return "aborted-blur";
     }
 
-    playEventPlan(trace, planBoundaryCommitAfterStep(stroke, value, i));
+    playEventPlan(
+      trace,
+      planBoundaryCommitAfterStep(stroke, value, i, profile.postCompositionEndInput),
+    );
   }
 
   playEventPlan(trace, planChromeStrokeKeyup(stroke, profile));
@@ -310,7 +313,15 @@ export async function composeHangul(
     );
 
     if (commitFinal) {
-      playEventPlan(trace, planEndComposition(finalPreedit));
+      playEventPlan(
+        trace,
+        planEndComposition(finalPreedit, {
+          postCompositionEndInput: profile.postCompositionEndInput,
+          confirmPulse: profile.postCompositionEndInput,
+          valueBefore: element.value,
+          maxLength: readMaxLength(element),
+        }),
+      );
     } else {
       setImeSession(element, {
         composing: true,

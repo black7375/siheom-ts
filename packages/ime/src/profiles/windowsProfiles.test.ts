@@ -10,6 +10,8 @@ import { toCriticalEvents } from "../toCriticalEvents";
 import msContinuous from "../../fixtures/windows-chrome-ms/continuous-hangul.json";
 import ngsContinuous from "../../fixtures/windows-chrome-ngs/continuous-hangul.json";
 import ngsEnterSubmit from "../../fixtures/windows-chrome-ngs/enter-submit-broken.json";
+import firefoxContinuous from "../../fixtures/windows-firefox-ms/continuous-hangul.json";
+import firefoxEnterSubmit from "../../fixtures/windows-firefox-ms/enter-submit-broken.json";
 
 function withRecordedInput(
   run: (input: HTMLInputElement, recorder: ReturnType<typeof attachImeRecorder>) => Promise<void>,
@@ -125,6 +127,30 @@ describe("Windows IME profiles (MS / Ngs / Firefox)", () => {
       expect(enterIndex).toBeGreaterThan(endIndex);
       expect(processEnter).toBe(-1);
       expect(types[enterIndex]?.isComposing).toBe(false);
+    })();
+  });
+
+  it("matches windows-firefox-ms continuous-hangul critical fields for 김태희", async () => {
+    const input = document.createElement("input");
+    document.body.append(input);
+
+    const events = await composeHangul(input, "김태희", { profile: "windows-firefox-ms" });
+    expect(input.value).toBe("김태희");
+    expect(toCriticalEvents(events)).toEqual(goldenCritical(firefoxContinuous.events));
+
+    input.remove();
+  });
+
+  it("windows-firefox-ms enter-submit: Hangul then Enter matches OS golden critical path", async () => {
+    await withRecordedInput(async (input, recorder) => {
+      await composeHangul(input, "김", {
+        commitFinal: false,
+        profile: "windows-firefox-ms",
+      });
+      await composeEnter(input, resolveProfile("windows-firefox-ms"));
+
+      expect(input.value).toBe("김");
+      expect(toCriticalEvents(recorder.events)).toEqual(goldenCritical(firefoxEnterSubmit.events));
     })();
   });
 });

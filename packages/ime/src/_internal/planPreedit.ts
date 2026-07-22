@@ -11,10 +11,13 @@ export function planPreedit(
   value: string,
   caret: number,
   facts: PlanPreeditFacts,
+  options: { omitCompositionUpdate?: boolean } = {},
 ): EventPlanStep[] {
   const inputData = preedit === "" ? null : preedit;
   const steps: EventPlanStep[] = [
-    { kind: "compositionupdate", data: preedit, value: facts.valueBefore },
+    ...(options.omitCompositionUpdate
+      ? []
+      : [{ kind: "compositionupdate" as const, data: preedit, value: facts.valueBefore }]),
     {
       kind: "beforeinput",
       fields: {
@@ -44,4 +47,18 @@ export function planPreedit(
   }
 
   return steps;
+}
+
+/** Windows Firefox: insertCompositionText input after compositionend (isComposing: false). */
+export function planPostCompositionEndInput(data: string): EventPlanStep[] {
+  return [
+    {
+      kind: "input",
+      fields: {
+        inputType: "insertCompositionText",
+        data,
+        isComposing: false,
+      },
+    },
+  ];
 }
