@@ -1,8 +1,17 @@
 import { describe, expect, it } from "vitest";
 import { getA11ySnapshot, getA11yTree } from "./getA11ySnapshot.ts";
 import { a11yFixtures, type A11yFixtureName } from "./a11y/a11yFixtures.ts";
+import markdownSampleHtml from "./markdown-sample.html?raw";
 
 describe("getA11ySnapshot", () => {
+  it("records markdown-sample.html accessible tree", async () => {
+    document.body.innerHTML = markdownSampleHtml;
+
+    await expect(getA11ySnapshot(document.body)).toMatchFileSnapshot(
+      "__snapshots__/a11y-markdown-sample.snap",
+    );
+  });
+
   it.each(Object.keys(a11yFixtures) as A11yFixtureName[])("fixture: %s", async (name) => {
     document.body.innerHTML = a11yFixtures[name];
 

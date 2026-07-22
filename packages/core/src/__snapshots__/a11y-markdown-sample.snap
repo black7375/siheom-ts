@@ -1,0 +1,347 @@
+separator:
+paragraph:
+  strong:
+    "Advertisement 😃"
+list:
+  listitem:
+    strong:
+      link: "pica"
+    "- high quality and fast image\n    resize in browser."
+  listitem:
+    strong:
+      link: "babelfish"
+    "- developer friendly\n    i18n with plurals support and easy syntax."
+paragraph:
+  "You will like those projects!"
+separator:
+heading: "h1 Heading 😎"
+  - properties: [level=1]
+heading: "h2 Heading"
+  - properties: [level=2]
+heading: "h3 Heading"
+  - properties: [level=3]
+heading: "h4 Heading"
+  - properties: [level=4]
+heading: "h5 Heading"
+  - properties: [level=5]
+heading: "h6 Heading"
+  - properties: [level=6]
+heading: "Horizontal Rules"
+  - properties: [level=2]
+separator:
+separator:
+separator:
+heading: "Typographic replacements"
+  - properties: [level=2]
+paragraph:
+  "Enable typographer option to see result."
+paragraph:
+  "© © ® ® ™ ™ ±"
+paragraph:
+  "test… test… test… test?.. test!.."
+paragraph:
+  "!!! ??? ,  – —"
+paragraph:
+  "“Smartypants, double quotes” and ‘single quotes’"
+heading: "Emphasis"
+  - properties: [level=2]
+paragraph:
+  strong:
+    "This is bold text"
+paragraph:
+  strong:
+    "This is bold text"
+paragraph:
+  emphasis:
+    "This is italic text"
+paragraph:
+  emphasis:
+    "This is italic text"
+paragraph:
+  "Strikethrough"
+heading: "Blockquotes"
+  - properties: [level=2]
+blockquote:
+  paragraph:
+    "Blockquotes can also be nested…"
+  blockquote:
+    paragraph:
+      "…by using additional greater-than signs right next to each other…"
+    blockquote:
+      paragraph:
+        "…or with spaces between arrows."
+heading: "Lists"
+  - properties: [level=2]
+paragraph:
+  "Unordered"
+list:
+  listitem:
+    "Create a list by starting a line with"
+    code:
+      "+"
+    ","
+    code:
+      "-"
+    ", or"
+    code:
+      "*"
+  listitem:
+    "Sub-lists are made by indenting 2 spaces:"
+    list:
+      listitem:
+        "Marker character change forces new list start:"
+        list:
+          listitem:
+            "Ac tristique libero volutpat at"
+        list:
+          listitem:
+            "Facilisis in pretium nisl aliquet"
+        list:
+          listitem:
+            "Nulla volutpat aliquam velit"
+  listitem:
+    "Very easy!"
+paragraph:
+  "Ordered"
+list:
+  listitem:
+    paragraph:
+      "Lorem ipsum dolor sit amet"
+  listitem:
+    paragraph:
+      "Consectetur adipiscing elit"
+  listitem:
+    paragraph:
+      "Integer molestie lorem at massa"
+  listitem:
+    paragraph:
+      "You can use sequential numbers…"
+  listitem:
+    paragraph:
+      "…or keep all the numbers as"
+      code:
+        "1."
+paragraph:
+  "Start numbering with offset:"
+list:
+  listitem:
+    "foo"
+  listitem:
+    "bar"
+heading: "Code"
+  - properties: [level=2]
+paragraph:
+  "Inline"
+  code:
+    "code"
+paragraph:
+  "Indented code"
+code:
+  "// Some comments\n    line 1 of code\n    line 2 of code\n    line 3 of code"
+paragraph:
+  "Block code “fences”"
+code:
+  "Sample text here..."
+paragraph:
+  "Syntax highlighting"
+code:
+  "var"
+  "foo ="
+  "function"
+  "("
+  "bar"
+  ") {"
+  "return"
+  "bar++;\n    };"
+  "console"
+  "."
+  "log"
+  "("
+  "foo"
+  "("
+  "5"
+  "));"
+heading: "Tables"
+  - properties: [level=2]
+table:
+  rowgroup:
+    row: "Option Description"
+      columnheader: "Option"
+      columnheader: "Description"
+  rowgroup:
+    row: "data path to data files to supply the data that will be passed into templates."
+      cell: "data"
+      cell: "path to data files to supply the data that will be passed into templates."
+    row: "engine engine to be used for processing templates. Handlebars is the default."
+      cell: "engine"
+      cell: "engine to be used for processing templates. Handlebars is the default."
+    row: "ext extension to be used for dest files."
+      cell: "ext"
+      cell: "extension to be used for dest files."
+paragraph:
+  "Right aligned columns"
+table:
+  rowgroup:
+    row: "Option Description"
+      columnheader: "Option"
+      columnheader: "Description"
+  rowgroup:
+    row: "data path to data files to supply the data that will be passed into templates."
+      cell: "data"
+      cell: "path to data files to supply the data that will be passed into templates."
+    row: "engine engine to be used for processing templates. Handlebars is the default."
+      cell: "engine"
+      cell: "engine to be used for processing templates. Handlebars is the default."
+    row: "ext extension to be used for dest files."
+      cell: "ext"
+      cell: "extension to be used for dest files."
+heading: "Links"
+  - properties: [level=2]
+paragraph:
+  link: "link text"
+paragraph:
+  link: "link with title" [description="title text!"]
+paragraph:
+  "Autoconverted link"
+  link: "https://github.com/nodeca/pica"
+  "(enable linkify to see)"
+heading: "Images"
+  - properties: [level=2]
+paragraph:
+  img: "Minion"
+  img: "Stormtroopocat" [description="The Stormtroopocat"]
+paragraph:
+  "Like links, Images also have a footnote style syntax"
+paragraph:
+  img: "Alt text" [description="The Dojocat"]
+paragraph:
+  "With a reference later in the document defining the URL location:"
+heading: "Plugins"
+  - properties: [level=2]
+paragraph:
+  "The killer feature of"
+  code:
+    "markdown-it"
+  "is very effective support of"
+  link: "syntax plugins"
+  "."
+heading: "Emojies"
+  - properties: [level=3]
+blockquote:
+  paragraph:
+    "Classic markup: 😉 😢 😆 😋"
+  paragraph:
+    "Shortcuts (emoticons): 😃 😦 😎 😉"
+paragraph:
+  "see"
+  link: "how to change output"
+  "with twemoji."
+heading: "Subscript / Superscript"
+  - properties: [level=3]
+list:
+  listitem:
+    "19"
+    superscript:
+      "th"
+  listitem:
+    "H"
+    subscript:
+      "2"
+    "O"
+heading: "<ins>"
+  - properties: [level=3]
+paragraph:
+  insertion:
+    "Inserted text"
+heading: "<mark>"
+  - properties: [level=3]
+paragraph:
+  mark:
+    "Marked text"
+heading: "Footnotes"
+  - properties: [level=3]
+paragraph:
+  "Footnote 1 link"
+  superscript:
+    link: "[1]"
+  "."
+paragraph:
+  "Footnote 2 link"
+  superscript:
+    link: "[2]"
+  "."
+paragraph:
+  "Inline footnote"
+  superscript:
+    link: "[3]"
+  "definition."
+paragraph:
+  "Duplicated footnote reference"
+  superscript:
+    link: "[2:1]"
+  "."
+heading: "Definition lists"
+  - properties: [level=3]
+term:
+  "Term 1"
+definition:
+  paragraph:
+    "Definition 1\n    with lazy continuation."
+term:
+  "Term 2 with"
+  emphasis:
+    "inline markup"
+definition:
+  paragraph:
+    "Definition 2"
+  code:
+    "{ some code, part of Definition 2 }"
+  paragraph:
+    "Third paragraph of definition 2."
+paragraph:
+  emphasis:
+    "Compact style:"
+term:
+  "Term 1"
+definition:
+  "Definition 1"
+term:
+  "Term 2"
+definition:
+  "Definition 2a"
+definition:
+  "Definition 2b"
+heading: "Abbreviations"
+  - properties: [level=3]
+paragraph:
+  "This is"
+  "HTML"
+  "abbreviation example."
+paragraph:
+  "It converts “"
+  "HTML"
+  "”, but keep intact partial entries like “xxxHTMLyyy” and so on."
+heading: "Custom containers"
+  - properties: [level=3]
+paragraph:
+  emphasis:
+    "here be dragons"
+separator:
+list:
+  listitem:
+    paragraph:
+      "Footnote"
+      strong:
+        "can have markup"
+    paragraph:
+      "and multiple paragraphs."
+      link: "↩︎"
+  listitem:
+    paragraph:
+      "Footnote text."
+      link: "↩︎"
+      link: "↩︎"
+  listitem:
+    paragraph:
+      "Text of inline footnote"
+      link: "↩︎"
