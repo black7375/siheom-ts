@@ -33,4 +33,8 @@ describe("TipTapLogger", () => {
       assertions.textContent(query.status("캡처 상태"), "클립보드에 복사했습니다."),
     );
   });
+
+  it("shows capture instructions for TipTap IME scenarios", async () => {
+    await runSiheom(given.render(<TipTapLogger />), assertions.visible(query.region("캡처 지시")));
+  });
 });

@@ -15,7 +15,7 @@ OS별로 재현·캡처하고, 트레이스로 `@siheom/ime` 프로필을 검증
 - [x] Storybook에 `IME/TipTap` Capture story가 등록된다
 - [x] IME 이벤트가 로그에 기록된다 (phase1: user-event 픽스처로 검증)
 - [x] 트레이스 JSON을 복사/다운로드할 수 있다 (`ImeCaptureShell` 기본 동작)
-- [ ] 캡처 안내 문구가 표시된다 (`enter-newline` / `list-item-start`)
+- [x] 캡처 안내 문구가 표시된다 (`enter-newline` / `list-item-start`)
 
 ### Debug + scenarios (phase 2)
 
