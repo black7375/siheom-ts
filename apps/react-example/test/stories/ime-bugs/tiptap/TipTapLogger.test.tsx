@@ -1,15 +1,23 @@
-import { describe, it } from "vitest";
+import { describe, expect, it } from "vitest";
 
-import { actions, assertions, given, query, runSiheom } from "@siheom/react";
+import { actions, given, query, runSiheom } from "@siheom/react";
 
+import type { ImeCaptureApi } from "../../ime-logger/ImeCaptureShell";
 import { TipTapLogger } from "./TipTapLogger";
 
 describe("TipTapLogger", () => {
-  it("records input events on the TipTap editor", async () => {
+  it("includes TipTap editor text in the IME capture trace", async () => {
+    const captureApiRef: { current: ImeCaptureApi | null } = { current: null };
+
     await runSiheom(
-      given.render(<TipTapLogger />),
+      given.render(<TipTapLogger captureApiRef={captureApiRef} />),
       actions.type(query.textbox("TipTap editor"), "a"),
-      assertions.not.textContent(query.region("이벤트 로그"), "아직 이벤트가 없습니다."),
     );
+
+    const trace = captureApiRef.current!.buildTrace();
+    expect(trace.events.length).toBeGreaterThan(0);
+    expect(trace).toMatchObject({
+      tiptapDebug: { final: { editorText: "a" } },
+    });
   });
 });

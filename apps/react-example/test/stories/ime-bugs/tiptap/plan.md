@@ -16,7 +16,7 @@ OS별로 재현·캡처하고, 트레이스로 `@siheom/ime` 프로필을 검증
 
 ### Debug + scenarios (phase 2)
 
-- [ ] `TipTapCompositionDebugPlugin` + snapshot이 `traceExtra.tiptapDebug`로 붙는다
+- [x] 캡처 트레이스에 `tiptapDebug.final` 스냅샷이 붙는다 (editorText / composing / nodeType)
 - [ ] 시나리오 모드 `enter-newline` / `list-item-start` (scenarioId·시드 doc)
 - [ ] `fixtures/` 빈 셸 + README (windows / macos chrome·safari / linux / android)
 
