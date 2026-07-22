@@ -1,0 +1,3307 @@
+{
+  "profileId": "windows-firefox-ms",
+  "os": "windows",
+  "browser": "firefox",
+  "ime": "ms",
+  "capturedAt": "2026-07-22T07:02:02.957Z",
+  "scenarioId": "slate-ac-first-hangul-placeholder-explore",
+  "source": "os-ime",
+  "events": [
+    {
+      "type": "keydown",
+      "key": "Process",
+      "code": "KeyR",
+      "keyCode": 229,
+      "isComposing": false,
+      "inputType": null,
+      "data": null,
+      "value": "﻿"
+    },
+    {
+      "type": "compositionstart",
+      "key": null,
+      "code": null,
+      "keyCode": null,
+      "isComposing": null,
+      "inputType": null,
+      "data": "",
+      "value": "﻿"
+    },
+    {
+      "type": "compositionupdate",
+      "key": null,
+      "code": null,
+      "keyCode": null,
+      "isComposing": null,
+      "inputType": null,
+      "data": "ㄱ",
+      "value": "﻿"
+    },
+    {
+      "type": "beforeinput",
+      "key": null,
+      "code": null,
+      "keyCode": null,
+      "isComposing": true,
+      "inputType": "insertCompositionText",
+      "data": "ㄱ",
+      "value": "﻿"
+    },
+    {
+      "type": "input",
+      "key": null,
+      "code": null,
+      "keyCode": null,
+      "isComposing": true,
+      "inputType": "insertCompositionText",
+      "data": "ㄱ",
+      "value": "﻿ㄱ"
+    },
+    {
+      "type": "keyup",
+      "key": "r",
+      "code": "KeyR",
+      "keyCode": 82,
+      "isComposing": true,
+      "inputType": null,
+      "data": null,
+      "value": "﻿ㄱ"
+    },
+    {
+      "type": "keydown",
+      "key": "Process",
+      "code": "KeyK",
+      "keyCode": 229,
+      "isComposing": true,
+      "inputType": null,
+      "data": null,
+      "value": "﻿ㄱ"
+    },
+    {
+      "type": "compositionupdate",
+      "key": null,
+      "code": null,
+      "keyCode": null,
+      "isComposing": null,
+      "inputType": null,
+      "data": "가",
+      "value": "﻿ㄱ"
+    },
+    {
+      "type": "beforeinput",
+      "key": null,
+      "code": null,
+      "keyCode": null,
+      "isComposing": true,
+      "inputType": "insertCompositionText",
+      "data": "가",
+      "value": "﻿ㄱ"
+    },
+    {
+      "type": "input",
+      "key": null,
+      "code": null,
+      "keyCode": null,
+      "isComposing": true,
+      "inputType": "insertCompositionText",
+      "data": "가",
+      "value": "﻿가"
+    },
+    {
+      "type": "keyup",
+      "key": "k",
+      "code": "KeyK",
+      "keyCode": 75,
+      "isComposing": true,
+      "inputType": null,
+      "data": null,
+      "value": "﻿가"
+    },
+    {
+      "type": "keydown",
+      "key": "Process",
+      "code": "KeyS",
+      "keyCode": 229,
+      "isComposing": true,
+      "inputType": null,
+      "data": null,
+      "value": "﻿가"
+    },
+    {
+      "type": "compositionupdate",
+      "key": null,
+      "code": null,
+      "keyCode": null,
+      "isComposing": null,
+      "inputType": null,
+      "data": "간",
+      "value": "﻿가"
+    },
+    {
+      "type": "beforeinput",
+      "key": null,
+      "code": null,
+      "keyCode": null,
+      "isComposing": true,
+      "inputType": "insertCompositionText",
+      "data": "간",
+      "value": "﻿가"
+    },
+    {
+      "type": "input",
+      "key": null,
+      "code": null,
+      "keyCode": null,
+      "isComposing": true,
+      "inputType": "insertCompositionText",
+      "data": "간",
+      "value": "﻿간"
+    },
+    {
+      "type": "keydown",
+      "key": "Process",
+      "code": "KeyK",
+      "keyCode": 229,
+      "isComposing": true,
+      "inputType": null,
+      "data": null,
+      "value": "﻿간"
+    },
+    {
+      "type": "compositionupdate",
+      "key": null,
+      "code": null,
+      "keyCode": null,
+      "isComposing": null,
+      "inputType": null,
+      "data": "가",
+      "value": "﻿간"
+    },
+    {
+      "type": "beforeinput",
+      "key": null,
+      "code": null,
+      "keyCode": null,
+      "isComposing": true,
+      "inputType": "insertCompositionText",
+      "data": "가",
+      "value": "﻿간"
+    },
+    {
+      "type": "input",
+      "key": null,
+      "code": null,
+      "keyCode": null,
+      "isComposing": true,
+      "inputType": "insertCompositionText",
+      "data": "가",
+      "value": "﻿가"
+    },
+    {
+      "type": "compositionend",
+      "key": null,
+      "code": null,
+      "keyCode": null,
+      "isComposing": null,
+      "inputType": null,
+      "data": "가",
+      "value": "﻿가"
+    },
+    {
+      "type": "input",
+      "key": null,
+      "code": null,
+      "keyCode": null,
+      "isComposing": false,
+      "inputType": "insertCompositionText",
+      "data": "가",
+      "value": "가"
+    },
+    {
+      "type": "compositionstart",
+      "key": null,
+      "code": null,
+      "keyCode": null,
+      "isComposing": null,
+      "inputType": null,
+      "data": "",
+      "value": "가"
+    },
+    {
+      "type": "compositionupdate",
+      "key": null,
+      "code": null,
+      "keyCode": null,
+      "isComposing": null,
+      "inputType": null,
+      "data": "나",
+      "value": "가"
+    },
+    {
+      "type": "beforeinput",
+      "key": null,
+      "code": null,
+      "keyCode": null,
+      "isComposing": true,
+      "inputType": "insertCompositionText",
+      "data": "나",
+      "value": "가"
+    },
+    {
+      "type": "input",
+      "key": null,
+      "code": null,
+      "keyCode": null,
+      "isComposing": true,
+      "inputType": "insertCompositionText",
+      "data": "나",
+      "value": "가나"
+    },
+    {
+      "type": "keyup",
+      "key": "s",
+      "code": "KeyS",
+      "keyCode": 83,
+      "isComposing": true,
+      "inputType": null,
+      "data": null,
+      "value": "가나"
+    },
+    {
+      "type": "keyup",
+      "key": "k",
+      "code": "KeyK",
+      "keyCode": 75,
+      "isComposing": true,
+      "inputType": null,
+      "data": null,
+      "value": "가나"
+    },
+    {
+      "type": "keydown",
+      "key": "Process",
+      "code": "KeyE",
+      "keyCode": 229,
+      "isComposing": true,
+      "inputType": null,
+      "data": null,
+      "value": "가나"
+    },
+    {
+      "type": "compositionupdate",
+      "key": null,
+      "code": null,
+      "keyCode": null,
+      "isComposing": null,
+      "inputType": null,
+      "data": "낟",
+      "value": "가나"
+    },
+    {
+      "type": "beforeinput",
+      "key": null,
+      "code": null,
+      "keyCode": null,
+      "isComposing": true,
+      "inputType": "insertCompositionText",
+      "data": "낟",
+      "value": "가나"
+    },
+    {
+      "type": "input",
+      "key": null,
+      "code": null,
+      "keyCode": null,
+      "isComposing": true,
+      "inputType": "insertCompositionText",
+      "data": "낟",
+      "value": "가낟"
+    },
+    {
+      "type": "keyup",
+      "key": "e",
+      "code": "KeyE",
+      "keyCode": 69,
+      "isComposing": true,
+      "inputType": null,
+      "data": null,
+      "value": "가낟"
+    },
+    {
+      "type": "keydown",
+      "key": "Process",
+      "code": "KeyK",
+      "keyCode": 229,
+      "isComposing": true,
+      "inputType": null,
+      "data": null,
+      "value": "가낟"
+    },
+    {
+      "type": "compositionupdate",
+      "key": null,
+      "code": null,
+      "keyCode": null,
+      "isComposing": null,
+      "inputType": null,
+      "data": "나",
+      "value": "가낟"
+    },
+    {
+      "type": "beforeinput",
+      "key": null,
+      "code": null,
+      "keyCode": null,
+      "isComposing": true,
+      "inputType": "insertCompositionText",
+      "data": "나",
+      "value": "가낟"
+    },
+    {
+      "type": "input",
+      "key": null,
+      "code": null,
+      "keyCode": null,
+      "isComposing": true,
+      "inputType": "insertCompositionText",
+      "data": "나",
+      "value": "가나"
+    },
+    {
+      "type": "compositionend",
+      "key": null,
+      "code": null,
+      "keyCode": null,
+      "isComposing": null,
+      "inputType": null,
+      "data": "나",
+      "value": "가나"
+    },
+    {
+      "type": "input",
+      "key": null,
+      "code": null,
+      "keyCode": null,
+      "isComposing": false,
+      "inputType": "insertCompositionText",
+      "data": "나",
+      "value": "가나"
+    },
+    {
+      "type": "compositionstart",
+      "key": null,
+      "code": null,
+      "keyCode": null,
+      "isComposing": null,
+      "inputType": null,
+      "data": "",
+      "value": "가나"
+    },
+    {
+      "type": "compositionupdate",
+      "key": null,
+      "code": null,
+      "keyCode": null,
+      "isComposing": null,
+      "inputType": null,
+      "data": "다",
+      "value": "가나"
+    },
+    {
+      "type": "beforeinput",
+      "key": null,
+      "code": null,
+      "keyCode": null,
+      "isComposing": true,
+      "inputType": "insertCompositionText",
+      "data": "다",
+      "value": "가나"
+    },
+    {
+      "type": "input",
+      "key": null,
+      "code": null,
+      "keyCode": null,
+      "isComposing": true,
+      "inputType": "insertCompositionText",
+      "data": "다",
+      "value": "가나다"
+    },
+    {
+      "type": "keyup",
+      "key": "k",
+      "code": "KeyK",
+      "keyCode": 75,
+      "isComposing": true,
+      "inputType": null,
+      "data": null,
+      "value": "가나다"
+    },
+    {
+      "type": "keydown",
+      "key": "Process",
+      "code": "KeyR",
+      "keyCode": 229,
+      "isComposing": true,
+      "inputType": null,
+      "data": null,
+      "value": "가나다"
+    },
+    {
+      "type": "compositionupdate",
+      "key": null,
+      "code": null,
+      "keyCode": null,
+      "isComposing": null,
+      "inputType": null,
+      "data": "닥",
+      "value": "가나다"
+    },
+    {
+      "type": "beforeinput",
+      "key": null,
+      "code": null,
+      "keyCode": null,
+      "isComposing": true,
+      "inputType": "insertCompositionText",
+      "data": "닥",
+      "value": "가나다"
+    },
+    {
+      "type": "input",
+      "key": null,
+      "code": null,
+      "keyCode": null,
+      "isComposing": true,
+      "inputType": "insertCompositionText",
+      "data": "닥",
+      "value": "가나닥"
+    },
+    {
+      "type": "keyup",
+      "key": "r",
+      "code": "KeyR",
+      "keyCode": 82,
+      "isComposing": true,
+      "inputType": null,
+      "data": null,
+      "value": "가나닥"
+    },
+    {
+      "type": "keydown",
+      "key": "Process",
+      "code": "KeyK",
+      "keyCode": 229,
+      "isComposing": true,
+      "inputType": null,
+      "data": null,
+      "value": "가나닥"
+    },
+    {
+      "type": "compositionupdate",
+      "key": null,
+      "code": null,
+      "keyCode": null,
+      "isComposing": null,
+      "inputType": null,
+      "data": "다",
+      "value": "가나닥"
+    },
+    {
+      "type": "beforeinput",
+      "key": null,
+      "code": null,
+      "keyCode": null,
+      "isComposing": true,
+      "inputType": "insertCompositionText",
+      "data": "다",
+      "value": "가나닥"
+    },
+    {
+      "type": "input",
+      "key": null,
+      "code": null,
+      "keyCode": null,
+      "isComposing": true,
+      "inputType": "insertCompositionText",
+      "data": "다",
+      "value": "가나다"
+    },
+    {
+      "type": "compositionend",
+      "key": null,
+      "code": null,
+      "keyCode": null,
+      "isComposing": null,
+      "inputType": null,
+      "data": "다",
+      "value": "가나다"
+    },
+    {
+      "type": "input",
+      "key": null,
+      "code": null,
+      "keyCode": null,
+      "isComposing": false,
+      "inputType": "insertCompositionText",
+      "data": "다",
+      "value": "가나다"
+    },
+    {
+      "type": "compositionstart",
+      "key": null,
+      "code": null,
+      "keyCode": null,
+      "isComposing": null,
+      "inputType": null,
+      "data": "",
+      "value": "가나다"
+    },
+    {
+      "type": "compositionupdate",
+      "key": null,
+      "code": null,
+      "keyCode": null,
+      "isComposing": null,
+      "inputType": null,
+      "data": "가",
+      "value": "가나다"
+    },
+    {
+      "type": "beforeinput",
+      "key": null,
+      "code": null,
+      "keyCode": null,
+      "isComposing": true,
+      "inputType": "insertCompositionText",
+      "data": "가",
+      "value": "가나다"
+    },
+    {
+      "type": "input",
+      "key": null,
+      "code": null,
+      "keyCode": null,
+      "isComposing": true,
+      "inputType": "insertCompositionText",
+      "data": "가",
+      "value": "가나다가"
+    },
+    {
+      "type": "keyup",
+      "key": "k",
+      "code": "KeyK",
+      "keyCode": 75,
+      "isComposing": true,
+      "inputType": null,
+      "data": null,
+      "value": "가나다가"
+    },
+    {
+      "type": "keydown",
+      "key": "Process",
+      "code": "KeyS",
+      "keyCode": 229,
+      "isComposing": true,
+      "inputType": null,
+      "data": null,
+      "value": "가나다가"
+    },
+    {
+      "type": "compositionupdate",
+      "key": null,
+      "code": null,
+      "keyCode": null,
+      "isComposing": null,
+      "inputType": null,
+      "data": "간",
+      "value": "가나다가"
+    },
+    {
+      "type": "beforeinput",
+      "key": null,
+      "code": null,
+      "keyCode": null,
+      "isComposing": true,
+      "inputType": "insertCompositionText",
+      "data": "간",
+      "value": "가나다가"
+    },
+    {
+      "type": "input",
+      "key": null,
+      "code": null,
+      "keyCode": null,
+      "isComposing": true,
+      "inputType": "insertCompositionText",
+      "data": "간",
+      "value": "가나다간"
+    },
+    {
+      "type": "keyup",
+      "key": "s",
+      "code": "KeyS",
+      "keyCode": 83,
+      "isComposing": true,
+      "inputType": null,
+      "data": null,
+      "value": "가나다간"
+    },
+    {
+      "type": "keydown",
+      "key": "Process",
+      "code": "KeyK",
+      "keyCode": 229,
+      "isComposing": true,
+      "inputType": null,
+      "data": null,
+      "value": "가나다간"
+    },
+    {
+      "type": "compositionupdate",
+      "key": null,
+      "code": null,
+      "keyCode": null,
+      "isComposing": null,
+      "inputType": null,
+      "data": "가",
+      "value": "가나다간"
+    },
+    {
+      "type": "beforeinput",
+      "key": null,
+      "code": null,
+      "keyCode": null,
+      "isComposing": true,
+      "inputType": "insertCompositionText",
+      "data": "가",
+      "value": "가나다간"
+    },
+    {
+      "type": "input",
+      "key": null,
+      "code": null,
+      "keyCode": null,
+      "isComposing": true,
+      "inputType": "insertCompositionText",
+      "data": "가",
+      "value": "가나다가"
+    },
+    {
+      "type": "compositionend",
+      "key": null,
+      "code": null,
+      "keyCode": null,
+      "isComposing": null,
+      "inputType": null,
+      "data": "가",
+      "value": "가나다가"
+    },
+    {
+      "type": "input",
+      "key": null,
+      "code": null,
+      "keyCode": null,
+      "isComposing": false,
+      "inputType": "insertCompositionText",
+      "data": "가",
+      "value": "가나다가"
+    },
+    {
+      "type": "compositionstart",
+      "key": null,
+      "code": null,
+      "keyCode": null,
+      "isComposing": null,
+      "inputType": null,
+      "data": "",
+      "value": "가나다가"
+    },
+    {
+      "type": "compositionupdate",
+      "key": null,
+      "code": null,
+      "keyCode": null,
+      "isComposing": null,
+      "inputType": null,
+      "data": "나",
+      "value": "가나다가"
+    },
+    {
+      "type": "beforeinput",
+      "key": null,
+      "code": null,
+      "keyCode": null,
+      "isComposing": true,
+      "inputType": "insertCompositionText",
+      "data": "나",
+      "value": "가나다가"
+    },
+    {
+      "type": "input",
+      "key": null,
+      "code": null,
+      "keyCode": null,
+      "isComposing": true,
+      "inputType": "insertCompositionText",
+      "data": "나",
+      "value": "가나다가나"
+    },
+    {
+      "type": "keyup",
+      "key": "k",
+      "code": "KeyK",
+      "keyCode": 75,
+      "isComposing": true,
+      "inputType": null,
+      "data": null,
+      "value": "가나다가나"
+    },
+    {
+      "type": "keydown",
+      "key": "Process",
+      "code": "KeyE",
+      "keyCode": 229,
+      "isComposing": true,
+      "inputType": null,
+      "data": null,
+      "value": "가나다가나"
+    },
+    {
+      "type": "compositionupdate",
+      "key": null,
+      "code": null,
+      "keyCode": null,
+      "isComposing": null,
+      "inputType": null,
+      "data": "낟",
+      "value": "가나다가나"
+    },
+    {
+      "type": "beforeinput",
+      "key": null,
+      "code": null,
+      "keyCode": null,
+      "isComposing": true,
+      "inputType": "insertCompositionText",
+      "data": "낟",
+      "value": "가나다가나"
+    },
+    {
+      "type": "input",
+      "key": null,
+      "code": null,
+      "keyCode": null,
+      "isComposing": true,
+      "inputType": "insertCompositionText",
+      "data": "낟",
+      "value": "가나다가낟"
+    },
+    {
+      "type": "keyup",
+      "key": "e",
+      "code": "KeyE",
+      "keyCode": 69,
+      "isComposing": true,
+      "inputType": null,
+      "data": null,
+      "value": "가나다가낟"
+    },
+    {
+      "type": "keydown",
+      "key": "Process",
+      "code": "KeyK",
+      "keyCode": 229,
+      "isComposing": true,
+      "inputType": null,
+      "data": null,
+      "value": "가나다가낟"
+    },
+    {
+      "type": "compositionupdate",
+      "key": null,
+      "code": null,
+      "keyCode": null,
+      "isComposing": null,
+      "inputType": null,
+      "data": "나",
+      "value": "가나다가낟"
+    },
+    {
+      "type": "beforeinput",
+      "key": null,
+      "code": null,
+      "keyCode": null,
+      "isComposing": true,
+      "inputType": "insertCompositionText",
+      "data": "나",
+      "value": "가나다가낟"
+    },
+    {
+      "type": "input",
+      "key": null,
+      "code": null,
+      "keyCode": null,
+      "isComposing": true,
+      "inputType": "insertCompositionText",
+      "data": "나",
+      "value": "가나다가나"
+    },
+    {
+      "type": "compositionend",
+      "key": null,
+      "code": null,
+      "keyCode": null,
+      "isComposing": null,
+      "inputType": null,
+      "data": "나",
+      "value": "가나다가나"
+    },
+    {
+      "type": "input",
+      "key": null,
+      "code": null,
+      "keyCode": null,
+      "isComposing": false,
+      "inputType": "insertCompositionText",
+      "data": "나",
+      "value": "가나다가나"
+    },
+    {
+      "type": "compositionstart",
+      "key": null,
+      "code": null,
+      "keyCode": null,
+      "isComposing": null,
+      "inputType": null,
+      "data": "",
+      "value": "가나다가나"
+    },
+    {
+      "type": "compositionupdate",
+      "key": null,
+      "code": null,
+      "keyCode": null,
+      "isComposing": null,
+      "inputType": null,
+      "data": "다",
+      "value": "가나다가나"
+    },
+    {
+      "type": "beforeinput",
+      "key": null,
+      "code": null,
+      "keyCode": null,
+      "isComposing": true,
+      "inputType": "insertCompositionText",
+      "data": "다",
+      "value": "가나다가나"
+    },
+    {
+      "type": "input",
+      "key": null,
+      "code": null,
+      "keyCode": null,
+      "isComposing": true,
+      "inputType": "insertCompositionText",
+      "data": "다",
+      "value": "가나다가나다"
+    },
+    {
+      "type": "keyup",
+      "key": "k",
+      "code": "KeyK",
+      "keyCode": 75,
+      "isComposing": true,
+      "inputType": null,
+      "data": null,
+      "value": "가나다가나다"
+    },
+    {
+      "type": "beforeinput",
+      "key": null,
+      "code": null,
+      "keyCode": null,
+      "isComposing": true,
+      "inputType": "insertCompositionText",
+      "data": "다",
+      "value": "가나다가나다"
+    },
+    {
+      "type": "input",
+      "key": null,
+      "code": null,
+      "keyCode": null,
+      "isComposing": true,
+      "inputType": "insertCompositionText",
+      "data": "다",
+      "value": "가나다가나다"
+    },
+    {
+      "type": "compositionend",
+      "key": null,
+      "code": null,
+      "keyCode": null,
+      "isComposing": null,
+      "inputType": null,
+      "data": "다",
+      "value": "가나다가나다"
+    },
+    {
+      "type": "input",
+      "key": null,
+      "code": null,
+      "keyCode": null,
+      "isComposing": false,
+      "inputType": "insertCompositionText",
+      "data": "다",
+      "value": "가나다가나다"
+    }
+  ],
+  "slateDebug": {
+    "patch": {
+      "expectedPatchId": "composition-anchor-v3",
+      "loadedPatchId": "composition-anchor-v3",
+      "patchActive": true
+    },
+    "imeEventCount": 95,
+    "final": {
+      "slateText": "가나다가나다",
+      "domText": "가나다가나다",
+      "placeholderPresent": false,
+      "placeholderDisplay": null,
+      "pendingDiffCount": 0
+    },
+    "exploration": {
+      "timeline": [
+        {
+          "i": 0,
+          "type": "keydown",
+          "inputType": null,
+          "data": null,
+          "eventValue": "﻿",
+          "slateText": "",
+          "domText": "여기에 입력…",
+          "placeholderPresent": true,
+          "placeholderDisplay": "block",
+          "isComposingWeak": false,
+          "isComposingReact": false,
+          "pendingDiffCount": 0,
+          "selection": {
+            "path": [0, 0],
+            "offset": 0,
+            "focusPath": [0, 0],
+            "focusOffset": 0
+          },
+          "flags": ["event.value≠domText", "slateText≠domText"]
+        },
+        {
+          "i": 1,
+          "type": "compositionstart",
+          "inputType": null,
+          "data": "",
+          "eventValue": "﻿",
+          "slateText": "",
+          "domText": "여기에 입력…",
+          "placeholderPresent": true,
+          "placeholderDisplay": "block",
+          "isComposingWeak": false,
+          "isComposingReact": false,
+          "pendingDiffCount": 0,
+          "selection": {
+            "path": [0, 0],
+            "offset": 0,
+            "focusPath": [0, 0],
+            "focusOffset": 0
+          },
+          "flags": ["event.value≠domText", "slateText≠domText"]
+        },
+        {
+          "i": 2,
+          "type": "compositionupdate",
+          "inputType": null,
+          "data": "ㄱ",
+          "eventValue": "﻿",
+          "slateText": "",
+          "domText": "",
+          "placeholderPresent": false,
+          "placeholderDisplay": null,
+          "isComposingWeak": false,
+          "isComposingReact": false,
+          "pendingDiffCount": 0,
+          "selection": {
+            "path": [0, 0],
+            "offset": 0,
+            "focusPath": [0, 0],
+            "focusOffset": 0
+          },
+          "flags": ["event.value≠domText"]
+        },
+        {
+          "i": 3,
+          "type": "beforeinput",
+          "inputType": "insertCompositionText",
+          "data": "ㄱ",
+          "eventValue": "﻿",
+          "slateText": "",
+          "domText": "ㄱ",
+          "placeholderPresent": false,
+          "placeholderDisplay": null,
+          "isComposingWeak": true,
+          "isComposingReact": true,
+          "pendingDiffCount": 0,
+          "selection": {
+            "path": [0, 0],
+            "offset": 0,
+            "focusPath": [0, 0],
+            "focusOffset": 0
+          },
+          "flags": ["event.value≠domText", "slateText≠domText"]
+        },
+        {
+          "i": 4,
+          "type": "input",
+          "inputType": "insertCompositionText",
+          "data": "ㄱ",
+          "eventValue": "﻿ㄱ",
+          "slateText": "",
+          "domText": "ㄱ",
+          "placeholderPresent": false,
+          "placeholderDisplay": null,
+          "isComposingWeak": true,
+          "isComposingReact": true,
+          "pendingDiffCount": 0,
+          "selection": {
+            "path": [0, 0],
+            "offset": 0,
+            "focusPath": [0, 0],
+            "focusOffset": 0
+          },
+          "flags": ["event.value≠domText", "slateText≠domText"]
+        },
+        {
+          "i": 5,
+          "type": "keyup",
+          "inputType": null,
+          "data": null,
+          "eventValue": "﻿ㄱ",
+          "slateText": "",
+          "domText": "ㄱ",
+          "placeholderPresent": false,
+          "placeholderDisplay": null,
+          "isComposingWeak": true,
+          "isComposingReact": true,
+          "pendingDiffCount": 0,
+          "selection": {
+            "path": [0, 0],
+            "offset": 0,
+            "focusPath": [0, 0],
+            "focusOffset": 0
+          },
+          "flags": ["event.value≠domText", "slateText≠domText"]
+        },
+        {
+          "i": 6,
+          "type": "keydown",
+          "inputType": null,
+          "data": null,
+          "eventValue": "﻿ㄱ",
+          "slateText": "",
+          "domText": "ㄱ",
+          "placeholderPresent": false,
+          "placeholderDisplay": null,
+          "isComposingWeak": true,
+          "isComposingReact": true,
+          "pendingDiffCount": 0,
+          "selection": {
+            "path": [0, 0],
+            "offset": 0,
+            "focusPath": [0, 0],
+            "focusOffset": 0
+          },
+          "flags": ["event.value≠domText", "slateText≠domText"]
+        },
+        {
+          "i": 7,
+          "type": "compositionupdate",
+          "inputType": null,
+          "data": "가",
+          "eventValue": "﻿ㄱ",
+          "slateText": "",
+          "domText": "ㄱ",
+          "placeholderPresent": false,
+          "placeholderDisplay": null,
+          "isComposingWeak": true,
+          "isComposingReact": true,
+          "pendingDiffCount": 0,
+          "selection": {
+            "path": [0, 0],
+            "offset": 0,
+            "focusPath": [0, 0],
+            "focusOffset": 0
+          },
+          "flags": [
+            "event.value≠domText",
+            "slateText≠domText",
+            "data∉domText",
+            "stuck-ㄱ-while-data-가"
+          ]
+        },
+        {
+          "i": 8,
+          "type": "beforeinput",
+          "inputType": "insertCompositionText",
+          "data": "가",
+          "eventValue": "﻿ㄱ",
+          "slateText": "",
+          "domText": "가",
+          "placeholderPresent": false,
+          "placeholderDisplay": null,
+          "isComposingWeak": true,
+          "isComposingReact": true,
+          "pendingDiffCount": 0,
+          "selection": {
+            "path": [0, 0],
+            "offset": 0,
+            "focusPath": [0, 0],
+            "focusOffset": 0
+          },
+          "flags": ["event.value≠domText", "slateText≠domText"]
+        },
+        {
+          "i": 9,
+          "type": "input",
+          "inputType": "insertCompositionText",
+          "data": "가",
+          "eventValue": "﻿가",
+          "slateText": "",
+          "domText": "가",
+          "placeholderPresent": false,
+          "placeholderDisplay": null,
+          "isComposingWeak": true,
+          "isComposingReact": true,
+          "pendingDiffCount": 0,
+          "selection": {
+            "path": [0, 0],
+            "offset": 0,
+            "focusPath": [0, 0],
+            "focusOffset": 0
+          },
+          "flags": ["event.value≠domText", "slateText≠domText"]
+        },
+        {
+          "i": 10,
+          "type": "keyup",
+          "inputType": null,
+          "data": null,
+          "eventValue": "﻿가",
+          "slateText": "",
+          "domText": "가",
+          "placeholderPresent": false,
+          "placeholderDisplay": null,
+          "isComposingWeak": true,
+          "isComposingReact": true,
+          "pendingDiffCount": 0,
+          "selection": {
+            "path": [0, 0],
+            "offset": 0,
+            "focusPath": [0, 0],
+            "focusOffset": 0
+          },
+          "flags": ["event.value≠domText", "slateText≠domText"]
+        },
+        {
+          "i": 11,
+          "type": "keydown",
+          "inputType": null,
+          "data": null,
+          "eventValue": "﻿가",
+          "slateText": "",
+          "domText": "가",
+          "placeholderPresent": false,
+          "placeholderDisplay": null,
+          "isComposingWeak": true,
+          "isComposingReact": true,
+          "pendingDiffCount": 0,
+          "selection": {
+            "path": [0, 0],
+            "offset": 0,
+            "focusPath": [0, 0],
+            "focusOffset": 0
+          },
+          "flags": ["event.value≠domText", "slateText≠domText"]
+        },
+        {
+          "i": 12,
+          "type": "compositionupdate",
+          "inputType": null,
+          "data": "간",
+          "eventValue": "﻿가",
+          "slateText": "",
+          "domText": "가",
+          "placeholderPresent": false,
+          "placeholderDisplay": null,
+          "isComposingWeak": true,
+          "isComposingReact": true,
+          "pendingDiffCount": 0,
+          "selection": {
+            "path": [0, 0],
+            "offset": 0,
+            "focusPath": [0, 0],
+            "focusOffset": 0
+          },
+          "flags": ["event.value≠domText", "slateText≠domText", "data∉domText"]
+        },
+        {
+          "i": 13,
+          "type": "beforeinput",
+          "inputType": "insertCompositionText",
+          "data": "간",
+          "eventValue": "﻿가",
+          "slateText": "",
+          "domText": "간",
+          "placeholderPresent": false,
+          "placeholderDisplay": null,
+          "isComposingWeak": true,
+          "isComposingReact": true,
+          "pendingDiffCount": 0,
+          "selection": {
+            "path": [0, 0],
+            "offset": 0,
+            "focusPath": [0, 0],
+            "focusOffset": 0
+          },
+          "flags": ["event.value≠domText", "slateText≠domText"]
+        },
+        {
+          "i": 14,
+          "type": "input",
+          "inputType": "insertCompositionText",
+          "data": "간",
+          "eventValue": "﻿간",
+          "slateText": "",
+          "domText": "간",
+          "placeholderPresent": false,
+          "placeholderDisplay": null,
+          "isComposingWeak": true,
+          "isComposingReact": true,
+          "pendingDiffCount": 0,
+          "selection": {
+            "path": [0, 0],
+            "offset": 0,
+            "focusPath": [0, 0],
+            "focusOffset": 0
+          },
+          "flags": ["event.value≠domText", "slateText≠domText"]
+        },
+        {
+          "i": 15,
+          "type": "keydown",
+          "inputType": null,
+          "data": null,
+          "eventValue": "﻿간",
+          "slateText": "",
+          "domText": "간",
+          "placeholderPresent": false,
+          "placeholderDisplay": null,
+          "isComposingWeak": true,
+          "isComposingReact": true,
+          "pendingDiffCount": 0,
+          "selection": {
+            "path": [0, 0],
+            "offset": 0,
+            "focusPath": [0, 0],
+            "focusOffset": 0
+          },
+          "flags": ["event.value≠domText", "slateText≠domText"]
+        },
+        {
+          "i": 16,
+          "type": "compositionupdate",
+          "inputType": null,
+          "data": "가",
+          "eventValue": "﻿간",
+          "slateText": "",
+          "domText": "간",
+          "placeholderPresent": false,
+          "placeholderDisplay": null,
+          "isComposingWeak": true,
+          "isComposingReact": true,
+          "pendingDiffCount": 0,
+          "selection": {
+            "path": [0, 0],
+            "offset": 0,
+            "focusPath": [0, 0],
+            "focusOffset": 0
+          },
+          "flags": ["event.value≠domText", "slateText≠domText", "data∉domText"]
+        },
+        {
+          "i": 17,
+          "type": "beforeinput",
+          "inputType": "insertCompositionText",
+          "data": "가",
+          "eventValue": "﻿간",
+          "slateText": "",
+          "domText": "가",
+          "placeholderPresent": false,
+          "placeholderDisplay": null,
+          "isComposingWeak": true,
+          "isComposingReact": true,
+          "pendingDiffCount": 0,
+          "selection": {
+            "path": [0, 0],
+            "offset": 0,
+            "focusPath": [0, 0],
+            "focusOffset": 0
+          },
+          "flags": ["event.value≠domText", "slateText≠domText"]
+        },
+        {
+          "i": 18,
+          "type": "input",
+          "inputType": "insertCompositionText",
+          "data": "가",
+          "eventValue": "﻿가",
+          "slateText": "",
+          "domText": "가",
+          "placeholderPresent": false,
+          "placeholderDisplay": null,
+          "isComposingWeak": true,
+          "isComposingReact": true,
+          "pendingDiffCount": 0,
+          "selection": {
+            "path": [0, 0],
+            "offset": 0,
+            "focusPath": [0, 0],
+            "focusOffset": 0
+          },
+          "flags": ["event.value≠domText", "slateText≠domText"]
+        },
+        {
+          "i": 19,
+          "type": "compositionend",
+          "inputType": null,
+          "data": "가",
+          "eventValue": "﻿가",
+          "slateText": "",
+          "domText": "가",
+          "placeholderPresent": false,
+          "placeholderDisplay": null,
+          "isComposingWeak": true,
+          "isComposingReact": true,
+          "pendingDiffCount": 0,
+          "selection": {
+            "path": [0, 0],
+            "offset": 0,
+            "focusPath": [0, 0],
+            "focusOffset": 0
+          },
+          "flags": ["event.value≠domText", "slateText≠domText"]
+        },
+        {
+          "i": 20,
+          "type": "input",
+          "inputType": "insertCompositionText",
+          "data": "가",
+          "eventValue": "가",
+          "slateText": "가",
+          "domText": "가",
+          "placeholderPresent": false,
+          "placeholderDisplay": null,
+          "isComposingWeak": false,
+          "isComposingReact": false,
+          "pendingDiffCount": 0,
+          "selection": {
+            "path": [0, 0],
+            "offset": 1,
+            "focusPath": [0, 0],
+            "focusOffset": 1
+          },
+          "flags": []
+        },
+        {
+          "i": 21,
+          "type": "compositionstart",
+          "inputType": null,
+          "data": "",
+          "eventValue": "가",
+          "slateText": "가",
+          "domText": "가",
+          "placeholderPresent": false,
+          "placeholderDisplay": null,
+          "isComposingWeak": false,
+          "isComposingReact": false,
+          "pendingDiffCount": 0,
+          "selection": {
+            "path": [0, 0],
+            "offset": 1,
+            "focusPath": [0, 0],
+            "focusOffset": 1
+          },
+          "flags": []
+        },
+        {
+          "i": 22,
+          "type": "compositionupdate",
+          "inputType": null,
+          "data": "나",
+          "eventValue": "가",
+          "slateText": "가",
+          "domText": "가",
+          "placeholderPresent": false,
+          "placeholderDisplay": null,
+          "isComposingWeak": false,
+          "isComposingReact": false,
+          "pendingDiffCount": 0,
+          "selection": {
+            "path": [0, 0],
+            "offset": 1,
+            "focusPath": [0, 0],
+            "focusOffset": 1
+          },
+          "flags": ["data∉domText"]
+        },
+        {
+          "i": 23,
+          "type": "beforeinput",
+          "inputType": "insertCompositionText",
+          "data": "나",
+          "eventValue": "가",
+          "slateText": "가",
+          "domText": "가나",
+          "placeholderPresent": false,
+          "placeholderDisplay": null,
+          "isComposingWeak": true,
+          "isComposingReact": true,
+          "pendingDiffCount": 0,
+          "selection": {
+            "path": [0, 0],
+            "offset": 1,
+            "focusPath": [0, 0],
+            "focusOffset": 1
+          },
+          "flags": ["event.value≠domText", "slateText≠domText"]
+        },
+        {
+          "i": 24,
+          "type": "input",
+          "inputType": "insertCompositionText",
+          "data": "나",
+          "eventValue": "가나",
+          "slateText": "가",
+          "domText": "가나",
+          "placeholderPresent": false,
+          "placeholderDisplay": null,
+          "isComposingWeak": true,
+          "isComposingReact": true,
+          "pendingDiffCount": 0,
+          "selection": {
+            "path": [0, 0],
+            "offset": 1,
+            "focusPath": [0, 0],
+            "focusOffset": 1
+          },
+          "flags": ["slateText≠domText"]
+        },
+        {
+          "i": 25,
+          "type": "keyup",
+          "inputType": null,
+          "data": null,
+          "eventValue": "가나",
+          "slateText": "가",
+          "domText": "가나",
+          "placeholderPresent": false,
+          "placeholderDisplay": null,
+          "isComposingWeak": true,
+          "isComposingReact": true,
+          "pendingDiffCount": 0,
+          "selection": {
+            "path": [0, 0],
+            "offset": 1,
+            "focusPath": [0, 0],
+            "focusOffset": 1
+          },
+          "flags": ["slateText≠domText"]
+        },
+        {
+          "i": 26,
+          "type": "keyup",
+          "inputType": null,
+          "data": null,
+          "eventValue": "가나",
+          "slateText": "가",
+          "domText": "가나",
+          "placeholderPresent": false,
+          "placeholderDisplay": null,
+          "isComposingWeak": true,
+          "isComposingReact": true,
+          "pendingDiffCount": 0,
+          "selection": {
+            "path": [0, 0],
+            "offset": 1,
+            "focusPath": [0, 0],
+            "focusOffset": 1
+          },
+          "flags": ["slateText≠domText"]
+        },
+        {
+          "i": 27,
+          "type": "keydown",
+          "inputType": null,
+          "data": null,
+          "eventValue": "가나",
+          "slateText": "가",
+          "domText": "가나",
+          "placeholderPresent": false,
+          "placeholderDisplay": null,
+          "isComposingWeak": true,
+          "isComposingReact": true,
+          "pendingDiffCount": 0,
+          "selection": {
+            "path": [0, 0],
+            "offset": 1,
+            "focusPath": [0, 0],
+            "focusOffset": 1
+          },
+          "flags": ["slateText≠domText"]
+        },
+        {
+          "i": 28,
+          "type": "compositionupdate",
+          "inputType": null,
+          "data": "낟",
+          "eventValue": "가나",
+          "slateText": "가",
+          "domText": "가나",
+          "placeholderPresent": false,
+          "placeholderDisplay": null,
+          "isComposingWeak": true,
+          "isComposingReact": true,
+          "pendingDiffCount": 0,
+          "selection": {
+            "path": [0, 0],
+            "offset": 1,
+            "focusPath": [0, 0],
+            "focusOffset": 1
+          },
+          "flags": ["slateText≠domText", "data∉domText"]
+        },
+        {
+          "i": 29,
+          "type": "beforeinput",
+          "inputType": "insertCompositionText",
+          "data": "낟",
+          "eventValue": "가나",
+          "slateText": "가",
+          "domText": "가낟",
+          "placeholderPresent": false,
+          "placeholderDisplay": null,
+          "isComposingWeak": true,
+          "isComposingReact": true,
+          "pendingDiffCount": 0,
+          "selection": {
+            "path": [0, 0],
+            "offset": 1,
+            "focusPath": [0, 0],
+            "focusOffset": 1
+          },
+          "flags": ["event.value≠domText", "slateText≠domText"]
+        },
+        {
+          "i": 30,
+          "type": "input",
+          "inputType": "insertCompositionText",
+          "data": "낟",
+          "eventValue": "가낟",
+          "slateText": "가",
+          "domText": "가낟",
+          "placeholderPresent": false,
+          "placeholderDisplay": null,
+          "isComposingWeak": true,
+          "isComposingReact": true,
+          "pendingDiffCount": 0,
+          "selection": {
+            "path": [0, 0],
+            "offset": 1,
+            "focusPath": [0, 0],
+            "focusOffset": 1
+          },
+          "flags": ["slateText≠domText"]
+        },
+        {
+          "i": 31,
+          "type": "keyup",
+          "inputType": null,
+          "data": null,
+          "eventValue": "가낟",
+          "slateText": "가",
+          "domText": "가낟",
+          "placeholderPresent": false,
+          "placeholderDisplay": null,
+          "isComposingWeak": true,
+          "isComposingReact": true,
+          "pendingDiffCount": 0,
+          "selection": {
+            "path": [0, 0],
+            "offset": 1,
+            "focusPath": [0, 0],
+            "focusOffset": 1
+          },
+          "flags": ["slateText≠domText"]
+        },
+        {
+          "i": 32,
+          "type": "keydown",
+          "inputType": null,
+          "data": null,
+          "eventValue": "가낟",
+          "slateText": "가",
+          "domText": "가낟",
+          "placeholderPresent": false,
+          "placeholderDisplay": null,
+          "isComposingWeak": true,
+          "isComposingReact": true,
+          "pendingDiffCount": 0,
+          "selection": {
+            "path": [0, 0],
+            "offset": 1,
+            "focusPath": [0, 0],
+            "focusOffset": 1
+          },
+          "flags": ["slateText≠domText"]
+        },
+        {
+          "i": 33,
+          "type": "compositionupdate",
+          "inputType": null,
+          "data": "나",
+          "eventValue": "가낟",
+          "slateText": "가",
+          "domText": "가낟",
+          "placeholderPresent": false,
+          "placeholderDisplay": null,
+          "isComposingWeak": true,
+          "isComposingReact": true,
+          "pendingDiffCount": 0,
+          "selection": {
+            "path": [0, 0],
+            "offset": 1,
+            "focusPath": [0, 0],
+            "focusOffset": 1
+          },
+          "flags": ["slateText≠domText", "data∉domText"]
+        },
+        {
+          "i": 34,
+          "type": "beforeinput",
+          "inputType": "insertCompositionText",
+          "data": "나",
+          "eventValue": "가낟",
+          "slateText": "가",
+          "domText": "가나",
+          "placeholderPresent": false,
+          "placeholderDisplay": null,
+          "isComposingWeak": true,
+          "isComposingReact": true,
+          "pendingDiffCount": 0,
+          "selection": {
+            "path": [0, 0],
+            "offset": 1,
+            "focusPath": [0, 0],
+            "focusOffset": 1
+          },
+          "flags": ["event.value≠domText", "slateText≠domText"]
+        },
+        {
+          "i": 35,
+          "type": "input",
+          "inputType": "insertCompositionText",
+          "data": "나",
+          "eventValue": "가나",
+          "slateText": "가",
+          "domText": "가나",
+          "placeholderPresent": false,
+          "placeholderDisplay": null,
+          "isComposingWeak": true,
+          "isComposingReact": true,
+          "pendingDiffCount": 0,
+          "selection": {
+            "path": [0, 0],
+            "offset": 1,
+            "focusPath": [0, 0],
+            "focusOffset": 1
+          },
+          "flags": ["slateText≠domText"]
+        },
+        {
+          "i": 36,
+          "type": "compositionend",
+          "inputType": null,
+          "data": "나",
+          "eventValue": "가나",
+          "slateText": "가",
+          "domText": "가나",
+          "placeholderPresent": false,
+          "placeholderDisplay": null,
+          "isComposingWeak": true,
+          "isComposingReact": true,
+          "pendingDiffCount": 0,
+          "selection": {
+            "path": [0, 0],
+            "offset": 1,
+            "focusPath": [0, 0],
+            "focusOffset": 1
+          },
+          "flags": ["slateText≠domText", "compositionend.data≠domText"]
+        },
+        {
+          "i": 37,
+          "type": "input",
+          "inputType": "insertCompositionText",
+          "data": "나",
+          "eventValue": "가나",
+          "slateText": "가나",
+          "domText": "가나",
+          "placeholderPresent": false,
+          "placeholderDisplay": null,
+          "isComposingWeak": false,
+          "isComposingReact": false,
+          "pendingDiffCount": 0,
+          "selection": {
+            "path": [0, 0],
+            "offset": 2,
+            "focusPath": [0, 0],
+            "focusOffset": 2
+          },
+          "flags": []
+        },
+        {
+          "i": 38,
+          "type": "compositionstart",
+          "inputType": null,
+          "data": "",
+          "eventValue": "가나",
+          "slateText": "가나",
+          "domText": "가나",
+          "placeholderPresent": false,
+          "placeholderDisplay": null,
+          "isComposingWeak": false,
+          "isComposingReact": false,
+          "pendingDiffCount": 0,
+          "selection": {
+            "path": [0, 0],
+            "offset": 2,
+            "focusPath": [0, 0],
+            "focusOffset": 2
+          },
+          "flags": []
+        },
+        {
+          "i": 39,
+          "type": "compositionupdate",
+          "inputType": null,
+          "data": "다",
+          "eventValue": "가나",
+          "slateText": "가나",
+          "domText": "가나",
+          "placeholderPresent": false,
+          "placeholderDisplay": null,
+          "isComposingWeak": false,
+          "isComposingReact": false,
+          "pendingDiffCount": 0,
+          "selection": {
+            "path": [0, 0],
+            "offset": 2,
+            "focusPath": [0, 0],
+            "focusOffset": 2
+          },
+          "flags": ["data∉domText"]
+        },
+        {
+          "i": 40,
+          "type": "beforeinput",
+          "inputType": "insertCompositionText",
+          "data": "다",
+          "eventValue": "가나",
+          "slateText": "가나",
+          "domText": "가나다",
+          "placeholderPresent": false,
+          "placeholderDisplay": null,
+          "isComposingWeak": true,
+          "isComposingReact": true,
+          "pendingDiffCount": 0,
+          "selection": {
+            "path": [0, 0],
+            "offset": 2,
+            "focusPath": [0, 0],
+            "focusOffset": 2
+          },
+          "flags": ["event.value≠domText", "slateText≠domText"]
+        },
+        {
+          "i": 41,
+          "type": "input",
+          "inputType": "insertCompositionText",
+          "data": "다",
+          "eventValue": "가나다",
+          "slateText": "가나",
+          "domText": "가나다",
+          "placeholderPresent": false,
+          "placeholderDisplay": null,
+          "isComposingWeak": true,
+          "isComposingReact": true,
+          "pendingDiffCount": 0,
+          "selection": {
+            "path": [0, 0],
+            "offset": 2,
+            "focusPath": [0, 0],
+            "focusOffset": 2
+          },
+          "flags": ["slateText≠domText"]
+        },
+        {
+          "i": 42,
+          "type": "keyup",
+          "inputType": null,
+          "data": null,
+          "eventValue": "가나다",
+          "slateText": "가나",
+          "domText": "가나다",
+          "placeholderPresent": false,
+          "placeholderDisplay": null,
+          "isComposingWeak": true,
+          "isComposingReact": true,
+          "pendingDiffCount": 0,
+          "selection": {
+            "path": [0, 0],
+            "offset": 2,
+            "focusPath": [0, 0],
+            "focusOffset": 2
+          },
+          "flags": ["slateText≠domText"]
+        },
+        {
+          "i": 43,
+          "type": "keydown",
+          "inputType": null,
+          "data": null,
+          "eventValue": "가나다",
+          "slateText": "가나",
+          "domText": "가나다",
+          "placeholderPresent": false,
+          "placeholderDisplay": null,
+          "isComposingWeak": true,
+          "isComposingReact": true,
+          "pendingDiffCount": 0,
+          "selection": {
+            "path": [0, 0],
+            "offset": 2,
+            "focusPath": [0, 0],
+            "focusOffset": 2
+          },
+          "flags": ["slateText≠domText"]
+        },
+        {
+          "i": 44,
+          "type": "compositionupdate",
+          "inputType": null,
+          "data": "닥",
+          "eventValue": "가나다",
+          "slateText": "가나",
+          "domText": "가나다",
+          "placeholderPresent": false,
+          "placeholderDisplay": null,
+          "isComposingWeak": true,
+          "isComposingReact": true,
+          "pendingDiffCount": 0,
+          "selection": {
+            "path": [0, 0],
+            "offset": 2,
+            "focusPath": [0, 0],
+            "focusOffset": 2
+          },
+          "flags": ["slateText≠domText", "data∉domText"]
+        },
+        {
+          "i": 45,
+          "type": "beforeinput",
+          "inputType": "insertCompositionText",
+          "data": "닥",
+          "eventValue": "가나다",
+          "slateText": "가나",
+          "domText": "가나닥",
+          "placeholderPresent": false,
+          "placeholderDisplay": null,
+          "isComposingWeak": true,
+          "isComposingReact": true,
+          "pendingDiffCount": 0,
+          "selection": {
+            "path": [0, 0],
+            "offset": 2,
+            "focusPath": [0, 0],
+            "focusOffset": 2
+          },
+          "flags": ["event.value≠domText", "slateText≠domText"]
+        },
+        {
+          "i": 46,
+          "type": "input",
+          "inputType": "insertCompositionText",
+          "data": "닥",
+          "eventValue": "가나닥",
+          "slateText": "가나",
+          "domText": "가나닥",
+          "placeholderPresent": false,
+          "placeholderDisplay": null,
+          "isComposingWeak": true,
+          "isComposingReact": true,
+          "pendingDiffCount": 0,
+          "selection": {
+            "path": [0, 0],
+            "offset": 2,
+            "focusPath": [0, 0],
+            "focusOffset": 2
+          },
+          "flags": ["slateText≠domText"]
+        },
+        {
+          "i": 47,
+          "type": "keyup",
+          "inputType": null,
+          "data": null,
+          "eventValue": "가나닥",
+          "slateText": "가나",
+          "domText": "가나닥",
+          "placeholderPresent": false,
+          "placeholderDisplay": null,
+          "isComposingWeak": true,
+          "isComposingReact": true,
+          "pendingDiffCount": 0,
+          "selection": {
+            "path": [0, 0],
+            "offset": 2,
+            "focusPath": [0, 0],
+            "focusOffset": 2
+          },
+          "flags": ["slateText≠domText"]
+        },
+        {
+          "i": 48,
+          "type": "keydown",
+          "inputType": null,
+          "data": null,
+          "eventValue": "가나닥",
+          "slateText": "가나",
+          "domText": "가나닥",
+          "placeholderPresent": false,
+          "placeholderDisplay": null,
+          "isComposingWeak": true,
+          "isComposingReact": true,
+          "pendingDiffCount": 0,
+          "selection": {
+            "path": [0, 0],
+            "offset": 2,
+            "focusPath": [0, 0],
+            "focusOffset": 2
+          },
+          "flags": ["slateText≠domText"]
+        },
+        {
+          "i": 49,
+          "type": "compositionupdate",
+          "inputType": null,
+          "data": "다",
+          "eventValue": "가나닥",
+          "slateText": "가나",
+          "domText": "가나닥",
+          "placeholderPresent": false,
+          "placeholderDisplay": null,
+          "isComposingWeak": true,
+          "isComposingReact": true,
+          "pendingDiffCount": 0,
+          "selection": {
+            "path": [0, 0],
+            "offset": 2,
+            "focusPath": [0, 0],
+            "focusOffset": 2
+          },
+          "flags": ["slateText≠domText", "data∉domText"]
+        },
+        {
+          "i": 50,
+          "type": "beforeinput",
+          "inputType": "insertCompositionText",
+          "data": "다",
+          "eventValue": "가나닥",
+          "slateText": "가나",
+          "domText": "가나다",
+          "placeholderPresent": false,
+          "placeholderDisplay": null,
+          "isComposingWeak": true,
+          "isComposingReact": true,
+          "pendingDiffCount": 0,
+          "selection": {
+            "path": [0, 0],
+            "offset": 2,
+            "focusPath": [0, 0],
+            "focusOffset": 2
+          },
+          "flags": ["event.value≠domText", "slateText≠domText"]
+        },
+        {
+          "i": 51,
+          "type": "input",
+          "inputType": "insertCompositionText",
+          "data": "다",
+          "eventValue": "가나다",
+          "slateText": "가나",
+          "domText": "가나다",
+          "placeholderPresent": false,
+          "placeholderDisplay": null,
+          "isComposingWeak": true,
+          "isComposingReact": true,
+          "pendingDiffCount": 0,
+          "selection": {
+            "path": [0, 0],
+            "offset": 2,
+            "focusPath": [0, 0],
+            "focusOffset": 2
+          },
+          "flags": ["slateText≠domText"]
+        },
+        {
+          "i": 52,
+          "type": "compositionend",
+          "inputType": null,
+          "data": "다",
+          "eventValue": "가나다",
+          "slateText": "가나",
+          "domText": "가나다",
+          "placeholderPresent": false,
+          "placeholderDisplay": null,
+          "isComposingWeak": true,
+          "isComposingReact": true,
+          "pendingDiffCount": 0,
+          "selection": {
+            "path": [0, 0],
+            "offset": 2,
+            "focusPath": [0, 0],
+            "focusOffset": 2
+          },
+          "flags": ["slateText≠domText", "compositionend.data≠domText"]
+        },
+        {
+          "i": 53,
+          "type": "input",
+          "inputType": "insertCompositionText",
+          "data": "다",
+          "eventValue": "가나다",
+          "slateText": "가나다",
+          "domText": "가나다",
+          "placeholderPresent": false,
+          "placeholderDisplay": null,
+          "isComposingWeak": false,
+          "isComposingReact": false,
+          "pendingDiffCount": 0,
+          "selection": {
+            "path": [0, 0],
+            "offset": 3,
+            "focusPath": [0, 0],
+            "focusOffset": 3
+          },
+          "flags": []
+        },
+        {
+          "i": 54,
+          "type": "compositionstart",
+          "inputType": null,
+          "data": "",
+          "eventValue": "가나다",
+          "slateText": "가나다",
+          "domText": "가나다",
+          "placeholderPresent": false,
+          "placeholderDisplay": null,
+          "isComposingWeak": false,
+          "isComposingReact": false,
+          "pendingDiffCount": 0,
+          "selection": {
+            "path": [0, 0],
+            "offset": 3,
+            "focusPath": [0, 0],
+            "focusOffset": 3
+          },
+          "flags": []
+        },
+        {
+          "i": 55,
+          "type": "compositionupdate",
+          "inputType": null,
+          "data": "가",
+          "eventValue": "가나다",
+          "slateText": "가나다",
+          "domText": "가나다",
+          "placeholderPresent": false,
+          "placeholderDisplay": null,
+          "isComposingWeak": false,
+          "isComposingReact": false,
+          "pendingDiffCount": 0,
+          "selection": {
+            "path": [0, 0],
+            "offset": 3,
+            "focusPath": [0, 0],
+            "focusOffset": 3
+          },
+          "flags": []
+        },
+        {
+          "i": 56,
+          "type": "beforeinput",
+          "inputType": "insertCompositionText",
+          "data": "가",
+          "eventValue": "가나다",
+          "slateText": "가나다",
+          "domText": "가나다가",
+          "placeholderPresent": false,
+          "placeholderDisplay": null,
+          "isComposingWeak": true,
+          "isComposingReact": true,
+          "pendingDiffCount": 0,
+          "selection": {
+            "path": [0, 0],
+            "offset": 3,
+            "focusPath": [0, 0],
+            "focusOffset": 3
+          },
+          "flags": ["event.value≠domText", "slateText≠domText"]
+        },
+        {
+          "i": 57,
+          "type": "input",
+          "inputType": "insertCompositionText",
+          "data": "가",
+          "eventValue": "가나다가",
+          "slateText": "가나다",
+          "domText": "가나다가",
+          "placeholderPresent": false,
+          "placeholderDisplay": null,
+          "isComposingWeak": true,
+          "isComposingReact": true,
+          "pendingDiffCount": 0,
+          "selection": {
+            "path": [0, 0],
+            "offset": 3,
+            "focusPath": [0, 0],
+            "focusOffset": 3
+          },
+          "flags": ["slateText≠domText"]
+        },
+        {
+          "i": 58,
+          "type": "keyup",
+          "inputType": null,
+          "data": null,
+          "eventValue": "가나다가",
+          "slateText": "가나다",
+          "domText": "가나다가",
+          "placeholderPresent": false,
+          "placeholderDisplay": null,
+          "isComposingWeak": true,
+          "isComposingReact": true,
+          "pendingDiffCount": 0,
+          "selection": {
+            "path": [0, 0],
+            "offset": 3,
+            "focusPath": [0, 0],
+            "focusOffset": 3
+          },
+          "flags": ["slateText≠domText"]
+        },
+        {
+          "i": 59,
+          "type": "keydown",
+          "inputType": null,
+          "data": null,
+          "eventValue": "가나다가",
+          "slateText": "가나다",
+          "domText": "가나다가",
+          "placeholderPresent": false,
+          "placeholderDisplay": null,
+          "isComposingWeak": true,
+          "isComposingReact": true,
+          "pendingDiffCount": 0,
+          "selection": {
+            "path": [0, 0],
+            "offset": 3,
+            "focusPath": [0, 0],
+            "focusOffset": 3
+          },
+          "flags": ["slateText≠domText"]
+        },
+        {
+          "i": 60,
+          "type": "compositionupdate",
+          "inputType": null,
+          "data": "간",
+          "eventValue": "가나다가",
+          "slateText": "가나다",
+          "domText": "가나다가",
+          "placeholderPresent": false,
+          "placeholderDisplay": null,
+          "isComposingWeak": true,
+          "isComposingReact": true,
+          "pendingDiffCount": 0,
+          "selection": {
+            "path": [0, 0],
+            "offset": 3,
+            "focusPath": [0, 0],
+            "focusOffset": 3
+          },
+          "flags": ["slateText≠domText", "data∉domText"]
+        },
+        {
+          "i": 61,
+          "type": "beforeinput",
+          "inputType": "insertCompositionText",
+          "data": "간",
+          "eventValue": "가나다가",
+          "slateText": "가나다",
+          "domText": "가나다간",
+          "placeholderPresent": false,
+          "placeholderDisplay": null,
+          "isComposingWeak": true,
+          "isComposingReact": true,
+          "pendingDiffCount": 0,
+          "selection": {
+            "path": [0, 0],
+            "offset": 3,
+            "focusPath": [0, 0],
+            "focusOffset": 3
+          },
+          "flags": ["event.value≠domText", "slateText≠domText"]
+        },
+        {
+          "i": 62,
+          "type": "input",
+          "inputType": "insertCompositionText",
+          "data": "간",
+          "eventValue": "가나다간",
+          "slateText": "가나다",
+          "domText": "가나다간",
+          "placeholderPresent": false,
+          "placeholderDisplay": null,
+          "isComposingWeak": true,
+          "isComposingReact": true,
+          "pendingDiffCount": 0,
+          "selection": {
+            "path": [0, 0],
+            "offset": 3,
+            "focusPath": [0, 0],
+            "focusOffset": 3
+          },
+          "flags": ["slateText≠domText"]
+        },
+        {
+          "i": 63,
+          "type": "keyup",
+          "inputType": null,
+          "data": null,
+          "eventValue": "가나다간",
+          "slateText": "가나다",
+          "domText": "가나다간",
+          "placeholderPresent": false,
+          "placeholderDisplay": null,
+          "isComposingWeak": true,
+          "isComposingReact": true,
+          "pendingDiffCount": 0,
+          "selection": {
+            "path": [0, 0],
+            "offset": 3,
+            "focusPath": [0, 0],
+            "focusOffset": 3
+          },
+          "flags": ["slateText≠domText"]
+        },
+        {
+          "i": 64,
+          "type": "keydown",
+          "inputType": null,
+          "data": null,
+          "eventValue": "가나다간",
+          "slateText": "가나다",
+          "domText": "가나다간",
+          "placeholderPresent": false,
+          "placeholderDisplay": null,
+          "isComposingWeak": true,
+          "isComposingReact": true,
+          "pendingDiffCount": 0,
+          "selection": {
+            "path": [0, 0],
+            "offset": 3,
+            "focusPath": [0, 0],
+            "focusOffset": 3
+          },
+          "flags": ["slateText≠domText"]
+        },
+        {
+          "i": 65,
+          "type": "compositionupdate",
+          "inputType": null,
+          "data": "가",
+          "eventValue": "가나다간",
+          "slateText": "가나다",
+          "domText": "가나다간",
+          "placeholderPresent": false,
+          "placeholderDisplay": null,
+          "isComposingWeak": true,
+          "isComposingReact": true,
+          "pendingDiffCount": 0,
+          "selection": {
+            "path": [0, 0],
+            "offset": 3,
+            "focusPath": [0, 0],
+            "focusOffset": 3
+          },
+          "flags": ["slateText≠domText"]
+        },
+        {
+          "i": 66,
+          "type": "beforeinput",
+          "inputType": "insertCompositionText",
+          "data": "가",
+          "eventValue": "가나다간",
+          "slateText": "가나다",
+          "domText": "가나다가",
+          "placeholderPresent": false,
+          "placeholderDisplay": null,
+          "isComposingWeak": true,
+          "isComposingReact": true,
+          "pendingDiffCount": 0,
+          "selection": {
+            "path": [0, 0],
+            "offset": 3,
+            "focusPath": [0, 0],
+            "focusOffset": 3
+          },
+          "flags": ["event.value≠domText", "slateText≠domText"]
+        },
+        {
+          "i": 67,
+          "type": "input",
+          "inputType": "insertCompositionText",
+          "data": "가",
+          "eventValue": "가나다가",
+          "slateText": "가나다",
+          "domText": "가나다가",
+          "placeholderPresent": false,
+          "placeholderDisplay": null,
+          "isComposingWeak": true,
+          "isComposingReact": true,
+          "pendingDiffCount": 0,
+          "selection": {
+            "path": [0, 0],
+            "offset": 3,
+            "focusPath": [0, 0],
+            "focusOffset": 3
+          },
+          "flags": ["slateText≠domText"]
+        },
+        {
+          "i": 68,
+          "type": "compositionend",
+          "inputType": null,
+          "data": "가",
+          "eventValue": "가나다가",
+          "slateText": "가나다",
+          "domText": "가나다가",
+          "placeholderPresent": false,
+          "placeholderDisplay": null,
+          "isComposingWeak": true,
+          "isComposingReact": true,
+          "pendingDiffCount": 0,
+          "selection": {
+            "path": [0, 0],
+            "offset": 3,
+            "focusPath": [0, 0],
+            "focusOffset": 3
+          },
+          "flags": ["slateText≠domText", "compositionend.data≠domText"]
+        },
+        {
+          "i": 69,
+          "type": "input",
+          "inputType": "insertCompositionText",
+          "data": "가",
+          "eventValue": "가나다가",
+          "slateText": "가나다가",
+          "domText": "가나다가",
+          "placeholderPresent": false,
+          "placeholderDisplay": null,
+          "isComposingWeak": false,
+          "isComposingReact": false,
+          "pendingDiffCount": 0,
+          "selection": {
+            "path": [0, 0],
+            "offset": 4,
+            "focusPath": [0, 0],
+            "focusOffset": 4
+          },
+          "flags": []
+        },
+        {
+          "i": 70,
+          "type": "compositionstart",
+          "inputType": null,
+          "data": "",
+          "eventValue": "가나다가",
+          "slateText": "가나다가",
+          "domText": "가나다가",
+          "placeholderPresent": false,
+          "placeholderDisplay": null,
+          "isComposingWeak": false,
+          "isComposingReact": false,
+          "pendingDiffCount": 0,
+          "selection": {
+            "path": [0, 0],
+            "offset": 4,
+            "focusPath": [0, 0],
+            "focusOffset": 4
+          },
+          "flags": []
+        },
+        {
+          "i": 71,
+          "type": "compositionupdate",
+          "inputType": null,
+          "data": "나",
+          "eventValue": "가나다가",
+          "slateText": "가나다가",
+          "domText": "가나다가",
+          "placeholderPresent": false,
+          "placeholderDisplay": null,
+          "isComposingWeak": false,
+          "isComposingReact": false,
+          "pendingDiffCount": 0,
+          "selection": {
+            "path": [0, 0],
+            "offset": 4,
+            "focusPath": [0, 0],
+            "focusOffset": 4
+          },
+          "flags": []
+        },
+        {
+          "i": 72,
+          "type": "beforeinput",
+          "inputType": "insertCompositionText",
+          "data": "나",
+          "eventValue": "가나다가",
+          "slateText": "가나다가",
+          "domText": "가나다가나",
+          "placeholderPresent": false,
+          "placeholderDisplay": null,
+          "isComposingWeak": true,
+          "isComposingReact": true,
+          "pendingDiffCount": 0,
+          "selection": {
+            "path": [0, 0],
+            "offset": 4,
+            "focusPath": [0, 0],
+            "focusOffset": 4
+          },
+          "flags": ["event.value≠domText", "slateText≠domText"]
+        },
+        {
+          "i": 73,
+          "type": "input",
+          "inputType": "insertCompositionText",
+          "data": "나",
+          "eventValue": "가나다가나",
+          "slateText": "가나다가",
+          "domText": "가나다가나",
+          "placeholderPresent": false,
+          "placeholderDisplay": null,
+          "isComposingWeak": true,
+          "isComposingReact": true,
+          "pendingDiffCount": 0,
+          "selection": {
+            "path": [0, 0],
+            "offset": 4,
+            "focusPath": [0, 0],
+            "focusOffset": 4
+          },
+          "flags": ["slateText≠domText"]
+        },
+        {
+          "i": 74,
+          "type": "keyup",
+          "inputType": null,
+          "data": null,
+          "eventValue": "가나다가나",
+          "slateText": "가나다가",
+          "domText": "가나다가나",
+          "placeholderPresent": false,
+          "placeholderDisplay": null,
+          "isComposingWeak": true,
+          "isComposingReact": true,
+          "pendingDiffCount": 0,
+          "selection": {
+            "path": [0, 0],
+            "offset": 4,
+            "focusPath": [0, 0],
+            "focusOffset": 4
+          },
+          "flags": ["slateText≠domText"]
+        },
+        {
+          "i": 75,
+          "type": "keydown",
+          "inputType": null,
+          "data": null,
+          "eventValue": "가나다가나",
+          "slateText": "가나다가",
+          "domText": "가나다가나",
+          "placeholderPresent": false,
+          "placeholderDisplay": null,
+          "isComposingWeak": true,
+          "isComposingReact": true,
+          "pendingDiffCount": 0,
+          "selection": {
+            "path": [0, 0],
+            "offset": 4,
+            "focusPath": [0, 0],
+            "focusOffset": 4
+          },
+          "flags": ["slateText≠domText"]
+        },
+        {
+          "i": 76,
+          "type": "compositionupdate",
+          "inputType": null,
+          "data": "낟",
+          "eventValue": "가나다가나",
+          "slateText": "가나다가",
+          "domText": "가나다가나",
+          "placeholderPresent": false,
+          "placeholderDisplay": null,
+          "isComposingWeak": true,
+          "isComposingReact": true,
+          "pendingDiffCount": 0,
+          "selection": {
+            "path": [0, 0],
+            "offset": 4,
+            "focusPath": [0, 0],
+            "focusOffset": 4
+          },
+          "flags": ["slateText≠domText", "data∉domText"]
+        },
+        {
+          "i": 77,
+          "type": "beforeinput",
+          "inputType": "insertCompositionText",
+          "data": "낟",
+          "eventValue": "가나다가나",
+          "slateText": "가나다가",
+          "domText": "가나다가낟",
+          "placeholderPresent": false,
+          "placeholderDisplay": null,
+          "isComposingWeak": true,
+          "isComposingReact": true,
+          "pendingDiffCount": 0,
+          "selection": {
+            "path": [0, 0],
+            "offset": 4,
+            "focusPath": [0, 0],
+            "focusOffset": 4
+          },
+          "flags": ["event.value≠domText", "slateText≠domText"]
+        },
+        {
+          "i": 78,
+          "type": "input",
+          "inputType": "insertCompositionText",
+          "data": "낟",
+          "eventValue": "가나다가낟",
+          "slateText": "가나다가",
+          "domText": "가나다가낟",
+          "placeholderPresent": false,
+          "placeholderDisplay": null,
+          "isComposingWeak": true,
+          "isComposingReact": true,
+          "pendingDiffCount": 0,
+          "selection": {
+            "path": [0, 0],
+            "offset": 4,
+            "focusPath": [0, 0],
+            "focusOffset": 4
+          },
+          "flags": ["slateText≠domText"]
+        },
+        {
+          "i": 79,
+          "type": "keyup",
+          "inputType": null,
+          "data": null,
+          "eventValue": "가나다가낟",
+          "slateText": "가나다가",
+          "domText": "가나다가낟",
+          "placeholderPresent": false,
+          "placeholderDisplay": null,
+          "isComposingWeak": true,
+          "isComposingReact": true,
+          "pendingDiffCount": 0,
+          "selection": {
+            "path": [0, 0],
+            "offset": 4,
+            "focusPath": [0, 0],
+            "focusOffset": 4
+          },
+          "flags": ["slateText≠domText"]
+        },
+        {
+          "i": 80,
+          "type": "keydown",
+          "inputType": null,
+          "data": null,
+          "eventValue": "가나다가낟",
+          "slateText": "가나다가",
+          "domText": "가나다가낟",
+          "placeholderPresent": false,
+          "placeholderDisplay": null,
+          "isComposingWeak": true,
+          "isComposingReact": true,
+          "pendingDiffCount": 0,
+          "selection": {
+            "path": [0, 0],
+            "offset": 4,
+            "focusPath": [0, 0],
+            "focusOffset": 4
+          },
+          "flags": ["slateText≠domText"]
+        },
+        {
+          "i": 81,
+          "type": "compositionupdate",
+          "inputType": null,
+          "data": "나",
+          "eventValue": "가나다가낟",
+          "slateText": "가나다가",
+          "domText": "가나다가낟",
+          "placeholderPresent": false,
+          "placeholderDisplay": null,
+          "isComposingWeak": true,
+          "isComposingReact": true,
+          "pendingDiffCount": 0,
+          "selection": {
+            "path": [0, 0],
+            "offset": 4,
+            "focusPath": [0, 0],
+            "focusOffset": 4
+          },
+          "flags": ["slateText≠domText"]
+        },
+        {
+          "i": 82,
+          "type": "beforeinput",
+          "inputType": "insertCompositionText",
+          "data": "나",
+          "eventValue": "가나다가낟",
+          "slateText": "가나다가",
+          "domText": "가나다가나",
+          "placeholderPresent": false,
+          "placeholderDisplay": null,
+          "isComposingWeak": true,
+          "isComposingReact": true,
+          "pendingDiffCount": 0,
+          "selection": {
+            "path": [0, 0],
+            "offset": 4,
+            "focusPath": [0, 0],
+            "focusOffset": 4
+          },
+          "flags": ["event.value≠domText", "slateText≠domText"]
+        },
+        {
+          "i": 83,
+          "type": "input",
+          "inputType": "insertCompositionText",
+          "data": "나",
+          "eventValue": "가나다가나",
+          "slateText": "가나다가",
+          "domText": "가나다가나",
+          "placeholderPresent": false,
+          "placeholderDisplay": null,
+          "isComposingWeak": true,
+          "isComposingReact": true,
+          "pendingDiffCount": 0,
+          "selection": {
+            "path": [0, 0],
+            "offset": 4,
+            "focusPath": [0, 0],
+            "focusOffset": 4
+          },
+          "flags": ["slateText≠domText"]
+        },
+        {
+          "i": 84,
+          "type": "compositionend",
+          "inputType": null,
+          "data": "나",
+          "eventValue": "가나다가나",
+          "slateText": "가나다가",
+          "domText": "가나다가나",
+          "placeholderPresent": false,
+          "placeholderDisplay": null,
+          "isComposingWeak": true,
+          "isComposingReact": true,
+          "pendingDiffCount": 0,
+          "selection": {
+            "path": [0, 0],
+            "offset": 4,
+            "focusPath": [0, 0],
+            "focusOffset": 4
+          },
+          "flags": ["slateText≠domText", "compositionend.data≠domText"]
+        },
+        {
+          "i": 85,
+          "type": "input",
+          "inputType": "insertCompositionText",
+          "data": "나",
+          "eventValue": "가나다가나",
+          "slateText": "가나다가나",
+          "domText": "가나다가나",
+          "placeholderPresent": false,
+          "placeholderDisplay": null,
+          "isComposingWeak": false,
+          "isComposingReact": false,
+          "pendingDiffCount": 0,
+          "selection": {
+            "path": [0, 0],
+            "offset": 5,
+            "focusPath": [0, 0],
+            "focusOffset": 5
+          },
+          "flags": []
+        },
+        {
+          "i": 86,
+          "type": "compositionstart",
+          "inputType": null,
+          "data": "",
+          "eventValue": "가나다가나",
+          "slateText": "가나다가나",
+          "domText": "가나다가나",
+          "placeholderPresent": false,
+          "placeholderDisplay": null,
+          "isComposingWeak": false,
+          "isComposingReact": false,
+          "pendingDiffCount": 0,
+          "selection": {
+            "path": [0, 0],
+            "offset": 5,
+            "focusPath": [0, 0],
+            "focusOffset": 5
+          },
+          "flags": []
+        },
+        {
+          "i": 87,
+          "type": "compositionupdate",
+          "inputType": null,
+          "data": "다",
+          "eventValue": "가나다가나",
+          "slateText": "가나다가나",
+          "domText": "가나다가나",
+          "placeholderPresent": false,
+          "placeholderDisplay": null,
+          "isComposingWeak": false,
+          "isComposingReact": false,
+          "pendingDiffCount": 0,
+          "selection": {
+            "path": [0, 0],
+            "offset": 5,
+            "focusPath": [0, 0],
+            "focusOffset": 5
+          },
+          "flags": []
+        },
+        {
+          "i": 88,
+          "type": "beforeinput",
+          "inputType": "insertCompositionText",
+          "data": "다",
+          "eventValue": "가나다가나",
+          "slateText": "가나다가나",
+          "domText": "가나다가나다",
+          "placeholderPresent": false,
+          "placeholderDisplay": null,
+          "isComposingWeak": true,
+          "isComposingReact": true,
+          "pendingDiffCount": 0,
+          "selection": {
+            "path": [0, 0],
+            "offset": 5,
+            "focusPath": [0, 0],
+            "focusOffset": 5
+          },
+          "flags": ["event.value≠domText", "slateText≠domText"]
+        },
+        {
+          "i": 89,
+          "type": "input",
+          "inputType": "insertCompositionText",
+          "data": "다",
+          "eventValue": "가나다가나다",
+          "slateText": "가나다가나",
+          "domText": "가나다가나다",
+          "placeholderPresent": false,
+          "placeholderDisplay": null,
+          "isComposingWeak": true,
+          "isComposingReact": true,
+          "pendingDiffCount": 0,
+          "selection": {
+            "path": [0, 0],
+            "offset": 5,
+            "focusPath": [0, 0],
+            "focusOffset": 5
+          },
+          "flags": ["slateText≠domText"]
+        },
+        {
+          "i": 90,
+          "type": "keyup",
+          "inputType": null,
+          "data": null,
+          "eventValue": "가나다가나다",
+          "slateText": "가나다가나",
+          "domText": "가나다가나다",
+          "placeholderPresent": false,
+          "placeholderDisplay": null,
+          "isComposingWeak": true,
+          "isComposingReact": true,
+          "pendingDiffCount": 0,
+          "selection": {
+            "path": [0, 0],
+            "offset": 5,
+            "focusPath": [0, 0],
+            "focusOffset": 5
+          },
+          "flags": ["slateText≠domText"]
+        },
+        {
+          "i": 91,
+          "type": "beforeinput",
+          "inputType": "insertCompositionText",
+          "data": "다",
+          "eventValue": "가나다가나다",
+          "slateText": "가나다가나",
+          "domText": "가나다가나다",
+          "placeholderPresent": false,
+          "placeholderDisplay": null,
+          "isComposingWeak": true,
+          "isComposingReact": true,
+          "pendingDiffCount": 0,
+          "selection": {
+            "path": [0, 0],
+            "offset": 5,
+            "focusPath": [0, 0],
+            "focusOffset": 5
+          },
+          "flags": ["slateText≠domText"]
+        },
+        {
+          "i": 92,
+          "type": "input",
+          "inputType": "insertCompositionText",
+          "data": "다",
+          "eventValue": "가나다가나다",
+          "slateText": "가나다가나",
+          "domText": "가나다가나다",
+          "placeholderPresent": false,
+          "placeholderDisplay": null,
+          "isComposingWeak": true,
+          "isComposingReact": true,
+          "pendingDiffCount": 0,
+          "selection": {
+            "path": [0, 0],
+            "offset": 5,
+            "focusPath": [0, 0],
+            "focusOffset": 5
+          },
+          "flags": ["slateText≠domText"]
+        },
+        {
+          "i": 93,
+          "type": "compositionend",
+          "inputType": null,
+          "data": "다",
+          "eventValue": "가나다가나다",
+          "slateText": "가나다가나",
+          "domText": "가나다가나다",
+          "placeholderPresent": false,
+          "placeholderDisplay": null,
+          "isComposingWeak": true,
+          "isComposingReact": true,
+          "pendingDiffCount": 0,
+          "selection": {
+            "path": [0, 0],
+            "offset": 5,
+            "focusPath": [0, 0],
+            "focusOffset": 5
+          },
+          "flags": ["slateText≠domText", "compositionend.data≠domText"]
+        },
+        {
+          "i": 94,
+          "type": "input",
+          "inputType": "insertCompositionText",
+          "data": "다",
+          "eventValue": "가나다가나다",
+          "slateText": "가나다가나다",
+          "domText": "가나다가나다",
+          "placeholderPresent": false,
+          "placeholderDisplay": null,
+          "isComposingWeak": false,
+          "isComposingReact": false,
+          "pendingDiffCount": 0,
+          "selection": {
+            "path": [0, 0],
+            "offset": 6,
+            "focusPath": [0, 0],
+            "focusOffset": 6
+          },
+          "flags": []
+        }
+      ],
+      "firstDivergence": {
+        "i": 0,
+        "flags": ["event.value≠domText", "slateText≠domText"]
+      },
+      "domStructures": [
+        {
+          "i": 1,
+          "trigger": "compositionstart",
+          "data": "",
+          "slate": [
+            {
+              "tag": "div",
+              "sn": "element",
+              "children": [
+                {
+                  "tag": "span",
+                  "sn": "text",
+                  "children": [
+                    {
+                      "tag": "span",
+                      "children": [
+                        {
+                          "tag": "span",
+                          "children": [
+                            {
+                              "tag": "br"
+                            }
+                          ]
+                        },
+                        {
+                          "tag": "span",
+                          "ce": "false",
+                          "ph": true,
+                          "tlen": 7,
+                          "tpre": "여기에 입력…"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ],
+          "textarea": [
+            {
+              "tag": "textarea",
+              "tlen": 0
+            }
+          ]
+        },
+        {
+          "i": 3,
+          "trigger": "first-beforeinput",
+          "data": "ㄱ",
+          "slate": [
+            {
+              "tag": "div",
+              "sn": "element",
+              "children": [
+                {
+                  "tag": "span",
+                  "sn": "text",
+                  "children": [
+                    {
+                      "tag": "span",
+                      "children": [
+                        {
+                          "tag": "span",
+                          "tlen": 2,
+                          "tpre": "﻿ㄱ"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ],
+          "textarea": [
+            {
+              "tag": "textarea",
+              "tlen": 0
+            }
+          ]
+        },
+        {
+          "i": 3,
+          "trigger": "first-insertCompositionText",
+          "data": "ㄱ",
+          "slate": [
+            {
+              "tag": "div",
+              "sn": "element",
+              "children": [
+                {
+                  "tag": "span",
+                  "sn": "text",
+                  "children": [
+                    {
+                      "tag": "span",
+                      "children": [
+                        {
+                          "tag": "span",
+                          "tlen": 2,
+                          "tpre": "﻿ㄱ"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ],
+          "textarea": [
+            {
+              "tag": "textarea",
+              "tlen": 0
+            }
+          ]
+        }
+      ],
+      "sourceMapHints": [
+        {
+          "i": 0,
+          "type": "keydown",
+          "inputType": null,
+          "data": null,
+          "handlers": ["Editable.onKeyDown", "android-input-manager: handleKeyDown (229 → defer)"],
+          "notes": "AF Hangul often key=Process keyCode=229"
+        },
+        {
+          "i": 1,
+          "type": "compositionstart",
+          "inputType": null,
+          "data": "",
+          "handlers": [
+            "Editable.onCompositionStart",
+            "android-input-manager: handleCompositionStart",
+            "IS_COMPOSING.set(true)"
+          ],
+          "notes": "Placeholder should be hidden before this on AF"
+        },
+        {
+          "i": 2,
+          "type": "compositionupdate",
+          "inputType": null,
+          "data": "ㄱ",
+          "handlers": [
+            "Editable.onCompositionUpdate",
+            "android-input-manager: handleCompositionUpdate"
+          ],
+          "notes": "IME cumulative preedit in data"
+        },
+        {
+          "i": 3,
+          "type": "beforeinput",
+          "inputType": "insertCompositionText",
+          "data": "ㄱ",
+          "handlers": ["Editable.onBeforeInput", "android-input-manager: handleDOMBeforeInput"],
+          "notes": "First insertCompositionText ㄱ — orphan jamo hypothesis"
+        },
+        {
+          "i": 4,
+          "type": "input",
+          "inputType": "insertCompositionText",
+          "data": "ㄱ",
+          "handlers": [
+            "Editable.onInput",
+            "android-input-manager: handleInput",
+            "applyPendingDiffs?"
+          ],
+          "notes": "DOM value recorded in events[].value"
+        },
+        {
+          "i": 5,
+          "type": "keyup",
+          "inputType": null,
+          "data": null,
+          "handlers": ["Editable.onKeyUp"],
+          "notes": ""
+        },
+        {
+          "i": 6,
+          "type": "keydown",
+          "inputType": null,
+          "data": null,
+          "handlers": ["Editable.onKeyDown", "android-input-manager: handleKeyDown (229 → defer)"],
+          "notes": "AF Hangul often key=Process keyCode=229"
+        },
+        {
+          "i": 7,
+          "type": "compositionupdate",
+          "inputType": null,
+          "data": "가",
+          "handlers": [
+            "Editable.onCompositionUpdate",
+            "android-input-manager: handleCompositionUpdate"
+          ],
+          "notes": "IME cumulative preedit in data"
+        },
+        {
+          "i": 8,
+          "type": "beforeinput",
+          "inputType": "insertCompositionText",
+          "data": "가",
+          "handlers": ["Editable.onBeforeInput", "android-input-manager: handleDOMBeforeInput"],
+          "notes": "First insertCompositionText ㄱ — orphan jamo hypothesis"
+        },
+        {
+          "i": 9,
+          "type": "input",
+          "inputType": "insertCompositionText",
+          "data": "가",
+          "handlers": [
+            "Editable.onInput",
+            "android-input-manager: handleInput",
+            "applyPendingDiffs?"
+          ],
+          "notes": "DOM value recorded in events[].value"
+        },
+        {
+          "i": 10,
+          "type": "keyup",
+          "inputType": null,
+          "data": null,
+          "handlers": ["Editable.onKeyUp"],
+          "notes": ""
+        },
+        {
+          "i": 11,
+          "type": "keydown",
+          "inputType": null,
+          "data": null,
+          "handlers": ["Editable.onKeyDown", "android-input-manager: handleKeyDown (229 → defer)"],
+          "notes": "AF Hangul often key=Process keyCode=229"
+        },
+        {
+          "i": 12,
+          "type": "compositionupdate",
+          "inputType": null,
+          "data": "간",
+          "handlers": [
+            "Editable.onCompositionUpdate",
+            "android-input-manager: handleCompositionUpdate"
+          ],
+          "notes": "IME cumulative preedit in data"
+        },
+        {
+          "i": 13,
+          "type": "beforeinput",
+          "inputType": "insertCompositionText",
+          "data": "간",
+          "handlers": ["Editable.onBeforeInput", "android-input-manager: handleDOMBeforeInput"],
+          "notes": "First insertCompositionText ㄱ — orphan jamo hypothesis"
+        },
+        {
+          "i": 14,
+          "type": "input",
+          "inputType": "insertCompositionText",
+          "data": "간",
+          "handlers": [
+            "Editable.onInput",
+            "android-input-manager: handleInput",
+            "applyPendingDiffs?"
+          ],
+          "notes": "DOM value recorded in events[].value"
+        },
+        {
+          "i": 15,
+          "type": "keydown",
+          "inputType": null,
+          "data": null,
+          "handlers": ["Editable.onKeyDown", "android-input-manager: handleKeyDown (229 → defer)"],
+          "notes": "AF Hangul often key=Process keyCode=229"
+        },
+        {
+          "i": 16,
+          "type": "compositionupdate",
+          "inputType": null,
+          "data": "가",
+          "handlers": [
+            "Editable.onCompositionUpdate",
+            "android-input-manager: handleCompositionUpdate"
+          ],
+          "notes": "IME cumulative preedit in data"
+        },
+        {
+          "i": 17,
+          "type": "beforeinput",
+          "inputType": "insertCompositionText",
+          "data": "가",
+          "handlers": ["Editable.onBeforeInput", "android-input-manager: handleDOMBeforeInput"],
+          "notes": "First insertCompositionText ㄱ — orphan jamo hypothesis"
+        },
+        {
+          "i": 18,
+          "type": "input",
+          "inputType": "insertCompositionText",
+          "data": "가",
+          "handlers": [
+            "Editable.onInput",
+            "android-input-manager: handleInput",
+            "applyPendingDiffs?"
+          ],
+          "notes": "DOM value recorded in events[].value"
+        },
+        {
+          "i": 19,
+          "type": "compositionend",
+          "inputType": null,
+          "data": "가",
+          "handlers": [
+            "Editable.onCompositionEnd",
+            "android-input-manager: handleCompositionEnd",
+            "flush/storeDiff"
+          ],
+          "notes": "Deferred input often follows on AF"
+        }
+      ],
+      "minimalFixture": {
+        "path": "apps/react-example/test/stories/ime-bugs/slate/slate-minimal-dom-fixture.html",
+        "instruction": "Open fixture HTML on AF device (same browser), type 가 — compare orphan ㄱ with Slate timeline"
+      },
+      "summary": {
+        "timelineSteps": 95,
+        "domStructureCaptures": 3
+      }
+    }
+  }
+}
