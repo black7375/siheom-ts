@@ -86,3 +86,10 @@ OS captures under `apps/react-example/.../fixtures/android-chrome/` (virtual key
 - [x] android delayed-update: `settle: "macrotask"` + deferred writeback reproduces broken 풀어쓰기 / fixed `김태희` against android fixtures
 - [x] (N/A) arrow-edit-mid — android capture has no ArrowLeft (virtual keyboard mid-edit via caret/tap; do not expect `{ArrowLeft}` scripts to match)
 - [x] (N/A) hanja Alt+Enter — android uses candidate-tap replace; broken≈fixed on captures (no Alt+Enter `composeHanjaConversion` path)
+
+### Phase 8 — Windows TipTap / Ngs / Firefox profiles
+
+- [x] OS TipTap enter (+ list) fixtures under `ime-bugs/tiptap/fixtures/windows-*`
+- [x] `windows-chrome-ngs`: same Enter facet as MS (`chromium-duplicate`); 세벌식 mid-preedit/`code` not modeled in 2-set planner
+- [x] `windows-firefox-ms`: `webkit` Enter (compositionend → Enter 13; no Process+Enter 229)
+- [x] `windowsProfiles.test.ts`: continuous-hangul (MS), TipTap enter golden (Ngs), Firefox Enter order

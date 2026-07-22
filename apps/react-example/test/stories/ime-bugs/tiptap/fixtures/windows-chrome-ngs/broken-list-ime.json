@@ -1,16 +1,16 @@
 {
-  "profileId": "windows-chrome-ms",
+  "profileId": "windows-chrome-ngs",
   "os": "windows",
   "browser": "chrome",
-  "ime": "ms",
-  "capturedAt": "2026-07-22T07:08:29.223Z",
-  "scenarioId": "tiptap-enter-김",
+  "ime": "ngs",
+  "capturedAt": "2026-07-22T07:17:18.461Z",
+  "scenarioId": "tiptap-list-ime",
   "source": "os-ime",
   "events": [
     {
       "type": "keydown",
       "key": "Process",
-      "code": "KeyR",
+      "code": "KeyK",
       "keyCode": 229,
       "isComposing": false,
       "inputType": null,
@@ -58,29 +58,9 @@
       "value": "ㄱ"
     },
     {
-      "type": "keyup",
-      "key": "Process",
-      "code": "KeyR",
-      "keyCode": 229,
-      "isComposing": true,
-      "inputType": null,
-      "data": null,
-      "value": "ㄱ"
-    },
-    {
-      "type": "keyup",
-      "key": "r",
-      "code": "KeyR",
-      "keyCode": 82,
-      "isComposing": true,
-      "inputType": null,
-      "data": null,
-      "value": "ㄱ"
-    },
-    {
       "type": "keydown",
       "key": "Process",
-      "code": "KeyK",
+      "code": "KeyF",
       "keyCode": 229,
       "isComposing": true,
       "inputType": null,
@@ -132,6 +112,26 @@
       "key": "k",
       "code": "KeyK",
       "keyCode": 75,
+      "isComposing": true,
+      "inputType": null,
+      "data": null,
+      "value": "가"
+    },
+    {
+      "type": "keyup",
+      "key": "Process",
+      "code": "KeyF",
+      "keyCode": 229,
+      "isComposing": true,
+      "inputType": null,
+      "data": null,
+      "value": "가"
+    },
+    {
+      "type": "keyup",
+      "key": "f",
+      "code": "KeyF",
+      "keyCode": 70,
       "isComposing": true,
       "inputType": null,
       "data": null,
@@ -219,11 +219,6 @@
     }
   ],
   "tiptapDebug": {
-    "final": {
-      "editorText": "가\n\n",
-      "domText": "가",
-      "isComposing": false,
-      "nodeType": "paragraph"
-    }
+    "final": null
   }
 }

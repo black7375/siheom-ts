@@ -1,10 +1,10 @@
 {
-  "profileId": "windows-chrome-ms",
+  "profileId": "windows-firefox-ms",
   "os": "windows",
-  "browser": "chrome",
+  "browser": "firefox",
   "ime": "ms",
-  "capturedAt": "2026-07-22T07:08:29.223Z",
-  "scenarioId": "tiptap-enter-김",
+  "capturedAt": "2026-07-22T07:00:41.015Z",
+  "scenarioId": "enter-submit-broken",
   "source": "os-ime",
   "events": [
     {
@@ -59,16 +59,6 @@
     },
     {
       "type": "keyup",
-      "key": "Process",
-      "code": "KeyR",
-      "keyCode": 229,
-      "isComposing": true,
-      "inputType": null,
-      "data": null,
-      "value": "ㄱ"
-    },
-    {
-      "type": "keyup",
       "key": "r",
       "code": "KeyR",
       "keyCode": 82,
@@ -80,7 +70,7 @@
     {
       "type": "keydown",
       "key": "Process",
-      "code": "KeyK",
+      "code": "KeyL",
       "keyCode": 229,
       "isComposing": true,
       "inputType": null,
@@ -94,7 +84,7 @@
       "keyCode": null,
       "isComposing": null,
       "inputType": null,
-      "data": "가",
+      "data": "기",
       "value": "ㄱ"
     },
     {
@@ -104,7 +94,7 @@
       "keyCode": null,
       "isComposing": true,
       "inputType": "insertCompositionText",
-      "data": "가",
+      "data": "기",
       "value": "ㄱ"
     },
     {
@@ -114,38 +104,28 @@
       "keyCode": null,
       "isComposing": true,
       "inputType": "insertCompositionText",
-      "data": "가",
-      "value": "가"
+      "data": "기",
+      "value": "기"
     },
     {
       "type": "keyup",
-      "key": "Process",
-      "code": "KeyK",
-      "keyCode": 229,
+      "key": "l",
+      "code": "KeyL",
+      "keyCode": 76,
       "isComposing": true,
       "inputType": null,
       "data": null,
-      "value": "가"
-    },
-    {
-      "type": "keyup",
-      "key": "k",
-      "code": "KeyK",
-      "keyCode": 75,
-      "isComposing": true,
-      "inputType": null,
-      "data": null,
-      "value": "가"
+      "value": "기"
     },
     {
       "type": "keydown",
       "key": "Process",
-      "code": "Enter",
+      "code": "KeyA",
       "keyCode": 229,
       "isComposing": true,
       "inputType": null,
       "data": null,
-      "value": "가"
+      "value": "기"
     },
     {
       "type": "compositionupdate",
@@ -154,8 +134,8 @@
       "keyCode": null,
       "isComposing": null,
       "inputType": null,
-      "data": "가",
-      "value": "가"
+      "data": "김",
+      "value": "기"
     },
     {
       "type": "beforeinput",
@@ -164,8 +144,8 @@
       "keyCode": null,
       "isComposing": true,
       "inputType": "insertCompositionText",
-      "data": "가",
-      "value": "가"
+      "data": "김",
+      "value": "기"
     },
     {
       "type": "input",
@@ -174,8 +154,38 @@
       "keyCode": null,
       "isComposing": true,
       "inputType": "insertCompositionText",
-      "data": "가",
-      "value": "가"
+      "data": "김",
+      "value": "김"
+    },
+    {
+      "type": "keyup",
+      "key": "a",
+      "code": "KeyA",
+      "keyCode": 65,
+      "isComposing": true,
+      "inputType": null,
+      "data": null,
+      "value": "김"
+    },
+    {
+      "type": "beforeinput",
+      "key": null,
+      "code": null,
+      "keyCode": null,
+      "isComposing": true,
+      "inputType": "insertCompositionText",
+      "data": "김",
+      "value": "김"
+    },
+    {
+      "type": "input",
+      "key": null,
+      "code": null,
+      "keyCode": null,
+      "isComposing": true,
+      "inputType": "insertCompositionText",
+      "data": "김",
+      "value": "김"
     },
     {
       "type": "compositionend",
@@ -184,8 +194,18 @@
       "keyCode": null,
       "isComposing": null,
       "inputType": null,
-      "data": "가",
-      "value": "가"
+      "data": "김",
+      "value": "김"
+    },
+    {
+      "type": "input",
+      "key": null,
+      "code": null,
+      "keyCode": null,
+      "isComposing": false,
+      "inputType": "insertCompositionText",
+      "data": "김",
+      "value": "김"
     },
     {
       "type": "keydown",
@@ -195,17 +215,7 @@
       "isComposing": false,
       "inputType": null,
       "data": null,
-      "value": "가"
-    },
-    {
-      "type": "keyup",
-      "key": "Process",
-      "code": "Enter",
-      "keyCode": 229,
-      "isComposing": false,
-      "inputType": null,
-      "data": null,
-      "value": "가"
+      "value": "김"
     },
     {
       "type": "keyup",
@@ -215,15 +225,7 @@
       "isComposing": false,
       "inputType": null,
       "data": null,
-      "value": "가"
+      "value": "김"
     }
-  ],
-  "tiptapDebug": {
-    "final": {
-      "editorText": "가\n\n",
-      "domText": "가",
-      "isComposing": false,
-      "nodeType": "paragraph"
-    }
-  }
+  ]
 }

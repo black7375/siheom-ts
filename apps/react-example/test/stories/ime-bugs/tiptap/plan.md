@@ -22,7 +22,9 @@ OS별로 재현·캡처하고, 트레이스로 `@siheom/ime` 프로필을 검증
 
 ### OS goldens + emulator (phase 3)
 
-- [ ] OS 캡처 JSON이 `fixtures/`에 채워진다 (`broken-enter-김` / `broken-list-ime`)
-- [ ] 골든 critical path를 기존 Enter facet과 diff한다
-- [ ] 필요 시에만 `@siheom/ime` TipTap 전용 profile/compose를 추가한다
-- [ ] `TipTapLogger.ime.test`: broken 게이트 (프로필로 버그 재현 또는 critical match)
+- [x] Windows OS captures in `fixtures/windows-chrome-ms|ngs|firefox-ms` (enter; list where available)
+- [x] `@siheom/ime` profiles: `windows-chrome-ms` (existing), `windows-chrome-ngs`, `windows-firefox-ms`
+- [x] Emulator tests vs Windows goldens (`windowsProfiles.test.ts`)
+- [ ] macOS / Linux / Android TipTap OS fills
+- [ ] TipTap broken 게이트 (에디터 문서 상태) — after more goldens
+- [ ] #4108/#6825 TipTap fixed workaround (later)
