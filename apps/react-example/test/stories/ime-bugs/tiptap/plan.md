@@ -11,11 +11,8 @@ OS별로 재현·캡처하고, 트레이스로 `@siheom/ime` 프로필을 검증
 
 ### Capture story (phase 1)
 
-- [x] `TipTapLogger`가 렌더링되고 contenteditable 영역이 accessible name을 가진다
-- [x] Storybook에 `IME/TipTap` Capture story가 등록된다
-- [x] IME 이벤트가 로그에 기록된다 (phase1: user-event 픽스처로 검증)
-- [x] 트레이스 JSON을 복사/다운로드할 수 있다 (`ImeCaptureShell` 기본 동작)
-- [x] 캡처 안내 문구가 표시된다 (`enter-newline` / `list-item-start`)
+- [x] `TipTapLogger` + `IME/TipTap` Storybook: TipTap contenteditable에 타이핑하면 이벤트 로그가 쌓인다
+      (accessible name · JSON 복사/다운로드 · 캡처 안내는 `ImeCaptureShell` / Storybook 기본 — 별도 `it` 없음)
 
 ### Debug + scenarios (phase 2)
 
