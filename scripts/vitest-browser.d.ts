@@ -6,6 +6,7 @@ export declare const vitestBrowserDefine: {
 };
 /** Shared Vitest browser mode config (matches apps/react-example). */
 export declare const vitestBrowserMode: {
+    onConsoleLog(log: string, type: "stderr" | "stdout"): false | undefined;
     browser: {
         enabled: true;
         headless: true;

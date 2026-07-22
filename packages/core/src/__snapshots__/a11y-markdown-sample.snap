@@ -6,11 +6,11 @@ list:
   listitem:
     strong:
       link: "pica"
-    "- high quality and fast image\n    resize in browser."
+    "- high quality and\n      fast image resize in browser."
   listitem:
     strong:
       link: "babelfish"
-    "- developer friendly\n    i18n with plurals support and easy syntax."
+    "- developer\n      friendly i18n with plurals support and easy syntax."
 paragraph:
   "You will like those projects!"
 separator:
@@ -40,7 +40,7 @@ paragraph:
 paragraph:
   "test… test… test… test?.. test!.."
 paragraph:
-  "!!! ??? ,  – —"
+  "!!! ??? , – —"
 paragraph:
   "“Smartypants, double quotes” and ‘single quotes’"
 heading: "Emphasis"
@@ -204,7 +204,7 @@ paragraph:
 paragraph:
   "Autoconverted link"
   link: "https://github.com/nodeca/pica"
-  "(enable linkify to see)"
+  "(enable linkify to\n    see)"
 heading: "Images"
   - properties: [level=2]
 paragraph:
@@ -238,6 +238,9 @@ paragraph:
   "with twemoji."
 heading: "Subscript / Superscript"
   - properties: [level=3]
+  link: "Subscript"
+  "/"
+  link: "Superscript"
 list:
   listitem:
     "19"
@@ -286,7 +289,7 @@ term:
   "Term 1"
 definition:
   paragraph:
-    "Definition 1\n    with lazy continuation."
+    "Definition 1 with lazy continuation."
 term:
   "Term 2 with"
   emphasis:
@@ -320,7 +323,7 @@ paragraph:
 paragraph:
   "It converts “"
   "HTML"
-  "”, but keep intact partial entries like “xxxHTMLyyy” and so on."
+  "”, but keep intact partial\n    entries like “xxxHTMLyyy” and so on."
 heading: "Custom containers"
   - properties: [level=3]
 paragraph:
