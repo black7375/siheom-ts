@@ -68,7 +68,7 @@ export const SEBEOL_COMPOUND_JUNGSEONG_SEQ: Record<string, [string, string]> = {
 /** Compound jongseong typed as two keys (값 = 갑→값). */
 export const SEBEOL_COMPOUND_JONGSEONG_SEQ: Record<string, [string, string]> = {
   ㅄ: ["ㅂ", "ㅅ"],
-  "ㅂㅅ": ["ㅂ", "ㅅ"],
+  ㅂㅅ: ["ㅂ", "ㅅ"],
 };
 
 /** Jongseong (left hand). `ㅂㅅ` is es-hangul's form of ㅄ. */
@@ -82,7 +82,7 @@ const SEBEOL_JONGSEONG: Record<string, PhysicalKey> = {
   ㅂ: { code: "Digit3", key: "3", keyCode: 51 },
   ㅅ: { code: "KeyQ", key: "q", keyCode: 81 },
   ㅄ: { code: "KeyQ", key: "q", keyCode: 81 },
-  "ㅂㅅ": { code: "KeyQ", key: "q", keyCode: 81 },
+  ㅂㅅ: { code: "KeyQ", key: "q", keyCode: 81 },
   ㅆ: { code: "Digit2", key: "2", keyCode: 50 },
   ㅇ: { code: "KeyA", key: "a", keyCode: 65 },
 };
@@ -100,7 +100,11 @@ export function keyForSebeolJamo(
   }
 
   const table =
-    role === "choseong" ? SEBEOL_CHOSEONG : role === "jungseong" ? SEBEOL_JUNGSEONG : SEBEOL_JONGSEONG;
+    role === "choseong"
+      ? SEBEOL_CHOSEONG
+      : role === "jungseong"
+        ? SEBEOL_JUNGSEONG
+        : SEBEOL_JONGSEONG;
   const mapped = table[jamo];
   if (!mapped) {
     throw new Error(`No 세벌식-ngs ${role} key mapping for jamo: ${jamo}`);

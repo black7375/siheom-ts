@@ -5,7 +5,7 @@ import type { Component } from "svelte";
 export const defaultGivens = {
   render: async (component: Component) => {
     await act(async () => {
-      render(component);
+      return render(component);
     });
   },
 };

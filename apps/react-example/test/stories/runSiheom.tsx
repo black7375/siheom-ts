@@ -1,4 +1,4 @@
-import { render } from "@testing-library/react";
+import { render } from "@/stories/render";
 import { overrideSiheom, defaultActions, defaultAssertions } from "@siheom/core";
 import { defaultGivens, reactEffects, reactFakeTimerScope } from "@siheom/react";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -18,7 +18,7 @@ export const { runSiheom } = overrideSiheom(
   {
     givens: {
       render: async (element: React.ReactElement) => {
-        render(<TestProvider>{element}</TestProvider>);
+        await render(<TestProvider>{element}</TestProvider>);
       },
     },
   },

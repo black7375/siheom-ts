@@ -14,8 +14,7 @@ export function playPreeditStep(
   profile?: ImeProfile,
 ): void {
   const valueBefore = trace.element.value;
-  const omitCompositionUpdate =
-    Boolean(profile?.postCompositionEndInput) && valueBefore === value;
+  const omitCompositionUpdate = Boolean(profile?.postCompositionEndInput) && valueBefore === value;
 
   playEventPlan(
     trace,

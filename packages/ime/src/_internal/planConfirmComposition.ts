@@ -22,9 +22,7 @@ export function planConfirmAndEndComposition(
     Boolean(options.postCompositionEndInput) && facts.valueBefore === value;
 
   return [
-    ...(pulse
-      ? planPreedit(session.preedit, value, caret, facts, { omitCompositionUpdate })
-      : []),
+    ...(pulse ? planPreedit(session.preedit, value, caret, facts, { omitCompositionUpdate }) : []),
     { kind: "compositionend", data: session.preedit, value },
     ...(options.postCompositionEndInput ? planPostCompositionEndInput(session.preedit) : []),
     { kind: "clearSession" },

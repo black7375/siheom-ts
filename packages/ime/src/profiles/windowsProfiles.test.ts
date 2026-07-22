@@ -241,9 +241,19 @@ describe("Windows IME profiles (MS / Ngs / Firefox)", () => {
   });
 
   it.each([
-    { profile: "windows-chrome-ms", golden: msMixed, text: "hello 김태희", expected: "hello 김태희" },
+    {
+      profile: "windows-chrome-ms",
+      golden: msMixed,
+      text: "hello 김태희",
+      expected: "hello 김태희",
+    },
     { profile: "windows-chrome-ngs", golden: ngsMixed, text: "hello 안녕", expected: "hello 안녕" },
-    { profile: "windows-firefox-ms", golden: firefoxMixed, text: "hello 김태희", expected: "hello 김태희" },
+    {
+      profile: "windows-firefox-ms",
+      golden: firefoxMixed,
+      text: "hello 김태희",
+      expected: "hello 김태희",
+    },
   ] as const)(
     "$profile mixed-en-ko: Hangul portion matches golden critical fields",
     async ({ profile, golden, text, expected }) => {

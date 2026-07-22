@@ -8,7 +8,7 @@ import {
 } from "@siheom/core";
 import { attachImeRecorder, createImeActions, goldenCritical, toCriticalEvents } from "@siheom/ime";
 import { defaultGivens, reactEffects } from "@siheom/react";
-import { render } from "@testing-library/react";
+import { render } from "@/stories/render";
 
 import { DelayedControlledField } from "./DelayedControlledField";
 import brokenGolden from "./fixtures/linux-ibus-hangul-chrome/broken-김태희.json";
@@ -42,7 +42,7 @@ function runWithDeferredIme(
       }),
       givens: {
         render: async (element: React.ReactElement) => {
-          render(element);
+          await render(element);
           const input = document.getElementById("ime-delayed-controlled-input") as HTMLInputElement;
           recorderRef.current = attachImeRecorder(input);
         },

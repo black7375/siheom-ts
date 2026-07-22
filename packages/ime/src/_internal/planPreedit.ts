@@ -17,7 +17,8 @@ export function planPreedit(
     emptyCompositionData?: null | "";
   } = {},
 ): EventPlanStep[] {
-  const emptyData = options.emptyCompositionData === undefined ? null : options.emptyCompositionData;
+  const emptyData =
+    options.emptyCompositionData === undefined ? null : options.emptyCompositionData;
   const inputData = preedit === "" ? emptyData : preedit;
   const steps: EventPlanStep[] = [
     ...(options.omitCompositionUpdate

@@ -6,7 +6,7 @@ import {
 } from "@siheom/core";
 import { createCdpImeActions, type CreateCdpImeActionsOptions } from "@siheom/ime-cdp";
 import { defaultGivens, reactEffects } from "@siheom/react";
-import { render } from "@testing-library/react";
+import { render } from "@/stories/render";
 
 export function runWithCdpImeSiheom(options: CreateCdpImeActionsOptions = {}) {
   return overrideSiheom(
@@ -20,7 +20,7 @@ export function runWithCdpImeSiheom(options: CreateCdpImeActionsOptions = {}) {
       actions: createCdpImeActions(options),
       givens: {
         render: async (element: React.ReactElement) => {
-          render(element);
+          await render(element);
         },
       },
     },

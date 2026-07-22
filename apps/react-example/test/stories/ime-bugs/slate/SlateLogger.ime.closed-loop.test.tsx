@@ -1,7 +1,7 @@
 import "./slateAndroidFirefoxEnv";
 
 import { describe, expect, it } from "vitest";
-import { render, waitFor } from "@testing-library/react";
+import { render, waitFor } from "@/stories/render";
 import { composeHangulAndroidFirefoxSlateClosedLoopOn } from "@siheom/ime";
 
 import { SlateLogger } from "./SlateLogger";
@@ -16,7 +16,7 @@ describe("closed-loop AF emulator drives real Slate", () => {
   async function typeInto(text: string): Promise<string> {
     const editorRef: { current: HTMLElement | null } = { current: null };
 
-    render(
+    await render(
       <SlateLogger
         captureTarget="slate-placeholder"
         editorRef={editorRef}

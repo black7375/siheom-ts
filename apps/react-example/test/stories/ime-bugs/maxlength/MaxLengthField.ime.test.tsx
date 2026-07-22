@@ -8,7 +8,7 @@ import {
 } from "@siheom/core";
 import { attachImeRecorder, createImeActions, goldenCritical, toCriticalEvents } from "@siheom/ime";
 import { defaultGivens, reactEffects } from "@siheom/react";
-import { render } from "@testing-library/react";
+import { render } from "@/stories/render";
 
 import { MaxLengthField } from "./MaxLengthField";
 import { runWithImeSiheom } from "../shared/runWithImeSiheom";
@@ -37,7 +37,7 @@ function runWithMaxLengthIme(profile: "macos-chrome-apple" | "macos-safari-apple
       actions: createImeActions({ profile }),
       givens: {
         render: async (element: React.ReactElement) => {
-          render(element);
+          await render(element);
           const input = document.getElementById("ime-maxlength-field") as HTMLInputElement;
           recorderRef.current = attachImeRecorder(input);
         },

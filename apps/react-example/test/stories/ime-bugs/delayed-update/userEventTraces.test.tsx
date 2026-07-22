@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { userEvent } from "@testing-library/user-event";
-import { render } from "@testing-library/react";
+import { render } from "@/stories/render";
 
 import { recordInputEvents } from "../../ime-logger/recordInputEvents";
 import { buildImeTrace, formatImeTraceJson } from "../../ime-logger/serializeImeEvent";
@@ -25,7 +25,7 @@ describe("delayed-update user-event capture fixtures", () => {
   it.each(SCENARIOS)(
     "records $id the way @testing-library/user-event fires events",
     async (scenario) => {
-      const { container } = render(<DelayedControlledField mode={scenario.mode} />);
+      const { container } = await render(<DelayedControlledField mode={scenario.mode} />);
       const input = container.querySelector("#ime-delayed-controlled-input") as HTMLInputElement;
 
       const user = userEvent.setup();

@@ -230,10 +230,16 @@ export function planEndComposition(
   const valueBefore = options.valueBefore ?? "";
   const pulse =
     options.confirmPulse && options.postCompositionEndInput
-      ? planPreedit(data, valueBefore, valueBefore.length, {
+      ? planPreedit(
+          data,
           valueBefore,
-          maxLength: options.maxLength ?? null,
-        }, { omitCompositionUpdate: true })
+          valueBefore.length,
+          {
+            valueBefore,
+            maxLength: options.maxLength ?? null,
+          },
+          { omitCompositionUpdate: true },
+        )
       : [];
 
   return [

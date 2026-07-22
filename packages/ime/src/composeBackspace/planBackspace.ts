@@ -85,12 +85,18 @@ export function planBackspace(input: PlanBackspaceInput): EventPlanStep[] {
           isComposing: true,
         },
       },
-      ...planPreedit(nextPreedit, value, caret, {
-        valueBefore: input.valueBefore,
-        maxLength: input.maxLength,
-      }, {
-        emptyCompositionData: input.postCompositionEndInput ? "" : null,
-      }),
+      ...planPreedit(
+        nextPreedit,
+        value,
+        caret,
+        {
+          valueBefore: input.valueBefore,
+          maxLength: input.maxLength,
+        },
+        {
+          emptyCompositionData: input.postCompositionEndInput ? "" : null,
+        },
+      ),
     ];
 
     if (nextPreedit === "") {

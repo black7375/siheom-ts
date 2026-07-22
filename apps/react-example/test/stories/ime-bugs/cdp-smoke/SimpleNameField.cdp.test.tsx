@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { query } from "@siheom/core";
 import { attachImeRecorder } from "@siheom/ime";
-import { render } from "@testing-library/react";
+import { render } from "@/stories/render";
 import {
   createDefaultActions,
   createDefaultAssertions,
@@ -42,7 +42,7 @@ describe("SimpleNameField + createCdpImeActions (Chromium CDP smoke)", () => {
         actions: createCdpImeActions(),
         givens: {
           render: async (element: React.ReactElement) => {
-            render(element);
+            await render(element);
             const input = document.getElementById("ime-cdp-name-field") as HTMLInputElement;
             recorderRef.current = attachImeRecorder(input);
             input.addEventListener("compositionupdate", () => {

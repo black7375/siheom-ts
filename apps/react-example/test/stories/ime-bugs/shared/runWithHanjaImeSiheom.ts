@@ -7,7 +7,7 @@ import {
 import { createImeActions, type CreateImeActionsOptions } from "@siheom/ime";
 import { createHanjaActions } from "@siheom/ime/hanja";
 import { defaultGivens, reactEffects } from "@siheom/react";
-import { render } from "@testing-library/react";
+import { render } from "@/stories/render";
 
 /**
  * IME fill/type override + typeHanja extension for candidate-conversion fixtures.
@@ -23,7 +23,7 @@ export function runWithHanjaImeSiheom(options: CreateImeActionsOptions = {}) {
       givens: {
         ...defaultGivens,
         render: async (element: React.ReactElement) => {
-          render(element);
+          await render(element);
         },
       },
       effects: { ...defaultEffects, ...reactEffects },

@@ -1,4 +1,11 @@
-import { assemble, canBeChoseong, canBeJongseong, canBeJungseong, combineVowels, disassembleCompleteCharacter } from "es-hangul";
+import {
+  assemble,
+  canBeChoseong,
+  canBeJongseong,
+  canBeJungseong,
+  combineVowels,
+  disassembleCompleteCharacter,
+} from "es-hangul";
 
 import { hangulJamos } from "../hangulJamos";
 import { keyForJamo } from "../_internal/jamoKeyMap";

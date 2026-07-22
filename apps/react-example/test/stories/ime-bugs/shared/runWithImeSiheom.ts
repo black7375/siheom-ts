@@ -6,7 +6,7 @@ import {
 } from "@siheom/core";
 import { createImeActions, type CreateImeActionsOptions } from "@siheom/ime";
 import { defaultGivens, reactEffects } from "@siheom/react";
-import { render } from "@testing-library/react";
+import { render } from "@/stories/render";
 
 export function runWithImeSiheom(options: CreateImeActionsOptions = {}) {
   return overrideSiheom(
@@ -20,7 +20,7 @@ export function runWithImeSiheom(options: CreateImeActionsOptions = {}) {
       actions: createImeActions(options),
       givens: {
         render: async (element: React.ReactElement) => {
-          render(element);
+          await render(element);
         },
       },
     },

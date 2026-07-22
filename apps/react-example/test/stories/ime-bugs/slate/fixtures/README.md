@@ -18,17 +18,17 @@ Profile: `android-chrome-slate-placeholder-broken` / `-plain-control`
 
 ## Android Firefox
 
-| File                                                | Visible                    | Notes                                                            |
-| --------------------------------------------------- | -------------------------- | ---------------------------------------------------------------- |
-| `fixed-가-plain-control.json`                       | `가`                       | plain textarea — **works**                                       |
-| `device-v2-patched-process-still-buggy-가나다.json` | final `가나다`, process flicker | v2 patch: committed OK, composing still duplicates          |
-| `rejected-rewrite-flicker-가나다.json`              | flicker → garbage          | post-hoc rewrite rejected                                        |
-| `decorative-still-explodes-가나다가나다.json`       | explosion (decorative era) | overlay rejected                                                 |
-| `mechanism-fix-v4-still-explodes-가나다가나다.json` | explosion                  | fix-pair drift 0%; DOM drive still fails                         |
-| `device-broken-가나다가나다-continuous.json`        | `ㄱ가나다가나다`           | broken continuous session — best baseline                        |
-| `device-tri-mode-broken-가나다.json`                | `ㄱ가나다`                 | 1 word; best-looking outcome                                     |
-| `device-tri-mode-minimal-가나다x2.json`             | `간ㅏ다간ㅏㄷ간ㅏ간ㄱ`     | 2 words; guard-only, session 2 explodes                          |
-| `device-tri-mode-fixed-가나다x3.json`               | `가ㅏㄷ가ㅏㅏ`             | 3 words; preedit drive reshuffles garbage                        |
+| File                                                | Visible                         | Notes                                              |
+| --------------------------------------------------- | ------------------------------- | -------------------------------------------------- |
+| `fixed-가-plain-control.json`                       | `가`                            | plain textarea — **works**                         |
+| `device-v2-patched-process-still-buggy-가나다.json` | final `가나다`, process flicker | v2 patch: committed OK, composing still duplicates |
+| `rejected-rewrite-flicker-가나다.json`              | flicker → garbage               | post-hoc rewrite rejected                          |
+| `decorative-still-explodes-가나다가나다.json`       | explosion (decorative era)      | overlay rejected                                   |
+| `mechanism-fix-v4-still-explodes-가나다가나다.json` | explosion                       | fix-pair drift 0%; DOM drive still fails           |
+| `device-broken-가나다가나다-continuous.json`        | `ㄱ가나다가나다`                | broken continuous session — best baseline          |
+| `device-tri-mode-broken-가나다.json`                | `ㄱ가나다`                      | 1 word; best-looking outcome                       |
+| `device-tri-mode-minimal-가나다x2.json`             | `간ㅏ다간ㅏㄷ간ㅏ간ㄱ`          | 2 words; guard-only, session 2 explodes            |
+| `device-tri-mode-fixed-가나다x3.json`               | `가ㅏㄷ가ㅏㅏ`                  | 3 words; preedit drive reshuffles garbage          |
 
 Profile: `android-firefox-slate-placeholder-broken` / `-plain-control`
 
