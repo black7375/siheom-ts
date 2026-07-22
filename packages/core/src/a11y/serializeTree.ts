@@ -20,7 +20,10 @@ function formatBracketedAttribute(key: string, val: unknown): string {
   if (typeof val === "string") {
     return `[${key}="${escapeString(val)}"]`;
   }
-  return `[${key}=${val}]`;
+  if (typeof val === "number" || typeof val === "boolean" || typeof val === "bigint") {
+    return `[${key}=${val}]`;
+  }
+  return `[${key}=${JSON.stringify(val)}]`;
 }
 
 function serializeStates(states: A11yStates): string {

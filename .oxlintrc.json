@@ -1,6 +1,9 @@
 {
   "$schema": "./node_modules/oxlint/configuration_schema.json",
   "plugins": ["typescript", "unicorn", "oxc"],
+  "options": {
+    "typeAware": true
+  },
   "categories": {
     "correctness": "error"
   },
@@ -11,7 +14,14 @@
     "**/__screenshots__/**",
     "apps/docs/**"
   ],
-  "rules": {},
+  "rules": {
+    "typescript/no-misused-spread": [
+      "error",
+      {
+        "allow": [{ "from": "lib", "name": "string" }]
+      }
+    ]
+  },
   "env": {
     "builtin": true
   }

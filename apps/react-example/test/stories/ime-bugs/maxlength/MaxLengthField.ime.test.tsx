@@ -37,7 +37,7 @@ function runWithMaxLengthIme(profile: "macos-chrome-apple" | "macos-safari-apple
       actions: createImeActions({ profile }),
       givens: {
         render: async (element: React.ReactElement) => {
-          await render(element);
+          render(element);
           const input = document.getElementById("ime-maxlength-field") as HTMLInputElement;
           recorderRef.current = attachImeRecorder(input);
         },

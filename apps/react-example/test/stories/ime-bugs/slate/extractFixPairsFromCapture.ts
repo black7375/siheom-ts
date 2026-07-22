@@ -19,6 +19,10 @@ type CaptureWithFixTrace = {
   };
 };
 
+function asString(value: unknown): string {
+  return typeof value === "string" ? value : "";
+}
+
 /** Experiment C — extract (committed, data) → next pairs from device fixTrace. */
 export function extractFixPairsFromCapture(capture: CaptureWithFixTrace): FixPairFromCapture[] {
   const rows = capture.slateDebug?.fixTrace ?? [];
@@ -26,9 +30,9 @@ export function extractFixPairsFromCapture(capture: CaptureWithFixTrace): FixPai
   return rows
     .filter((row) => row.action === "committed-preedit")
     .map((row) => {
-      const committed = String(row.detail.committed ?? "");
-      const data = String(row.detail.data ?? "");
-      const expectedNext = String(row.detail.next ?? "");
+      const committed = asString(row.detail.committed);
+      const data = asString(row.detail.data);
+      const expectedNext = asString(row.detail.next);
       return {
         committed,
         data,

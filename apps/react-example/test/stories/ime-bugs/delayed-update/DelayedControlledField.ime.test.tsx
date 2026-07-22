@@ -42,7 +42,7 @@ function runWithDeferredIme(
       }),
       givens: {
         render: async (element: React.ReactElement) => {
-          await render(element);
+          render(element);
           const input = document.getElementById("ime-delayed-controlled-input") as HTMLInputElement;
           recorderRef.current = attachImeRecorder(input);
         },

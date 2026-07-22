@@ -42,7 +42,7 @@ describe("SimpleNameField + createCdpImeActions (Chromium CDP smoke)", () => {
         actions: createCdpImeActions(),
         givens: {
           render: async (element: React.ReactElement) => {
-            await render(element);
+            render(element);
             const input = document.getElementById("ime-cdp-name-field") as HTMLInputElement;
             recorderRef.current = attachImeRecorder(input);
             input.addEventListener("compositionupdate", () => {

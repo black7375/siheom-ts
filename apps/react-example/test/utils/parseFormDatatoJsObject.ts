@@ -44,26 +44,32 @@ function inferFieldType(fieldSchema: unknown): FieldType {
   return "unknown";
 }
 
+function formDataEntryToString(value: FormDataEntryValue): string {
+  return typeof value === "string" ? value : value.name;
+}
+
 function convertFormValue(value: FormDataEntryValue | null, targetType: FieldType): unknown {
   if (value === null || value === undefined) {
     return undefined;
   }
 
+  const text = formDataEntryToString(value);
+
   if (targetType === "number") {
-    const num = Number(value);
-    return Number.isNaN(num) ? value : num;
+    const num = Number(text);
+    return Number.isNaN(num) ? text : num;
   }
 
   if (targetType === "boolean") {
-    if (value === "on") return true;
-    if (value === "off") return false;
-    const lowerValue = String(value).toLowerCase();
+    if (text === "on") return true;
+    if (text === "off") return false;
+    const lowerValue = text.toLowerCase();
     if (["true", "1", "yes"].includes(lowerValue)) return true;
     if (["false", "0", "no", ""].includes(lowerValue)) return false;
-    return Boolean(value);
+    return Boolean(text);
   }
 
-  return String(value);
+  return text;
 }
 
 export function parseFormDatatoJsObject<T extends object>(

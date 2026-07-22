@@ -31,7 +31,7 @@ export type SlateCompositionSnapshot = {
   hasPendingSelection: boolean;
   committedHangul: string;
   lastFixAction: string | null;
-  slateDocument: unknown | null;
+  slateDocument: unknown;
 };
 
 function readSelection(editor: Editor): SlateCompositionSnapshot["selection"] {

@@ -48,7 +48,7 @@ function buildElementRoleList(elementRolesMap: typeof elementRoles): ElementRole
   const result: ElementRoleEntry[] = [];
 
   for (const [element, roles] of elementRolesMap.entries()) {
-    let { attributes = [] } = element as ARIAQueryElement;
+    let { attributes } = element as ARIAQueryElement;
 
     // Handle type="text" edge case
     // https://github.com/testing-library/dom-testing-library/issues/814

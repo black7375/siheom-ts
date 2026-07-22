@@ -13,19 +13,19 @@ export function createDefaultAssertions(options: DefaultAssertionsOptions = {}) 
 
   async function withPresentElement(
     target: Locator,
-    assertMatch: (element: ReturnType<typeof getElement>) => void,
+    assertMatch: (element: ReturnType<typeof getElement>) => void | Promise<void>,
   ) {
     if (resolveElement === "sync") {
       const element = getElement(target, true);
       expect(element).toBeOnTheScreen();
-      assertMatch(element);
+      await assertMatch(element);
       return;
     }
 
     await waitFor(async () => {
       const element = getElement(target, true);
       expect(element).toBeOnTheScreen();
-      assertMatch(element);
+      await assertMatch(element);
     });
   }
 
@@ -133,8 +133,8 @@ export function createDefaultAssertions(options: DefaultAssertionsOptions = {}) 
         expect(element).not.toHaveTextContent(expected);
       }),
     a11ySnapshot: async (target: Locator, path: string) =>
-      withPresentElement(target, (element) => {
-        expect(getA11ySnapshot(element)).toMatchFileSnapshot(path);
+      withPresentElement(target, async (element) => {
+        await expect(getA11ySnapshot(element)).toMatchFileSnapshot(path);
       }),
     tableSnapshot: async (_target: Locator, _path: string) => {
       throw new Error("tableSnapshot is not supported in React Native");

@@ -40,7 +40,8 @@
     "@vitest/browser-playwright": "^4.1.10",
     "jscpd": "^5.0.12",
     "oxfmt": "^0.59.0",
-    "oxlint": "^1.74.0",
+    "oxlint": "^1.75.0",
+    "oxlint-tsgolint": "7",
     "playwright": "^1.61.1",
     "typescript": "^7.0.2",
     "vitest": "^4.1.10"

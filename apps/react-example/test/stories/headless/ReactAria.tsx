@@ -8,6 +8,7 @@ import { Checkbox } from "@/components/react-aria/checkbox";
 import { Dialog, DialogTitle, DialogTrigger, Modal } from "@/components/react-aria/modal";
 import { Select, SelectItem } from "@/components/react-aria/select";
 import { TextField } from "@/components/react-aria/text-field";
+import { formDataText } from "@/utils/formDataText";
 import { SUBSCRIPTION_PLANS, type SubscribeData, type SubscriptionPlan } from "./subscribe.fixture";
 
 export type { SubscribeData };
@@ -31,11 +32,11 @@ export function ReactAriaSubscribe({
               onSubmit={async (event) => {
                 event.preventDefault();
                 const formData = new FormData(event.currentTarget);
-                const plan = String(formData.get("plan") ?? "");
+                const plan = formDataText(formData, "plan");
 
                 await onSubscribe({
-                  name: String(formData.get("name") ?? ""),
-                  email: String(formData.get("email") ?? ""),
+                  name: formDataText(formData, "name"),
+                  email: formDataText(formData, "email"),
                   plan: plan as SubscriptionPlan,
                   terms: formData.get("terms") === "on",
                 });

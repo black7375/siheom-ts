@@ -156,7 +156,7 @@ export function LoginPage({ login }: { login: () => Promise<void> }) {
             onClick={async () => {
               setLoading(true);
               await login();
-              navigate("/dashboard");
+              await navigate("/dashboard");
             }}
           >
             {loading ? "로그인 중..." : "로그인"}

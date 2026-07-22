@@ -6,6 +6,7 @@ import { Dialog, useDialogStore } from "@/components/ariakit/dialog";
 import { Select, SelectItem } from "@/components/ariakit/select";
 import { TextField } from "@/components/ariakit/text-field";
 import { SUBSCRIPTION_PLANS, type SubscribeData, type SubscriptionPlan } from "./subscribe.fixture";
+import { formDataText } from "@/utils/formDataText";
 
 export function AriakitSubscribe({
   onSubscribe,
@@ -24,9 +25,9 @@ export function AriakitSubscribe({
             const formData = new FormData(event.currentTarget);
 
             await onSubscribe({
-              name: String(formData.get("name") ?? ""),
-              email: String(formData.get("email") ?? ""),
-              plan: String(formData.get("plan") ?? "") as SubscriptionPlan,
+              name: formDataText(formData, "name"),
+              email: formDataText(formData, "email"),
+              plan: formDataText(formData, "plan") as SubscriptionPlan,
               terms: formData.get("terms") === "on",
             });
             dialog.hide();

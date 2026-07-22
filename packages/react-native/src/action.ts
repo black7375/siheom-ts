@@ -36,7 +36,7 @@ export function createDefaultActions(options: DefaultActionsOptions = {}) {
       if (value) {
         await user.type(element, value);
       }
-      fireEvent(element, "submitEditing");
+      await fireEvent(element, "submitEditing");
       return;
     }
 

@@ -7,6 +7,7 @@ import { Checkbox } from "@/components/ark-ui/checkbox";
 import { Dialog } from "@/components/ark-ui/dialog";
 import { Select } from "@/components/ark-ui/select";
 import { TextField } from "@/components/ark-ui/text-field";
+import { formDataText } from "@/utils/formDataText";
 import { SUBSCRIPTION_PLANS, type SubscribeData, type SubscriptionPlan } from "./subscribe.fixture";
 
 export function ArkUiSubscribe({
@@ -32,9 +33,9 @@ export function ArkUiSubscribe({
             const formData = new FormData(event.currentTarget);
 
             await onSubscribe({
-              name: String(formData.get("name") ?? ""),
-              email: String(formData.get("email") ?? ""),
-              plan: String(formData.get("plan") ?? "") as SubscriptionPlan,
+              name: formDataText(formData, "name"),
+              email: formDataText(formData, "email"),
+              plan: formDataText(formData, "plan") as SubscriptionPlan,
               terms: formData.get("terms") === "on",
             });
             setOpen(false);
