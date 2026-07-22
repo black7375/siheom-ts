@@ -20,8 +20,8 @@ Profile: `android-chrome-slate-placeholder-broken` / `-plain-control`
 
 | File                                                | Visible                    | Notes                                                            |
 | --------------------------------------------------- | -------------------------- | ---------------------------------------------------------------- |
-| `broken-가-placeholder.json`                        | `ㄱ` (not `가`)            | preedit `가` but `value` stuck at `ㄱ`; Firefox deferred `input` |
 | `fixed-가-plain-control.json`                       | `가`                       | plain textarea — **works**                                       |
+| `device-v2-patched-process-still-buggy-가나다.json` | final `가나다`, process flicker | v2 patch: committed OK, composing still duplicates          |
 | `rejected-rewrite-flicker-가나다.json`              | flicker → garbage          | post-hoc rewrite rejected                                        |
 | `decorative-still-explodes-가나다가나다.json`       | explosion (decorative era) | overlay rejected                                                 |
 | `mechanism-fix-v4-still-explodes-가나다가나다.json` | explosion                  | fix-pair drift 0%; DOM drive still fails                         |

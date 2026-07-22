@@ -37,18 +37,17 @@ final `가나다` but the composing display flickers duplicates (`가가나`, `�
 syllable boundary. v2 only corrects the committed value at `compositionend` — user still sees
 the bug. See `docs/research/slate-closed-loop-emulator.md` (Correction section).
 
-- [x] Characterization: `SlateLogger.device-v2-process.test.tsx` locks known-bad process
 - [x] Faithful flicker repro: `composeHangulAndroidFirefoxSlateNativeComposition` performs the
-      native DOM writeback (committed + cumulative preedit) so real Slate exhibits the device
-      flicker `가가나`/`가나가나ㄷ` then reconciles (`SlateLogger.ime.native-flicker.test.tsx`)
+      native DOM writeback (committed + cumulative preedit) so real Slate can exhibit device-style
+      flicker when the composition range collapses per syllable
 - [x] Make native writeback **composition-range-aware** (replace the composition range Slate
       selects, not blind-append) so the fix is testable
-- [x] RED-for-fix: `SlateLogger.ime.process-fix.test.tsx` — each composing snapshot must equal
-      the cumulative preedit, never committed+preedit
+- [x] Fix gate: `SlateLogger.ime.process-fix.test.tsx` — patch probe + each composing snapshot
+      equals the cumulative preedit (never committed+preedit)
 - [x] Fix (v3 patch): `handleCompositionStart` extends the composition over the contiguous
       committed Hangul before the caret and spans the DOM selection, so native composition
-      **replaces** the word instead of appending → no `가가나`. RED now green; final still 가나다;
-      full slate suite green. (`patches/slate-react@0.126.0.patch`, `composition-anchor-v3`)
+      **replaces** the word instead of appending → no `가가나`. Final still 가나다.
+      (`patches/slate-react@0.126.0.patch`, `composition-anchor-v3`)
 - [ ] Device: recapture on Android Firefox with v3 → confirm composing process is clean (no
       flicker), not just the final value
 - [ ] Generative intents: replace device-capture intents with a Hangul-IME model

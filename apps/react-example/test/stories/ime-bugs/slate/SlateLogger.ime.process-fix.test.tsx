@@ -1,7 +1,7 @@
 import "./slateAndroidFirefoxEnv";
 
 import { describe, expect, it } from "vitest";
-import { render, waitFor } from "@testing-library/react";
+import { render, waitFor } from "@/stories/render";
 import {
   composeHangulAndroidFirefoxSlateNativeComposition,
   compositionIntentsFromEvents,
@@ -9,25 +9,30 @@ import {
 
 import { SlateLogger } from "./SlateLogger";
 import deviceV2 from "./fixtures/android-firefox/device-v2-patched-process-still-buggy-가나다.json";
+import { EXPECTED_SLATE_ANDROID_HANGUL_PATCH_ID, readSlatePatchProbe } from "./readSlatePatchProbe";
 
 const TARGET = "가나다";
 
 /**
- * RED for the real fix. The native-composition emulator paints into the composition region the
- * editor SELECTS at compositionstart, so this goes green once Slate keeps the Android run as one
- * composition (selection spans the composed text → cumulative preedit replaces cleanly) instead
- * of committing per syllable (collapsed caret → cumulative preedit appends → `가가나`).
+ * Native-composition emulator paints into the composition region Slate selects at
+ * compositionstart. With composition-anchor-v3, the Android run stays one composition so
+ * cumulative preedit replaces cleanly (no committed+preedit flicker like `가가나`).
  *
  * A clean composing snapshot is exactly the IME's cumulative preedit (`ㄱ`, `가`, `간`, `가나`,
- * `가낟`, `가나다`). The bug prepends the committed text (`가간`, `가가나`, `가나가나ㄷ`).
- *
- * Currently RED: v2-patched Slate collapses per syllable, so the native paint duplicates.
- * See docs/research/slate-closed-loop-emulator.md.
+ * `가낟`, `가나다`). See docs/research/slate-closed-loop-emulator.md.
  */
-describe("AF Slate composing process is clean (no flicker) — RED until the run-composition fix", () => {
+describe("AF Slate composing process is clean (no flicker)", () => {
+  it("loads patched slate-react in bundle", () => {
+    expect(readSlatePatchProbe()).toEqual({
+      expectedPatchId: EXPECTED_SLATE_ANDROID_HANGUL_PATCH_ID,
+      loadedPatchId: EXPECTED_SLATE_ANDROID_HANGUL_PATCH_ID,
+      patchActive: true,
+    });
+  });
+
   it("each composing snapshot is the cumulative preedit, with no committed text prepended", async () => {
     const editorRef: { current: HTMLElement | null } = { current: null };
-    render(
+    await render(
       <SlateLogger
         captureTarget="slate-placeholder"
         editorRef={editorRef}
