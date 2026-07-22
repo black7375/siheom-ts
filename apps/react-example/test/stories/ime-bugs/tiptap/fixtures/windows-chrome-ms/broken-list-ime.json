@@ -1,0 +1,10 @@
+{
+  "profileId": "windows-chrome-ms",
+  "os": "windows",
+  "browser": "chrome",
+  "ime": "ms",
+  "capturedAt": "",
+  "scenarioId": "tiptap-list-ime",
+  "source": "os-ime",
+  "events": []
+}

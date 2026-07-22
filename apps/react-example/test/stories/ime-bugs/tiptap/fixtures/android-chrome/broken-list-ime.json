@@ -1,0 +1,10 @@
+{
+  "profileId": "android-chrome",
+  "os": "android",
+  "browser": "chrome",
+  "ime": "",
+  "capturedAt": "",
+  "scenarioId": "tiptap-list-ime",
+  "source": "os-ime",
+  "events": []
+}

@@ -1,0 +1,10 @@
+{
+  "profileId": "macos-safari-apple",
+  "os": "macos",
+  "browser": "safari",
+  "ime": "apple",
+  "capturedAt": "",
+  "scenarioId": "tiptap-list-ime",
+  "source": "os-ime",
+  "events": []
+}

@@ -1,0 +1,10 @@
+{
+  "profileId": "linux-chrome-ibus-hangul",
+  "os": "linux",
+  "browser": "chrome",
+  "ime": "ibus-hangul",
+  "capturedAt": "",
+  "scenarioId": "tiptap-list-ime",
+  "source": "os-ime",
+  "events": []
+}
