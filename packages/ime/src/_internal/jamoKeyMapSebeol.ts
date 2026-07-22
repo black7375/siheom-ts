@@ -27,12 +27,12 @@ const SEBEOL_CHOSEONG: Record<string, PhysicalKey> = {
 /**
  * Atomic jungseong. ㅗ/ㅜ have a second physical key used as compound head
  * (Slash / Digit9) — see `keyForSebeolJamo` `compoundHead`.
- * ㅢ is a dedicated single key (Digit8).
- * ㅑ not yet seen in OS coverage captures — omit until logged.
+ * ㅢ is a dedicated single key (Digit8); ㅑ is Digit6.
  */
 const SEBEOL_JUNGSEONG: Record<string, PhysicalKey> = {
   ㅏ: { code: "KeyF", key: "f", keyCode: 70 },
   ㅐ: { code: "KeyT", key: "t", keyCode: 84 },
+  ㅑ: { code: "Digit6", key: "6", keyCode: 54 },
   ㅒ: { code: "KeyT", key: "T", keyCode: 84 },
   ㅓ: { code: "KeyR", key: "r", keyCode: 82 },
   ㅔ: { code: "KeyC", key: "c", keyCode: 67 },
