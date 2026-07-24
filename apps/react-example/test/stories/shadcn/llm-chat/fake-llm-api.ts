@@ -3,6 +3,7 @@ import { act } from "react";
 import { ASSISTANT_REPLY } from "./chat.fixture";
 
 export type ChatMessage = {
+  id: string;
   role: "user" | "assistant";
   content: string;
 };

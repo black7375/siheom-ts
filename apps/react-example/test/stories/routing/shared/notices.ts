@@ -24,7 +24,3 @@ export const NOTICES: Notice[] = [
       "외부 링크나 목록에서 /notice?id=456 으로 진입하면 해당 Accordion이 열린 상태로 렌더됩니다. query string 파싱은 가짜 Next Router 구현체가 담당합니다.",
   },
 ];
-
-export function getNotice(id: string) {
-  return NOTICES.find((notice) => notice.id === id);
-}

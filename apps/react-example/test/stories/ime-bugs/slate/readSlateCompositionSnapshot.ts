@@ -78,40 +78,6 @@ export type SlateDebugSnapshotCompact = {
   committedHangul: string;
 };
 
-/** Model + weak-map reads only — safe inside IME event handlers. */
-export function readSlateCompositionSnapshotModelOnly(
-  editor: Editor,
-): Pick<
-  SlateCompositionSnapshot,
-  | "slateText"
-  | "isComposingReact"
-  | "isComposingWeak"
-  | "isAndroid"
-  | "isFocused"
-  | "pendingDiffCount"
-  | "hasPendingAction"
-  | "hasPendingSelection"
-  | "committedHangul"
-  | "lastFixAction"
-  | "selection"
-> {
-  const fix = readSlateFixDebugState(editor);
-
-  return {
-    slateText: stripInvisible(Node.string(editor)),
-    selection: readSelection(editor),
-    isComposingReact: ReactEditor.isComposing(editor),
-    isComposingWeak: Boolean(IS_COMPOSING.get(editor)),
-    isAndroid: IS_ANDROID,
-    isFocused: Boolean(IS_FOCUSED.get(editor)),
-    pendingDiffCount: EDITOR_TO_PENDING_DIFFS.get(editor)?.length ?? 0,
-    hasPendingAction: Boolean(EDITOR_TO_PENDING_ACTION.get(editor)),
-    hasPendingSelection: Boolean(EDITOR_TO_PENDING_SELECTION.get(editor)),
-    committedHangul: fix.committedHangul,
-    lastFixAction: fix.lastFixAction?.action ?? null,
-  };
-}
-
 export function compactSlateDebugSnapshot(
   snap: Pick<
     SlateCompositionSnapshot,
@@ -198,10 +164,6 @@ function safeCloneDocument(children: unknown): unknown {
   try {
     return structuredClone(children);
   } catch {
-    try {
-      return JSON.parse(JSON.stringify(children));
-    } catch {
-      return null;
-    }
+    return null;
   }
 }

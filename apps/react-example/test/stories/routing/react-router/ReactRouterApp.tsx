@@ -47,7 +47,7 @@ function ArticleDetailPage() {
   );
 }
 
-export function TermsPage() {
+function TermsPage() {
   const location = useLocation();
   const section = location.hash.replace("#", "") || "intro";
 
@@ -121,7 +121,7 @@ export function TermsPage() {
   );
 }
 
-export function LoginPage({ login }: { login: () => Promise<void> }) {
+function LoginPage({ login }: { login: () => Promise<void> }) {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
 
@@ -167,7 +167,7 @@ export function LoginPage({ login }: { login: () => Promise<void> }) {
   );
 }
 
-export function DashboardPage() {
+function DashboardPage() {
   return (
     <AppShell activeNav="login">
       <section

@@ -22,6 +22,3 @@ export const CAPTURE_SCENARIOS: CaptureScenario[] = [
   },
 ];
 
-export function getCaptureScenario(id: string): CaptureScenario | undefined {
-  return CAPTURE_SCENARIOS.find((scenario) => scenario.id === id);
-}

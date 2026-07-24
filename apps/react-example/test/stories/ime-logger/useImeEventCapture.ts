@@ -55,7 +55,10 @@ export function useImeEventCapture<T extends HTMLElement = HTMLElement>({
   const inputRef = useRef<T>(null);
   const listenersCleanupRef = useRef<(() => void) | null>(null);
   const onEventRecordedRef = useRef(onEventRecorded);
-  onEventRecordedRef.current = onEventRecorded;
+
+  useEffect(() => {
+    onEventRecordedRef.current = onEventRecorded;
+  });
 
   const profileId = useMemo(() => profileIdFromMeta(os, browser, ime), [os, browser, ime]);
 

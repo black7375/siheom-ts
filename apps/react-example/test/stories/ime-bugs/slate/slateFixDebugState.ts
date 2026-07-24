@@ -52,7 +52,3 @@ export function readSlateFixDebugState(editor: Editor): {
     fixActionCount: fixActionHistoryByEditor.get(editor)?.length ?? 0,
   };
 }
-
-export function readSlateFixActionHistory(editor: Editor): SlateFixDebugNote[] {
-  return [...(fixActionHistoryByEditor.get(editor) ?? [])];
-}
