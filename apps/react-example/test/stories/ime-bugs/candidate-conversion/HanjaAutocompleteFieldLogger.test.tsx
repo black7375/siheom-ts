@@ -11,7 +11,7 @@ describe("HanjaAutocompleteFieldLogger", () => {
       assertions.visible(query.heading("Hanja autocomplete conflict (IME bug)")),
       assertions.visible(query.button("broken")),
       actions.click(query.button("fixed")),
-      assertions.visible(query.textbox("이름")),
+      assertions.visible(query.combobox("이름")),
     );
   });
 });

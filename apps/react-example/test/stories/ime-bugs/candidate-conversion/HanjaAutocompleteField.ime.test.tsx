@@ -12,8 +12,8 @@ describe("HanjaAutocompleteField + typeHanja", () => {
 
     await runSiheom(
       given.render(<HanjaAutocompleteField mode="fixed" />),
-      actions.typeHanja(query.textbox("이름"), "金", "김"),
-      assertions.value(query.textbox("이름"), "金"),
+      actions.typeHanja(query.combobox("이름"), "金", "김"),
+      assertions.value(query.combobox("이름"), "金"),
     );
   });
 
@@ -24,8 +24,8 @@ describe("HanjaAutocompleteField + typeHanja", () => {
 
     await runSiheom(
       given.render(<HanjaAutocompleteField mode="fixed" />),
-      actions.typeHanja(query.textbox("이름"), "金泰熙", "김태희"),
-      assertions.value(query.textbox("이름"), "金泰熙"),
+      actions.typeHanja(query.combobox("이름"), "金泰熙", "김태희"),
+      assertions.value(query.combobox("이름"), "金泰熙"),
     );
   });
 
@@ -36,7 +36,7 @@ describe("HanjaAutocompleteField + typeHanja", () => {
 
     await runSiheom(
       given.render(<HanjaAutocompleteField mode="broken" />),
-      actions.typeHanja(query.textbox("이름"), "金", "김"),
+      actions.typeHanja(query.combobox("이름"), "金", "김"),
       assertions.visible(query.status("마지막 combobox 선택"), true),
     );
   });
