@@ -8,11 +8,14 @@
   "license": "MIT",
   "workspaces": [
     "packages/*",
-    "apps/*"
+    "apps/*",
+    "scripts/pretty-ccts"
   ],
   "scripts": {
     "postinstall": "playwright install chromium",
     "ci": "bun run check-format && bun run lint && bun run build && bun run check-exports && bun run typecheck && bun run test",
+    "test:pretty-ccts": "bun test scripts/pretty-ccts",
+    "dup:ccts": "bunx ccts-json packages/core/src | pretty-ccts",
     "build": "bun run --filter '@siheom/core' build && bun run --filter '@siheom/react' build && bun run --filter '@siheom/vue' build && bun run --filter '@siheom/svelte' build && bun run --filter '@siheom/solid' build && bun run --filter '@siheom/angular' build && bun run --filter '@siheom/qwik' build && bun run --filter '@siheom/react-native' build && bun run --filter '@siheom/ime' build && bun run --filter '@siheom/ime-cdp' build && bun run --filter '@siheom/vitest-browser-react' build",
     "check-exports": "bun run --filter '@siheom/core' check-exports && bun run --filter '@siheom/react' check-exports && bun run --filter '@siheom/vue' check-exports && bun run --filter '@siheom/svelte' check-exports && bun run --filter '@siheom/solid' check-exports && bun run --filter '@siheom/angular' check-exports && bun run --filter '@siheom/qwik' check-exports && bun run --filter '@siheom/react-native' check-exports && bun run --filter '@siheom/ime' check-exports && bun run --filter '@siheom/ime-cdp' check-exports && bun run --filter '@siheom/vitest-browser-react' check-exports",
     "typecheck": "bun run --filter '@siheom/core' typecheck && bun run --filter '@siheom/react' typecheck && bun run --filter '@siheom/vue' typecheck && bun run --filter '@siheom/svelte' typecheck && bun run --filter '@siheom/solid' typecheck && bun run --filter '@siheom/angular' typecheck && bun run --filter '@siheom/qwik' typecheck && bun run --filter '@siheom/ime' typecheck && bun run --filter '@siheom/ime-cdp' typecheck && bun run --filter '@siheom/react-example' typecheck && bun run --filter '@siheom/react-native' typecheck && bun run --filter '@siheom/react-native-examples' typecheck && bun run --filter '@siheom/vitest-browser-react' typecheck",
@@ -38,11 +41,13 @@
     "@changesets/cli": "^2.31.1",
     "@vitest/browser": "^4.1.10",
     "@vitest/browser-playwright": "^4.1.10",
+    "cognitive-complexity-ts": "^0.8.2",
     "jscpd": "^5.0.12",
     "oxfmt": "^0.59.0",
     "oxlint": "^1.75.0",
     "oxlint-tsgolint": "7",
     "playwright": "^1.61.1",
+    "pretty-ccts": "workspace:*",
     "typescript": "^7.0.2",
     "vitest": "^4.1.10"
   },
