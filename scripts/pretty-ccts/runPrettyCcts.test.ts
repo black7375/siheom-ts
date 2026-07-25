@@ -79,4 +79,55 @@ describe("runPrettyCcts", () => {
     expect(result.exitCode).toBe(0);
     expect(result.output).toContain("Found 0 complex functions (score > 10).");
   });
+
+  it("merges findings across multiple trees, sorted by score", async () => {
+    const dir = await mkdtemp(join(tmpdir(), "pretty-ccts-"));
+    await writeFile(
+      join(dir, "ccts.config.json"),
+      JSON.stringify({ scoreLimit: 10 }),
+    );
+
+    const core = JSON.stringify({
+      "core.ts": {
+        kind: "file",
+        score: 12,
+        inner: [
+          {
+            kind: "function",
+            name: "coreFn",
+            score: 12,
+            line: 1,
+            column: 1,
+            inner: [],
+          },
+        ],
+      },
+    });
+    const ime = JSON.stringify({
+      "ime.ts": {
+        kind: "file",
+        score: 30,
+        inner: [
+          {
+            kind: "function",
+            name: "imeFn",
+            score: 30,
+            line: 1,
+            column: 1,
+            inner: [],
+          },
+        ],
+      },
+    });
+
+    const result = await runPrettyCcts([core, ime], dir);
+
+    expect(result.exitCode).toBe(1);
+    expect(result.output).toContain("imeFn");
+    expect(result.output).toContain("coreFn");
+    expect(result.output.indexOf("imeFn")).toBeLessThan(
+      result.output.indexOf("coreFn"),
+    );
+    expect(result.output).toContain("Found 2 complex functions (score > 10).");
+  });
 });

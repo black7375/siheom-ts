@@ -3,19 +3,27 @@
   "version": "0.0.0",
   "private": true,
   "description": "siheom monorepo — data-first frontend test interpreter",
-  "type": "module",
-  "packageManager": "bun@1.3.12",
+  "homepage": "https://github.com/twinstae/siheom-ts",
+  "bugs": {
+    "url": "https://github.com/twinstae/siheom-ts/issues"
+  },
   "license": "MIT",
+  "author": "Taehee Kim <rabolution@gmail.com> (https://x.com/stelo_kim)",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/twinstae/siheom-ts.git"
+  },
   "workspaces": [
     "packages/*",
     "apps/*",
     "scripts/pretty-ccts"
   ],
+  "type": "module",
   "scripts": {
     "postinstall": "playwright install chromium",
     "ci": "bun run check-format && bun run lint && bun run build && bun run check-exports && bun run typecheck && bun run test",
     "test:pretty-ccts": "bun test scripts/pretty-ccts",
-    "dup:ccts": "bunx ccts-json packages/core/src | pretty-ccts",
+    "ccts": "pretty-ccts",
     "build": "bun run --filter '@siheom/core' build && bun run --filter '@siheom/react' build && bun run --filter '@siheom/vue' build && bun run --filter '@siheom/svelte' build && bun run --filter '@siheom/solid' build && bun run --filter '@siheom/angular' build && bun run --filter '@siheom/qwik' build && bun run --filter '@siheom/react-native' build && bun run --filter '@siheom/ime' build && bun run --filter '@siheom/ime-cdp' build && bun run --filter '@siheom/vitest-browser-react' build",
     "check-exports": "bun run --filter '@siheom/core' check-exports && bun run --filter '@siheom/react' check-exports && bun run --filter '@siheom/vue' check-exports && bun run --filter '@siheom/svelte' check-exports && bun run --filter '@siheom/solid' check-exports && bun run --filter '@siheom/angular' check-exports && bun run --filter '@siheom/qwik' check-exports && bun run --filter '@siheom/react-native' check-exports && bun run --filter '@siheom/ime' check-exports && bun run --filter '@siheom/ime-cdp' check-exports && bun run --filter '@siheom/vitest-browser-react' check-exports",
     "typecheck": "bun run --filter '@siheom/core' typecheck && bun run --filter '@siheom/react' typecheck && bun run --filter '@siheom/vue' typecheck && bun run --filter '@siheom/svelte' typecheck && bun run --filter '@siheom/solid' typecheck && bun run --filter '@siheom/angular' typecheck && bun run --filter '@siheom/qwik' typecheck && bun run --filter '@siheom/ime' typecheck && bun run --filter '@siheom/ime-cdp' typecheck && bun run --filter '@siheom/react-example' typecheck && bun run --filter '@siheom/react-native' typecheck && bun run --filter '@siheom/react-native-examples' typecheck && bun run --filter '@siheom/vitest-browser-react' typecheck",
@@ -51,15 +59,7 @@
     "typescript": "^7.0.2",
     "vitest": "^4.1.10"
   },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/twinstae/siheom-ts.git"
-  },
-  "homepage": "https://github.com/twinstae/siheom-ts",
-  "bugs": {
-    "url": "https://github.com/twinstae/siheom-ts/issues"
-  },
-  "author": "Taehee Kim <rabolution@gmail.com> (https://x.com/stelo_kim)",
+  "packageManager": "bun@1.3.12",
   "patchedDependencies": {
     "slate-react@0.126.0": "patches/slate-react@0.126.0.patch"
   }

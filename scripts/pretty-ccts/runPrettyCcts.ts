@@ -9,15 +9,21 @@ export type PrettyCctsResult = {
 };
 
 export async function runPrettyCcts(
-  jsonText: string,
+  jsonTexts: string | string[],
   cwd: string,
 ): Promise<PrettyCctsResult> {
   const config = await loadConfig(cwd);
-  const tree = JSON.parse(jsonText) as CctsNode;
-  const findings = collectFindings(tree, config.scoreLimit).map((finding) => ({
-    ...finding,
-    path: resolveFindingPath(finding.path, cwd),
-  }));
+  const trees = (Array.isArray(jsonTexts) ? jsonTexts : [jsonTexts]).map(
+    (text) => JSON.parse(text) as CctsNode,
+  );
+
+  const findings = trees
+    .flatMap((tree) => collectFindings(tree, config.scoreLimit))
+    .map((finding) => ({
+      ...finding,
+      path: resolveFindingPath(finding.path, cwd),
+    }))
+    .sort((a, b) => b.score - a.score);
 
   return {
     output: formatFindings(findings, config.scoreLimit),

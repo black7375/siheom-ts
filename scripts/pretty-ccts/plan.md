@@ -14,3 +14,5 @@ Pipe `ccts-json` stdout into a jscpd-like console report of functions over `scor
 - [x] Summary line: `Found N complex functions (score > limit).`
 - [x] CLI reads JSON from stdin, config from cwd, prints report; exit 1 when findings exist
 - [x] `pretty-ccts` bin + root `ccts.config.json` wired for `… | pretty-ccts`
+- [x] `runPrettyCcts` accepts multiple ccts-json trees and merges findings across them
+- [x] CLI runs `ccts-json <path>` itself for each path arg (so `bun run ccts packages/ime/src` works)
