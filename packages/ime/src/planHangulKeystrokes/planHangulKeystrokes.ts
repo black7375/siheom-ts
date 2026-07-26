@@ -14,6 +14,7 @@ import {
   SEBEOL_COMPOUND_JONGSEONG_SEQ,
   SEBEOL_COMPOUND_JUNGSEONG_SEQ,
 } from "../_internal/jamoKeyMapSebeol";
+import { normalizeJungseong } from "../_internal/normalizeJungseong";
 import type { HangulCompositionBoundary, HangulKeyboardLayout } from "../profiles";
 
 export type HangulKeyStroke = {
@@ -46,6 +47,15 @@ type SyllableParts = {
   jongseong?: string;
 };
 
+type KeyMeta = { code: string; key: string; keyCode?: number };
+
+type PlannerState = {
+  committed: string;
+  runBase: string;
+  current: SyllableParts;
+  composing: boolean;
+};
+
 function syllableText(parts: SyllableParts): string {
   const { choseong, jungseong, jongseong } = parts;
   if (!choseong) return "";
@@ -53,15 +63,18 @@ function syllableText(parts: SyllableParts): string {
   return assemble([choseong, jungseong, ...(jongseong ? [jongseong] : [])]);
 }
 
-function pushBoundaryStroke(
-  strokes: HangulKeyStroke[],
-  meta: { code: string; key: string; keyCode?: number },
+function isShiftedPhysicalKey(key: string): boolean {
+  return key.length === 1 && key !== key.toLowerCase();
+}
+
+function boundaryStroke(
+  meta: KeyMeta,
   jamo: string,
   preeditSteps: [string, string],
   valuesAfterSteps: [string, string],
   commitAfterFirstStep: string,
-) {
-  strokes.push({
+): HangulKeyStroke {
+  return {
     jamo,
     code: meta.code,
     key: meta.key,
@@ -72,22 +85,17 @@ function pushBoundaryStroke(
     preeditSteps,
     valuesAfterSteps,
     commitAfterFirstStep,
-  });
+  };
 }
 
-function isShiftedPhysicalKey(key: string): boolean {
-  return key.length === 1 && key !== key.toLowerCase();
-}
-
-function pushSingleStepStroke(
-  strokes: HangulKeyStroke[],
-  meta: { code: string; key: string; keyCode?: number },
+function singleStepStroke(
+  meta: KeyMeta,
   jamo: string,
   preedit: string,
   value: string,
   composing: boolean,
-) {
-  strokes.push({
+): HangulKeyStroke {
+  return {
     jamo,
     code: meta.code,
     key: meta.key,
@@ -97,40 +105,40 @@ function pushSingleStepStroke(
     compositionStart: !composing,
     preeditSteps: [preedit],
     valuesAfterSteps: [value],
-  });
+  };
+}
+
+function tryAttachChoseong(current: SyllableParts, jamo: string): SyllableParts | null {
+  if (!canBeChoseong(jamo) || current.choseong) return null;
+  return { choseong: jamo };
+}
+
+function tryAttachJungseong(current: SyllableParts, jamo: string): SyllableParts | null {
+  if (!canBeJungseong(jamo) || !current.choseong) return null;
+  if (!current.jungseong) return { ...current, jungseong: jamo };
+  if (current.jongseong) return null;
+  try {
+    const combined = combineVowels(current.jungseong, jamo);
+    if (combined && canBeJungseong(combined)) return { ...current, jungseong: combined };
+  } catch {
+    // not a combinable vowel pair
+  }
+  return null;
+}
+
+function tryAttachJongseong(current: SyllableParts, jamo: string): SyllableParts | null {
+  if (!canBeJongseong(jamo) || !current.choseong || !current.jungseong) return null;
+  if (!current.jongseong) return { ...current, jongseong: jamo };
+  if (!canBeJongseong(`${current.jongseong}${jamo}`)) return null;
+  return { ...current, jongseong: `${current.jongseong}${jamo}` };
 }
 
 function tryGrowSyllable(current: SyllableParts, jamo: string): SyllableParts | null {
-  if (canBeChoseong(jamo) && !current.choseong) {
-    return { choseong: jamo };
-  }
-  if (canBeJungseong(jamo) && current.choseong && !current.jungseong) {
-    return { ...current, jungseong: jamo };
-  }
-  // Compound jungseong (ㅡ+ㅣ → ㅢ, etc.) — only when there is no jongseong yet
-  if (canBeJungseong(jamo) && current.choseong && current.jungseong && !current.jongseong) {
-    try {
-      const combined = combineVowels(current.jungseong, jamo);
-      if (combined && canBeJungseong(combined)) {
-        return { ...current, jungseong: combined };
-      }
-    } catch {
-      // not a combinable vowel pair
-    }
-  }
-  if (canBeJongseong(jamo) && current.choseong && current.jungseong && !current.jongseong) {
-    return { ...current, jongseong: jamo };
-  }
-  if (
-    canBeJongseong(jamo) &&
-    current.choseong &&
-    current.jungseong &&
-    current.jongseong &&
-    canBeJongseong(`${current.jongseong}${jamo}`)
-  ) {
-    return { ...current, jongseong: `${current.jongseong}${jamo}` };
-  }
-  return null;
+  return (
+    tryAttachChoseong(current, jamo) ??
+    tryAttachJungseong(current, jamo) ??
+    tryAttachJongseong(current, jamo)
+  );
 }
 
 export type PlanHangulKeystrokesOptions = {
@@ -142,20 +150,155 @@ export type PlanHangulKeystrokesOptions = {
   hangulKeyboard?: HangulKeyboardLayout;
 };
 
-function normalizeJungseong(raw: string): string {
-  if (raw.length <= 1) return raw;
-  const chars = [...raw];
-  let combined = chars[0] ?? "";
-  for (let i = 1; i < chars.length; i++) {
-    const next = chars[i];
-    if (!next) continue;
-    try {
-      combined = combineVowels(combined, next) ?? combined + next;
-    } catch {
-      combined += next;
-    }
+function planSebeolChoseong(
+  state: PlannerState,
+  choseong: string,
+): { state: PlannerState; strokes: HangulKeyStroke[] } {
+  const meta = keyForSebeolJamo(choseong, "choseong");
+  if (state.current.choseong && state.current.jungseong) {
+    const oldText = syllableText(state.current);
+    const afterCommit = state.committed + oldText;
+    return {
+      state: {
+        committed: afterCommit,
+        runBase: state.runBase,
+        current: { choseong },
+        composing: true,
+      },
+      strokes: [
+        boundaryStroke(meta, choseong, [oldText, choseong], [afterCommit, afterCommit + choseong], oldText),
+      ],
+    };
   }
-  return combined;
+  return {
+    state: {
+      ...state,
+      current: { choseong },
+      composing: true,
+    },
+    strokes: [
+      singleStepStroke(meta, choseong, choseong, state.committed + choseong, state.composing),
+    ],
+  };
+}
+
+function planSebeolJungseong(
+  state: PlannerState,
+  jungseong: string,
+): { state: PlannerState; strokes: HangulKeyStroke[] } {
+  const compoundSeq = SEBEOL_COMPOUND_JUNGSEONG_SEQ[jungseong];
+  if (compoundSeq) {
+    const [head, tail] = compoundSeq;
+    const withHead: SyllableParts = { ...state.current, jungseong: head };
+    const midPreedit = syllableText(withHead);
+    const withFull: SyllableParts = { ...state.current, jungseong };
+    const preedit = syllableText(withFull);
+    return {
+      state: { ...state, current: withFull },
+      strokes: [
+        singleStepStroke(
+          keyForSebeolJamo(head, "jungseong", { compoundHead: true }),
+          head,
+          midPreedit,
+          state.committed + midPreedit,
+          true,
+        ),
+        singleStepStroke(
+          keyForSebeolJamo(tail, "jungseong"),
+          jungseong,
+          preedit,
+          state.committed + preedit,
+          true,
+        ),
+      ],
+    };
+  }
+  const next: SyllableParts = { ...state.current, jungseong };
+  const preedit = syllableText(next);
+  return {
+    state: { ...state, current: next },
+    strokes: [
+      singleStepStroke(
+        keyForSebeolJamo(jungseong, "jungseong"),
+        jungseong,
+        preedit,
+        state.committed + preedit,
+        true,
+      ),
+    ],
+  };
+}
+
+function planSebeolJongseong(
+  state: PlannerState,
+  jongseong: string,
+): { state: PlannerState; strokes: HangulKeyStroke[] } {
+  const compoundJong = SEBEOL_COMPOUND_JONGSEONG_SEQ[jongseong];
+  if (compoundJong) {
+    const [head, tail] = compoundJong;
+    const withHead: SyllableParts = { ...state.current, jongseong: head };
+    const midPreedit = syllableText(withHead);
+    const withFull: SyllableParts = { ...state.current, jongseong };
+    const preedit = syllableText(withFull);
+    return {
+      state: { ...state, current: withFull },
+      strokes: [
+        singleStepStroke(
+          keyForSebeolJamo(head, "jongseong"),
+          head,
+          midPreedit,
+          state.committed + midPreedit,
+          true,
+        ),
+        singleStepStroke(
+          keyForSebeolJamo(tail, "jongseong"),
+          jongseong,
+          preedit,
+          state.committed + preedit,
+          true,
+        ),
+      ],
+    };
+  }
+  const next: SyllableParts = { ...state.current, jongseong };
+  const preedit = syllableText(next);
+  return {
+    state: { ...state, current: next },
+    strokes: [
+      singleStepStroke(
+        keyForSebeolJamo(jongseong, "jongseong"),
+        jongseong,
+        preedit,
+        state.committed + preedit,
+        true,
+      ),
+    ],
+  };
+}
+
+function planOneSebeolSyllable(
+  state: PlannerState,
+  char: string,
+): { state: PlannerState; strokes: HangulKeyStroke[] } {
+  const parts = disassembleCompleteCharacter(char);
+  if (!parts?.choseong) {
+    throw new Error(`Cannot plan 세벌식-ngs for character: ${char}`);
+  }
+  const choseong = parts.choseong;
+  const jungseong = parts.jungseong ? normalizeJungseong(parts.jungseong) : undefined;
+  const jongseong = parts.jongseong ? parts.jongseong : undefined;
+
+  let next = planSebeolChoseong(state, choseong);
+  const strokes = [...next.strokes];
+  if (jungseong) {
+    next = planSebeolJungseong(next.state, jungseong);
+    strokes.push(...next.strokes);
+  }
+  if (jongseong) {
+    next = planSebeolJongseong(next.state, jongseong);
+    strokes.push(...next.strokes);
+  }
+  return { state: next.state, strokes };
 }
 
 /**
@@ -164,87 +307,150 @@ function normalizeJungseong(raw: string): string {
  * ㅢ is one key (Digit8); ㅘ/ㅝ/… expand to two keys (Slash/Digit9 head + vowel).
  */
 function planSebeolsikNgs(text: string, prefix: string): HangulKeyStroke[] {
+  let state: PlannerState = {
+    committed: prefix,
+    runBase: "",
+    current: {},
+    composing: false,
+  };
   const strokes: HangulKeyStroke[] = [];
-  let committed = prefix;
-  let current: SyllableParts = {};
-  let composing = false;
-
   for (const char of text) {
     if (!char.trim()) continue;
-    const parts = disassembleCompleteCharacter(char);
-    if (!parts?.choseong) {
-      throw new Error(`Cannot plan 세벌식-ngs for character: ${char}`);
-    }
+    const planned = planOneSebeolSyllable(state, char);
+    state = planned.state;
+    strokes.push(...planned.strokes);
+  }
+  return strokes;
+}
 
-    const choseong = parts.choseong;
-    const jungseong = parts.jungseong ? normalizeJungseong(parts.jungseong) : undefined;
-    const jongseong = parts.jongseong ? parts.jongseong : undefined;
-    const choMeta = keyForSebeolJamo(choseong, "choseong");
+function stripJongseongForVowelCarry(current: SyllableParts): {
+  stripped: SyllableParts;
+  moved: string;
+} {
+  const jongChars = [...(current.jongseong ?? "")];
+  const moved = jongChars.length > 1 ? (jongChars[jongChars.length - 1] ?? "") : (current.jongseong ?? "");
+  const keptJong = jongChars.length > 1 ? jongChars[0] : undefined;
+  return {
+    moved,
+    stripped: {
+      choseong: current.choseong,
+      jungseong: current.jungseong,
+      ...(keptJong ? { jongseong: keptJong } : {}),
+    },
+  };
+}
 
-    if (current.choseong && current.jungseong) {
-      const oldText = syllableText(current);
-      const afterCommit = committed + oldText;
-      pushBoundaryStroke(
-        strokes,
-        choMeta,
-        choseong,
-        [oldText, choseong],
-        [afterCommit, afterCommit + choseong],
-        oldText,
-      );
-      committed = afterCommit;
-      current = { choseong };
-      composing = true;
-    } else {
-      current = { choseong };
-      pushSingleStepStroke(strokes, choMeta, choseong, choseong, committed + choseong, composing);
-      composing = true;
-    }
+function planJungseongAfterJongseong(
+  state: PlannerState,
+  jamo: string,
+  meta: KeyMeta,
+  boundary: HangulCompositionBoundary,
+): { state: PlannerState; strokes: HangulKeyStroke[] } | null {
+  if (!canBeJungseong(jamo) || !state.current.choseong || !state.current.jungseong || !state.current.jongseong) {
+    return null;
+  }
+  const { stripped, moved } = stripJongseongForVowelCarry(state.current);
+  const strippedText = syllableText(stripped);
+  const nextCurrent: SyllableParts = { choseong: moved, jungseong: jamo };
+  const nextPreedit = syllableText(nextCurrent);
 
-    if (jungseong) {
-      const compoundSeq = SEBEOL_COMPOUND_JUNGSEONG_SEQ[jungseong];
-      if (compoundSeq) {
-        const [head, tail] = compoundSeq;
-        const headMeta = keyForSebeolJamo(head, "jungseong", { compoundHead: true });
-        current = { ...current, jungseong: head };
-        const midPreedit = syllableText(current);
-        pushSingleStepStroke(strokes, headMeta, head, midPreedit, committed + midPreedit, true);
-
-        const tailMeta = keyForSebeolJamo(tail, "jungseong");
-        current = { ...current, jungseong };
-        const preedit = syllableText(current);
-        pushSingleStepStroke(strokes, tailMeta, jungseong, preedit, committed + preedit, true);
-      } else {
-        const jungMeta = keyForSebeolJamo(jungseong, "jungseong");
-        current = { ...current, jungseong };
-        const preedit = syllableText(current);
-        pushSingleStepStroke(strokes, jungMeta, jungseong, preedit, committed + preedit, true);
-      }
-    }
-
-    if (jongseong) {
-      const compoundJong = SEBEOL_COMPOUND_JONGSEONG_SEQ[jongseong];
-      if (compoundJong) {
-        const [head, tail] = compoundJong;
-        const headMeta = keyForSebeolJamo(head, "jongseong");
-        current = { ...current, jongseong: head };
-        const midPreedit = syllableText(current);
-        pushSingleStepStroke(strokes, headMeta, head, midPreedit, committed + midPreedit, true);
-
-        const tailMeta = keyForSebeolJamo(tail, "jongseong");
-        current = { ...current, jongseong };
-        const preedit = syllableText(current);
-        pushSingleStepStroke(strokes, tailMeta, jongseong, preedit, committed + preedit, true);
-      } else {
-        const jongMeta = keyForSebeolJamo(jongseong, "jongseong");
-        current = { ...current, jongseong };
-        const preedit = syllableText(current);
-        pushSingleStepStroke(strokes, jongMeta, jongseong, preedit, committed + preedit, true);
-      }
-    }
+  if (boundary === "run") {
+    const runBase = state.runBase + strippedText;
+    const preedit = runBase + nextPreedit;
+    return {
+      state: {
+        committed: state.committed,
+        runBase,
+        current: nextCurrent,
+        composing: true,
+      },
+      strokes: [singleStepStroke(meta, jamo, preedit, state.committed + preedit, state.composing)],
+    };
   }
 
-  return strokes;
+  const afterCommit = state.committed + strippedText;
+  return {
+    state: {
+      committed: afterCommit,
+      runBase: state.runBase,
+      current: nextCurrent,
+      composing: true,
+    },
+    strokes: [
+      boundaryStroke(
+        meta,
+        jamo,
+        [strippedText, nextPreedit],
+        [afterCommit, afterCommit + nextPreedit],
+        strippedText,
+      ),
+    ],
+  };
+}
+
+function planGrownStroke(
+  state: PlannerState,
+  jamo: string,
+  meta: KeyMeta,
+): { state: PlannerState; strokes: HangulKeyStroke[] } | null {
+  const grown = tryGrowSyllable(state.current, jamo);
+  if (!grown) return null;
+  const preedit = state.runBase + syllableText(grown);
+  return {
+    state: { ...state, current: grown, composing: true },
+    strokes: [singleStepStroke(meta, jamo, preedit, state.committed + preedit, state.composing)],
+  };
+}
+
+function planChoseongAfterCompleteSyllable(
+  state: PlannerState,
+  jamo: string,
+  meta: KeyMeta,
+  boundary: HangulCompositionBoundary,
+): { state: PlannerState; strokes: HangulKeyStroke[] } | null {
+  if (!canBeChoseong(jamo) || !state.current.choseong || !state.current.jungseong) return null;
+  const oldText = syllableText(state.current);
+
+  if (boundary === "run") {
+    const runBase = state.runBase + oldText;
+    const preedit = runBase + jamo;
+    return {
+      state: {
+        committed: state.committed,
+        runBase,
+        current: { choseong: jamo },
+        composing: true,
+      },
+      strokes: [singleStepStroke(meta, jamo, preedit, state.committed + preedit, state.composing)],
+    };
+  }
+
+  const afterCommit = state.committed + oldText;
+  return {
+    state: {
+      committed: afterCommit,
+      runBase: state.runBase,
+      current: { choseong: jamo },
+      composing: true,
+    },
+    strokes: [
+      boundaryStroke(meta, jamo, [oldText, jamo], [afterCommit, afterCommit + jamo], oldText),
+    ],
+  };
+}
+
+function planOneDubeolsikJamo(
+  state: PlannerState,
+  jamo: string,
+  boundary: HangulCompositionBoundary,
+): { state: PlannerState; strokes: HangulKeyStroke[] } {
+  const meta = keyForJamo(jamo);
+  const afterJong =
+    planJungseongAfterJongseong(state, jamo, meta, boundary) ??
+    planGrownStroke(state, jamo, meta) ??
+    planChoseongAfterCompleteSyllable(state, jamo, meta, boundary);
+  if (afterJong) return afterJong;
+  throw new Error(`Cannot place jamo "${jamo}" onto ${JSON.stringify(state.current)}`);
 }
 
 /** Plan per-keystroke Hangul IME behavior for `text` (2-set style / ibus-hangul-like). */
@@ -256,99 +462,19 @@ export function planHangulKeystrokes(
     return planSebeolsikNgs(text, options.prefix ?? "");
   }
 
-  const jamos = hangulJamos(text);
-  const strokes: HangulKeyStroke[] = [];
   const boundary = options.compositionBoundary ?? "syllable";
-  let committed = options.prefix ?? "";
-  /** Syllables already in the active run composition (android); empty for syllable mode. */
-  let runBase = "";
-  let current: SyllableParts = {};
-  let composing = false;
-
-  for (const jamo of jamos) {
-    const meta = keyForJamo(jamo);
-
-    // Vowel after jongseong: commit previous syllable, start next with (moved jong)+vowel.
-    // Double batchim (ㄹㅅ→ㄽ): keep first jong, move last jong as next choseong (철+수).
-    if (canBeJungseong(jamo) && current.choseong && current.jungseong && current.jongseong) {
-      const jongChars = [...current.jongseong];
-      const moved =
-        jongChars.length > 1 ? (jongChars[jongChars.length - 1] ?? "") : current.jongseong;
-      const keptJong = jongChars.length > 1 ? jongChars[0] : undefined;
-      const stripped: SyllableParts = {
-        choseong: current.choseong,
-        jungseong: current.jungseong,
-        ...(keptJong ? { jongseong: keptJong } : {}),
-      };
-      const strippedText = syllableText(stripped);
-      current = { choseong: moved, jungseong: jamo };
-      const nextPreedit = syllableText(current);
-
-      if (boundary === "run") {
-        runBase += strippedText;
-        const preedit = runBase + nextPreedit;
-        pushSingleStepStroke(strokes, meta, jamo, preedit, committed + preedit, composing);
-        composing = true;
-        continue;
-      }
-
-      const afterCommit = committed + strippedText;
-      pushBoundaryStroke(
-        strokes,
-        meta,
-        jamo,
-        [strippedText, nextPreedit],
-        [afterCommit, afterCommit + nextPreedit],
-        strippedText,
-      );
-
-      committed = afterCommit;
-      composing = true;
-      continue;
-    }
-
-    const grown = tryGrowSyllable(current, jamo);
-    if (grown) {
-      current = grown;
-      const preedit = runBase + syllableText(current);
-      const value = committed + preedit;
-      pushSingleStepStroke(strokes, meta, jamo, preedit, value, composing);
-      composing = true;
-      continue;
-    }
-
-    // New choseong after a syllable that already has a vowel (and possibly batchim)
-    if (canBeChoseong(jamo) && current.choseong && current.jungseong) {
-      const oldText = syllableText(current);
-
-      if (boundary === "run") {
-        runBase += oldText;
-        current = { choseong: jamo };
-        const preedit = runBase + jamo;
-        pushSingleStepStroke(strokes, meta, jamo, preedit, committed + preedit, composing);
-        composing = true;
-        continue;
-      }
-
-      const afterCommit = committed + oldText;
-      pushBoundaryStroke(
-        strokes,
-        meta,
-        jamo,
-        [oldText, jamo],
-        [afterCommit, afterCommit + jamo],
-        oldText,
-      );
-
-      committed = afterCommit;
-      current = { choseong: jamo };
-      composing = true;
-      continue;
-    }
-
-    throw new Error(`Cannot place jamo "${jamo}" onto ${JSON.stringify(current)}`);
+  let state: PlannerState = {
+    committed: options.prefix ?? "",
+    runBase: "",
+    current: {},
+    composing: false,
+  };
+  const strokes: HangulKeyStroke[] = [];
+  for (const jamo of hangulJamos(text)) {
+    const planned = planOneDubeolsikJamo(state, jamo, boundary);
+    state = planned.state;
+    strokes.push(...planned.strokes);
   }
-
   return strokes;
 }
 

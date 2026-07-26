@@ -15,10 +15,6 @@ import lcSlatePhGolden from "../../fixtures/linux-chrome-slate-placeholder-fixed
 import lcSlatePlGolden from "../../fixtures/linux-chrome-slate-plain-control/first-hangul-가.json";
 import lfSlatePhGolden from "../../fixtures/linux-firefox-slate-placeholder-fixed/first-hangul-가.json";
 import lfSlatePlGolden from "../../fixtures/linux-firefox-slate-plain-control/first-hangul-가.json";
-
-function visibleHangul(text: string): string {
-  return text.replace(/[\uFEFF\u200B]/g, "");
-}
 import { attachImeRecorder } from "../attachImeRecorder";
 import { composeEnter } from "../composeEnter";
 import { resolveProfile } from "../profiles";
@@ -26,6 +22,104 @@ import safariEnterGolden from "../../fixtures/macos-safari-apple/broken-김-ente
 import { goldenCritical } from "../goldenCritical";
 import { toCriticalEvents } from "../toCriticalEvents";
 import { planHangulKeystrokes } from "../planHangulKeystrokes";
+
+function visibleHangul(text: string): string {
+  return text.replace(/[\uFEFF\u200B]/g, "");
+}
+
+type ComposedEvent = Awaited<ReturnType<typeof composeHangul>>[number];
+
+function isInputOfType(event: ComposedEvent, inputType: string, data?: string): boolean {
+  if (event.type !== "input" || event.inputType !== inputType) return false;
+  if (data === undefined) return true;
+  return event.data === data;
+}
+
+function isCompositionEnd(event: ComposedEvent): boolean {
+  return event.type === "compositionend";
+}
+
+function isOverflowClampedInput(event: ComposedEvent): boolean {
+  return (
+    event.type === "input" &&
+    event.inputType === "insertCompositionText" &&
+    event.data === "가나다라마바사" &&
+    event.value === "가나다라마바"
+  );
+}
+
+function installHostMaxLengthClamp(input: HTMLInputElement): void {
+  input.addEventListener("input", clampInputToMaxLength);
+}
+
+function clampInputToMaxLength(this: HTMLInputElement): void {
+  if (this.value.length > this.maxLength) {
+    this.value = this.value.slice(0, this.maxLength);
+  }
+}
+
+async function expectSafariMaxLengthRejectsOverflow(): Promise<void> {
+  const input = document.createElement("input");
+  input.maxLength = 3;
+  document.body.append(input);
+
+  const events = await composeHangul(input, "가나다라", { profile: "macos-safari-apple" });
+
+  expect(input.value).toBe("가나다");
+  expect(events.some((e) => isInputOfType(e, "deleteCompositionText"))).toBe(true);
+  expect(events.some((e) => isInputOfType(e, "insertFromComposition", ""))).toBe(true);
+
+  input.remove();
+}
+
+async function expectSafariMacrotaskCommitsBetweenSyllables(): Promise<void> {
+  const input = document.createElement("input");
+  document.body.append(input);
+
+  const events = await composeHangul(input, "김태", {
+    profile: "macos-safari-apple",
+    settle: "macrotask",
+  });
+
+  expect(input.value).toBe("김태");
+  expect(events.filter(isCompositionEnd).length).toBeGreaterThanOrEqual(2);
+  expect(events.some((e) => isInputOfType(e, "insertFromComposition", "김"))).toBe(true);
+
+  input.remove();
+}
+
+async function expectSafariHostClampRejectsViaEmptyInsertText(): Promise<void> {
+  const input = document.createElement("input");
+  input.maxLength = 3;
+  document.body.append(input);
+  installHostMaxLengthClamp(input);
+
+  const events = await composeHangul(input, "가나다라", { profile: "macos-safari-apple" });
+
+  expect(input.value).toBe("가나다");
+  expect(events.some((e) => isInputOfType(e, "insertText", ""))).toBe(true);
+
+  input.remove();
+}
+
+async function expectAndroidHostClampKeepsOverflowData(): Promise<void> {
+  const input = document.createElement("input");
+  input.maxLength = 6;
+  document.body.append(input);
+  installHostMaxLengthClamp(input);
+
+  const events = await composeHangul(input, "가나다라마바사", {
+    profile: "android-chrome",
+    commitFinal: false,
+  });
+
+  expect(input.value).toBe("가나다라마바");
+  expect(events.find(isOverflowClampedInput)).toBeDefined();
+  expect(events.some((e) => isInputOfType(e, "insertCompositionText", ""))).toBe(false);
+  expect(events.filter(isCompositionEnd)).toHaveLength(0);
+
+  input.remove();
+}
 
 describe("planHangulKeystrokes", () => {
   it("plans 김 with one composition session ending after ㅁ", () => {
@@ -398,99 +492,15 @@ describe("composeHangul", () => {
     input.remove();
   });
 
-  it("macos-safari-apple with maxLength rejects overflow on composition path", async () => {
-    const input = document.createElement("input");
-    input.maxLength = 3;
-    document.body.append(input);
+  it("macos-safari-apple with maxLength rejects overflow on composition path", () =>
+    expectSafariMaxLengthRejectsOverflow());
 
-    const events = await composeHangul(input, "가나다라", { profile: "macos-safari-apple" });
+  it("macos-safari-apple settle macrotask commits between syllables on composition path", () =>
+    expectSafariMacrotaskCommitsBetweenSyllables());
 
-    expect(input.value).toBe("가나다");
-    expect(events.some((e) => e.type === "input" && e.inputType === "deleteCompositionText")).toBe(
-      true,
-    );
-    expect(
-      events.some(
-        (e) => e.type === "input" && e.inputType === "insertFromComposition" && e.data === "",
-      ),
-    ).toBe(true);
+  it("macos-safari-apple maxLength with host clamp rejects via empty insertText", () =>
+    expectSafariHostClampRejectsViaEmptyInsertText());
 
-    input.remove();
-  });
-
-  it("macos-safari-apple settle macrotask commits between syllables on composition path", async () => {
-    const input = document.createElement("input");
-    document.body.append(input);
-
-    const events = await composeHangul(input, "김태", {
-      profile: "macos-safari-apple",
-      settle: "macrotask",
-    });
-
-    expect(input.value).toBe("김태");
-    const compositionEnds = events.filter((e) => e.type === "compositionend");
-    expect(compositionEnds.length).toBeGreaterThanOrEqual(2);
-    expect(
-      events.some(
-        (e) => e.type === "input" && e.inputType === "insertFromComposition" && e.data === "김",
-      ),
-    ).toBe(true);
-
-    input.remove();
-  });
-
-  it("macos-safari-apple maxLength with host clamp rejects via empty insertText", async () => {
-    const input = document.createElement("input");
-    input.maxLength = 3;
-    document.body.append(input);
-    input.addEventListener("input", () => {
-      if (input.value.length > input.maxLength) {
-        input.value = input.value.slice(0, input.maxLength);
-      }
-    });
-
-    const events = await composeHangul(input, "가나다라", { profile: "macos-safari-apple" });
-
-    expect(input.value).toBe("가나다");
-    expect(
-      events.some((e) => e.type === "input" && e.inputType === "insertText" && e.data === ""),
-    ).toBe(true);
-
-    input.remove();
-  });
-
-  it("android-chrome host clamp keeps overflow data with clamped value (no empty reject)", async () => {
-    const input = document.createElement("input");
-    input.maxLength = 6;
-    document.body.append(input);
-    input.addEventListener("input", () => {
-      if (input.value.length > input.maxLength) {
-        input.value = input.value.slice(0, input.maxLength);
-      }
-    });
-
-    const events = await composeHangul(input, "가나다라마바사", {
-      profile: "android-chrome",
-      commitFinal: false,
-    });
-
-    expect(input.value).toBe("가나다라마바");
-    const overflowInput = events.find(
-      (e) =>
-        e.type === "input" &&
-        e.inputType === "insertCompositionText" &&
-        e.data === "가나다라마바사" &&
-        e.value === "가나다라마바",
-    );
-    expect(overflowInput).toBeDefined();
-    // Desktop Chrome reject path uses empty insertCompositionText + compositionend.
-    expect(
-      events.some(
-        (e) => e.type === "input" && e.inputType === "insertCompositionText" && e.data === "",
-      ),
-    ).toBe(false);
-    expect(events.filter((e) => e.type === "compositionend")).toHaveLength(0);
-
-    input.remove();
-  });
+  it("android-chrome host clamp keeps overflow data with clamped value (no empty reject)", () =>
+    expectAndroidHostClampKeepsOverflowData());
 });
