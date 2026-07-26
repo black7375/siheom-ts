@@ -1,5 +1,6 @@
 import type { A11yStates } from "./types.ts";
 import { isCheckableRole } from "./ariaRoles.ts";
+import { fromDefinedEntries, mergeDefinedParts } from "./assignDefined.ts";
 
 function checkBooleanAttribute(
   el: Element,
@@ -123,82 +124,29 @@ export function computeStates(
   role: string,
   isVerbose = false,
 ): A11yStates | undefined {
-  const states: A11yStates = {};
-  let hasAny = false;
+  return mergeDefinedParts(
+    collectAlwaysStates(el, isVerbose),
+    collectCheckedState(el, role, isVerbose),
+  );
+}
 
-  const hidden = computeAriaHidden(el, isVerbose);
-  if (hidden !== undefined) {
-    states.hidden = hidden;
-    hasAny = true;
-  }
+function collectAlwaysStates(el: Element, isVerbose: boolean): A11yStates {
+  return fromDefinedEntries([
+    ["hidden", computeAriaHidden(el, isVerbose)],
+    ["disabled", computeAriaDisabled(el, isVerbose)],
+    ["modal", computeAriaModal(el, isVerbose)],
+    ["expanded", computeAriaExpanded(el, isVerbose)],
+    ["pressed", computeAriaPressed(el, isVerbose)],
+    ["selected", computeAriaSelected(el, isVerbose)],
+    ["current", computeAriaCurrent(el, isVerbose)],
+    ["invalid", computeAriaInvalid(el, isVerbose)],
+    ["required", computeAriaRequired(el, isVerbose)],
+    ["readonly", computeAriaReadonly(el, isVerbose)],
+    ["busy", computeAriaBusy(el, isVerbose)],
+  ]);
+}
 
-  const disabled = computeAriaDisabled(el, isVerbose);
-  if (disabled !== undefined) {
-    states.disabled = disabled;
-    hasAny = true;
-  }
-
-  const modal = computeAriaModal(el, isVerbose);
-  if (modal !== undefined) {
-    states.modal = modal;
-    hasAny = true;
-  }
-
-  const expanded = computeAriaExpanded(el, isVerbose);
-  if (expanded !== undefined) {
-    states.expanded = expanded;
-    hasAny = true;
-  }
-
-  const pressed = computeAriaPressed(el, isVerbose);
-  if (pressed !== undefined) {
-    states.pressed = pressed;
-    hasAny = true;
-  }
-
-  if (isCheckableRole(role)) {
-    const checked = computeAriaChecked(el, isVerbose);
-    if (checked !== undefined) {
-      states.checked = checked;
-      hasAny = true;
-    }
-  }
-
-  const selected = computeAriaSelected(el, isVerbose);
-  if (selected !== undefined) {
-    states.selected = selected;
-    hasAny = true;
-  }
-
-  const current = computeAriaCurrent(el, isVerbose);
-  if (current !== undefined) {
-    states.current = current;
-    hasAny = true;
-  }
-
-  const invalid = computeAriaInvalid(el, isVerbose);
-  if (invalid !== undefined) {
-    states.invalid = invalid;
-    hasAny = true;
-  }
-
-  const required = computeAriaRequired(el, isVerbose);
-  if (required !== undefined) {
-    states.required = required;
-    hasAny = true;
-  }
-
-  const readonly = computeAriaReadonly(el, isVerbose);
-  if (readonly !== undefined) {
-    states.readonly = readonly;
-    hasAny = true;
-  }
-
-  const busy = computeAriaBusy(el, isVerbose);
-  if (busy !== undefined) {
-    states.busy = busy;
-    hasAny = true;
-  }
-
-  return hasAny ? states : undefined;
+function collectCheckedState(el: Element, role: string, isVerbose: boolean): A11yStates {
+  if (!isCheckableRole(role)) return {};
+  return fromDefinedEntries([["checked", computeAriaChecked(el, isVerbose)]]);
 }
