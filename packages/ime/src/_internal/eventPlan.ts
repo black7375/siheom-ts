@@ -17,61 +17,109 @@ export type EventPlanStep =
   | { kind: "clearSession" }
   | { kind: "markPendingMaxLengthReject"; preedit: string; overflowValue: string };
 
+function playKeyPlanStep(
+  trace: ImeTraceEmitter,
+  step: Extract<EventPlanStep, { kind: "keydown" | "keyup" }>,
+): void {
+  if (step.kind === "keydown") {
+    trace.keydown(step.fields);
+    return;
+  }
+  trace.keyup(step.fields);
+}
+
+function playCompositionPlanStep(
+  trace: ImeTraceEmitter,
+  step: Extract<EventPlanStep, { kind: "compositionstart" | "compositionupdate" | "compositionend" }>,
+): void {
+  if (step.kind === "compositionstart") {
+    trace.compositionStart(step.data ?? "", step.value);
+    return;
+  }
+  if (step.kind === "compositionupdate") {
+    trace.compositionUpdate(step.data, step.value);
+    return;
+  }
+  trace.compositionEnd(step.data, step.value);
+}
+
+function playInputPlanStep(
+  trace: ImeTraceEmitter,
+  step: Extract<EventPlanStep, { kind: "beforeinput" | "input" }>,
+): void {
+  if (step.kind === "beforeinput") {
+    trace.beforeInput(step.fields);
+    return;
+  }
+  trace.input(step.fields);
+}
+
+function playDomMutationPlanStep(
+  inputElement: HTMLInputElement | HTMLTextAreaElement | null,
+  step: Extract<EventPlanStep, { kind: "setValue" | "setSession" | "clearSession" }>,
+): void {
+  if (!inputElement) return;
+  if (step.kind === "setValue") {
+    setInputValue(inputElement, step.value, step.caret);
+    return;
+  }
+  if (step.kind === "setSession") {
+    setImeSession(inputElement, step.session);
+    return;
+  }
+  clearImeSession(inputElement);
+}
+
+function playPendingMaxLengthRejectStep(
+  inputElement: HTMLInputElement | HTMLTextAreaElement | null,
+  step: Extract<EventPlanStep, { kind: "markPendingMaxLengthReject" }>,
+): void {
+  if (!inputElement) return;
+  const session = getImeSession(inputElement);
+  if (!session) return;
+  setImeSession(inputElement, {
+    ...session,
+    pendingMaxLengthReject: {
+      preedit: step.preedit,
+      overflowValue: step.overflowValue,
+    },
+  });
+}
+
+function playEventPlanStep(
+  trace: ImeTraceEmitter,
+  inputElement: HTMLInputElement | HTMLTextAreaElement | null,
+  step: EventPlanStep,
+): void {
+  switch (step.kind) {
+    case "keydown":
+    case "keyup":
+      playKeyPlanStep(trace, step);
+      return;
+    case "compositionstart":
+    case "compositionupdate":
+    case "compositionend":
+      playCompositionPlanStep(trace, step);
+      return;
+    case "beforeinput":
+    case "input":
+      playInputPlanStep(trace, step);
+      return;
+    case "setValue":
+    case "setSession":
+    case "clearSession":
+      playDomMutationPlanStep(inputElement, step);
+      return;
+    case "markPendingMaxLengthReject":
+      playPendingMaxLengthRejectStep(inputElement, step);
+      return;
+  }
+}
+
 /** Execute a pure event plan against an IME trace shell. */
 export function playEventPlan(trace: ImeTraceEmitter, steps: EventPlanStep[]): void {
   const inputElement = trace instanceof ImeTrace ? trace.element : null;
-
   for (const step of steps) {
-    switch (step.kind) {
-      case "keydown":
-        trace.keydown(step.fields);
-        break;
-      case "keyup":
-        trace.keyup(step.fields);
-        break;
-      case "compositionstart":
-        trace.compositionStart(step.data ?? "", step.value);
-        break;
-      case "compositionupdate":
-        trace.compositionUpdate(step.data, step.value);
-        break;
-      case "compositionend":
-        trace.compositionEnd(step.data, step.value);
-        break;
-      case "beforeinput":
-        trace.beforeInput(step.fields);
-        break;
-      case "input":
-        trace.input(step.fields);
-        break;
-      case "setValue":
-        if (inputElement) {
-          setInputValue(inputElement, step.value, step.caret);
-        }
-        break;
-      case "setSession":
-        if (inputElement) {
-          setImeSession(inputElement, step.session);
-        }
-        break;
-      case "clearSession":
-        if (inputElement) {
-          clearImeSession(inputElement);
-        }
-        break;
-      case "markPendingMaxLengthReject": {
-        if (!inputElement) break;
-        const session = getImeSession(inputElement);
-        if (!session) break;
-        setImeSession(inputElement, {
-          ...session,
-          pendingMaxLengthReject: {
-            preedit: step.preedit,
-            overflowValue: step.overflowValue,
-          },
-        });
-        break;
-      }
-    }
+    playEventPlanStep(trace, inputElement, step);
   }
 }

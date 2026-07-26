@@ -8,7 +8,7 @@ import {
   type ComposedEventRecord,
 } from "../_internal";
 import { consumeImeControlledWriteback } from "../markImeControlledWriteback";
-import { resolveProfile, type ImeProfile } from "../profiles";
+import { resolveProfile, type HangulComposeMode, type ImeProfile } from "../profiles";
 import {
   composeHangulSafariComposition,
   composeHangulSafariReplacement,
@@ -65,6 +65,17 @@ export type ComposeHangulOptions = {
 
 type StrokeAbort = "aborted-blur" | "aborted-deferred" | "maxlength-reject" | "ok";
 
+type AlternateComposeContext = {
+  element: HTMLInputElement | HTMLTextAreaElement;
+  text: string;
+  strokes: HangulKeyStroke[];
+  suffix: string;
+  profile: ImeProfile;
+  options: ComposeHangulOptions;
+};
+
+type AlternateComposer = (ctx: AlternateComposeContext) => Promise<ComposedEventRecord[]>;
+
 async function playRemainingIsolated(
   trace: ImeTrace,
   remaining: string[],
@@ -87,7 +98,7 @@ async function playRemainingIsolated(
   }
 }
 
-async function playStrokeRespectingBlur(
+async function playChromePreeditStepsWithAbort(
   trace: ImeTrace,
   stroke: HangulKeyStroke,
   suffix: string,
@@ -95,11 +106,9 @@ async function playStrokeRespectingBlur(
   settle: "microtask" | "macrotask",
   deferredUpdateRace: boolean,
   profile: ImeProfile,
-): Promise<StrokeAbort> {
+): Promise<StrokeAbort | null> {
   const { element } = trace;
   const carets = stroke.valuesAfterSteps.map((value) => value.length - suffix.length);
-
-  playEventPlan(trace, planChromeStrokeHead(stroke, profile));
 
   for (let i = 0; i < stroke.preeditSteps.length; i++) {
     const preedit = stroke.preeditSteps[i] ?? "";
@@ -134,139 +143,158 @@ async function playStrokeRespectingBlur(
     );
   }
 
-  playEventPlan(trace, planChromeStrokeKeyup(stroke, profile));
-
-  const pendingReject = takePendingMaxLengthReject(element);
-  if (pendingReject) {
-    const limit = readMaxLength(element);
-    if (limit !== null && element.value.length > limit) {
-      playEventPlan(
-        trace,
-        planChromePendingOverflowReject(pendingReject.preedit, pendingReject.overflowValue, limit),
-      );
-    }
-    return "maxlength-reject";
-  }
-
-  return "ok";
+  return null;
 }
 
-/**
- * Type Hangul `text` into an input by dispatching composition-faithful events.
- * If the field blurs mid-composition (focus-steal), remaining jamos are typed as
- * isolated compositions — matching OS 풀어쓰기 (e.g. 김태희 → ㄱㅣㅁㅌㅐㅎㅡㅣ).
- * Deferred controlled writeback aborts similarly but without compositionend events.
- */
-export async function composeHangul(
-  element: HTMLInputElement | HTMLTextAreaElement,
-  text: string,
-  options: ComposeHangulOptions = {},
-): Promise<ComposedEventRecord[]> {
-  const {
-    commitFinal = true,
-    settle = "microtask",
-    deferredUpdateRace = false,
-    profile: profileOpt,
-  } = options;
-  const profile = resolveProfile(profileOpt);
-  const selectionStart = element.selectionStart ?? element.value.length;
-  const selectionEnd = element.selectionEnd ?? element.value.length;
-  const prefix = element.value.slice(0, selectionStart);
-  const suffix = element.value.slice(selectionEnd);
-  const strokes = planHangulKeystrokes(text, {
-    prefix,
-    compositionBoundary: profile.hangulCompositionBoundary,
-    hangulKeyboard: profile.hangulKeyboard,
-  });
-  const trace = new ImeTrace(element);
+function playPendingMaxLengthRejectIfNeeded(trace: ImeTrace): StrokeAbort | null {
+  const { element } = trace;
+  const pendingReject = takePendingMaxLengthReject(element);
+  if (!pendingReject) return null;
+  const limit = readMaxLength(element);
+  if (limit !== null && element.value.length > limit) {
+    playEventPlan(
+      trace,
+      planChromePendingOverflowReject(pendingReject.preedit, pendingReject.overflowValue, limit),
+    );
+  }
+  return "maxlength-reject";
+}
 
+async function playStrokeRespectingBlur(
+  trace: ImeTrace,
+  stroke: HangulKeyStroke,
+  suffix: string,
+  blurred: { current: boolean },
+  settle: "microtask" | "macrotask",
+  deferredUpdateRace: boolean,
+  profile: ImeProfile,
+): Promise<StrokeAbort> {
+  playEventPlan(trace, planChromeStrokeHead(stroke, profile));
+
+  const abort = await playChromePreeditStepsWithAbort(
+    trace,
+    stroke,
+    suffix,
+    blurred,
+    settle,
+    deferredUpdateRace,
+    profile,
+  );
+  if (abort) return abort;
+
+  playEventPlan(trace, planChromeStrokeKeyup(stroke, profile));
+  return playPendingMaxLengthRejectIfNeeded(trace) ?? "ok";
+}
+
+const ALTERNATE_COMPOSERS = {
+  replacement: ({ element, strokes, suffix, profile, options }) =>
+    composeHangulSafariReplacement(element, strokes, suffix, profile, {
+      settle: options.settle,
+    }),
+  "contenteditable-firefox-broken": ({ element, text, options }) =>
+    composeHangulContentEditableFirefoxBroken(element, text, {
+      commitFinal: options.commitFinal,
+    }),
+  "contenteditable-firefox-fixed": ({ element, text, profile, options }) =>
+    composeHangulContentEditableFirefoxFixed(element, text, {
+      commitFinal: options.commitFinal,
+      profile,
+    }),
+  "contenteditable-firefox-af-fixed": ({ element, text }) =>
+    composeHangulContentEditableAndroidFirefoxFixed(element, text),
+  "android-chrome-slate-placeholder-broken": ({ element, text }) =>
+    composeHangulAndroidChromeSlatePlaceholderBroken(element, text),
+  "android-chrome-slate-plain-control": ({ element, text }) =>
+    composeHangulAndroidChromeSlatePlainControl(element, text),
+  "android-firefox-slate-placeholder-broken": ({ element, text }) =>
+    composeHangulAndroidFirefoxSlatePlaceholderBroken(element, text),
+  "android-firefox-slate-plain-control": ({ element, text }) =>
+    composeHangulAndroidFirefoxSlatePlainControl(element, text),
+  "android-firefox-slate-placeholder-fixed": ({ element, text }) =>
+    composeHangulAndroidFirefoxSlatePlaceholderFixed(element, text),
+  "linux-chrome-slate-placeholder-fixed": ({ element, text }) =>
+    composeHangulLinuxChromeSlatePlaceholderFixed(element, text),
+  "linux-chrome-slate-plain-control": ({ element, text }) =>
+    composeHangulLinuxChromeSlatePlainControl(element, text),
+  "linux-firefox-slate-placeholder-fixed": ({ element, text }) =>
+    composeHangulLinuxFirefoxSlatePlaceholderFixed(element, text),
+  "linux-firefox-slate-plain-control": ({ element, text }) =>
+    composeHangulLinuxFirefoxSlatePlainControl(element, text),
+} as const satisfies Partial<Record<HangulComposeMode, AlternateComposer>>;
+
+function tryDispatchAlternateCompose(
+  ctx: AlternateComposeContext,
+): Promise<ComposedEventRecord[]> | null {
+  const { element, strokes, suffix, profile, options } = ctx;
   if (
     profile.id === "macos-safari-apple" &&
-    (settle === "macrotask" || readMaxLength(element) !== null)
+    (options.settle === "macrotask" || readMaxLength(element) !== null)
   ) {
     element.focus();
     return composeHangulSafariComposition(element, strokes, suffix, profile, {
-      commitFinal,
-      settle,
-      deferredUpdateRace,
+      commitFinal: options.commitFinal,
+      settle: options.settle,
+      deferredUpdateRace: options.deferredUpdateRace,
     });
   }
 
-  if (profile.hangulComposeMode === "replacement") {
-    element.focus();
-    return composeHangulSafariReplacement(element, strokes, suffix, profile, {
-      settle,
-    });
+  const composer = ALTERNATE_COMPOSERS[profile.hangulComposeMode as keyof typeof ALTERNATE_COMPOSERS];
+  if (!composer) return null;
+  element.focus();
+  return composer(ctx);
+}
+
+function finishChromeComposition(
+  trace: ImeTrace,
+  strokesWithSuffix: HangulKeyStroke[],
+  suffix: string,
+  commitFinal: boolean,
+  profile: ImeProfile,
+): void {
+  if (strokesWithSuffix.length === 0) return;
+  const last = strokesWithSuffix[strokesWithSuffix.length - 1];
+  const finalPreedit = last?.preeditSteps[last.preeditSteps.length - 1] ?? "";
+  const committed = trace.element.value.slice(
+    0,
+    trace.element.value.length - suffix.length - finalPreedit.length,
+  );
+
+  if (commitFinal) {
+    playEventPlan(
+      trace,
+      planEndComposition(finalPreedit, {
+        postCompositionEndInput: profile.postCompositionEndInput,
+        confirmPulse: profile.postCompositionEndInput,
+        valueBefore: trace.element.value,
+        maxLength: readMaxLength(trace.element),
+      }),
+    );
+    return;
   }
 
-  if (profile.hangulComposeMode === "contenteditable-firefox-broken") {
-    element.focus();
-    return composeHangulContentEditableFirefoxBroken(element, text, { commitFinal });
-  }
+  setImeSession(trace.element, {
+    composing: true,
+    committed,
+    preedit: finalPreedit,
+    suffix,
+  });
+}
 
-  if (profile.hangulComposeMode === "contenteditable-firefox-fixed") {
-    element.focus();
-    return composeHangulContentEditableFirefoxFixed(element, text, { commitFinal, profile });
-  }
-
-  if (profile.hangulComposeMode === "contenteditable-firefox-af-fixed") {
-    element.focus();
-    return composeHangulContentEditableAndroidFirefoxFixed(element, text);
-  }
-
-  if (profile.hangulComposeMode === "android-chrome-slate-placeholder-broken") {
-    element.focus();
-    return composeHangulAndroidChromeSlatePlaceholderBroken(element, text);
-  }
-
-  if (profile.hangulComposeMode === "android-chrome-slate-plain-control") {
-    element.focus();
-    return composeHangulAndroidChromeSlatePlainControl(element, text);
-  }
-
-  if (profile.hangulComposeMode === "android-firefox-slate-placeholder-broken") {
-    element.focus();
-    return composeHangulAndroidFirefoxSlatePlaceholderBroken(element, text);
-  }
-
-  if (profile.hangulComposeMode === "android-firefox-slate-plain-control") {
-    element.focus();
-    return composeHangulAndroidFirefoxSlatePlainControl(element, text);
-  }
-
-  if (profile.hangulComposeMode === "android-firefox-slate-placeholder-fixed") {
-    element.focus();
-    return composeHangulAndroidFirefoxSlatePlaceholderFixed(element, text);
-  }
-
-  if (profile.hangulComposeMode === "linux-chrome-slate-placeholder-fixed") {
-    element.focus();
-    return composeHangulLinuxChromeSlatePlaceholderFixed(element, text);
-  }
-
-  if (profile.hangulComposeMode === "linux-chrome-slate-plain-control") {
-    element.focus();
-    return composeHangulLinuxChromeSlatePlainControl(element, text);
-  }
-
-  if (profile.hangulComposeMode === "linux-firefox-slate-placeholder-fixed") {
-    element.focus();
-    return composeHangulLinuxFirefoxSlatePlaceholderFixed(element, text);
-  }
-
-  if (profile.hangulComposeMode === "linux-firefox-slate-plain-control") {
-    element.focus();
-    return composeHangulLinuxFirefoxSlatePlainControl(element, text);
-  }
-
+async function runChromeCompositionSession(
+  trace: ImeTrace,
+  strokesWithSuffix: HangulKeyStroke[],
+  suffix: string,
+  settle: "microtask" | "macrotask",
+  deferredUpdateRace: boolean,
+  commitFinal: boolean,
+  profile: ImeProfile,
+): Promise<ComposedEventRecord[]> {
   const blurred = { current: false };
   const onBlur = () => {
     blurred.current = true;
   };
-  element.addEventListener("blur", onBlur);
-  element.focus();
-
-  const strokesWithSuffix = withSuffix(strokes, suffix);
+  trace.element.addEventListener("blur", onBlur);
+  trace.element.focus();
 
   try {
     for (let index = 0; index < strokesWithSuffix.length; index++) {
@@ -296,43 +324,61 @@ export async function composeHangul(
         return trace.records;
       }
 
-      if (result === "maxlength-reject") {
-        return trace.records;
-      }
+      if (result === "maxlength-reject") return trace.records;
     }
 
-    if (strokesWithSuffix.length === 0) {
-      return trace.records;
-    }
-
-    const last = strokesWithSuffix[strokesWithSuffix.length - 1];
-    const finalPreedit = last?.preeditSteps[last.preeditSteps.length - 1] ?? "";
-    const committed = element.value.slice(
-      0,
-      element.value.length - suffix.length - finalPreedit.length,
-    );
-
-    if (commitFinal) {
-      playEventPlan(
-        trace,
-        planEndComposition(finalPreedit, {
-          postCompositionEndInput: profile.postCompositionEndInput,
-          confirmPulse: profile.postCompositionEndInput,
-          valueBefore: element.value,
-          maxLength: readMaxLength(element),
-        }),
-      );
-    } else {
-      setImeSession(element, {
-        composing: true,
-        committed,
-        preedit: finalPreedit,
-        suffix,
-      });
-    }
-
+    finishChromeComposition(trace, strokesWithSuffix, suffix, commitFinal, profile);
     return trace.records;
   } finally {
-    element.removeEventListener("blur", onBlur);
+    trace.element.removeEventListener("blur", onBlur);
   }
+}
+
+/**
+ * Type Hangul `text` into an input by dispatching composition-faithful events.
+ * If the field blurs mid-composition (focus-steal), remaining jamos are typed as
+ * isolated compositions — matching OS 풀어쓰기 (e.g. 김태희 → ㄱㅣㅁㅌㅐㅎㅡㅣ).
+ * Deferred controlled writeback aborts similarly but without compositionend events.
+ */
+export async function composeHangul(
+  element: HTMLInputElement | HTMLTextAreaElement,
+  text: string,
+  options: ComposeHangulOptions = {},
+): Promise<ComposedEventRecord[]> {
+  const {
+    commitFinal = true,
+    settle = "microtask",
+    deferredUpdateRace = false,
+    profile: profileOpt,
+  } = options;
+  const profile = resolveProfile(profileOpt);
+  const selectionStart = element.selectionStart ?? element.value.length;
+  const selectionEnd = element.selectionEnd ?? element.value.length;
+  const prefix = element.value.slice(0, selectionStart);
+  const suffix = element.value.slice(selectionEnd);
+  const strokes = planHangulKeystrokes(text, {
+    prefix,
+    compositionBoundary: profile.hangulCompositionBoundary,
+    hangulKeyboard: profile.hangulKeyboard,
+  });
+
+  const alternate = tryDispatchAlternateCompose({
+    element,
+    text,
+    strokes,
+    suffix,
+    profile,
+    options: { commitFinal, settle, deferredUpdateRace, profile },
+  });
+  if (alternate) return alternate;
+
+  return runChromeCompositionSession(
+    new ImeTrace(element),
+    withSuffix(strokes, suffix),
+    suffix,
+    settle,
+    deferredUpdateRace,
+    commitFinal,
+    profile,
+  );
 }

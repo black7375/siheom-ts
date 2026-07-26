@@ -12,25 +12,45 @@ const IME_EVENT_TYPES = [
   "input",
 ] as const;
 
-function snapshotFromDom(element: HTMLElement, event: Event): ComposedEventRecord {
+function readKeyboardSnapshotFields(event: Event): Pick<
+  ComposedEventRecord,
+  "key" | "code" | "keyCode" | "isComposing"
+> {
   const keyboard = event as KeyboardEvent;
-  const composition = event as CompositionEvent;
   const input = event as InputEvent;
-
   return {
-    type: event.type,
     key: "key" in keyboard ? (keyboard.key ?? null) : null,
     code: "code" in keyboard ? (keyboard.code ?? null) : null,
     keyCode: "keyCode" in keyboard ? (keyboard.keyCode ?? null) : null,
     isComposing:
       "isComposing" in keyboard || "isComposing" in input
-        ? ((keyboard as KeyboardEvent).isComposing ?? (input as InputEvent).isComposing ?? null)
+        ? (keyboard.isComposing ?? input.isComposing ?? null)
         : null,
+  };
+}
+
+function isCompositionDataEvent(eventType: string): boolean {
+  return (
+    eventType.startsWith("composition") || eventType === "beforeinput" || eventType === "input"
+  );
+}
+
+function readInputSnapshotFields(event: Event): Pick<ComposedEventRecord, "inputType" | "data"> {
+  const composition = event as CompositionEvent;
+  const input = event as InputEvent;
+  return {
     inputType: "inputType" in input ? (input.inputType ?? null) : null,
-    data:
-      event.type.startsWith("composition") || event.type === "beforeinput" || event.type === "input"
-        ? ((composition.data ?? input.data ?? null) as string | null)
-        : null,
+    data: isCompositionDataEvent(event.type)
+      ? ((composition.data ?? input.data ?? null) as string | null)
+      : null,
+  };
+}
+
+function snapshotFromDom(element: HTMLElement, event: Event): ComposedEventRecord {
+  return {
+    type: event.type,
+    ...readKeyboardSnapshotFields(event),
+    ...readInputSnapshotFields(event),
     value: readEditableText(element),
   };
 }

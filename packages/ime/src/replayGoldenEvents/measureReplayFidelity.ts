@@ -26,6 +26,54 @@ export type FidelityReport = {
   steps: FidelityStep[];
 };
 
+async function applyReplayStepDomEffects(
+  trace: ImeTrace | ContentEditableImeTrace,
+  element: HTMLElement,
+  event: ComposedEventRecord,
+  options: MeasureReplayFidelityOptions,
+  expected: string,
+): Promise<void> {
+  if (trace instanceof ImeTrace && event.type === "input" && event.value != null) {
+    const visible = stripGoldenText(event.value);
+    setInputValue(trace.element, visible, visible.length);
+  }
+
+  if (options.settle === "macrotask" && trace instanceof ContentEditableImeTrace) {
+    await settleAfterPreedit("macrotask");
+  }
+
+  if ((options.writeback ?? "none") === "golden") {
+    applyGoldenDomWriteback(element, expected);
+  }
+}
+
+function compareFidelityStep(
+  index: number,
+  event: ComposedEventRecord,
+  expected: string,
+  actual: string,
+): FidelityStep {
+  return {
+    index,
+    type: event.type,
+    data: event.data,
+    expected,
+    actual,
+    matched: expected === actual,
+  };
+}
+
+function summarizeFidelityReport(steps: FidelityStep[]): FidelityReport {
+  const matchedSteps = steps.filter((step) => step.matched).length;
+  return {
+    totalSteps: steps.length,
+    matchedSteps,
+    matchRate: steps.length === 0 ? 1 : matchedSteps / steps.length,
+    firstMismatchIndex: steps.find((step) => !step.matched)?.index ?? null,
+    steps,
+  };
+}
+
 /**
  * Replay golden events step-by-step and compare DOM to each event's captured `value`.
  * Experiment A: if broken-mode replay ≠ golden, Chromium replay is not device-faithful.
@@ -40,44 +88,14 @@ export async function measureReplayFidelity(
   element.focus();
 
   const steps: FidelityStep[] = [];
-  const writeback = options.writeback ?? "none";
-
   for (const [index, event] of events.entries()) {
     playGoldenEvent(trace, event);
-
-    if (trace instanceof ImeTrace && event.type === "input" && event.value != null) {
-      const visible = stripGoldenText(event.value);
-      setInputValue(trace.element, visible, visible.length);
-    }
-
-    if (options.settle === "macrotask" && trace instanceof ContentEditableImeTrace) {
-      await settleAfterPreedit("macrotask");
-    }
-
     const expected = stripGoldenText(event.value ?? "");
-    if (writeback === "golden") {
-      applyGoldenDomWriteback(element, expected);
-    }
-
-    const actual = stripGoldenText(readDom(element));
-    steps.push({
-      index,
-      type: event.type,
-      data: event.data,
-      expected,
-      actual,
-      matched: expected === actual,
-    });
+    await applyReplayStepDomEffects(trace, element, event, options, expected);
+    steps.push(compareFidelityStep(index, event, expected, stripGoldenText(readDom(element))));
   }
 
-  const matchedSteps = steps.filter((step) => step.matched).length;
-  return {
-    totalSteps: steps.length,
-    matchedSteps,
-    matchRate: steps.length === 0 ? 1 : matchedSteps / steps.length,
-    firstMismatchIndex: steps.find((step) => !step.matched)?.index ?? null,
-    steps,
-  };
+  return summarizeFidelityReport(steps);
 }
 
 export function formatFidelityReport(report: FidelityReport, limit = 5): string {

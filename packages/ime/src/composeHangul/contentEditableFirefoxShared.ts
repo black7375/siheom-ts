@@ -1,5 +1,6 @@
 import type { EventPlanStep } from "../_internal/eventPlan";
 import type { KeyEventFields } from "../_internal/events";
+import { planPreedit } from "../_internal/planPreedit";
 
 /** Firefox contenteditable: NBSP composition sentinel + trailing ZWSP in OS captures. */
 export const FIREFOX_CE_SENTINEL = "\u00a0\u200b";
@@ -7,6 +8,45 @@ const ZWSP = "\u200b";
 
 export function withZwsp(text: string): string {
   return `${text}${ZWSP}`;
+}
+
+/** Shared preedit pulse; `caret` differs (fixed uses dom length, broken uses preedit length). */
+export function planContentEditablePreeditPulse(
+  preedit: string,
+  valueBefore: string,
+  domValue: string,
+  applyDom: boolean,
+  caret: number,
+): EventPlanStep[] {
+  if (applyDom) {
+    return planPreedit(preedit, domValue, caret, {
+      valueBefore,
+      maxLength: null,
+    });
+  }
+
+  const inputData = preedit === "" ? null : preedit;
+  return [
+    { kind: "compositionupdate", data: preedit, value: valueBefore },
+    {
+      kind: "beforeinput",
+      fields: {
+        inputType: "insertCompositionText",
+        data: preedit,
+        isComposing: true,
+        value: valueBefore,
+      },
+    },
+    {
+      kind: "input",
+      fields: {
+        inputType: "insertCompositionText",
+        data: inputData,
+        isComposing: true,
+        value: domValue,
+      },
+    },
+  ];
 }
 
 export function stripZwsp(text: string): string {
