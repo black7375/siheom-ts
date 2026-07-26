@@ -24,7 +24,6 @@ function longestCommonPrefixLength(a: string, b: string): number {
   return index;
 }
 
-
 /** IME preedit `data` → intended visible syllable (when jamo or syllable). */
 export function syllableFromCompositionData(data: string): string | null {
   if (!data) {
@@ -38,7 +37,6 @@ export function syllableFromCompositionData(data: string): string | null {
   }
   return null;
 }
-
 
 /** Document text during an active composition session (committed prefix + live preedit). */
 export function documentFromCommittedPreedit(committed: string, compositionData: string): string {
@@ -154,7 +152,6 @@ export function documentAfterCompositionEnd(
   return normalized;
 }
 
-
 /** After compositionend flush duplicates syllable (`가` → `가가`). */
 export function dedupeDoubledSyllableCommit(
   visible: string,
@@ -175,7 +172,6 @@ export function dedupeDoubledSyllableCommit(
 
   return null;
 }
-
 
 /**
  * Firefox deferred `insertCompositionText` after compositionend can re-insert the
@@ -254,4 +250,3 @@ export function shouldSkipStaleDocumentCompositionInsert(
 
   return false;
 }
-

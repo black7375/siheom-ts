@@ -166,7 +166,13 @@ function planSebeolChoseong(
         composing: true,
       },
       strokes: [
-        boundaryStroke(meta, choseong, [oldText, choseong], [afterCommit, afterCommit + choseong], oldText),
+        boundaryStroke(
+          meta,
+          choseong,
+          [oldText, choseong],
+          [afterCommit, afterCommit + choseong],
+          oldText,
+        ),
       ],
     };
   }
@@ -328,7 +334,8 @@ function stripJongseongForVowelCarry(current: SyllableParts): {
   moved: string;
 } {
   const jongChars = [...(current.jongseong ?? "")];
-  const moved = jongChars.length > 1 ? (jongChars[jongChars.length - 1] ?? "") : (current.jongseong ?? "");
+  const moved =
+    jongChars.length > 1 ? (jongChars[jongChars.length - 1] ?? "") : (current.jongseong ?? "");
   const keptJong = jongChars.length > 1 ? jongChars[0] : undefined;
   return {
     moved,
@@ -346,7 +353,12 @@ function planJungseongAfterJongseong(
   meta: KeyMeta,
   boundary: HangulCompositionBoundary,
 ): { state: PlannerState; strokes: HangulKeyStroke[] } | null {
-  if (!canBeJungseong(jamo) || !state.current.choseong || !state.current.jungseong || !state.current.jongseong) {
+  if (
+    !canBeJungseong(jamo) ||
+    !state.current.choseong ||
+    !state.current.jungseong ||
+    !state.current.jongseong
+  ) {
     return null;
   }
   const { stripped, moved } = stripJongseongForVowelCarry(state.current);

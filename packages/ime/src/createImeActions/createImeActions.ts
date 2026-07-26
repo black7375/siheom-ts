@@ -30,7 +30,10 @@ export type CreateImeActionsOptions = {
   deferredUpdateRace?: ComposeHangulOptions["deferredUpdateRace"];
 };
 
-type HangulStepPlayer = (element: HTMLElement, step: Extract<TypeImeStep, { kind: "hangul" }>) => Promise<void>;
+type HangulStepPlayer = (
+  element: HTMLElement,
+  step: Extract<TypeImeStep, { kind: "hangul" }>,
+) => Promise<unknown>;
 
 async function composeSpecialKeyName(
   element: HTMLInputElement | HTMLTextAreaElement,
@@ -140,7 +143,7 @@ type ContentEditableHangulPlayer = (
   text: string,
   step: Extract<TypeImeStep, { kind: "hangul" }>,
   profile: ImeProfile,
-) => Promise<void>;
+) => Promise<unknown>;
 
 const CONTENT_EDITABLE_HANGUL_PLAYERS = {
   "contenteditable-firefox-broken": (element, _text, step) =>

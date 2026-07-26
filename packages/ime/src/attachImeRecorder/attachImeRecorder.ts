@@ -12,10 +12,9 @@ const IME_EVENT_TYPES = [
   "input",
 ] as const;
 
-function readKeyboardSnapshotFields(event: Event): Pick<
-  ComposedEventRecord,
-  "key" | "code" | "keyCode" | "isComposing"
-> {
+function readKeyboardSnapshotFields(
+  event: Event,
+): Pick<ComposedEventRecord, "key" | "code" | "keyCode" | "isComposing"> {
   const keyboard = event as KeyboardEvent;
   const input = event as InputEvent;
   return {

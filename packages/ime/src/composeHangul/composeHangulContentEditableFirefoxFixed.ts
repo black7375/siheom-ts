@@ -111,8 +111,7 @@ async function playFixedCommitFinal(
   if (strokes.length === 0) return;
   const lastStroke = strokes[strokes.length - 1]!;
   const finalPreedit = lastStroke.preeditSteps[lastStroke.preeditSteps.length - 1] ?? text;
-  const finalDomValue =
-    lastStroke.valuesAfterSteps[lastStroke.valuesAfterSteps.length - 1] ?? text;
+  const finalDomValue = lastStroke.valuesAfterSteps[lastStroke.valuesAfterSteps.length - 1] ?? text;
   playEventPlan(trace, [
     ...planDuplicateCompositionPulse(finalPreedit, withZwsp(finalDomValue)),
     ...planFirefoxDeferredEnd(finalPreedit, finalDomValue),

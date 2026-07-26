@@ -74,7 +74,11 @@ function brokenValueBefore(index: number, previous: string): string {
   return withZwsp(previous);
 }
 
-function planBrokenFirstJamoTail(preedit: string, domValue: string, applyDom: boolean): EventPlanStep[] {
+function planBrokenFirstJamoTail(
+  preedit: string,
+  domValue: string,
+  applyDom: boolean,
+): EventPlanStep[] {
   const tail: EventPlanStep[] = [
     ...planDuplicateCompositionPulse(preedit, domValue),
     ...planFirefoxDeferredEnd(preedit),

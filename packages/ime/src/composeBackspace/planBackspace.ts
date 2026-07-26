@@ -76,7 +76,10 @@ function planClearComposingSession(
   ];
 }
 
-function planContinueComposingSession(session: ImeComposeSession, nextPreedit: string): EventPlanStep[] {
+function planContinueComposingSession(
+  session: ImeComposeSession,
+  nextPreedit: string,
+): EventPlanStep[] {
   return [
     { kind: "setSession", session: { ...session, preedit: nextPreedit } },
     backspaceKeyup(true),

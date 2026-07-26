@@ -238,7 +238,8 @@ function tryDispatchAlternateCompose(
     });
   }
 
-  const composer = ALTERNATE_COMPOSERS[profile.hangulComposeMode as keyof typeof ALTERNATE_COMPOSERS];
+  const composer =
+    ALTERNATE_COMPOSERS[profile.hangulComposeMode as keyof typeof ALTERNATE_COMPOSERS];
   if (!composer) return null;
   element.focus();
   return composer(ctx);

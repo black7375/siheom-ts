@@ -21,4 +21,3 @@ export const CAPTURE_SCENARIOS: CaptureScenario[] = [
     userEventScript: "金泰熙",
   },
 ];
-

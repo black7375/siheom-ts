@@ -1,9 +1,13 @@
 import { vi } from "vitest";
 import type {
+  ActionStep,
   ActionStepDefinitionDict,
+  AssertionStep,
   AssertionStepDefinitionDict,
+  EffectStep,
   EffectStepDefinitionDict,
   FakeTimersScopeStep,
+  GivenStep,
   GivenStepDefinitionDict,
   Locator,
   Step,
@@ -64,31 +68,19 @@ async function runLoggedStep(
   await run().catch(handleError);
 }
 
-async function runActionStep<
-  TActions extends ActionStepDefinitionDict,
-  TAssertions extends AssertionStepDefinitionDict,
-  TGivens extends GivenStepDefinitionDict,
-  TEffects extends EffectStepDefinitionDict,
->(
-  step: Extract<Step<TActions, TAssertions, TGivens, TEffects>, { action: string }>,
-  registries: SiheomRegistries<TActions, TAssertions, TGivens, TEffects>,
+async function runActionStep<TActions extends ActionStepDefinitionDict>(
+  step: ActionStep<TActions>,
+  registries: { actions: TActions },
   logs: string[],
   handleError: (error: Error) => never,
 ): Promise<void> {
   const run = registries.actions[step.action] as ActionStepDefinitionDict[string];
-  await runLoggedStep(logs, step.log, handleError, () =>
-    run(step.target, ...(step.args ?? [])),
-  );
+  await runLoggedStep(logs, step.log, handleError, () => run(step.target, ...(step.args ?? [])));
 }
 
-async function runGivenStep<
-  TActions extends ActionStepDefinitionDict,
-  TAssertions extends AssertionStepDefinitionDict,
-  TGivens extends GivenStepDefinitionDict,
-  TEffects extends EffectStepDefinitionDict,
->(
-  step: Extract<Step<TActions, TAssertions, TGivens, TEffects>, { given: string }>,
-  registries: SiheomRegistries<TActions, TAssertions, TGivens, TEffects>,
+async function runGivenStep<TGivens extends GivenStepDefinitionDict>(
+  step: GivenStep<TGivens>,
+  registries: { givens: TGivens },
   logs: string[],
   handleError: (error: Error) => never,
 ): Promise<void> {
@@ -96,14 +88,9 @@ async function runGivenStep<
   await runLoggedStep(logs, step.log, handleError, () => run(...(step.args ?? [])));
 }
 
-async function runEffectStep<
-  TActions extends ActionStepDefinitionDict,
-  TAssertions extends AssertionStepDefinitionDict,
-  TGivens extends GivenStepDefinitionDict,
-  TEffects extends EffectStepDefinitionDict,
->(
-  step: Extract<Step<TActions, TAssertions, TGivens, TEffects>, { effect: string }>,
-  registries: SiheomRegistries<TActions, TAssertions, TGivens, TEffects>,
+async function runEffectStep<TEffects extends EffectStepDefinitionDict>(
+  step: EffectStep<TEffects>,
+  registries: { effects: TEffects },
   logs: string[],
   handleError: (error: Error) => never,
 ): Promise<void> {
@@ -111,14 +98,9 @@ async function runEffectStep<
   await runLoggedStep(logs, step.log, handleError, () => run(...(step.args ?? [])));
 }
 
-async function runAssertStep<
-  TActions extends ActionStepDefinitionDict,
-  TAssertions extends AssertionStepDefinitionDict,
-  TGivens extends GivenStepDefinitionDict,
-  TEffects extends EffectStepDefinitionDict,
->(
-  step: Extract<Step<TActions, TAssertions, TGivens, TEffects>, { assert: string }>,
-  registries: SiheomRegistries<TActions, TAssertions, TGivens, TEffects>,
+async function runAssertStep<TAssertions extends AssertionStepDefinitionDict>(
+  step: AssertionStep<TAssertions>,
+  registries: { assertions: TAssertions },
   logs: string[],
   handleError: (error: Error) => never,
 ): Promise<void> {
@@ -126,9 +108,7 @@ async function runAssertStep<
     locator: Locator,
     ...args: readonly unknown[]
   ) => Promise<void>;
-  await runLoggedStep(logs, step.log, handleError, () =>
-    run(step.target, ...(step.args ?? [])),
-  );
+  await runLoggedStep(logs, step.log, handleError, () => run(step.target, ...(step.args ?? [])));
 }
 
 async function runOneStep<

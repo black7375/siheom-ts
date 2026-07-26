@@ -30,7 +30,10 @@ function playKeyPlanStep(
 
 function playCompositionPlanStep(
   trace: ImeTraceEmitter,
-  step: Extract<EventPlanStep, { kind: "compositionstart" | "compositionupdate" | "compositionend" }>,
+  step: Extract<
+    EventPlanStep,
+    { kind: "compositionstart" | "compositionupdate" | "compositionend" }
+  >,
 ): void {
   if (step.kind === "compositionstart") {
     trace.compositionStart(step.data ?? "", step.value);

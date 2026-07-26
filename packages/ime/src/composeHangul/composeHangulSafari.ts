@@ -318,15 +318,7 @@ async function runSafariCompositionLoop(
     );
 
     if (result.status === "aborted-deferred") {
-      await playSafariDeferredBroken(
-        trace,
-        strokes,
-        index,
-        result.step,
-        suffix,
-        profile,
-        settle,
-      );
+      await playSafariDeferredBroken(trace, strokes, index, result.step, suffix, profile, settle);
       return;
     }
 

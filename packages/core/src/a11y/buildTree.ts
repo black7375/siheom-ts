@@ -19,10 +19,7 @@ function shouldSkipNameFromContentChildren(el: HTMLElement, role: string, name: 
   return isNameFromContentRole(role) && hasOnlyTextMatchingName(el, name);
 }
 
-type SkipRoleBranch =
-  | { kind: "node"; node: A11yNode }
-  | { kind: "null" }
-  | { kind: "continue" };
+type SkipRoleBranch = { kind: "node"; node: A11yNode } | { kind: "null" } | { kind: "continue" };
 
 function tryBuildSkipRoleBranch(
   el: HTMLElement,

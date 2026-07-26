@@ -106,10 +106,7 @@ export function StreamingChat({ api = fakeLlmApi }: { api?: LlmApi }) {
               const isStreamingAssistant = streaming && index === messages.length - 1;
 
               return (
-                <li
-                  key={message.id}
-                  className="self-start rounded-lg border bg-muted/40 px-3 py-2"
-                >
+                <li key={message.id} className="self-start rounded-lg border bg-muted/40 px-3 py-2">
                   <AssistantMessage content={message.content} streaming={isStreamingAssistant} />
                 </li>
               );

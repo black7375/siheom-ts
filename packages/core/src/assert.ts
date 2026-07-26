@@ -273,8 +273,7 @@ export function createDefaultAssertions(options: DefaultAssertionsOptions = {}) 
       assertHref(mode, target, expected, flag),
     errormessage: (target: Locator, expected: string, flag = true) =>
       assertErrormessage(mode, target, expected, flag),
-    description: (target: Locator, expected: string) =>
-      assertDescription(mode, target, expected),
+    description: (target: Locator, expected: string) => assertDescription(mode, target, expected),
     textContent: (target: Locator, expected: string, flag = true) =>
       assertTextContent(mode, target, expected, flag),
     a11ySnapshot: (target: Locator, path: string) => assertA11ySnapshot(mode, target, path),

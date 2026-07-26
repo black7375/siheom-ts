@@ -67,9 +67,9 @@ function eventsFromHangulCompositionStart(events: RecordedEvent[]): RecordedEven
   return events.slice(start);
 }
 
-async function renderNamedInput(
-  recorderRef: { current: ReturnType<typeof attachImeRecorder> | undefined },
-): Promise<void> {
+async function renderNamedInput(recorderRef: {
+  current: ReturnType<typeof attachImeRecorder> | undefined;
+}): Promise<void> {
   document.body.innerHTML = "";
   const label = document.createElement("label");
   label.append("이름");
@@ -354,14 +354,12 @@ describe("Windows IME profiles (MS / Ngs / Firefox)", () => {
     { profile: "windows-chrome-ms", golden: msArrow },
     { profile: "windows-chrome-ngs", golden: ngsArrow },
     { profile: "windows-firefox-ms", golden: firefoxArrow },
-  ] as const)(
-    "$profile arrow-edit-mid matches golden critical fields",
-    ({ profile, golden }) =>
-      expectTypedScriptCriticalMatches({
-        profile,
-        golden,
-        script: "김희{ArrowLeft}태",
-        expected: "김태희",
-      }),
+  ] as const)("$profile arrow-edit-mid matches golden critical fields", ({ profile, golden }) =>
+    expectTypedScriptCriticalMatches({
+      profile,
+      golden,
+      script: "김희{ArrowLeft}태",
+      expected: "김태희",
+    }),
   );
 });
