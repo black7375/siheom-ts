@@ -22,6 +22,9 @@ export const vitestBrowserMode = {
     enabled: true,
     headless: true,
     provider: playwright({
+      launchOptions: {
+        channel: "chrome",
+      },
       contextOptions: {
         timezoneId: "Asia/Seoul",
         locale: "ko-KR",
