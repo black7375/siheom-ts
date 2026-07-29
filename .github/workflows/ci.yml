@@ -19,8 +19,12 @@ jobs:
       - uses: oven-sh/setup-bun@v2
         with:
           bun-version: 1.3.12
-
-      # Skip postinstall browser download; install explicitly after cache restore.
+      
+      - uses: actions/cache@v3
+        with:
+          key: key
+          path: ~/.bun/install/cache
+      
       - run: bun install --ignore-scripts
 
       - name: Install Playwright OS deps
