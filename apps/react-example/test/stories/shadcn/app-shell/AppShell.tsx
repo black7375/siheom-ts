@@ -1,6 +1,6 @@
 "use client";
 
-import { Link, MemoryRouter, Route, Routes, useLocation } from "react-router-dom";
+import { Link, MemoryRouter, Route, Routes, useLocation } from "react-router";
 
 import {
   Breadcrumb,
