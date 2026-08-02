@@ -42,7 +42,6 @@ export function buildA11yTree(
     const hasMeaningfulAttributes =
       states || relations || liveRegion || dragDrop || interaction || attributes || other;
 
-<<<<<<< HEAD
     // Verbose mode always outputs generic nodes; compact mode only when attributes exist.
     if (isVerbose || hasMeaningfulAttributes) {
       return buildGenericRoleNode(el, options, {
@@ -140,7 +139,15 @@ type GenericRoleNodeAttributes = {
 function buildGenericRoleNode(
   el: HTMLElement,
   options: BuildA11yTreeOptions,
-  { states, relations, liveRegion, dragDrop, interaction, attributes, other }: GenericRoleNodeAttributes,
+  {
+    states,
+    relations,
+    liveRegion,
+    dragDrop,
+    interaction,
+    attributes,
+    other,
+  }: GenericRoleNodeAttributes,
 ): A11yNode {
   const name = computeAccessibleName(el);
   const description = computeAccessibleDescription(el);
