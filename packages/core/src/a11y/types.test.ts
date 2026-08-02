@@ -1,5 +1,11 @@
 import { describe, it, expectTypeOf } from "vitest";
-import type { A11yAttributes, A11yInteraction, A11yNode, BuildA11yTreeOptions } from "./types.ts";
+import type {
+  A11yAttributes,
+  A11yInteraction,
+  A11yNode,
+  A11yOther,
+  BuildA11yTreeOptions,
+} from "./types.ts";
 import type { A11ySnapshotOptions } from "../getA11ySnapshot.ts";
 
 describe("A11yInteraction type", () => {
@@ -20,6 +26,11 @@ describe("A11yInteraction type", () => {
   });
 
   it("rejects non-string keyshortcuts", () => {
+    // prettier-ignore
+    // @ts-expect-error: keyshortcuts must be string, not number
+    const badShortcut: A11yInteraction = { focusable: true, tabbable: true, focused: false, keyshortcuts: 123 };
+    void badShortcut;
+
     expectTypeOf<{
       readonly focusable: true;
       readonly tabbable: true;
@@ -29,6 +40,10 @@ describe("A11yInteraction type", () => {
   });
 
   it("requires focusable", () => {
+    // @ts-expect-error: focusable is required
+    const missingFocusable: A11yInteraction = { tabbable: true, focused: false };
+    void missingFocusable;
+
     expectTypeOf<{
       readonly tabbable: true;
       readonly focused: false;
@@ -40,6 +55,17 @@ describe("A11yAttributes type", () => {
   it("accepts string-to-string record", () => {
     const attrs: A11yAttributes = { "aria-label": "Save", role: "button", disabled: "" };
     expectTypeOf(attrs).toExtend<A11yAttributes>();
+  });
+});
+
+describe("A11yOther type", () => {
+  it("accepts serializable scalar values", () => {
+    const other: A11yOther = { label: "dom", count: 1, enabled: true, fallback: null };
+    expectTypeOf(other).toExtend<A11yOther>();
+  });
+
+  it("rejects symbol values", () => {
+    expectTypeOf<{ readonly metadata: symbol }>().not.toExtend<A11yOther>();
   });
 });
 
@@ -63,6 +89,10 @@ describe("BuildA11yTreeOptions with includeHidden", () => {
   });
 
   it("rejects non-boolean includeHidden", () => {
+    // @ts-expect-error: includeHidden must be boolean, not string
+    const badHidden: BuildA11yTreeOptions = { includeHidden: "true" };
+    void badHidden;
+
     expectTypeOf<{ readonly includeHidden: string }>().not.toExtend<BuildA11yTreeOptions>();
   });
 });
