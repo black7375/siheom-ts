@@ -1,6 +1,11 @@
-navigation: "주 메뉴"
-  link: "홈"
-    - states: [current=page]
-  link: "문서"
-  link: "소개"
-    - states: [current=false]
+generic:
+  - interaction: [focused=true]
+  navigation: "주 메뉴"
+    link: "홈"
+      - states: [current=page]
+      - interaction: [focusable=true] [tabbable=true]
+    link: "문서"
+      - interaction: [focusable=true] [tabbable=true]
+    link: "소개"
+      - states: [current=false]
+      - interaction: [focusable=true] [tabbable=true]

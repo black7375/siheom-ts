@@ -3,15 +3,19 @@ region: "설정"
     - properties: [level=2]
   tablist: "설정 탭"
     tab: "일반"
-      - states: [selected=true]
+      - states: [disabled=false] [selected=true]
+      - interaction: [focusable=true] [tabbable=true]
       - relations:
-        controls: "설정"
+        controls: "설정" (#base-ui-_r_2_)
     tab: "알림"
-      - states: [selected=false]
+      - states: [disabled=false] [selected=false]
+      - interaction: [focusable=true]
   tabpanel: "설정"
+    - interaction: [focusable=true] [tabbable=true]
     - relations:
-      labelledby: "설정"
+      labelledby: "설정" (#settings-title)
     group:
       "다크 모드"
       switch: "다크 모드"
         - states: [checked=false]
+        - interaction: [focusable=true] [tabbable=true]

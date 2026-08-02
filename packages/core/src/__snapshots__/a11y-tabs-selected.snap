@@ -1,12 +1,16 @@
-tablist: "설정 탭"
-  - properties: [orientation="horizontal"]
-  tab: "일반"
-    - states: [selected=true]
+generic:
+  - interaction: [focused=true]
+  tablist: "설정 탭"
+    - properties: [orientation="horizontal"]
+    tab: "일반"
+      - states: [selected=true]
+      - interaction: [focusable=true] [tabbable=true]
+      - relations:
+        controls: "일반" (#panel-general)
+    tab: "보안"
+      - states: [selected=false]
+      - interaction: [focusable=true] [tabbable=true]
+  tabpanel: "일반"
     - relations:
-      controls: "일반"
-  tab: "보안"
-    - states: [selected=false]
-tabpanel: "일반"
-  - relations:
-    labelledby: "일반"
-  "일반 내용"
+      labelledby: "일반" (#tab-general)
+    "일반 내용"

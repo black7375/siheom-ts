@@ -4,6 +4,7 @@ region: "공지 검색"
   group:
     "공지 검색"
     textbox: "공지 검색" [value=""]
+      - interaction: [focusable=true] [tabbable=true]
   list:
     listitem: "서버 점검 안내"
       paragraph:

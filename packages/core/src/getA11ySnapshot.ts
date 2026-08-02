@@ -20,7 +20,7 @@ export function getA11ySnapshot(element: HTMLElement, options: A11ySnapshotOptio
   const serializeOpts: SerializeOptions = {
     mode: options.serialize?.mode ?? options.mode,
   };
-  return serializeA11yTree(tree, serializeOpts).trim();
+  return serializeA11yTree(tree, serializeOpts);
 }
 
 /**

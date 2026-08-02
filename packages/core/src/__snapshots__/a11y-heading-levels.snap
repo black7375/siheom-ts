@@ -1,6 +1,8 @@
-heading: "제목 1"
-  - properties: [level=1]
-heading: "제목 3 (ARIA)"
-  - properties: [level=3]
-heading: "제목 6"
-  - properties: [level=6]
+generic:
+  - interaction: [focused=true]
+  heading: "제목 1"
+    - properties: [level=1]
+  heading: "제목 3 (ARIA)"
+    - properties: [level=3]
+  heading: "제목 6"
+    - properties: [level=6]

@@ -3,14 +3,17 @@ region: "지표 대시보드"
     - properties: [level=2]
   tablist: "지표 탭"
     tab: "매출"
-      - states: [selected=true]
+      - states: [disabled=false] [selected=true]
+      - interaction: [focusable=true] [tabbable=true]
       - relations:
-        controls: "지표 대시보드"
+        controls: "지표 대시보드" (#base-ui-_r_2_)
     tab: "방문자"
-      - states: [selected=false]
+      - states: [disabled=false] [selected=false]
+      - interaction: [focusable=true]
   tabpanel: "지표 대시보드"
+    - interaction: [focusable=true] [tabbable=true]
     - relations:
-      labelledby: "지표 대시보드"
+      labelledby: "지표 대시보드" (#chart-dashboard-title)
     region: "매출 차트"
       "주간 매출"
       "최근 5일 매출 추이"

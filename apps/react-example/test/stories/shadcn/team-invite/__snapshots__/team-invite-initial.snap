@@ -3,11 +3,12 @@ region: "팀원 초대"
     - properties: [level=2]
   form: "팀원 초대"
     - relations:
-      labelledby: "팀원 초대"
+      labelledby: "팀원 초대" (#team-invite-title)
     group:
       "역할"
       combobox: "역할"
         - states: [expanded=false] [required=true]
+        - interaction: [focusable=true] [tabbable=true]
         - properties: [haspopup="listbox"]
         "역할 선택"
     group:
@@ -15,9 +16,12 @@ region: "팀원 초대"
       group:
         combobox: "팀원" [value=""]
           - states: [expanded=false]
+          - interaction: [focusable=true] [tabbable=true]
           - properties: [autocomplete="list"] [haspopup="listbox"]
         group:
-          button:
+          button: ""
             - states: [expanded=false]
+            - interaction: [focusable=true] [tabbable=true]
             - properties: [haspopup="listbox"]
     button: "초대하기"
+      - interaction: [focusable=true] [tabbable=true]
