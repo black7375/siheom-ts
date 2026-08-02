@@ -27,6 +27,14 @@ export function computeRelevant(el: Element, isVerbose = false): string | null |
   return undefined;
 }
 
+export function computeBusy(el: Element, isVerbose = false): boolean | null | undefined {
+  const val = el.getAttribute("aria-busy");
+  if (val === "true") return true;
+  if (val === "false") return false;
+  if (isVerbose && el.hasAttribute("aria-busy")) return null;
+  return undefined;
+}
+
 export function computeLiveRegion(el: Element, isVerbose = false): A11yLiveRegion | undefined {
   const region: A11yLiveRegion = {};
   let hasAny = false;
@@ -46,6 +54,12 @@ export function computeLiveRegion(el: Element, isVerbose = false): A11yLiveRegio
   const relevant = computeRelevant(el, isVerbose);
   if (relevant !== undefined) {
     region.relevant = relevant;
+    hasAny = true;
+  }
+
+  const busy = computeBusy(el, isVerbose);
+  if (busy !== undefined) {
+    region.busy = busy;
     hasAny = true;
   }
 

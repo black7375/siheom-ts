@@ -7,6 +7,8 @@ import { computeProperties } from "./computeProperties.ts";
 import { computeRelations } from "./computeRelations.ts";
 import { computeLiveRegion } from "./computeLiveRegion.ts";
 import { computeDragDrop } from "./computeDragDrop.ts";
+import { computeInteraction } from "./computeInteraction.ts";
+import { computeAttributes } from "./computeAttributes.ts";
 import { isNameFromContentRole } from "./ariaRoles.ts";
 
 const SKIP_ROLES = new Set(["generic", "presentation", "none"]);
@@ -16,7 +18,8 @@ export function buildA11yTree(
   options: BuildA11yTreeOptions = {},
 ): A11yNode | null {
   const isVerbose = options.mode === "verbose";
-  if (isInaccessible(el)) {
+  const isHidden = isInaccessible(el);
+  if (isHidden && !options.includeHidden) {
     return null;
   }
 
@@ -27,13 +30,17 @@ export function buildA11yTree(
   const role = getRole(el);
 
   if (SKIP_ROLES.has(role) || role === "") {
-    const states = computeStates(el, role, isVerbose);
+    const computedStates = computeStates(el, role, isVerbose);
+    const states = isHidden ? { ...computedStates, hidden: true } : computedStates;
     const relations = computeRelations(el, isVerbose);
     const liveRegion = computeLiveRegion(el, isVerbose);
     const dragDrop = computeDragDrop(el, isVerbose);
+    const interaction = computeInteraction(el, isVerbose);
+    const attributes = isVerbose ? computeAttributes(el) : undefined;
     const other = options.computeOther?.(el);
 
-    const hasMeaningfulAttributes = states || relations || liveRegion || dragDrop || other;
+    const hasMeaningfulAttributes =
+      states || relations || liveRegion || dragDrop || interaction || attributes || other;
 
     // Verbose mode: always output as generic: "" with full tree preserved
     if (isVerbose) {
@@ -48,9 +55,11 @@ export function buildA11yTree(
 
       if (description) node.description = description;
       if (states) node.states = states;
+      if (interaction) node.interaction = interaction;
       if (relations) node.relations = relations;
       if (liveRegion) node.liveRegion = liveRegion;
       if (dragDrop) node.dragDrop = dragDrop;
+      if (attributes) node.attributes = attributes;
       if (other && Object.keys(other).length > 0) node.other = other;
 
       return node;
@@ -69,9 +78,11 @@ export function buildA11yTree(
 
       if (description) node.description = description;
       if (states) node.states = states;
+      if (interaction) node.interaction = interaction;
       if (relations) node.relations = relations;
       if (liveRegion) node.liveRegion = liveRegion;
       if (dragDrop) node.dragDrop = dragDrop;
+      if (attributes) node.attributes = attributes;
       if (other && Object.keys(other).length > 0) node.other = other;
 
       return node;
@@ -104,9 +115,15 @@ export function buildA11yTree(
     node.value = value;
   }
 
-  const states = computeStates(el, role, isVerbose);
+  const computedStates = computeStates(el, role, isVerbose);
+  const states = isHidden ? { ...computedStates, hidden: true } : computedStates;
   if (states) {
     node.states = states;
+  }
+
+  const interaction = computeInteraction(el, isVerbose);
+  if (interaction) {
+    node.interaction = interaction;
   }
 
   const properties = computeProperties(el, role);
@@ -127,6 +144,11 @@ export function buildA11yTree(
   const dragDrop = computeDragDrop(el, isVerbose);
   if (dragDrop) {
     node.dragDrop = dragDrop;
+  }
+
+  const attributes = isVerbose ? computeAttributes(el) : undefined;
+  if (attributes) {
+    node.attributes = attributes;
   }
 
   const other = options.computeOther?.(el);
