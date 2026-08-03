@@ -5,6 +5,7 @@ import type { EffectStepDefinitionDict } from "@siheom/core";
 export const qwikEffects = {
   elapsed: async (ms: number) => {
     await vi.advanceTimersByTimeAsync(ms);
+    vi.advanceTimersToNextFrame();
     await waitFor(() => undefined);
   },
   runAllTimers: async () => {
