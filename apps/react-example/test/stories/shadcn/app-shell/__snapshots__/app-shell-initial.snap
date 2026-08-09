@@ -4,6 +4,7 @@ region: "앱 셸"
     list:
       listitem:
         link: "대시보드"
+          - states: [current=page]
           - interaction: [focusable=true] [tabbable=true]
       listitem:
         link: "설정"
@@ -12,8 +13,9 @@ region: "앱 셸"
     navigation: "breadcrumb"
       list:
         listitem:
-          link: "대시보드"
+          generic:
             - states: [disabled=true] [current=page]
+            "대시보드"
     region: "대시보드"
       heading: "대시보드"
         - properties: [level=2]

@@ -41,12 +41,14 @@ function AppShellContent() {
                   <SidebarMenuItem>
                     <SidebarMenuButton
                       isActive={pathname === "/"}
+                      aria-current={pathname === "/" ? "page" : undefined}
                       render={<Link to="/">대시보드</Link>}
                     />
                   </SidebarMenuItem>
                   <SidebarMenuItem>
                     <SidebarMenuButton
                       isActive={pathname === "/settings"}
+                      aria-current={pathname === "/settings" ? "page" : undefined}
                       render={<Link to="/settings">설정</Link>}
                     />
                   </SidebarMenuItem>

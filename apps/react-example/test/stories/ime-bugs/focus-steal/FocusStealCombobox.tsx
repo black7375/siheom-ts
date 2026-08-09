@@ -37,8 +37,10 @@ export function FocusStealCombobox({
   const onValueChangeRef = useRef(onValueChange);
   const inputId = "focus-steal-combobox-input";
 
-  modeRef.current = mode;
-  onValueChangeRef.current = onValueChange;
+  useEffect(() => {
+    modeRef.current = mode;
+    onValueChangeRef.current = onValueChange;
+  });
 
   const filtered = useMemo(() => {
     const q = value.trim().toLowerCase();

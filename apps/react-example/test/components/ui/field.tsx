@@ -188,9 +188,9 @@ function FieldError({
     return (
       <div className="ml-4 flex flex-col gap-1">
         {uniqueErrors.map(
-          (error, index) =>
+          (error) =>
             error?.message && (
-              <p key={index} className="text-sm">
+              <p key={error.message} className="text-sm">
                 {error.message}
               </p>
             ),

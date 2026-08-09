@@ -1,25 +1,31 @@
-import { assemble, disassembleCompleteCharacter, combineVowels } from "es-hangul";
+import { assemble, disassembleCompleteCharacter } from "es-hangul";
 
 import { hangulJamos } from "../hangulJamos";
 import type { EventPlanStep } from "../_internal/eventPlan";
+import { normalizeJungseong } from "../_internal/normalizeJungseong";
 import { planPostCompositionEndInput, planPreedit } from "../_internal/planPreedit";
 import type { ImeComposeSession } from "../_internal/session";
 import type { HangulKeyboardLayout } from "../profiles";
 
-function normalizeJungseong(raw: string): string {
-  if (raw.length <= 1) return raw;
-  const chars = [...raw];
-  let combined = chars[0] ?? "";
-  for (let i = 1; i < chars.length; i++) {
-    const next = chars[i];
-    if (!next) continue;
-    try {
-      combined = combineVowels(combined, next) ?? combined + next;
-    } catch {
-      combined += next;
-    }
+function shrinkDubeolsikPreedit(preedit: string): string {
+  const jamos = hangulJamos(preedit);
+  if (jamos.length <= 1) return "";
+  return assemble(jamos.slice(0, -1));
+}
+
+function shrinkSebeolsikPreedit(preedit: string): string {
+  const chars = [...preedit];
+  const last = chars[chars.length - 1];
+  if (!last) return "";
+  const parts = disassembleCompleteCharacter(last);
+  if (!parts?.choseong) return shrinkDubeolsikPreedit(preedit);
+  const prefix = chars.slice(0, -1).join("");
+  if (parts.jongseong) {
+    const jung = normalizeJungseong(parts.jungseong);
+    return prefix + assemble([parts.choseong, jung]);
   }
-  return combined;
+  if (parts.jungseong) return prefix + parts.choseong;
+  return prefix;
 }
 
 /** 2-set: remove one disassembled jamo. 세벌식: remove one role unit (ㅢ as one key). */
@@ -28,31 +34,8 @@ export function shrinkPreedit(
   hangulKeyboard: HangulKeyboardLayout = "dubeolsik",
 ): string {
   if (!preedit) return "";
-
-  if (hangulKeyboard === "sebeolsik-ngs") {
-    const chars = [...preedit];
-    const last = chars[chars.length - 1];
-    if (!last) return "";
-    const parts = disassembleCompleteCharacter(last);
-    if (!parts?.choseong) {
-      const jamos = hangulJamos(preedit);
-      if (jamos.length <= 1) return "";
-      return assemble(jamos.slice(0, -1));
-    }
-    const prefix = chars.slice(0, -1).join("");
-    if (parts.jongseong) {
-      const jung = normalizeJungseong(parts.jungseong);
-      return prefix + assemble([parts.choseong, jung]);
-    }
-    if (parts.jungseong) {
-      return prefix + parts.choseong;
-    }
-    return prefix;
-  }
-
-  const jamos = hangulJamos(preedit);
-  if (jamos.length <= 1) return "";
-  return assemble(jamos.slice(0, -1));
+  if (hangulKeyboard === "sebeolsik-ngs") return shrinkSebeolsikPreedit(preedit);
+  return shrinkDubeolsikPreedit(preedit);
 }
 
 export type PlanBackspaceInput = {
@@ -67,86 +50,104 @@ export type PlanBackspaceInput = {
   postCompositionEndInput?: boolean;
 };
 
-/** Pure: Backspace while composing (decompose) or deleteContentBackward. */
-export function planBackspace(input: PlanBackspaceInput): EventPlanStep[] {
-  if (input.composing && input.session) {
-    const session = input.session;
-    const nextPreedit = shrinkPreedit(session.preedit, input.hangulKeyboard ?? "dubeolsik");
-    const caret = session.committed.length + nextPreedit.length;
-    const value = session.committed + nextPreedit + session.suffix;
+function backspaceKeyup(isComposing: boolean): EventPlanStep {
+  return {
+    kind: "keyup",
+    fields: {
+      key: "Backspace",
+      code: "Backspace",
+      keyCode: 8,
+      isComposing,
+    },
+  };
+}
 
-    const steps: EventPlanStep[] = [
-      {
-        kind: "keydown",
-        fields: {
-          key: "Process",
-          code: "Backspace",
-          keyCode: 229,
-          isComposing: true,
-        },
-      },
-      ...planPreedit(
-        nextPreedit,
-        value,
-        caret,
-        {
-          valueBefore: input.valueBefore,
-          maxLength: input.maxLength,
-        },
-        {
-          emptyCompositionData: input.postCompositionEndInput ? "" : null,
-        },
-      ),
-    ];
+function planClearComposingSession(
+  value: string,
+  caret: number,
+  postCompositionEndInput: boolean | undefined,
+): EventPlanStep[] {
+  return [
+    { kind: "compositionend", data: "", value },
+    ...(postCompositionEndInput ? planPostCompositionEndInput("") : []),
+    { kind: "clearSession" },
+    { kind: "setValue", value, caret },
+    backspaceKeyup(false),
+  ];
+}
 
-    if (nextPreedit === "") {
-      steps.push(
-        { kind: "compositionend", data: "", value },
-        ...(input.postCompositionEndInput ? planPostCompositionEndInput("") : []),
-        { kind: "clearSession" },
-        { kind: "setValue", value, caret },
-        {
-          kind: "keyup",
-          fields: {
-            key: "Backspace",
-            code: "Backspace",
-            keyCode: 8,
-            isComposing: false,
-          },
-        },
-      );
-      return steps;
-    }
+function planContinueComposingSession(
+  session: ImeComposeSession,
+  nextPreedit: string,
+): EventPlanStep[] {
+  return [
+    { kind: "setSession", session: { ...session, preedit: nextPreedit } },
+    backspaceKeyup(true),
+  ];
+}
 
-    steps.push(
+function planComposingBackspace(input: PlanBackspaceInput): EventPlanStep[] {
+  const session = input.session!;
+  const nextPreedit = shrinkPreedit(session.preedit, input.hangulKeyboard ?? "dubeolsik");
+  const caret = session.committed.length + nextPreedit.length;
+  const value = session.committed + nextPreedit + session.suffix;
+
+  const steps: EventPlanStep[] = [
+    {
+      kind: "keydown",
+      fields: {
+        key: "Process",
+        code: "Backspace",
+        keyCode: 229,
+        isComposing: true,
+      },
+    },
+    ...planPreedit(
+      nextPreedit,
+      value,
+      caret,
       {
-        kind: "setSession",
-        session: { ...session, preedit: nextPreedit },
+        valueBefore: input.valueBefore,
+        maxLength: input.maxLength,
       },
       {
-        kind: "keyup",
-        fields: {
-          key: "Backspace",
-          code: "Backspace",
-          keyCode: 8,
-          isComposing: true,
-        },
+        emptyCompositionData: input.postCompositionEndInput ? "" : null,
       },
-    );
-    return steps;
+    ),
+  ];
+
+  if (nextPreedit === "") {
+    return [...steps, ...planClearComposingSession(value, caret, input.postCompositionEndInput)];
   }
+  return [...steps, ...planContinueComposingSession(session, nextPreedit)];
+}
 
-  const { value, selectionStart: start, selectionEnd: end } = input;
-  let nextValue = value;
-  let nextCaret = start;
+function nextValueAfterBackwardDelete(
+  value: string,
+  start: number,
+  end: number,
+): { value: string; caret: number } {
   if (start === end && start > 0) {
-    nextValue = value.slice(0, start - 1) + value.slice(end);
-    nextCaret = start - 1;
-  } else if (start !== end) {
-    nextValue = value.slice(0, start) + value.slice(end);
-    nextCaret = start;
+    return {
+      value: value.slice(0, start - 1) + value.slice(end),
+      caret: start - 1,
+    };
   }
+  if (start !== end) {
+    return {
+      value: value.slice(0, start) + value.slice(end),
+      caret: start,
+    };
+  }
+  return { value, caret: start };
+}
 
+function planDeleteContentBackward(input: PlanBackspaceInput): EventPlanStep[] {
+  const { value, caret } = nextValueAfterBackwardDelete(
+    input.value,
+    input.selectionStart,
+    input.selectionEnd,
+  );
   return [
     {
       kind: "keydown",
@@ -165,24 +166,22 @@ export function planBackspace(input: PlanBackspaceInput): EventPlanStep[] {
         isComposing: false,
       },
     },
-    { kind: "setValue", value: nextValue, caret: nextCaret },
+    { kind: "setValue", value, caret },
     {
       kind: "input",
       fields: {
         inputType: "deleteContentBackward",
         data: null,
         isComposing: false,
-        value: nextValue,
+        value,
       },
     },
-    {
-      kind: "keyup",
-      fields: {
-        key: "Backspace",
-        code: "Backspace",
-        keyCode: 8,
-        isComposing: false,
-      },
-    },
+    backspaceKeyup(false),
   ];
+}
+
+/** Pure: Backspace while composing (decompose) or deleteContentBackward. */
+export function planBackspace(input: PlanBackspaceInput): EventPlanStep[] {
+  if (input.composing && input.session) return planComposingBackspace(input);
+  return planDeleteContentBackward(input);
 }

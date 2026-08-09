@@ -34,6 +34,65 @@ function shouldConfirmAfterStroke(strokes: HangulKeyStroke[], index: number): bo
   return next.compositionStart;
 }
 
+function playSafariReplacementPreeditStep(
+  trace: ImeTrace,
+  stroke: HangulKeyStroke,
+  stepIndex: number,
+  suffix: string,
+  profile: ImeProfile,
+): void {
+  const { element } = trace;
+  const preedit = stroke.preeditSteps[stepIndex] ?? "";
+  const value = stroke.valuesAfterSteps[stepIndex] ?? element.value;
+  const caret = value.length - suffix.length;
+  const previousValue = element.value;
+
+  playEventPlan(
+    trace,
+    planReplacementText(
+      preedit,
+      value,
+      replacementInputType(previousValue, value, preedit),
+      caret,
+      previousValue,
+    ),
+  );
+
+  playEventPlan(trace, [
+    {
+      kind: "keydown",
+      fields: {
+        ...hangulKeydownFields(profile, stroke),
+        isComposing: false,
+      },
+    },
+    {
+      kind: "keyup",
+      fields: { ...hangulKeyupFields(profile, stroke, false) },
+    },
+  ]);
+}
+
+function confirmSafariReplacementIfNeeded(
+  trace: ImeTrace,
+  strokes: HangulKeyStroke[],
+  strokeIndex: number,
+  finalPreedit: string,
+): void {
+  if (!shouldConfirmAfterStroke(strokes, strokeIndex) || !finalPreedit) return;
+  const { element } = trace;
+  playEventPlan(
+    trace,
+    planReplacementText(
+      finalPreedit,
+      element.value,
+      "insertReplacementText",
+      element.value.length,
+      element.value,
+    ),
+  );
+}
+
 /** macOS Safari Apple: insertText / insertReplacementText + jamo keydown (no composition). */
 export async function composeHangulSafariReplacement(
   element: HTMLInputElement | HTMLTextAreaElement,
@@ -50,74 +109,30 @@ export async function composeHangulSafariReplacement(
     if (!stroke) continue;
 
     const finalPreedit = stroke.preeditSteps[stroke.preeditSteps.length - 1] ?? "";
-
     for (let i = 0; i < stroke.preeditSteps.length; i++) {
-      const preedit = stroke.preeditSteps[i] ?? "";
-      const value = stroke.valuesAfterSteps[i] ?? element.value;
-      const caret = value.length - suffix.length;
-      const previousValue = element.value;
-
-      playEventPlan(
-        trace,
-        planReplacementText(
-          preedit,
-          value,
-          replacementInputType(previousValue, value, preedit),
-          caret,
-          previousValue,
-        ),
-      );
-
-      playEventPlan(trace, [
-        {
-          kind: "keydown",
-          fields: {
-            ...hangulKeydownFields(profile, stroke),
-            isComposing: false,
-          },
-        },
-        {
-          kind: "keyup",
-          fields: { ...hangulKeyupFields(profile, stroke, false) },
-        },
-      ]);
-
+      playSafariReplacementPreeditStep(trace, stroke, i, suffix, profile);
       await settleAfterPreedit(settle ?? "microtask");
     }
-
-    if (shouldConfirmAfterStroke(strokes, strokeIndex) && finalPreedit) {
-      playEventPlan(
-        trace,
-        planReplacementText(
-          finalPreedit,
-          element.value,
-          "insertReplacementText",
-          element.value.length,
-          element.value,
-        ),
-      );
-    }
+    confirmSafariReplacementIfNeeded(trace, strokes, strokeIndex, finalPreedit);
   }
 
   return trace.records;
 }
 
-/** macOS Safari Apple composition order: update → input → keydown (fixed delayed-update captures). */
-async function playStrokeSafariComposition(
+type SafariStrokeResult =
+  | { status: "aborted-deferred"; step: number }
+  | { status: "maxlength-reject" }
+  | { status: "ok" };
+
+function playSafariPreeditStepsWithOverflow(
   trace: ImeTrace,
   stroke: HangulKeyStroke,
   suffix: string,
   profile: ImeProfile,
-  settle: "microtask" | "macrotask",
-  deferredUpdateRace: boolean,
-): Promise<
-  { status: "aborted-deferred"; step: number } | { status: "maxlength-reject" } | { status: "ok" }
-> {
+): SafariStrokeResult | null {
   const { element } = trace;
   const carets = stroke.valuesAfterSteps.map((value) => value.length - suffix.length);
   const limit = readMaxLength(element);
-
-  playEventPlan(trace, planSafariStrokeCompositionStart(stroke));
 
   for (let i = 0; i < stroke.preeditSteps.length; i++) {
     const preedit = stroke.preeditSteps[i] ?? "";
@@ -155,13 +170,14 @@ async function playStrokeSafariComposition(
     playEventPlan(trace, planSafariBoundaryCommit(stroke, element.value, i));
   }
 
-  playEventPlan(trace, planSafariStrokeKeys(stroke, profile));
+  return null;
+}
 
-  await settleAfterPreedit(settle);
-  if (deferredUpdateRace) {
-    await settleAfterPreedit(settle);
-  }
-
+function detectSafariDeferredAbortAfterKeys(
+  element: HTMLInputElement | HTMLTextAreaElement,
+  stroke: HangulKeyStroke,
+  deferredUpdateRace: boolean,
+): SafariStrokeResult {
   const lastValue = stroke.valuesAfterSteps[stroke.valuesAfterSteps.length - 1] ?? element.value;
   const writeback = deferredUpdateRace && consumeImeControlledWriteback(element);
   const outcome = decideStrokeStepOutcome({
@@ -179,6 +195,66 @@ async function playStrokeSafariComposition(
   return { status: "ok" };
 }
 
+/** macOS Safari Apple composition order: update → input → keydown (fixed delayed-update captures). */
+async function playStrokeSafariComposition(
+  trace: ImeTrace,
+  stroke: HangulKeyStroke,
+  suffix: string,
+  profile: ImeProfile,
+  settle: "microtask" | "macrotask",
+  deferredUpdateRace: boolean,
+): Promise<SafariStrokeResult> {
+  playEventPlan(trace, planSafariStrokeCompositionStart(stroke));
+
+  const overflowReject = playSafariPreeditStepsWithOverflow(trace, stroke, suffix, profile);
+  if (overflowReject) return overflowReject;
+
+  playEventPlan(trace, planSafariStrokeKeys(stroke, profile));
+
+  await settleAfterPreedit(settle);
+  if (deferredUpdateRace) {
+    await settleAfterPreedit(settle);
+  }
+
+  return detectSafariDeferredAbortAfterKeys(trace.element, stroke, deferredUpdateRace);
+}
+
+function shouldSkipDeferredPreedit(
+  element: HTMLInputElement | HTMLTextAreaElement,
+  preedit: string,
+  step: number,
+  firstStep: number,
+): boolean {
+  return step === firstStep && element.value.endsWith(preedit);
+}
+
+async function playDeferredBrokenStroke(
+  trace: ImeTrace,
+  stroke: HangulKeyStroke,
+  firstStep: number,
+  suffix: string,
+  profile: ImeProfile,
+  settle: "microtask" | "macrotask",
+): Promise<void> {
+  const { element } = trace;
+  playEventPlan(trace, planRestartSafariComposition());
+
+  for (let step = firstStep; step < stroke.preeditSteps.length; step++) {
+    const preedit = stroke.preeditSteps[step] ?? "";
+    if (shouldSkipDeferredPreedit(element, preedit, step, firstStep)) continue;
+    const appended = element.value + preedit;
+    const value = appended + suffix;
+    playEventPlan(
+      trace,
+      planSafariDeferredBrokenStep(stroke, profile, preedit, value, appended.length, {
+        valueBefore: element.value,
+        maxLength: readMaxLength(element),
+      }),
+    );
+    await settleAfterPreedit(settle);
+  }
+}
+
 /** Safari broken deferred-update: append preedit onto stale DOM value (OS capture). */
 async function playSafariDeferredBroken(
   trace: ImeTrace,
@@ -189,31 +265,66 @@ async function playSafariDeferredBroken(
   profile: ImeProfile,
   settle: "microtask" | "macrotask",
 ) {
-  const { element } = trace;
-
   for (let strokeIndex = startIndex; strokeIndex < strokes.length; strokeIndex++) {
     const stroke = strokes[strokeIndex];
     if (!stroke) continue;
-
-    playEventPlan(trace, planRestartSafariComposition());
     const firstStep = strokeIndex === startIndex ? startStep : 0;
+    await playDeferredBrokenStroke(trace, stroke, firstStep, suffix, profile, settle);
+  }
+}
 
-    for (let step = firstStep; step < stroke.preeditSteps.length; step++) {
-      const preedit = stroke.preeditSteps[step] ?? "";
-      if (step === firstStep && element.value.endsWith(preedit)) {
-        continue;
-      }
-      const appended = element.value + preedit;
-      const value = appended + suffix;
-      playEventPlan(
-        trace,
-        planSafariDeferredBrokenStep(stroke, profile, preedit, value, appended.length, {
-          valueBefore: element.value,
-          maxLength: readMaxLength(element),
-        }),
-      );
-      await settleAfterPreedit(settle);
+function confirmSafariStrokeIfNeeded(
+  trace: ImeTrace,
+  strokes: HangulKeyStroke[],
+  index: number,
+  stroke: HangulKeyStroke,
+): void {
+  const finalPreedit = stroke.preeditSteps[stroke.preeditSteps.length - 1] ?? "";
+  const finalValue =
+    stroke.valuesAfterSteps[stroke.valuesAfterSteps.length - 1] ?? trace.element.value;
+  if (!shouldConfirmAfterStroke(strokes, index) || !finalPreedit) return;
+
+  playEventPlan(
+    trace,
+    planSafariSyllableCommit(finalPreedit, finalValue, {
+      valueBefore: trace.element.value,
+      maxLength: readMaxLength(trace.element),
+    }),
+  );
+  if (index < strokes.length - 1) {
+    playEventPlan(trace, planRestartSafariComposition());
+  }
+}
+
+async function runSafariCompositionLoop(
+  trace: ImeTrace,
+  strokes: HangulKeyStroke[],
+  suffix: string,
+  profile: ImeProfile,
+  settle: "microtask" | "macrotask",
+  deferredUpdateRace: boolean,
+): Promise<void> {
+  for (let index = 0; index < strokes.length; index++) {
+    const stroke = strokes[index];
+    if (!stroke) continue;
+
+    const result = await playStrokeSafariComposition(
+      trace,
+      stroke,
+      suffix,
+      profile,
+      settle,
+      deferredUpdateRace,
+    );
+
+    if (result.status === "aborted-deferred") {
+      await playSafariDeferredBroken(trace, strokes, index, result.step, suffix, profile, settle);
+      return;
     }
+
+    if (result.status === "maxlength-reject") return;
+
+    confirmSafariStrokeIfNeeded(trace, strokes, index, stroke);
   }
 }
 
@@ -226,52 +337,13 @@ export async function composeHangulSafariComposition(
 ): Promise<ComposedEventRecord[]> {
   const { settle = "macrotask", deferredUpdateRace = false } = options;
   const trace = new ImeTrace(element);
-
-  for (let index = 0; index < strokes.length; index++) {
-    const stroke = strokes[index];
-    if (!stroke) continue;
-
-    const result = await playStrokeSafariComposition(
-      trace,
-      stroke,
-      suffix,
-      profile,
-      settle ?? "macrotask",
-      deferredUpdateRace ?? false,
-    );
-
-    if (result.status === "aborted-deferred") {
-      await playSafariDeferredBroken(
-        trace,
-        strokes,
-        index,
-        result.step,
-        suffix,
-        profile,
-        settle ?? "macrotask",
-      );
-      return trace.records;
-    }
-
-    if (result.status === "maxlength-reject") {
-      return trace.records;
-    }
-
-    const finalPreedit = stroke.preeditSteps[stroke.preeditSteps.length - 1] ?? "";
-    const finalValue = stroke.valuesAfterSteps[stroke.valuesAfterSteps.length - 1] ?? element.value;
-    if (shouldConfirmAfterStroke(strokes, index) && finalPreedit) {
-      playEventPlan(
-        trace,
-        planSafariSyllableCommit(finalPreedit, finalValue, {
-          valueBefore: element.value,
-          maxLength: readMaxLength(element),
-        }),
-      );
-      if (index < strokes.length - 1) {
-        playEventPlan(trace, planRestartSafariComposition());
-      }
-    }
-  }
-
+  await runSafariCompositionLoop(
+    trace,
+    strokes,
+    suffix,
+    profile,
+    settle ?? "macrotask",
+    deferredUpdateRace ?? false,
+  );
   return trace.records;
 }

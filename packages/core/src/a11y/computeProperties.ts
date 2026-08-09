@@ -1,4 +1,5 @@
 import type { A11yProperties } from "./types.ts";
+import { fromDefinedEntries, mergeDefinedParts } from "./assignDefined.ts";
 
 function getNumberAttribute(el: Element, attr: string): number | undefined {
   const val = el.getAttribute(attr);
@@ -141,129 +142,69 @@ const TABLE_ROLES = new Set(["table", "grid", "treegrid"]);
 const CELL_ROLES = new Set(["cell", "gridcell", "columnheader", "rowheader"]);
 const ROW_ROLE = "row";
 
+function collectUniversalProperties(el: Element, role: string): A11yProperties {
+  return fromDefinedEntries([
+    ["level", computeLevel(el, role)],
+    ["haspopup", computeHaspopup(el)],
+    ["orientation", computeOrientation(el)],
+    ["multiselectable", computeMultiselectable(el)],
+    ["autocomplete", computeAutocomplete(el)],
+  ]);
+}
+
+function collectValueRangeProperties(el: Element, role: string): A11yProperties {
+  if (!VALUE_RANGE_ROLES.has(role)) return {};
+  return fromDefinedEntries([
+    ["valuemin", computeValuemin(el)],
+    ["valuemax", computeValuemax(el)],
+    ["valuenow", computeValuenow(el)],
+    ["valuetext", computeValuetext(el)],
+  ]);
+}
+
+function collectSetItemProperties(el: Element, role: string): A11yProperties {
+  if (!SET_ITEM_ROLES.has(role)) return {};
+  return fromDefinedEntries([
+    ["posinset", computePosinset(el)],
+    ["setsize", computeSetsize(el)],
+  ]);
+}
+
+function collectTableCountProperties(el: Element, role: string): A11yProperties {
+  if (!TABLE_ROLES.has(role)) return {};
+  return fromDefinedEntries([
+    ["colcount", computeColcount(el)],
+    ["rowcount", computeRowcount(el)],
+  ]);
+}
+
+function collectRowIndexProperty(el: Element, role: string): A11yProperties {
+  if (role !== ROW_ROLE) return {};
+  return fromDefinedEntries([["rowindex", computeRowindex(el)]]);
+}
+
+function collectCellProperties(el: Element, role: string): A11yProperties {
+  if (!CELL_ROLES.has(role)) return {};
+  return fromDefinedEntries([
+    ["colindex", computeColindex(el)],
+    ["colspan", computeColspan(el)],
+    ["rowspan", computeRowspan(el)],
+  ]);
+}
+
+function collectHeaderSortProperty(el: Element, role: string): A11yProperties {
+  if (role !== "columnheader" && role !== "rowheader") return {};
+  return fromDefinedEntries([["sort", computeSort(el)]]);
+}
+
 export function computeProperties(el: Element, role: string): A11yProperties | undefined {
-  const props: A11yProperties = {};
-  let hasAny = false;
-
-  const level = computeLevel(el, role);
-  if (level !== undefined) {
-    props.level = level;
-    hasAny = true;
-  }
-
-  const haspopup = computeHaspopup(el);
-  if (haspopup !== undefined) {
-    props.haspopup = haspopup;
-    hasAny = true;
-  }
-
-  const orientation = computeOrientation(el);
-  if (orientation !== undefined) {
-    props.orientation = orientation;
-    hasAny = true;
-  }
-
-  const multiselectable = computeMultiselectable(el);
-  if (multiselectable !== undefined) {
-    props.multiselectable = multiselectable;
-    hasAny = true;
-  }
-
-  const autocomplete = computeAutocomplete(el);
-  if (autocomplete !== undefined) {
-    props.autocomplete = autocomplete;
-    hasAny = true;
-  }
-
-  if (VALUE_RANGE_ROLES.has(role)) {
-    const valuemin = computeValuemin(el);
-    if (valuemin !== undefined) {
-      props.valuemin = valuemin;
-      hasAny = true;
-    }
-
-    const valuemax = computeValuemax(el);
-    if (valuemax !== undefined) {
-      props.valuemax = valuemax;
-      hasAny = true;
-    }
-
-    const valuenow = computeValuenow(el);
-    if (valuenow !== undefined) {
-      props.valuenow = valuenow;
-      hasAny = true;
-    }
-
-    const valuetext = computeValuetext(el);
-    if (valuetext !== undefined) {
-      props.valuetext = valuetext;
-      hasAny = true;
-    }
-  }
-
-  if (SET_ITEM_ROLES.has(role)) {
-    const posinset = computePosinset(el);
-    if (posinset !== undefined) {
-      props.posinset = posinset;
-      hasAny = true;
-    }
-
-    const setsize = computeSetsize(el);
-    if (setsize !== undefined) {
-      props.setsize = setsize;
-      hasAny = true;
-    }
-  }
-
-  if (TABLE_ROLES.has(role)) {
-    const colcount = computeColcount(el);
-    if (colcount !== undefined) {
-      props.colcount = colcount;
-      hasAny = true;
-    }
-
-    const rowcount = computeRowcount(el);
-    if (rowcount !== undefined) {
-      props.rowcount = rowcount;
-      hasAny = true;
-    }
-  }
-
-  if (role === ROW_ROLE) {
-    const rowindex = computeRowindex(el);
-    if (rowindex !== undefined) {
-      props.rowindex = rowindex;
-      hasAny = true;
-    }
-  }
-
-  if (CELL_ROLES.has(role)) {
-    const colindex = computeColindex(el);
-    if (colindex !== undefined) {
-      props.colindex = colindex;
-      hasAny = true;
-    }
-
-    const colspan = computeColspan(el);
-    if (colspan !== undefined) {
-      props.colspan = colspan;
-      hasAny = true;
-    }
-
-    const rowspan = computeRowspan(el);
-    if (rowspan !== undefined) {
-      props.rowspan = rowspan;
-      hasAny = true;
-    }
-  }
-
-  if (role === "columnheader" || role === "rowheader") {
-    const sort = computeSort(el);
-    if (sort !== undefined) {
-      props.sort = sort;
-      hasAny = true;
-    }
-  }
-
-  return hasAny ? props : undefined;
+  return mergeDefinedParts(
+    collectUniversalProperties(el, role),
+    collectValueRangeProperties(el, role),
+    collectSetItemProperties(el, role),
+    collectTableCountProperties(el, role),
+    collectRowIndexProperty(el, role),
+    collectCellProperties(el, role),
+    collectHeaderSortProperty(el, role),
+  );
 }

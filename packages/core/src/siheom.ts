@@ -1,9 +1,13 @@
 import { vi } from "vitest";
 import type {
+  ActionStep,
   ActionStepDefinitionDict,
+  AssertionStep,
   AssertionStepDefinitionDict,
+  EffectStep,
   EffectStepDefinitionDict,
   FakeTimersScopeStep,
+  GivenStep,
   GivenStepDefinitionDict,
   Locator,
   Step,
@@ -45,6 +49,102 @@ function defaultFailureSnapshot(): string {
   return getA11ySnapshot(document.body);
 }
 
+function wrapStepError(
+  logs: string[],
+  error: Error,
+  getFailureSnapshot: () => string,
+  messages: MessageMap | undefined,
+): never {
+  throw new Error(formatFailureReport(logs, error, getFailureSnapshot(), messages));
+}
+
+async function runLoggedStep(
+  logs: string[],
+  log: string,
+  handleError: (error: Error) => never,
+  run: () => Promise<void>,
+): Promise<void> {
+  logs.push(log);
+  await run().catch(handleError);
+}
+
+async function runActionStep<TActions extends ActionStepDefinitionDict>(
+  step: ActionStep<TActions>,
+  registries: { actions: TActions },
+  logs: string[],
+  handleError: (error: Error) => never,
+): Promise<void> {
+  const run = registries.actions[step.action] as ActionStepDefinitionDict[string];
+  await runLoggedStep(logs, step.log, handleError, () => run(step.target, ...(step.args ?? [])));
+}
+
+async function runGivenStep<TGivens extends GivenStepDefinitionDict>(
+  step: GivenStep<TGivens>,
+  registries: { givens: TGivens },
+  logs: string[],
+  handleError: (error: Error) => never,
+): Promise<void> {
+  const run = registries.givens[step.given] as (...args: readonly unknown[]) => Promise<void>;
+  await runLoggedStep(logs, step.log, handleError, () => run(...(step.args ?? [])));
+}
+
+async function runEffectStep<TEffects extends EffectStepDefinitionDict>(
+  step: EffectStep<TEffects>,
+  registries: { effects: TEffects },
+  logs: string[],
+  handleError: (error: Error) => never,
+): Promise<void> {
+  const run = registries.effects[step.effect] as EffectStepDefinitionDict[string];
+  await runLoggedStep(logs, step.log, handleError, () => run(...(step.args ?? [])));
+}
+
+async function runAssertStep<TAssertions extends AssertionStepDefinitionDict>(
+  step: AssertionStep<TAssertions>,
+  registries: { assertions: TAssertions },
+  logs: string[],
+  handleError: (error: Error) => never,
+): Promise<void> {
+  const run = registries.assertions[step.assert] as (
+    locator: Locator,
+    ...args: readonly unknown[]
+  ) => Promise<void>;
+  await runLoggedStep(logs, step.log, handleError, () => run(step.target, ...(step.args ?? [])));
+}
+
+async function runOneStep<
+  TActions extends ActionStepDefinitionDict,
+  TAssertions extends AssertionStepDefinitionDict,
+  TGivens extends GivenStepDefinitionDict,
+  TEffects extends EffectStepDefinitionDict,
+>(
+  step: Step<TActions, TAssertions, TGivens, TEffects>,
+  registries: SiheomRegistries<TActions, TAssertions, TGivens, TEffects>,
+  logs: string[],
+  handleError: (error: Error) => never,
+): Promise<void> {
+  if ("scope" in step) {
+    await runFakeTimersScope(step, registries, logs);
+    return;
+  }
+  if ("action" in step) {
+    await runActionStep(step, registries, logs, handleError);
+    return;
+  }
+  if ("given" in step) {
+    await runGivenStep(step, registries, logs, handleError);
+    return;
+  }
+  if ("effect" in step) {
+    await runEffectStep(step, registries, logs, handleError);
+    return;
+  }
+  if ("assert" in step) {
+    await runAssertStep(step, registries, logs, handleError);
+    return;
+  }
+  throw new Error("Invalid step");
+}
+
 async function runSteps<
   TActions extends ActionStepDefinitionDict,
   TAssertions extends AssertionStepDefinitionDict,
@@ -56,49 +156,11 @@ async function runSteps<
   logs: string[],
 ) {
   const getFailureSnapshot = registries.getFailureSnapshot ?? defaultFailureSnapshot;
-
-  const handleError = (error: Error) => {
-    throw new Error(formatFailureReport(logs, error, getFailureSnapshot(), registries.messages));
-  };
+  const handleError = (error: Error) =>
+    wrapStepError(logs, error, getFailureSnapshot, registries.messages);
 
   for (const step of steps) {
-    if ("scope" in step) {
-      await runFakeTimersScope(step, registries, logs);
-      continue;
-    }
-
-    if ("action" in step) {
-      const run = registries.actions[step.action] as ActionStepDefinitionDict[string];
-      logs.push(step.log);
-      await run(step.target, ...(step.args ?? [])).catch(handleError);
-      continue;
-    }
-
-    if ("given" in step) {
-      const run = registries.givens[step.given] as (...args: readonly unknown[]) => Promise<void>;
-      logs.push(step.log);
-      await run(...(step.args ?? [])).catch(handleError);
-      continue;
-    }
-
-    if ("effect" in step) {
-      const run = registries.effects[step.effect] as EffectStepDefinitionDict[string];
-      logs.push(step.log);
-      await run(...(step.args ?? [])).catch(handleError);
-      continue;
-    }
-
-    if ("assert" in step) {
-      const run = registries.assertions[step.assert] as (
-        locator: Locator,
-        ...args: readonly unknown[]
-      ) => Promise<void>;
-      logs.push(step.log);
-      await run(step.target, ...(step.args ?? [])).catch(handleError);
-      continue;
-    }
-
-    throw new Error("Invalid step");
+    await runOneStep(step, registries, logs, handleError);
   }
 }
 

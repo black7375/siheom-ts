@@ -12,8 +12,16 @@ const RELATION_ATTRIBUTES = {
   owns: "aria-owns",
 } as const;
 
-const SINGLE_RELATIONS = new Set(["activedescendant", "errormessage", "details"]);
-const MULTI_RELATIONS = new Set(["labelledby", "describedby", "controls", "owns", "flowto"]);
+type RelationKey = keyof typeof RELATION_ATTRIBUTES;
+
+const SINGLE_RELATIONS = new Set<RelationKey>(["activedescendant", "errormessage", "details"]);
+const MULTI_RELATIONS = new Set<RelationKey>([
+  "labelledby",
+  "describedby",
+  "controls",
+  "owns",
+  "flowto",
+]);
 
 function resolveRelation(
   id: string,
@@ -40,41 +48,71 @@ function getIdRefs(el: Element, attr: string): string[] {
   return value.trim().split(/\s+/).filter(Boolean);
 }
 
+function computeEmptyVerboseRelation(
+  hasAttr: boolean,
+  ids: string[],
+  isVerbose: boolean,
+): null | undefined {
+  if (isVerbose && hasAttr && ids.length === 0) return null;
+  return undefined;
+}
+
+function resolveSingleRelation(
+  ids: string[],
+  root: Element,
+  isVerbose: boolean,
+): A11yRelation | A11yRelationOrNull | undefined {
+  const firstId = ids[0];
+  if (!firstId) return undefined;
+  return resolveRelation(firstId, root, isVerbose) ?? undefined;
+}
+
+function resolveMultiRelations(
+  ids: string[],
+  root: Element,
+  isVerbose: boolean,
+): Array<A11yRelation | A11yRelationOrNull> | undefined {
+  const resolved: Array<A11yRelation | A11yRelationOrNull> = [];
+  for (const id of ids) {
+    const relation = resolveRelation(id, root, isVerbose);
+    if (relation) resolved.push(relation);
+  }
+  if (resolved.length === 0) return undefined;
+  return resolved;
+}
+
+function computeRelationEntry(
+  el: Element,
+  key: RelationKey,
+  attr: string,
+  root: Element,
+  isVerbose: boolean,
+): A11yRelations[RelationKey] | null | undefined {
+  const hasAttr = el.hasAttribute(attr);
+  const ids = getIdRefs(el, attr);
+  const emptyVerbose = computeEmptyVerboseRelation(hasAttr, ids, isVerbose);
+  if (emptyVerbose === null) return null;
+  if (ids.length === 0) return undefined;
+
+  if (SINGLE_RELATIONS.has(key)) {
+    return resolveSingleRelation(ids, root, isVerbose);
+  }
+  if (MULTI_RELATIONS.has(key)) {
+    return resolveMultiRelations(ids, root, isVerbose);
+  }
+  return undefined;
+}
+
 export function computeRelations(el: Element, isVerbose = false): A11yRelations | undefined {
   const relations: A11yRelations = {};
   const root = el.ownerDocument?.documentElement ?? el;
   let hasAny = false;
 
-  for (const [key, attr] of Object.entries(RELATION_ATTRIBUTES)) {
-    const hasAttr = el.hasAttribute(attr);
-    const ids = getIdRefs(el, attr);
-
-    if (isVerbose && hasAttr && ids.length === 0) {
-      (relations as Record<string, null>)[key] = null;
-      hasAny = true;
-      continue;
-    }
-
-    if (ids.length === 0) continue;
-
-    if (SINGLE_RELATIONS.has(key)) {
-      const firstId = ids[0];
-      if (firstId) {
-        const resolved = resolveRelation(firstId, root, isVerbose);
-        if (resolved) {
-          (relations as Record<string, A11yRelation | A11yRelationOrNull>)[key] = resolved;
-          hasAny = true;
-        }
-      }
-    } else if (MULTI_RELATIONS.has(key)) {
-      const resolved = ids
-        .map((id) => resolveRelation(id, root, isVerbose))
-        .filter((r): r is A11yRelation | A11yRelationOrNull => r !== null);
-      if (resolved.length > 0) {
-        (relations as Record<string, (A11yRelation | A11yRelationOrNull)[]>)[key] = resolved;
-        hasAny = true;
-      }
-    }
+  for (const [key, attr] of Object.entries(RELATION_ATTRIBUTES) as Array<[RelationKey, string]>) {
+    const entry = computeRelationEntry(el, key, attr, root, isVerbose);
+    if (entry === undefined) continue;
+    (relations as Record<string, unknown>)[key] = entry;
+    hasAny = true;
   }
 
   return hasAny ? relations : undefined;

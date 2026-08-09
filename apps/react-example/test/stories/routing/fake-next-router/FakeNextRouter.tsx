@@ -1,4 +1,12 @@
-import { createContext, useCallback, useContext, useMemo, useState, type ReactNode } from "react";
+import {
+  createContext,
+  useCallback,
+  useContext,
+  useMemo,
+  useRef,
+  useState,
+  type ReactNode,
+} from "react";
 import { parseHref, parseQueryString } from "./parseHref";
 
 type FakeNextRouterContextValue = {
@@ -31,20 +39,37 @@ export function FakeNextRouterProvider({
   const [pathname, setPathname] = useState(initial.pathname);
   const [search, setSearch] = useState(initial.search);
   const [hash, setHash] = useState(initial.hash);
-  const [_history, setHistory] = useState<string[]>([initialPath]);
+  const historyRef = useRef<string[]>([initialPath]);
 
-  const navigate = useCallback((href: string, mode: "push" | "replace") => {
+  const applyLocation = useCallback((href: string) => {
     const next = parseHref(href);
     setPathname(next.pathname);
     setSearch(next.search);
     setHash(next.hash);
-    setHistory((current) => {
-      if (mode === "replace") {
-        return [...current.slice(0, -1), href];
-      }
-      return [...current, href];
-    });
   }, []);
+
+  const navigate = useCallback(
+    (href: string, mode: "push" | "replace") => {
+      const current = historyRef.current;
+      historyRef.current =
+        mode === "replace" ? [...current.slice(0, -1), href] : [...current, href];
+      applyLocation(href);
+    },
+    [applyLocation],
+  );
+
+  const back = useCallback(() => {
+    const current = historyRef.current;
+    if (current.length <= 1) {
+      return;
+    }
+    const previous = current.at(-2);
+    if (!previous) {
+      return;
+    }
+    historyRef.current = current.slice(0, -1);
+    applyLocation(previous);
+  }, [applyLocation]);
 
   const value = useMemo<FakeNextRouterContextValue>(
     () => ({
@@ -57,32 +82,12 @@ export function FakeNextRouterProvider({
       replace: (href) => {
         navigate(href, "replace");
       },
-      back: () => {
-        setHistory((current) => {
-          if (current.length <= 1) {
-            return current;
-          }
-          const previous = current.at(-2);
-          if (!previous) {
-            return current;
-          }
-          const next = parseHref(previous);
-          setPathname(next.pathname);
-          setSearch(next.search);
-          setHash(next.hash);
-          return current.slice(0, -1);
-        });
-      },
+      back,
     }),
-    [hash, navigate, pathname, search],
+    [back, hash, navigate, pathname, search],
   );
 
   return <FakeNextRouterContext.Provider value={value}>{children}</FakeNextRouterContext.Provider>;
-}
-
-export function useRouter() {
-  const { push, replace, back } = useFakeNextRouterContext();
-  return { push, replace, back };
 }
 
 export function usePathname() {

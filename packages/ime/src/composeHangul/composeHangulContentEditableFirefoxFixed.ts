@@ -1,15 +1,15 @@
-import { planHangulKeystrokes } from "../planHangulKeystrokes";
+import { planHangulKeystrokes, type HangulKeyStroke } from "../planHangulKeystrokes";
 import type { ComposedEventRecord } from "../_internal";
 import { ContentEditableImeTrace } from "../_internal/contentEditableImeTrace";
-import { playEventPlan, type EventPlanStep } from "../_internal/eventPlan";
+import { playEventPlan } from "../_internal/eventPlan";
 import { ImeTrace } from "../_internal/imeTrace";
 import { isEditable } from "../withPresentElement";
-import { planPreedit } from "../_internal/planPreedit";
 import type { ImeProfile } from "../profiles";
 import {
   contentEditableValueBefore,
   planContentEditableBoundaryCommit,
   planContentEditableBoundaryKeydown,
+  planContentEditablePreeditPulse,
   planDuplicateCompositionPulse,
   planFirefoxDeferredEnd,
   stripZwsp,
@@ -18,41 +18,106 @@ import {
 import { planChromeStrokeHead, planChromeStrokeKeyup } from "./planStroke";
 import { settleAfterPreedit } from "./settle";
 
-function planContentEditablePreeditPulse(
-  preedit: string,
-  valueBefore: string,
-  domValue: string,
+type FixedPlayState = {
+  sessionJustStarted: boolean;
+  previousVisible: string;
+};
+
+const DEFAULT_FIXED_PROFILE: ImeProfile = {
+  id: "linux-firefox-contenteditable-fixed",
+  enterDuringComposition: "webkit",
+  hangulKeyEventKey: "process",
+  hangulComposeMode: "contenteditable-firefox-fixed",
+  hanjaConversion: "replace",
+  hangulCompositionBoundary: "syllable",
+  hangulKeyboard: "dubeolsik",
+  postCompositionEndInput: false,
+};
+
+function playFixedBoundaryKeydownIfNeeded(
+  trace: ImeTrace | ContentEditableImeTrace,
+  stroke: HangulKeyStroke,
+  stepIndex: number,
+  previousVisible: string,
+): void {
+  if (stepIndex !== 0 || stroke.commitAfterFirstStep === undefined) return;
+  playEventPlan(trace, [planContentEditableBoundaryKeydown(withZwsp(previousVisible))]);
+}
+
+function nextFixedPlayState(
+  stroke: HangulKeyStroke,
+  stepIndex: number,
+  value: string,
+): FixedPlayState {
+  const previousVisible = stripZwsp(value);
+  if (stepIndex === 0 && stroke.commitAfterFirstStep !== undefined) {
+    return { previousVisible, sessionJustStarted: true };
+  }
+  return { previousVisible, sessionJustStarted: false };
+}
+
+async function playFixedPreeditStep(
+  trace: ImeTrace | ContentEditableImeTrace,
+  stroke: HangulKeyStroke,
+  stepIndex: number,
+  state: FixedPlayState,
   applyDom: boolean,
-): EventPlanStep[] {
-  if (applyDom) {
-    return planPreedit(preedit, domValue, domValue.length, {
-      valueBefore,
-      maxLength: null,
-    });
+  settleHost: boolean,
+): Promise<FixedPlayState> {
+  playFixedBoundaryKeydownIfNeeded(trace, stroke, stepIndex, state.previousVisible);
+
+  const preedit = stroke.preeditSteps[stepIndex]!;
+  const value = stroke.valuesAfterSteps[stepIndex]!;
+  const valueBefore = contentEditableValueBefore(state.previousVisible, state.sessionJustStarted);
+  const domValue = withZwsp(value);
+
+  playEventPlan(
+    trace,
+    planContentEditablePreeditPulse(preedit, valueBefore, domValue, applyDom, domValue.length),
+  );
+
+  if (stepIndex === 0 && stroke.commitAfterFirstStep !== undefined) {
+    playEventPlan(trace, planContentEditableBoundaryCommit(stroke.commitAfterFirstStep, value));
   }
 
-  const inputData = preedit === "" ? null : preedit;
-  return [
-    { kind: "compositionupdate", data: preedit, value: valueBefore },
-    {
-      kind: "beforeinput",
-      fields: {
-        inputType: "insertCompositionText",
-        data: preedit,
-        isComposing: true,
-        value: valueBefore,
-      },
-    },
-    {
-      kind: "input",
-      fields: {
-        inputType: "insertCompositionText",
-        data: inputData,
-        isComposing: true,
-        value: domValue,
-      },
-    },
-  ];
+  if (settleHost) await settleAfterPreedit("macrotask");
+  return nextFixedPlayState(stroke, stepIndex, value);
+}
+
+async function playFixedStroke(
+  trace: ImeTrace | ContentEditableImeTrace,
+  stroke: HangulKeyStroke,
+  state: FixedPlayState,
+  profile: ImeProfile,
+  applyDom: boolean,
+  settleHost: boolean,
+): Promise<FixedPlayState> {
+  playEventPlan(trace, planChromeStrokeHead(stroke, profile));
+  let next = state;
+  for (let stepIndex = 0; stepIndex < stroke.preeditSteps.length; stepIndex++) {
+    next = await playFixedPreeditStep(trace, stroke, stepIndex, next, applyDom, settleHost);
+  }
+  playEventPlan(trace, planChromeStrokeKeyup(stroke, profile));
+  if (settleHost) await settleAfterPreedit("macrotask");
+  return next;
+}
+
+async function playFixedCommitFinal(
+  trace: ImeTrace | ContentEditableImeTrace,
+  strokes: HangulKeyStroke[],
+  text: string,
+  settleHost: boolean,
+): Promise<void> {
+  if (strokes.length === 0) return;
+  const lastStroke = strokes[strokes.length - 1]!;
+  const finalPreedit = lastStroke.preeditSteps[lastStroke.preeditSteps.length - 1] ?? text;
+  const finalDomValue = lastStroke.valuesAfterSteps[lastStroke.valuesAfterSteps.length - 1] ?? text;
+  playEventPlan(trace, [
+    ...planDuplicateCompositionPulse(finalPreedit, withZwsp(finalDomValue)),
+    ...planFirefoxDeferredEnd(finalPreedit, finalDomValue),
+    { kind: "clearSession" },
+  ]);
+  if (settleHost) await settleAfterPreedit("macrotask");
 }
 
 async function playContentEditableFixedSequence(
@@ -64,60 +129,14 @@ async function playContentEditableFixedSequence(
   const strokes = planHangulKeystrokes(text);
   const applyDom = trace instanceof ImeTrace;
   const settleHost = trace instanceof ContentEditableImeTrace;
-  let sessionJustStarted = true;
-  let previousVisible = "";
+  let state: FixedPlayState = { sessionJustStarted: true, previousVisible: "" };
 
   for (const stroke of strokes) {
-    playEventPlan(trace, planChromeStrokeHead(stroke, profile));
-
-    for (let stepIndex = 0; stepIndex < stroke.preeditSteps.length; stepIndex++) {
-      if (stepIndex === 0 && stroke.commitAfterFirstStep !== undefined) {
-        playEventPlan(trace, [planContentEditableBoundaryKeydown(withZwsp(previousVisible))]);
-      }
-
-      const preedit = stroke.preeditSteps[stepIndex]!;
-      const value = stroke.valuesAfterSteps[stepIndex]!;
-      const valueBefore = contentEditableValueBefore(previousVisible, sessionJustStarted);
-      const domValue = withZwsp(value);
-
-      playEventPlan(
-        trace,
-        planContentEditablePreeditPulse(preedit, valueBefore, domValue, applyDom),
-      );
-
-      if (stepIndex === 0 && stroke.commitAfterFirstStep !== undefined) {
-        playEventPlan(trace, planContentEditableBoundaryCommit(stroke.commitAfterFirstStep, value));
-        previousVisible = stripZwsp(value);
-        sessionJustStarted = true;
-      } else {
-        previousVisible = stripZwsp(value);
-        sessionJustStarted = false;
-      }
-
-      if (settleHost) {
-        await settleAfterPreedit("macrotask");
-      }
-    }
-
-    playEventPlan(trace, planChromeStrokeKeyup(stroke, profile));
-    if (settleHost) {
-      await settleAfterPreedit("macrotask");
-    }
+    state = await playFixedStroke(trace, stroke, state, profile, applyDom, settleHost);
   }
 
-  if (commitFinal && strokes.length > 0) {
-    const lastStroke = strokes[strokes.length - 1]!;
-    const finalPreedit = lastStroke.preeditSteps[lastStroke.preeditSteps.length - 1] ?? text;
-    const finalDomValue =
-      lastStroke.valuesAfterSteps[lastStroke.valuesAfterSteps.length - 1] ?? text;
-    playEventPlan(trace, [
-      ...planDuplicateCompositionPulse(finalPreedit, withZwsp(finalDomValue)),
-      ...planFirefoxDeferredEnd(finalPreedit, finalDomValue),
-      { kind: "clearSession" },
-    ]);
-    if (settleHost) {
-      await settleAfterPreedit("macrotask");
-    }
+  if (commitFinal) {
+    await playFixedCommitFinal(trace, strokes, text, settleHost);
   }
 
   return trace.records;
@@ -135,16 +154,7 @@ export async function composeHangulContentEditableFirefoxFixed(
     new ImeTrace(element),
     text,
     commitFinal,
-    profile ?? {
-      id: "linux-firefox-contenteditable-fixed",
-      enterDuringComposition: "webkit",
-      hangulKeyEventKey: "process",
-      hangulComposeMode: "contenteditable-firefox-fixed",
-      hanjaConversion: "replace",
-      hangulCompositionBoundary: "syllable",
-      hangulKeyboard: "dubeolsik",
-      postCompositionEndInput: false,
-    },
+    profile ?? DEFAULT_FIXED_PROFILE,
   );
 }
 
@@ -159,16 +169,7 @@ export async function composeHangulContentEditableFirefoxFixedOnContentEditable(
     new ContentEditableImeTrace(element),
     text,
     commitFinal,
-    profile ?? {
-      id: "linux-firefox-contenteditable-fixed",
-      enterDuringComposition: "webkit",
-      hangulKeyEventKey: "process",
-      hangulComposeMode: "contenteditable-firefox-fixed",
-      hanjaConversion: "replace",
-      hangulCompositionBoundary: "syllable",
-      hangulKeyboard: "dubeolsik",
-      postCompositionEndInput: false,
-    },
+    profile ?? DEFAULT_FIXED_PROFILE,
   );
 }
 

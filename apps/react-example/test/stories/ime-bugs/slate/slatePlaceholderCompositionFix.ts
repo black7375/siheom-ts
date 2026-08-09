@@ -3,23 +3,9 @@
  * @see docs/research/slate-placeholder-fix-alternatives.md
  */
 import { assemble } from "es-hangul";
-import type { CSSProperties } from "react";
-import type { Editor } from "slate";
-import { Node } from "slate";
-import { ReactEditor } from "slate-react";
-import {
-  EDITOR_TO_FORCE_RENDER,
-  EDITOR_TO_PLACEHOLDER_ELEMENT,
-  IS_ANDROID,
-  IS_COMPOSING,
-} from "slate-dom";
+import { IS_ANDROID } from "slate-dom";
 
 import { stripInvisible } from "./fixSlatePlaceholderHangulText";
-
-type GuardedForceRender = (() => void) & {
-  __slateImeGuard?: boolean;
-  __slateImeOriginal?: () => void;
-};
 
 const JAMO = /^[\u3131-\u3163]+$/;
 const SINGLE_JAMO = /^[\u3131-\u3163]$/;
@@ -38,10 +24,6 @@ function longestCommonPrefixLength(a: string, b: string): number {
   return index;
 }
 
-/** Slate Android IM flushes shortly after compositionend — keep guarding force-render. */
-const COMPOSITION_COOLDOWN_MS = 600;
-const lastCompositionEndAt = new WeakMap<Editor, number>();
-
 /** IME preedit `data` → intended visible syllable (when jamo or syllable). */
 export function syllableFromCompositionData(data: string): string | null {
   if (!data) {
@@ -54,15 +36,6 @@ export function syllableFromCompositionData(data: string): string | null {
     return assemble([...data]);
   }
   return null;
-}
-
-export function noteCompositionEndForGuard(editor: Editor): void {
-  lastCompositionEndAt.set(editor, Date.now());
-}
-
-function isInCompositionCooldown(editor: Editor): boolean {
-  const at = lastCompositionEndAt.get(editor);
-  return at !== undefined && Date.now() - at < COMPOSITION_COOLDOWN_MS;
 }
 
 /** Document text during an active composition session (committed prefix + live preedit). */
@@ -179,46 +152,6 @@ export function documentAfterCompositionEnd(
   return normalized;
 }
 
-/**
- * Trust IME `data` when visible text is broken (jamo split) — used by unit tests / legacy.
- * Runtime Android path uses {@link documentFromCommittedPreedit} instead.
- */
-export function compositionPreeditCorrection(
-  visible: string,
-  compositionData: string | null | undefined,
-): string | null {
-  if (!IS_ANDROID || !compositionData) {
-    return null;
-  }
-
-  const target = syllableFromCompositionData(compositionData);
-  if (!target) {
-    return null;
-  }
-
-  const normalized = stripInvisible(visible);
-  if (normalized === target) {
-    return null;
-  }
-
-  // Explosion-scale `data` echoes the document — never apply.
-  if (compositionData.length > target.length + 4 && compositionData.includes(normalized)) {
-    return null;
-  }
-
-  // AC #5989: jamo-only broken visible while IME preedit is the syllable.
-  if (JAMO.test(normalized)) {
-    return target;
-  }
-
-  // AF device: editor still holds previous syllables while `data` is fresh preedit.
-  if (normalized.length > compositionData.length && normalized.includes(compositionData)) {
-    return target;
-  }
-
-  return null;
-}
-
 /** After compositionend flush duplicates syllable (`가` → `가가`). */
 export function dedupeDoubledSyllableCommit(
   visible: string,
@@ -238,31 +171,6 @@ export function dedupeDoubledSyllableCommit(
   }
 
   return null;
-}
-
-/** Hide Slate's official placeholder element (keeps decoration; avoids IME targeting it). */
-export function hideOfficialPlaceholderElement(editor: Editor): void {
-  const placeholder = EDITOR_TO_PLACEHOLDER_ELEMENT.get(editor);
-  if (placeholder) {
-    placeholder.style.display = "none";
-  }
-}
-
-export function isActivelyComposing(editor: Editor): boolean {
-  return Boolean(IS_COMPOSING.get(editor) || ReactEditor.isComposing(editor));
-}
-
-export function placeholderStyleWhileComposing(
-  editor: Editor,
-  baseStyle: CSSProperties | undefined,
-): CSSProperties {
-  if (!isActivelyComposing(editor)) {
-    return baseStyle ?? {};
-  }
-  return {
-    ...baseStyle,
-    display: "none",
-  };
 }
 
 /**
@@ -341,44 +249,4 @@ export function shouldSkipStaleDocumentCompositionInsert(
   }
 
   return false;
-}
-
-function installForceRenderGuard(editor: Editor): void {
-  const current = EDITOR_TO_FORCE_RENDER.get(editor) as GuardedForceRender | undefined;
-  if (!current || current.__slateImeGuard) {
-    return;
-  }
-
-  const guarded: GuardedForceRender = () => {
-    if (isActivelyComposing(editor) || isInCompositionCooldown(editor)) {
-      return;
-    }
-    current();
-  };
-  guarded.__slateImeGuard = true;
-  guarded.__slateImeOriginal = current;
-  EDITOR_TO_FORCE_RENDER.set(editor, guarded);
-}
-
-/** Re-wrap after each Editable render resets EDITOR_TO_FORCE_RENDER. */
-export function attachSlatePlaceholderCompositionFix(editor: Editor): () => void {
-  installForceRenderGuard(editor);
-
-  const previousOnChange = editor.onChange;
-  editor.onChange = () => {
-    previousOnChange();
-    installForceRenderGuard(editor);
-  };
-
-  return () => {
-    editor.onChange = previousOnChange;
-    const guarded = EDITOR_TO_FORCE_RENDER.get(editor) as GuardedForceRender | undefined;
-    if (guarded?.__slateImeOriginal) {
-      EDITOR_TO_FORCE_RENDER.set(editor, guarded.__slateImeOriginal);
-    }
-  };
-}
-
-export function readSlateVisibleText(editor: Editor): string {
-  return stripInvisible(Node.string(editor));
 }

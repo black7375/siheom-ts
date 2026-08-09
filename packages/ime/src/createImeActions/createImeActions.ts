@@ -15,8 +15,8 @@ import {
   composeHangulLinuxChromeSlatePlaceholderFixedOn,
   composeHangulLinuxFirefoxSlatePlaceholderFixedOn,
 } from "../composeHangul/composeHangulLinuxSlateGolden";
-import { planTypeImeSteps } from "../planTypeImeSteps";
-import { resolveProfile, type ImeProfile } from "../profiles";
+import { planTypeImeSteps, type TypeImeStep } from "../planTypeImeSteps";
+import { resolveProfile, type HangulComposeMode, type ImeProfile } from "../profiles";
 import { isContentEditableComposeTarget } from "../_internal/editableElement";
 import { isEditable, withPresentElement } from "../withPresentElement";
 
@@ -30,39 +30,154 @@ export type CreateImeActionsOptions = {
   deferredUpdateRace?: ComposeHangulOptions["deferredUpdateRace"];
 };
 
+type HangulStepPlayer = (
+  element: HTMLElement,
+  step: Extract<TypeImeStep, { kind: "hangul" }>,
+) => Promise<unknown>;
+
+async function composeSpecialKeyName(
+  element: HTMLInputElement | HTMLTextAreaElement,
+  name: string,
+  profile: ImeProfile,
+  user: UserEvent,
+): Promise<void> {
+  if (/^Backspace$/i.test(name)) {
+    await composeBackspace(element, profile);
+    return;
+  }
+  if (/^ArrowLeft$/i.test(name)) {
+    await composeArrowLeft(element, profile);
+    return;
+  }
+  if (/^Enter$/i.test(name)) {
+    await composeEnter(element, profile);
+    return;
+  }
+  await user.keyboard(`{${name}}`);
+}
+
+/** Parse `{Name}`; unclosed `{` returns the rest of the string as keyboard text. */
+function braceTokenEnd(text: string, start: number): { end: number; name: string | null } {
+  const close = text.indexOf("}", start + 1);
+  if (close === -1) return { end: text.length, name: null };
+  return { end: close + 1, name: text.slice(start + 1, close) };
+}
+
+function plainKeyboardRunEnd(text: string, start: number): number {
+  let end = start + 1;
+  while (end < text.length && text[end] !== "{") end++;
+  return end;
+}
+
 async function typeKeySegment(
   user: UserEvent,
   element: HTMLInputElement | HTMLTextAreaElement,
   text: string,
   profile: ImeProfile,
 ): Promise<void> {
-  let i = 0;
-  while (i < text.length) {
-    if (text[i] === "{") {
-      const end = text.indexOf("}", i + 1);
-      if (end === -1) {
-        await user.keyboard(text.slice(i));
+  let index = 0;
+  while (index < text.length) {
+    if (text[index] === "{") {
+      const token = braceTokenEnd(text, index);
+      if (token.name === null) {
+        await user.keyboard(text.slice(index));
         return;
       }
-      const name = text.slice(i + 1, end);
-      if (/^Backspace$/i.test(name)) {
-        await composeBackspace(element, profile);
-      } else if (/^ArrowLeft$/i.test(name)) {
-        await composeArrowLeft(element, profile);
-      } else if (/^Enter$/i.test(name)) {
-        await composeEnter(element, profile);
-      } else {
-        await user.keyboard(`{${name}}`);
-      }
-      i = end + 1;
+      await composeSpecialKeyName(element, token.name, profile, user);
+      index = token.end;
       continue;
     }
-
-    let j = i + 1;
-    while (j < text.length && text[j] !== "{") j++;
-    await user.keyboard(text.slice(i, j));
-    i = j;
+    const end = plainKeyboardRunEnd(text, index);
+    await user.keyboard(text.slice(index, end));
+    index = end;
   }
+}
+
+async function typeNonHangulStep(
+  user: UserEvent,
+  element: HTMLElement,
+  text: string,
+  profile: ImeProfile,
+): Promise<void> {
+  if (isEditable(element)) {
+    await typeKeySegment(user, element, text, profile);
+    return;
+  }
+  await user.type(element, text);
+}
+
+async function playPlannedImeSteps(
+  user: UserEvent,
+  element: HTMLElement,
+  text: string,
+  profile: ImeProfile,
+  playHangul: HangulStepPlayer,
+): Promise<void> {
+  for (const step of planTypeImeSteps(text)) {
+    if (step.kind === "hangul") {
+      await playHangul(element, step);
+      continue;
+    }
+    await typeNonHangulStep(user, element, step.text, profile);
+  }
+}
+
+function defaultComposeHangulPlayer(
+  profile: ImeProfile,
+  composeOptions: Pick<ComposeHangulOptions, "settle" | "deferredUpdateRace">,
+): HangulStepPlayer {
+  return async (element, step) => {
+    if (!isEditable(element)) {
+      throw new Error("composeHangul requires an input or textarea");
+    }
+    await composeHangul(element, step.text, {
+      commitFinal: step.commitFinal,
+      profile,
+      ...composeOptions,
+    });
+  };
+}
+
+type ContentEditableHangulPlayer = (
+  element: HTMLElement,
+  text: string,
+  step: Extract<TypeImeStep, { kind: "hangul" }>,
+  profile: ImeProfile,
+) => Promise<unknown>;
+
+const CONTENT_EDITABLE_HANGUL_PLAYERS = {
+  "contenteditable-firefox-broken": (element, _text, step) =>
+    composeHangulContentEditableFirefoxBrokenOn(element, step.text, {
+      commitFinal: step.commitFinal,
+    }),
+  "contenteditable-firefox-fixed": (element, _text, step, profile) =>
+    composeHangulContentEditableFirefoxFixedOn(element, step.text, {
+      commitFinal: step.commitFinal,
+      profile,
+    }),
+  "contenteditable-firefox-af-fixed": (element, _text, step) =>
+    composeHangulContentEditableAndroidFirefoxFixedOn(element, step.text),
+  "android-chrome-slate-placeholder-broken": (element, _text, step) =>
+    composeHangulAndroidChromeSlatePlaceholderBrokenOn(element, step.text),
+  "android-firefox-slate-placeholder-broken": (element, _text, step) =>
+    composeHangulAndroidFirefoxSlatePlaceholderBrokenOn(element, step.text),
+  "android-firefox-slate-placeholder-fixed": (element, _text, step) =>
+    composeHangulAndroidFirefoxSlatePlaceholderFixedOn(element, step.text),
+  "linux-chrome-slate-placeholder-fixed": (element, _text, step) =>
+    composeHangulLinuxChromeSlatePlaceholderFixedOn(element, step.text),
+  "linux-firefox-slate-placeholder-fixed": (element, _text, step) =>
+    composeHangulLinuxFirefoxSlatePlaceholderFixedOn(element, step.text),
+} as const satisfies Partial<Record<HangulComposeMode, ContentEditableHangulPlayer>>;
+
+const PLAIN_COMPOSE_MODES = new Set<HangulComposeMode>([
+  "linux-chrome-slate-plain-control",
+  "linux-firefox-slate-plain-control",
+  "android-firefox-slate-plain-control",
+  "android-chrome-slate-plain-control",
+]);
+
+function isPlainComposeMode(mode: HangulComposeMode): boolean {
+  return PLAIN_COMPOSE_MODES.has(mode);
 }
 
 async function typeImeText(
@@ -72,196 +187,25 @@ async function typeImeText(
   profile: ImeProfile,
   composeOptions: Pick<ComposeHangulOptions, "settle" | "deferredUpdateRace">,
 ): Promise<void> {
-  if (
-    profile.hangulComposeMode === "contenteditable-firefox-broken" &&
-    isContentEditableComposeTarget(element)
-  ) {
-    for (const step of planTypeImeSteps(text)) {
-      if (step.kind === "hangul") {
-        await composeHangulContentEditableFirefoxBrokenOn(element, step.text, {
-          commitFinal: step.commitFinal,
-        });
-      } else if (isEditable(element)) {
-        await typeKeySegment(user, element, step.text, profile);
-      } else {
-        await user.type(element, step.text);
-      }
-    }
+  const cePlayer =
+    CONTENT_EDITABLE_HANGUL_PLAYERS[
+      profile.hangulComposeMode as keyof typeof CONTENT_EDITABLE_HANGUL_PLAYERS
+    ];
+  if (cePlayer && isContentEditableComposeTarget(element)) {
+    await playPlannedImeSteps(user, element, text, profile, (el, step) =>
+      cePlayer(el, text, step, profile),
+    );
     return;
   }
 
-  if (
-    profile.hangulComposeMode === "contenteditable-firefox-fixed" &&
-    isContentEditableComposeTarget(element)
-  ) {
-    for (const step of planTypeImeSteps(text)) {
-      if (step.kind === "hangul") {
-        await composeHangulContentEditableFirefoxFixedOn(element, step.text, {
-          commitFinal: step.commitFinal,
-          profile,
-        });
-      } else if (isEditable(element)) {
-        await typeKeySegment(user, element, step.text, profile);
-      } else {
-        await user.type(element, step.text);
-      }
-    }
-    return;
-  }
-
-  if (
-    profile.hangulComposeMode === "contenteditable-firefox-af-fixed" &&
-    isContentEditableComposeTarget(element)
-  ) {
-    for (const step of planTypeImeSteps(text)) {
-      if (step.kind === "hangul") {
-        await composeHangulContentEditableAndroidFirefoxFixedOn(element, step.text);
-      } else if (isEditable(element)) {
-        await typeKeySegment(user, element, step.text, profile);
-      } else {
-        await user.type(element, step.text);
-      }
-    }
-    return;
-  }
-
-  if (
-    profile.hangulComposeMode === "android-chrome-slate-placeholder-broken" &&
-    isContentEditableComposeTarget(element)
-  ) {
-    for (const step of planTypeImeSteps(text)) {
-      if (step.kind === "hangul") {
-        await composeHangulAndroidChromeSlatePlaceholderBrokenOn(element, step.text);
-      } else if (isEditable(element)) {
-        await typeKeySegment(user, element, step.text, profile);
-      } else {
-        await user.type(element, step.text);
-      }
-    }
-    return;
-  }
-
-  if (
-    profile.hangulComposeMode === "android-firefox-slate-placeholder-broken" &&
-    isContentEditableComposeTarget(element)
-  ) {
-    for (const step of planTypeImeSteps(text)) {
-      if (step.kind === "hangul") {
-        await composeHangulAndroidFirefoxSlatePlaceholderBrokenOn(element, step.text);
-      } else if (isEditable(element)) {
-        await typeKeySegment(user, element, step.text, profile);
-      } else {
-        await user.type(element, step.text);
-      }
-    }
-    return;
-  }
-
-  if (
-    profile.hangulComposeMode === "android-firefox-slate-placeholder-fixed" &&
-    isContentEditableComposeTarget(element)
-  ) {
-    for (const step of planTypeImeSteps(text)) {
-      if (step.kind === "hangul") {
-        await composeHangulAndroidFirefoxSlatePlaceholderFixedOn(element, step.text);
-      } else if (isEditable(element)) {
-        await typeKeySegment(user, element, step.text, profile);
-      } else {
-        await user.type(element, step.text);
-      }
-    }
-    return;
-  }
-
-  if (
-    profile.hangulComposeMode === "linux-chrome-slate-placeholder-fixed" &&
-    isContentEditableComposeTarget(element)
-  ) {
-    for (const step of planTypeImeSteps(text)) {
-      if (step.kind === "hangul") {
-        await composeHangulLinuxChromeSlatePlaceholderFixedOn(element, step.text);
-      } else if (isEditable(element)) {
-        await typeKeySegment(user, element, step.text, profile);
-      } else {
-        await user.type(element, step.text);
-      }
-    }
-    return;
-  }
-
-  if (
-    profile.hangulComposeMode === "linux-firefox-slate-placeholder-fixed" &&
-    isContentEditableComposeTarget(element)
-  ) {
-    for (const step of planTypeImeSteps(text)) {
-      if (step.kind === "hangul") {
-        await composeHangulLinuxFirefoxSlatePlaceholderFixedOn(element, step.text);
-      } else if (isEditable(element)) {
-        await typeKeySegment(user, element, step.text, profile);
-      } else {
-        await user.type(element, step.text);
-      }
-    }
-    return;
-  }
-
-  if (profile.hangulComposeMode === "linux-chrome-slate-plain-control" && isEditable(element)) {
-    for (const step of planTypeImeSteps(text)) {
-      if (step.kind === "hangul") {
-        await composeHangul(element, step.text, {
-          commitFinal: step.commitFinal,
-          profile,
-          ...composeOptions,
-        });
-      } else {
-        await typeKeySegment(user, element, step.text, profile);
-      }
-    }
-    return;
-  }
-
-  if (profile.hangulComposeMode === "linux-firefox-slate-plain-control" && isEditable(element)) {
-    for (const step of planTypeImeSteps(text)) {
-      if (step.kind === "hangul") {
-        await composeHangul(element, step.text, {
-          commitFinal: step.commitFinal,
-          profile,
-          ...composeOptions,
-        });
-      } else {
-        await typeKeySegment(user, element, step.text, profile);
-      }
-    }
-    return;
-  }
-
-  if (profile.hangulComposeMode === "android-firefox-slate-plain-control" && isEditable(element)) {
-    for (const step of planTypeImeSteps(text)) {
-      if (step.kind === "hangul") {
-        await composeHangul(element, step.text, {
-          commitFinal: step.commitFinal,
-          profile,
-          ...composeOptions,
-        });
-      } else {
-        await typeKeySegment(user, element, step.text, profile);
-      }
-    }
-    return;
-  }
-
-  if (profile.hangulComposeMode === "android-chrome-slate-plain-control" && isEditable(element)) {
-    for (const step of planTypeImeSteps(text)) {
-      if (step.kind === "hangul") {
-        await composeHangul(element, step.text, {
-          commitFinal: step.commitFinal,
-          profile,
-          ...composeOptions,
-        });
-      } else {
-        await typeKeySegment(user, element, step.text, profile);
-      }
-    }
+  if (isPlainComposeMode(profile.hangulComposeMode) && isEditable(element)) {
+    await playPlannedImeSteps(
+      user,
+      element,
+      text,
+      profile,
+      defaultComposeHangulPlayer(profile, composeOptions),
+    );
     return;
   }
 
@@ -270,17 +214,36 @@ async function typeImeText(
     return;
   }
 
-  for (const step of planTypeImeSteps(text)) {
-    if (step.kind === "hangul") {
-      await composeHangul(element, step.text, {
-        commitFinal: step.commitFinal,
-        profile,
-        ...composeOptions,
-      });
-    } else {
-      await typeKeySegment(user, element, step.text, profile);
-    }
-  }
+  await playPlannedImeSteps(
+    user,
+    element,
+    text,
+    profile,
+    defaultComposeHangulPlayer(profile, composeOptions),
+  );
+}
+
+async function fillImeTarget(
+  user: UserEvent,
+  element: HTMLElement,
+  text: string,
+  profile: ImeProfile,
+  composeOptions: Pick<ComposeHangulOptions, "settle" | "deferredUpdateRace">,
+): Promise<void> {
+  await user.click(element);
+  await user.clear(element);
+  await typeImeText(user, element, text, profile, composeOptions);
+}
+
+async function typeImeTarget(
+  user: UserEvent,
+  element: HTMLElement,
+  text: string,
+  profile: ImeProfile,
+  composeOptions: Pick<ComposeHangulOptions, "settle" | "deferredUpdateRace">,
+): Promise<void> {
+  await user.click(element);
+  await typeImeText(user, element, text, profile, composeOptions);
 }
 
 /**
@@ -297,17 +260,14 @@ export function createImeActions(options: CreateImeActionsOptions = {}) {
   };
 
   return {
-    fill: async (target: Locator, text: string) =>
-      withPresentElement(target, resolveElement, async (element) => {
-        await user.click(element);
-        await user.clear(element);
-        await typeImeText(user, element, text, profile, composeOptions);
-      }),
-    type: async (target: Locator, text: string) =>
-      withPresentElement(target, resolveElement, async (element) => {
-        await user.click(element);
-        await typeImeText(user, element, text, profile, composeOptions);
-      }),
+    fill: (target: Locator, text: string) =>
+      withPresentElement(target, resolveElement, (element) =>
+        fillImeTarget(user, element, text, profile, composeOptions),
+      ),
+    type: (target: Locator, text: string) =>
+      withPresentElement(target, resolveElement, (element) =>
+        typeImeTarget(user, element, text, profile, composeOptions),
+      ),
   } satisfies Pick<ActionStepDefinitionDict, "fill" | "type">;
 }
 

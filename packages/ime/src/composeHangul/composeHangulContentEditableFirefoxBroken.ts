@@ -6,50 +6,13 @@ import { ContentEditableImeTrace } from "../_internal/contentEditableImeTrace";
 import { playEventPlan, type EventPlanStep } from "../_internal/eventPlan";
 import { ImeTrace } from "../_internal/imeTrace";
 import { isEditable } from "../withPresentElement";
-import { planPreedit } from "../_internal/planPreedit";
 import {
   FIREFOX_CE_SENTINEL,
+  planContentEditablePreeditPulse,
   planDuplicateCompositionPulse,
   planFirefoxDeferredEnd,
   withZwsp,
 } from "./contentEditableFirefoxShared";
-
-function planContentEditablePreeditPulse(
-  preedit: string,
-  valueBefore: string,
-  domValue: string,
-  applyDom: boolean,
-): EventPlanStep[] {
-  if (applyDom) {
-    return planPreedit(preedit, domValue, preedit.length, {
-      valueBefore,
-      maxLength: null,
-    });
-  }
-
-  const inputData = preedit === "" ? null : preedit;
-  return [
-    { kind: "compositionupdate", data: preedit, value: valueBefore },
-    {
-      kind: "beforeinput",
-      fields: {
-        inputType: "insertCompositionText",
-        data: preedit,
-        isComposing: true,
-        value: valueBefore,
-      },
-    },
-    {
-      kind: "input",
-      fields: {
-        inputType: "insertCompositionText",
-        data: inputData,
-        isComposing: true,
-        value: domValue,
-      },
-    },
-  ];
-}
 
 /** Plan preedit snapshots for broken Firefox contenteditable mode (first syllable stays jamo). */
 export function planContentEditableBrokenPreeditSequence(text: string): string[] {
@@ -74,14 +37,107 @@ export function planContentEditableBrokenPreeditSequence(text: string): string[]
   const strokes = planHangulKeystrokes(rest, { prefix: preedit });
   for (const stroke of strokes) {
     for (let stepIndex = 0; stepIndex < stroke.preeditSteps.length; stepIndex++) {
-      if (stepIndex === 0 && stroke.commitAfterFirstStep !== undefined) {
-        continue;
-      }
+      if (stepIndex === 0 && stroke.commitAfterFirstStep !== undefined) continue;
       sequence.push(stroke.valuesAfterSteps[stepIndex]!);
     }
   }
 
   return sequence;
+}
+
+function planBrokenStrokeHead(index: number, previous: string): EventPlanStep[] {
+  const isFirst = index === 0;
+  const isRestart = index === 1;
+  const head: EventPlanStep[] = [
+    {
+      kind: "keydown",
+      fields: {
+        key: "Process",
+        code: "",
+        keyCode: 229,
+        isComposing: !isFirst && !isRestart,
+      },
+    },
+  ];
+  if (isFirst) {
+    head.push({ kind: "compositionstart" });
+    return head;
+  }
+  if (isRestart) {
+    head.push({ kind: "compositionstart", data: previous, value: previous });
+  }
+  return head;
+}
+
+function brokenValueBefore(index: number, previous: string): string {
+  if (index === 0 || index === 1) return FIREFOX_CE_SENTINEL;
+  return withZwsp(previous);
+}
+
+function planBrokenFirstJamoTail(
+  preedit: string,
+  domValue: string,
+  applyDom: boolean,
+): EventPlanStep[] {
+  const tail: EventPlanStep[] = [
+    ...planDuplicateCompositionPulse(preedit, domValue),
+    ...planFirefoxDeferredEnd(preedit),
+  ];
+  if (applyDom) {
+    tail.push({ kind: "setValue", value: preedit, caret: preedit.length });
+  }
+  tail.push({ kind: "clearSession" });
+  return tail;
+}
+
+function playBrokenPreeditAt(
+  trace: ImeTrace | ContentEditableImeTrace,
+  preeditSequence: string[],
+  index: number,
+  applyDom: boolean,
+): void {
+  const preedit = preeditSequence[index]!;
+  const previous = index === 0 ? "" : preeditSequence[index - 1]!;
+  const domValue = withZwsp(preedit);
+
+  playEventPlan(trace, planBrokenStrokeHead(index, previous));
+  playEventPlan(
+    trace,
+    planContentEditablePreeditPulse(
+      preedit,
+      brokenValueBefore(index, previous),
+      domValue,
+      applyDom,
+      preedit.length,
+    ),
+  );
+  playEventPlan(trace, [
+    {
+      kind: "keyup",
+      fields: {
+        key: "Process",
+        code: "",
+        keyCode: 229,
+        isComposing: true,
+      },
+    },
+  ]);
+
+  if (index === 0) {
+    playEventPlan(trace, planBrokenFirstJamoTail(preedit, domValue, applyDom));
+  }
+}
+
+function playBrokenCommitFinal(
+  trace: ImeTrace | ContentEditableImeTrace,
+  finalPreedit: string,
+): void {
+  const domValue = withZwsp(finalPreedit);
+  playEventPlan(trace, [
+    ...planDuplicateCompositionPulse(finalPreedit, domValue),
+    ...planFirefoxDeferredEnd(finalPreedit),
+    { kind: "clearSession" },
+  ]);
 }
 
 function playContentEditableBrokenSequence(
@@ -91,79 +147,14 @@ function playContentEditableBrokenSequence(
 ): ComposedEventRecord[] {
   const preeditSequence = planContentEditableBrokenPreeditSequence(text);
   const applyDom = trace instanceof ImeTrace;
-
-  if (preeditSequence.length === 0) {
-    return trace.records;
-  }
+  if (preeditSequence.length === 0) return trace.records;
 
   for (let index = 0; index < preeditSequence.length; index++) {
-    const preedit = preeditSequence[index]!;
-    const isFirst = index === 0;
-    const isRestart = index === 1;
-    const keydownComposing = !isFirst && !isRestart;
-    const previous = index === 0 ? "" : preeditSequence[index - 1]!;
-
-    const head: EventPlanStep[] = [
-      {
-        kind: "keydown",
-        fields: {
-          key: "Process",
-          code: "",
-          keyCode: 229,
-          isComposing: keydownComposing,
-        },
-      },
-    ];
-
-    if (isFirst) {
-      head.push({ kind: "compositionstart" });
-    } else if (isRestart) {
-      head.push({
-        kind: "compositionstart",
-        data: previous,
-        value: previous,
-      });
-    }
-
-    playEventPlan(trace, head);
-
-    const valueBefore = isFirst || isRestart ? FIREFOX_CE_SENTINEL : withZwsp(previous);
-    const domValue = withZwsp(preedit);
-
-    playEventPlan(trace, planContentEditablePreeditPulse(preedit, valueBefore, domValue, applyDom));
-    playEventPlan(trace, [
-      {
-        kind: "keyup",
-        fields: {
-          key: "Process",
-          code: "",
-          keyCode: 229,
-          isComposing: true,
-        },
-      },
-    ]);
-
-    if (isFirst) {
-      const tail: EventPlanStep[] = [
-        ...planDuplicateCompositionPulse(preedit, domValue),
-        ...planFirefoxDeferredEnd(preedit),
-      ];
-      if (applyDom) {
-        tail.push({ kind: "setValue", value: preedit, caret: preedit.length });
-      }
-      tail.push({ kind: "clearSession" });
-      playEventPlan(trace, tail);
-    }
+    playBrokenPreeditAt(trace, preeditSequence, index, applyDom);
   }
 
   if (commitFinal) {
-    const finalPreedit = preeditSequence[preeditSequence.length - 1]!;
-    const domValue = withZwsp(finalPreedit);
-    playEventPlan(trace, [
-      ...planDuplicateCompositionPulse(finalPreedit, domValue),
-      ...planFirefoxDeferredEnd(finalPreedit),
-      { kind: "clearSession" },
-    ]);
+    playBrokenCommitFinal(trace, preeditSequence[preeditSequence.length - 1]!);
   }
 
   return trace.records;

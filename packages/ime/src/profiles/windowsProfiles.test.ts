@@ -50,6 +50,35 @@ function withRecordedInput(
   };
 }
 
+type RecordedEvent = ReturnType<typeof attachImeRecorder>["events"][number];
+
+/** Slice from the Hangul compositionstart (Ngs mixed captures Latin via composition). */
+function eventsFromHangulCompositionStart(events: RecordedEvent[]): RecordedEvent[] {
+  const hangulUpdateIndex = events.findIndex(
+    (event) =>
+      event.type === "compositionupdate" &&
+      typeof event.data === "string" &&
+      /[ㄱ-ㅎㅏ-ㅣ가-힣]/.test(event.data),
+  );
+  if (hangulUpdateIndex < 0) return fromFirstCompositionStart(events);
+  let start = hangulUpdateIndex;
+  while (start > 0 && events[start - 1]?.type !== "compositionstart") start -= 1;
+  if (events[start]?.type !== "compositionstart" && start > 0) start -= 1;
+  return events.slice(start);
+}
+
+async function renderNamedInput(recorderRef: {
+  current: ReturnType<typeof attachImeRecorder> | undefined;
+}): Promise<void> {
+  document.body.innerHTML = "";
+  const label = document.createElement("label");
+  label.append("이름");
+  const input = document.createElement("input");
+  label.append(input);
+  document.body.append(label);
+  recorderRef.current = attachImeRecorder(input);
+}
+
 function setupType(profile: string) {
   const recorderRef: { current: ReturnType<typeof attachImeRecorder> | undefined } = {
     current: undefined,
@@ -60,15 +89,7 @@ function setupType(profile: string) {
       actions: createDefaultActions(),
       assertions: createDefaultAssertions(),
       givens: {
-        render: async () => {
-          document.body.innerHTML = "";
-          const label = document.createElement("label");
-          label.append("이름");
-          const input = document.createElement("input");
-          label.append(input);
-          document.body.append(label);
-          recorderRef.current = attachImeRecorder(input);
-        },
+        render: () => renderNamedInput(recorderRef),
       },
       effects: defaultEffects,
     },
@@ -78,6 +99,47 @@ function setupType(profile: string) {
   );
 
   return { runSiheom, actions, assertions, given, recorderRef };
+}
+
+async function expectMixedHangulCriticalMatches(options: {
+  profile: string;
+  golden: { events: RecordedEvent[] };
+  text: string;
+  expected: string;
+}): Promise<void> {
+  const { runSiheom, actions, assertions, given, recorderRef } = setupType(options.profile);
+
+  await runSiheom(
+    given.render(),
+    actions.type(query.textbox("이름"), options.text),
+    assertions.value(query.textbox("이름"), options.expected),
+  );
+
+  const recorded = recorderRef.current!.events;
+  expect(toCriticalEvents(eventsFromHangulCompositionStart(recorded))).toEqual(
+    goldenCritical(eventsFromHangulCompositionStart(options.golden.events)),
+  );
+  recorderRef.current!.detach();
+}
+
+async function expectTypedScriptCriticalMatches(options: {
+  profile: string;
+  golden: { events: RecordedEvent[] };
+  script: string;
+  expected: string;
+}): Promise<void> {
+  const { runSiheom, actions, assertions, given, recorderRef } = setupType(options.profile);
+
+  await runSiheom(
+    given.render(),
+    actions.type(query.textbox("이름"), options.script),
+    assertions.value(query.textbox("이름"), options.expected),
+  );
+
+  expect(toCriticalEvents(recorderRef.current!.events)).toEqual(
+    goldenCritical(options.golden.events),
+  );
+  recorderRef.current!.detach();
 }
 
 describe("Windows IME profiles (MS / Ngs / Firefox)", () => {
@@ -256,37 +318,8 @@ describe("Windows IME profiles (MS / Ngs / Firefox)", () => {
     },
   ] as const)(
     "$profile mixed-en-ko: Hangul portion matches golden critical fields",
-    async ({ profile, golden, text, expected }) => {
-      const { runSiheom, actions, assertions, given, recorderRef } = setupType(profile);
-
-      await runSiheom(
-        given.render(),
-        actions.type(query.textbox("이름"), text),
-        assertions.value(query.textbox("이름"), expected),
-      );
-
-      // Ngs mixed captures Latin letters via composition; slice from first Hangul update.
-      const recorded = recorderRef.current!.events;
-      const goldenEvents = golden.events;
-      const hangulStart = (events: typeof recorded) => {
-        const idx = events.findIndex(
-          (event) =>
-            event.type === "compositionupdate" &&
-            typeof event.data === "string" &&
-            /[ㄱ-ㅎㅏ-ㅣ가-힣]/.test(event.data),
-        );
-        if (idx < 0) return fromFirstCompositionStart(events);
-        let start = idx;
-        while (start > 0 && events[start - 1]?.type !== "compositionstart") start -= 1;
-        if (events[start]?.type !== "compositionstart" && start > 0) start -= 1;
-        return events.slice(start);
-      };
-
-      expect(toCriticalEvents(hangulStart(recorded))).toEqual(
-        goldenCritical(hangulStart(goldenEvents)),
-      );
-      recorderRef.current!.detach();
-    },
+    ({ profile, golden, text, expected }) =>
+      expectMixedHangulCriticalMatches({ profile, golden, text, expected }),
   );
 
   it.each([
@@ -308,37 +341,25 @@ describe("Windows IME profiles (MS / Ngs / Firefox)", () => {
     },
   ] as const)(
     "$profile backspace-mid matches golden critical fields",
-    async ({ profile, golden, script }) => {
-      const { runSiheom, actions, assertions, given, recorderRef } = setupType(profile);
-
-      await runSiheom(
-        given.render(),
-        actions.type(query.textbox("이름"), script),
-        assertions.value(query.textbox("이름"), "김철수"),
-      );
-
-      expect(toCriticalEvents(recorderRef.current!.events)).toEqual(goldenCritical(golden.events));
-      recorderRef.current!.detach();
-    },
+    ({ profile, golden, script }) =>
+      expectTypedScriptCriticalMatches({
+        profile,
+        golden,
+        script,
+        expected: "김철수",
+      }),
   );
 
   it.each([
     { profile: "windows-chrome-ms", golden: msArrow },
     { profile: "windows-chrome-ngs", golden: ngsArrow },
     { profile: "windows-firefox-ms", golden: firefoxArrow },
-  ] as const)(
-    "$profile arrow-edit-mid matches golden critical fields",
-    async ({ profile, golden }) => {
-      const { runSiheom, actions, assertions, given, recorderRef } = setupType(profile);
-
-      await runSiheom(
-        given.render(),
-        actions.type(query.textbox("이름"), "김희{ArrowLeft}태"),
-        assertions.value(query.textbox("이름"), "김태희"),
-      );
-
-      expect(toCriticalEvents(recorderRef.current!.events)).toEqual(goldenCritical(golden.events));
-      recorderRef.current!.detach();
-    },
+  ] as const)("$profile arrow-edit-mid matches golden critical fields", ({ profile, golden }) =>
+    expectTypedScriptCriticalMatches({
+      profile,
+      golden,
+      script: "김희{ArrowLeft}태",
+      expected: "김태희",
+    }),
   );
 });

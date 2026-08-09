@@ -14,7 +14,7 @@ function appendAssistantReply(messages: ChatMessage[], content: string): ChatMes
   if (last?.role === "assistant") {
     return [...messages.slice(0, -1), { ...last, content }];
   }
-  return [...messages, { role: "assistant", content }];
+  return [...messages, { id: crypto.randomUUID(), role: "assistant", content }];
 }
 
 function AssistantMessage({ content, streaming }: { content: string; streaming: boolean }) {
@@ -54,8 +54,8 @@ export function StreamingChat({ api = fakeLlmApi }: { api?: LlmApi }) {
 
     const nextMessages: ChatMessage[] = [
       ...messages,
-      { role: "user", content: trimmed },
-      { role: "assistant", content: "" },
+      { id: crypto.randomUUID(), role: "user", content: trimmed },
+      { id: crypto.randomUUID(), role: "assistant", content: "" },
     ];
 
     setMessages(nextMessages);
@@ -94,7 +94,7 @@ export function StreamingChat({ api = fakeLlmApi }: { api?: LlmApi }) {
               if (message.role === "user") {
                 return (
                   <li
-                    key={`${message.role}-${index}`}
+                    key={message.id}
                     aria-label={message.content}
                     className="self-end rounded-lg bg-primary px-3 py-2 text-primary-foreground"
                   >
@@ -106,10 +106,7 @@ export function StreamingChat({ api = fakeLlmApi }: { api?: LlmApi }) {
               const isStreamingAssistant = streaming && index === messages.length - 1;
 
               return (
-                <li
-                  key={`${message.role}-${index}`}
-                  className="self-start rounded-lg border bg-muted/40 px-3 py-2"
-                >
+                <li key={message.id} className="self-start rounded-lg border bg-muted/40 px-3 py-2">
                   <AssistantMessage content={message.content} streaming={isStreamingAssistant} />
                 </li>
               );

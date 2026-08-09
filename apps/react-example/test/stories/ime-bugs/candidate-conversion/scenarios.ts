@@ -21,7 +21,3 @@ export const CAPTURE_SCENARIOS: CaptureScenario[] = [
     userEventScript: "金泰熙",
   },
 ];
-
-export function getCaptureScenario(id: string): CaptureScenario | undefined {
-  return CAPTURE_SCENARIOS.find((scenario) => scenario.id === id);
-}
