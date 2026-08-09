@@ -1,11 +1,13 @@
-listbox: "크기"
-  - properties: [multiselectable=true] [orientation="vertical"]
-  option: "작게"
-    - states: [selected=true]
-    - properties: [posinset=1] [setsize=3]
-  option: "보통"
-    - states: [selected=false]
-    - properties: [posinset=2] [setsize=3]
-  option: "크게"
-    - states: [disabled=true] [selected=false]
-    - properties: [posinset=3] [setsize=3]
+generic:
+  - interaction: [focused=true]
+  listbox: "크기"
+    - properties: [multiselectable=true] [orientation="vertical"]
+    option: "작게"
+      - states: [selected=true]
+      - properties: [posinset=1] [setsize=3]
+    option: "보통"
+      - states: [selected=false]
+      - properties: [posinset=2] [setsize=3]
+    option: "크게"
+      - states: [disabled=true] [selected=false]
+      - properties: [posinset=3] [setsize=3]

@@ -1,13 +1,16 @@
-region: "섹션"
-  - relations:
-    labelledby: "섹션"
-  heading: "섹션"
-    - properties: [level=2]
-  button: "열기"
+generic:
+  - interaction: [focused=true]
+  region: "섹션"
     - relations:
-      details: "추가 정보"
-  "패널"
-  region: "추가 정보"
-    "자세한 설명"
-  "다음 영역"
-  "소유된 노트"
+      labelledby: "섹션" (#sec-title)
+    heading: "섹션"
+      - properties: [level=2]
+    button: "열기"
+      - interaction: [focusable=true] [tabbable=true]
+      - relations:
+        details: "추가 정보" (#more)
+    "패널"
+    region: "추가 정보"
+      "자세한 설명"
+    "다음 영역"
+    "소유된 노트"

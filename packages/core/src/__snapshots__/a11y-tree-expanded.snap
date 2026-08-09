@@ -1,10 +1,12 @@
-tree: "폴더"
-  treeitem: "문서 계획.md 메모.md"
-    - states: [expanded=true]
-    "문서"
-    group:
-      treeitem: "계획.md"
-        - states: [selected=true]
-      treeitem: "메모.md"
-  treeitem: "사진"
-    - states: [expanded=false]
+generic:
+  - interaction: [focused=true]
+  tree: "폴더"
+    treeitem: "문서 계획.md 메모.md"
+      - states: [expanded=true]
+      "문서"
+      group:
+        treeitem: "계획.md"
+          - states: [selected=true]
+        treeitem: "메모.md"
+    treeitem: "사진"
+      - states: [expanded=false]

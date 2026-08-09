@@ -1,6 +1,11 @@
-button: "굵게"
-  - states: [pressed=true]
-button: "정렬"
-  - states: [pressed=mixed]
-button: "기울임"
-  - states: [pressed=false]
+generic:
+  - interaction: [focused=true]
+  button: "굵게"
+    - states: [pressed=true]
+    - interaction: [focusable=true] [tabbable=true]
+  button: "정렬"
+    - states: [pressed=mixed]
+    - interaction: [focusable=true] [tabbable=true]
+  button: "기울임"
+    - states: [pressed=false]
+    - interaction: [focusable=true] [tabbable=true]

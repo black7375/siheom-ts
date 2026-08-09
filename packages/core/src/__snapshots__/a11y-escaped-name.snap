@@ -1,2 +1,5 @@
-button: "Say \"hi\"\nnow"
-  "x"
+generic:
+  - interaction: [focused=true]
+  button: "Say \"hi\"\nnow"
+    - interaction: [focusable=true] [tabbable=true]
+    "x"

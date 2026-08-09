@@ -1,5 +1,9 @@
-generic: ""
-  generic: ""
+generic: "" [childCount=1]
+  - interaction: [focusable=false] [tabbable=false] [focused=true]
+  generic: "" [childCount=1]
+    - interaction: [focusable=false] [tabbable=false] [focused=false]
     - relations:
       controls: null
-    button: "열기"
+    - attributes: [aria-controls="missing-id"]
+    button: "열기" [childCount=0]
+      - interaction: [focusable=true] [tabbable=true] [focused=false]

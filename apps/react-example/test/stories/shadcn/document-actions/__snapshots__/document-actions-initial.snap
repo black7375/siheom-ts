@@ -4,4 +4,5 @@ region: "문서 목록"
     "2026년 1분기 제품 기획 문서"
     button: "기획서 더보기"
       - states: [expanded=false]
+      - interaction: [focusable=true] [tabbable=true]
       - properties: [haspopup="menu"]

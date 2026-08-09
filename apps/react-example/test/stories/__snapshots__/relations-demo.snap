@@ -5,23 +5,29 @@ form: "relations-demo"
     "Email is required"
   textbox: "Email" [value=""] [description="Enter your email address"]
     - states: [invalid=true]
+    - interaction: [focusable=true] [tabbable=true]
   generic: "Settings Panel"
     - relations:
-      labelledby: "Settings Panel"
+      labelledby: "Settings Panel" (#panel-title)
     heading: "Settings Panel"
       - properties: [level=2]
     button: "Toggle Panel"
       - states: [expanded=true]
+      - interaction: [focusable=true] [tabbable=true]
       - relations:
-        controls: "Settings Panel"
+        controls: "Settings Panel" (#panel)
   region: "Feature details"
     "More information about this feature"
   button: "Help"
+    - interaction: [focusable=true] [tabbable=true]
     - relations:
-      details: "Feature details"
+      details: "Feature details" (#detail-info)
   navigation: "Main navigation"
     menu:
       menuitem: "Home"
+        - interaction: [focusable=true] [tabbable=true]
       menuitem: "About"
+        - interaction: [focusable=true] [tabbable=true]
     button: "Menu"
+      - interaction: [focusable=true] [tabbable=true]
       - properties: [haspopup="menu"]

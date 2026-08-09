@@ -1,2 +1,5 @@
-button: "저장"
-  - other: [testid="save"]
+generic:
+  - interaction: [focused=true]
+  button: "저장"
+    - interaction: [focusable=true] [tabbable=true]
+    - other: [testid="save"]

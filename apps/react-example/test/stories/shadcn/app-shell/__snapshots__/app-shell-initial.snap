@@ -4,8 +4,10 @@ region: "앱 셸"
     list:
       listitem:
         link: "대시보드"
+          - interaction: [focusable=true] [tabbable=true]
       listitem:
         link: "설정"
+          - interaction: [focusable=true] [tabbable=true]
   main:
     navigation: "breadcrumb"
       list:

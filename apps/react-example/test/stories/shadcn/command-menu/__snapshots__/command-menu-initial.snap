@@ -1,5 +1,6 @@
 region: "빠른 실행 데모"
   button: "빠른 실행"
+    - interaction: [focusable=true] [tabbable=true]
     "빠른 실행"
   heading: "빠른 실행"
     - properties: [level=2]

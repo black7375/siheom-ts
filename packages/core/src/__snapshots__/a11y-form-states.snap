@@ -1,15 +1,20 @@
-form: "가입"
-  "이름"
-  textbox: "이름" [value="김"]
-    - states: [required=true]
-  "메모"
-  textbox: "메모" [value="읽기전용"]
-    - states: [readonly=true]
-    "읽기전용"
-  checkbox: "동의" [value="on"]
-    - states: [checked=true]
-  "동의"
-  checkbox: "부분선택"
-    - states: [checked=mixed]
-  button: "제출"
-    - states: [disabled=true]
+generic:
+  - interaction: [focused=true]
+  form: "가입"
+    "이름"
+    textbox: "이름" [value="김"]
+      - states: [required=true]
+      - interaction: [focusable=true] [tabbable=true]
+    "메모"
+    textbox: "메모" [value="읽기전용"]
+      - states: [readonly=true]
+      - interaction: [focusable=true] [tabbable=true]
+      "읽기전용"
+    checkbox: "동의" [value="on"]
+      - states: [checked=true]
+      - interaction: [focusable=true] [tabbable=true]
+    "동의"
+    checkbox: "부분선택"
+      - states: [checked=mixed]
+    button: "제출"
+      - states: [disabled=true]

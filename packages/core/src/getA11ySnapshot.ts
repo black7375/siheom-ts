@@ -2,7 +2,14 @@ import { buildA11yTree } from "./a11y/buildTree.ts";
 import { serializeA11yTree } from "./a11y/serializeTree.ts";
 import type { BuildA11yTreeOptions, SerializeOptions } from "./a11y/types.ts";
 
-export type { A11yNode, A11yStates, BuildA11yTreeOptions } from "./a11y/types.ts";
+export type {
+  A11yNode,
+  A11yStates,
+  A11yInteraction,
+  A11yAttributes,
+  BuildA11yTreeOptions,
+  SerializeOptions,
+} from "./a11y/types.ts";
 
 export interface A11ySnapshotOptions extends BuildA11yTreeOptions {
   serialize?: SerializeOptions;
@@ -20,7 +27,7 @@ export function getA11ySnapshot(element: HTMLElement, options: A11ySnapshotOptio
   const serializeOpts: SerializeOptions = {
     mode: options.serialize?.mode ?? options.mode,
   };
-  return serializeA11yTree(tree, serializeOpts).trim();
+  return serializeA11yTree(tree, serializeOpts);
 }
 
 /**

@@ -1,7 +1,11 @@
-"본문"
-textbox: "본문" [value="문장이 이상함"]
-  - states: [invalid=grammar]
-  "문장이 이상함"
-"검색"
-textbox: "검색" [value="serach"]
-  - states: [invalid=spelling]
+generic:
+  - interaction: [focused=true]
+  "본문"
+  textbox: "본문" [value="문장이 이상함"]
+    - states: [invalid=grammar]
+    - interaction: [focusable=true] [tabbable=true]
+    "문장이 이상함"
+  "검색"
+  textbox: "검색" [value="serach"]
+    - states: [invalid=spelling]
+    - interaction: [focusable=true] [tabbable=true]

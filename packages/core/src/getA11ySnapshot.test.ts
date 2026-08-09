@@ -30,8 +30,21 @@ describe("getA11ySnapshot", () => {
 
   it("returns empty string when the tree is inaccessible", () => {
     document.body.innerHTML = `<div aria-hidden="true"><button>숨김</button></div>`;
+    const root = document.querySelector("div");
 
-    expect(getA11ySnapshot(document.querySelector("div")!)).toBe("");
+    expect(root).not.toBeNull();
+    if (root) expect(getA11ySnapshot(root)).toBe("");
+  });
+
+  it("ends non-empty snapshots with a newline", () => {
+    // Given
+    document.body.innerHTML = `<button type="button">저장</button>`;
+
+    // When
+    const snapshot = getA11ySnapshot(document.body);
+
+    // Then
+    expect(snapshot.endsWith("\n")).toBe(true);
   });
 
   it("verbose mode keeps nullish relation targets and generic wrappers", async () => {

@@ -1,4 +1,7 @@
-paragraph:
-  "보이는 문단"
-"장식"
-button: "보이면 안 됨?"
+generic:
+  - interaction: [focused=true]
+  paragraph:
+    "보이는 문단"
+  "장식"
+  button: "보이면 안 됨?"
+    - interaction: [focusable=true] [tabbable=true]

@@ -1,5 +1,6 @@
 import type { A11yStates } from "./types.ts";
 import { isCheckableRole } from "./ariaRoles.ts";
+import { isDisabledByHTMLSemantics } from "./elementSemantics.ts";
 
 function checkBooleanAttribute(
   el: Element,
@@ -31,13 +32,11 @@ export function computeAriaHidden(el: Element, isVerbose = false): boolean | nul
 }
 
 export function computeAriaDisabled(el: Element, isVerbose = false): boolean | null | undefined {
-  if ((el as HTMLButtonElement).disabled) {
+  // Check native HTML disabled (including inheritance from fieldset/custom elements).
+  if (isDisabledByHTMLSemantics(el)) {
     return true;
   }
-  const val = el.getAttribute("aria-disabled");
-  if (val === "true") return true;
-  if (isVerbose && el.hasAttribute("aria-disabled")) return null;
-  return undefined;
+  return checkBooleanAttribute(el, "aria-disabled", isVerbose);
 }
 
 export function computeAriaModal(el: Element, isVerbose = false): boolean | null | undefined {
@@ -114,10 +113,6 @@ export function computeAriaReadonly(el: Element, isVerbose = false): boolean | n
   return checkBooleanAttribute(el, "aria-readonly", isVerbose);
 }
 
-export function computeAriaBusy(el: Element, isVerbose = false): boolean | null | undefined {
-  return checkBooleanAttribute(el, "aria-busy", isVerbose);
-}
-
 export function computeStates(
   el: Element,
   role: string,
@@ -191,12 +186,6 @@ export function computeStates(
   const readonly = computeAriaReadonly(el, isVerbose);
   if (readonly !== undefined) {
     states.readonly = readonly;
-    hasAny = true;
-  }
-
-  const busy = computeAriaBusy(el, isVerbose);
-  if (busy !== undefined) {
-    states.busy = busy;
     hasAny = true;
   }
 

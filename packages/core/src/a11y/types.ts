@@ -2,7 +2,16 @@ export interface A11yStates {
   hidden?: boolean | null;
   disabled?: boolean | null;
 
+  /**
+   * @deprecated Retained for compatibility with manually constructed trees.
+   * Generated trees should use `interaction.focusable` instead.
+   */
   focusable?: boolean | null;
+
+  /**
+   * @deprecated Retained for compatibility with manually constructed trees.
+   * Generated trees should use `interaction.focused` instead.
+   */
   focused?: boolean | null;
   modal?: boolean | null;
 
@@ -15,9 +24,22 @@ export interface A11yStates {
   invalid?: boolean | "grammar" | "spelling" | null;
   required?: boolean | null;
   readonly?: boolean | null;
-
-  busy?: boolean | null;
 }
+
+export interface A11yInteraction {
+  focusable: boolean;
+  tabbable: boolean;
+  focused: boolean;
+  keyshortcuts?: string;
+  accesskey?: string;
+}
+
+export interface A11yAttributes {
+  [key: string]: string;
+}
+
+export type A11yOtherValue = string | number | boolean | null;
+export type A11yOther = Record<string, A11yOtherValue>;
 
 export interface A11yProperties {
   level?: number | null;
@@ -68,6 +90,7 @@ export interface A11yLiveRegion {
   live?: "off" | "polite" | "assertive" | null;
   atomic?: boolean | null;
   relevant?: string | null;
+  busy?: boolean | null;
 }
 
 export interface A11yDragDrop {
@@ -86,14 +109,17 @@ export interface A11yNode {
   relations?: A11yRelations;
   liveRegion?: A11yLiveRegion;
   dragDrop?: A11yDragDrop;
-  other?: Record<string, unknown>;
+  interaction?: A11yInteraction;
+  attributes?: A11yAttributes;
+  other?: A11yOther;
 
   children: A11yNode[];
 }
 
 export interface BuildA11yTreeOptions {
   mode?: "compact" | "verbose";
-  computeOther?: (el: HTMLElement) => Record<string, unknown> | undefined;
+  computeOther?: (el: HTMLElement) => A11yOther | undefined;
+  includeHidden?: boolean;
 }
 
 export interface SerializeOptions {
