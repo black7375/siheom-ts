@@ -1,3 +1,5 @@
 region: "2단계 인증"
   textbox: "인증 코드" [value=""]
+    - interaction: [focusable=true] [tabbable=true]
   button: "확인"
+    - interaction: [focusable=true] [tabbable=true]

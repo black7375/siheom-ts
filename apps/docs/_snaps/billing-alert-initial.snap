@@ -3,3 +3,4 @@ region: "청구 알림"
     "결제 실패"
     "등록된 카드로 결제할 수 없습니다."
     button: "확인"
+      - interaction: [focusable=true] [tabbable=true]

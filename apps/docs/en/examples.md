@@ -35,7 +35,7 @@ Counter and SignUpForm in `apps/react-example` are the canonical examples. There
 | [Chart Dashboard](/en/examples/chart-dashboard) | Chart · Card · Tabs |
 | [LLM Chat](/en/examples/llm-chat) | Streaming replies · fake LLM API |
 
-Run `bun run storybook` in the repo to inspect UI visually.
+Run `yarn storybook` in the repo to inspect UI visually.
 
 ## Next steps
 

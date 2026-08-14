@@ -27,7 +27,7 @@
 프레임워크 패키지와 함께 설치합니다. peer는 Testing Library / Vitest입니다 (React peer는 없습니다).
 
 ```bash
-bun add @siheom/ime
+yarn add @siheom/ime
 # 또는
 npm install @siheom/ime
 ```

@@ -1,28 +1,33 @@
 form: "회원가입"
   - relations:
-    labelledby: "회원가입"
+    labelledby: "회원가입" (#signup-form-title)
   group:
     "이메일"
     textbox: "이메일" [value=""]
       - states: [invalid=true]
+      - interaction: [focusable=true] [tabbable=true]
     alert:
       "올바른 이메일 형식이 아닙니다"
   group:
     "비밀번호"
     generic: "비밀번호"
       - states: [invalid=true]
+      - interaction: [focusable=true] [tabbable=true]
     alert:
       "비밀번호를 10자 이상 입력해주세요"
   group:
     checkbox: "약관 동의"
       - states: [checked=false] [invalid=true]
+      - interaction: [focusable=true] [tabbable=true]
     "약관 동의"
     alert:
       "약관 동의에 동의해야 합니다"
   group:
     checkbox: "개인정보 수집 동의"
       - states: [checked=false] [invalid=true]
+      - interaction: [focusable=true] [tabbable=true]
     "개인정보 수집 동의"
     alert:
       "개인정보 수집 동의에 동의해야 합니다"
   button: "가입하기"
+    - interaction: [focusable=true] [tabbable=true] [focused=true]

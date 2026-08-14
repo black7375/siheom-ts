@@ -1,4 +1,6 @@
 region: "저장 피드백"
   button: "저장"
+    - interaction: [focusable=true] [tabbable=true]
   region: "Notifications alt+T"
-    - live-region: [live=polite] [atomic=false] [relevant="additions text"]
+    - interaction: [focusable=true]
+    - live-region: [live="polite"] [atomic=false] [relevant="additions text"]

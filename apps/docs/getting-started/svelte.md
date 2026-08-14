@@ -17,9 +17,9 @@ siheom은 **vitest browser mode**(Playwright provider)에서 실제 Chromium 등
 필요한 dev dependency:
 
 ```bash
-bun add -d vitest @vitest/browser playwright @sveltejs/vite-plugin-svelte
-bunx playwright install chromium
-bun add @siheom/svelte svelte @testing-library/svelte @testing-library/jest-dom @testing-library/user-event
+yarn add -D vitest @vitest/browser playwright @sveltejs/vite-plugin-svelte
+yarn playwright install chromium
+yarn add @siheom/svelte svelte @testing-library/svelte @testing-library/jest-dom @testing-library/user-event
 ```
 
 `vitest.config.ts`:
@@ -53,7 +53,7 @@ import "@testing-library/jest-dom/vitest";
 실행:
 
 ```bash
-bunx vitest
+yarn vitest
 ```
 
 ## 첫 시험

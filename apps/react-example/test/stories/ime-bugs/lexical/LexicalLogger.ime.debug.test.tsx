@@ -31,7 +31,7 @@ function runWithLexicalIme(profile: "android-firefox-contenteditable-fixed") {
 
 /**
  * Diagnostic test — dumps Lexical DOM/command trace on failure.
- * Run: cd apps/react-example && bun run test LexicalLogger.ime.debug.test.tsx
+ * Run: yarn workspace @siheom/react-example test LexicalLogger.ime.debug.test.tsx
  */
 describe("LexicalLogger AF fixed — composition debug trace", () => {
   it("dump trace while typing 가나다 (android-firefox-contenteditable-fixed)", async () => {

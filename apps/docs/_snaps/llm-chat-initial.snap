@@ -3,5 +3,6 @@ region: "LLM 채팅"
   list: "대화"
   "메시지"
   textbox: "메시지" [value=""]
+    - interaction: [focusable=true] [tabbable=true]
   button: "전송"
     - states: [disabled=true]

@@ -35,7 +35,7 @@
 | [Chart Dashboard](/examples/chart-dashboard) | Chart · Card · Tabs |
 | [LLM Chat](/examples/llm-chat) | 스트리밍 응답 · fake LLM API |
 
-Storybook으로 UI를 눈으로 확인하려면 레포에서 `bun run storybook`을 실행하세요.
+Storybook으로 UI를 눈으로 확인하려면 레포에서 `yarn storybook`을 실행하세요.
 
 ## 다음 단계
 

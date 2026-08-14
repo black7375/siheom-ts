@@ -21,12 +21,17 @@ region: "할 일 관리"
     list:
       listitem:
         button: "이전 페이지"
+          - interaction: [focusable=true] [tabbable=true]
       listitem:
         button: "1"
           - states: [current=page]
+          - interaction: [focusable=true] [tabbable=true]
       listitem:
         button: "2"
+          - interaction: [focusable=true] [tabbable=true]
       listitem:
         button: "3"
+          - interaction: [focusable=true] [tabbable=true]
       listitem:
         button: "다음 페이지"
+          - interaction: [focusable=true] [tabbable=true]

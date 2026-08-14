@@ -6,13 +6,13 @@ export declare const vitestBrowserDefine: {
 };
 /** Shared Vitest browser mode config (matches apps/react-example). */
 export declare const vitestBrowserMode: {
-    onConsoleLog(log: string, type: "stderr" | "stdout"): false | undefined;
+    onConsoleLog(log: any, type: any): false | undefined;
     browser: {
-        enabled: true;
-        headless: true;
-        provider: import("vitest/node").BrowserProviderOption<import("@vitest/browser-playwright").PlaywrightProviderOptions>;
+        enabled: boolean;
+        headless: boolean;
+        provider: any;
         instances: {
-            browser: "chromium";
+            browser: string;
         }[];
     };
 };

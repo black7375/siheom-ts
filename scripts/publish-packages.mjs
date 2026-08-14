@@ -3,7 +3,7 @@
  * Publish workspace packages to npm with workspace: protocol rewritten
  * to real semver (same behavior as pnpm publish).
  *
- * Bun publish does not rewrite workspace:*, which breaks consumers.
+ * Published manifests must not expose workspace:* ranges to consumers.
  */
 
 import { spawnSync } from "node:child_process";
@@ -81,10 +81,12 @@ function rewriteDeps(deps, workspaceVersions) {
 }
 
 function isPublished(name, version) {
-  const result = spawnSync("npm", ["view", `${name}@${version}`, "version"], {
-    encoding: "utf8",
-  });
-  return result.status === 0;
+  const result = spawnSync(
+    "yarn",
+    ["npm", "info", `${name}@${version}`, "--fields", "version", "--json"],
+    { cwd: ROOT, encoding: "utf8" },
+  );
+  return result.status === 0 && JSON.parse(result.stdout).version === version;
 }
 
 function publishPackage(packageName, { otp, dryRun }) {
@@ -112,7 +114,7 @@ function publishPackage(packageName, { otp, dryRun }) {
     cpSync(join(packageDir, "dist"), join(tempDir, "dist"), { recursive: true });
     writeFileSync(join(tempDir, "package.json"), `${JSON.stringify(exportable, null, 2)}\n`);
 
-    const args = ["publish", tempDir, "--access", "public"];
+    const args = ["--cwd", tempDir, "npm", "publish", "--access", "public"];
     if (otp) {
       args.push("--otp", otp);
     }
@@ -120,7 +122,7 @@ function publishPackage(packageName, { otp, dryRun }) {
       args.push("--dry-run");
     }
 
-    const result = spawnSync("npm", args, { stdio: "inherit" });
+    const result = spawnSync("yarn", args, { cwd: ROOT, stdio: "inherit" });
     if (result.status !== 0) {
       throw new Error(`Failed to publish ${pkgJson.name}@${pkgJson.version}`);
     }

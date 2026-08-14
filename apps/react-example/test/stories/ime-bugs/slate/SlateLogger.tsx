@@ -121,8 +121,7 @@ export function SlateLogger({
           </li>
           <li>
             JSON includes <code>slateDebug.patch.patchActive</code> — must be <strong>true</strong>{" "}
-            (false = Storybook served stale slate-react; restart after{" "}
-            <code>bun run storybook</code>).
+            (false = Storybook served stale slate-react; restart after <code>yarn storybook</code>).
           </li>
           <li>
             JSON includes <code>slateDebug.exploration.timeline</code> (H1),{" "}

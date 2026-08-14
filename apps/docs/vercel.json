@@ -1,7 +1,6 @@
 {
 	"$schema": "https://openapi.vercel.sh/vercel.json",
-	"bunVersion": "1.x",
-	"installCommand": "cd ../.. && bun install --filter '@siheom/docs' --ignore-scripts",
-	"buildCommand": "bun run build",
+	"installCommand": "cd ../.. && corepack yarn workspaces focus @siheom/docs",
+	"buildCommand": "corepack yarn build",
 	"outputDirectory": ".vitepress/dist"
 }

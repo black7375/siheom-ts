@@ -102,5 +102,5 @@ Full guide: /guides/ime · /en/guides/ime
 
 ## Optional
 
-- Full docs site: `bun run --filter '@siheom/docs' dev`
+- Full docs site: `yarn workspace @siheom/docs dev`
 - AI skill (when published): `npx skills add twinstae/siheom-ts`

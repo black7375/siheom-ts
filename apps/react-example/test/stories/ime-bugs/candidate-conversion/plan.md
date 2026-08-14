@@ -30,4 +30,4 @@ Safari/native apps replace. Toss/당근 etc. show the same Chrome append.
 
 ## Storybook
 
-`bun run storybook` → **IME / Hanja Autocomplete Conflict**
+`yarn storybook` → **IME / Hanja Autocomplete Conflict**

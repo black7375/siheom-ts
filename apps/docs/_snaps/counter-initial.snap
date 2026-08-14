@@ -1,1 +1,2 @@
 button: "0"
+  - interaction: [focusable=true] [tabbable=true]

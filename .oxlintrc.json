@@ -1,9 +1,6 @@
 {
-  "$schema": "./node_modules/oxlint/configuration_schema.json",
+  "$schema": "https://unpkg.com/oxlint@1.76.0/configuration_schema.json",
   "plugins": ["typescript", "unicorn", "oxc"],
-  "options": {
-    "typeAware": true
-  },
   "categories": {
     "correctness": "error"
   },

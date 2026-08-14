@@ -1,17 +1,23 @@
 form: "회원가입"
   - relations:
-    labelledby: "회원가입"
+    labelledby: "회원가입" (#signup-form-title)
   group:
     "이메일"
     textbox: "이메일" [value="test@test.com"]
+      - interaction: [focusable=true] [tabbable=true]
   group:
     "비밀번호"
+    generic: "비밀번호"
+      - interaction: [focusable=true] [tabbable=true]
   group:
     checkbox: "약관 동의"
       - states: [checked=true]
+      - interaction: [focusable=true] [tabbable=true]
     "약관 동의"
   group:
     checkbox: "개인정보 수집 동의"
       - states: [checked=true]
+      - interaction: [focusable=true] [tabbable=true] [focused=true]
     "개인정보 수집 동의"
   button: "가입하기"
+    - interaction: [focusable=true] [tabbable=true]

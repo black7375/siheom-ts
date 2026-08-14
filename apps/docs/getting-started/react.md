@@ -17,9 +17,9 @@ siheom은 **vitest browser mode**(Playwright provider)에서 실제 Chromium 등
 필요한 dev dependency:
 
 ```bash
-bun add -d vitest @vitest/browser playwright @vitejs/plugin-react
-bunx playwright install chromium
-bun add @siheom/react @testing-library/react @testing-library/jest-dom @testing-library/user-event
+yarn add -D vitest @vitest/browser playwright @vitejs/plugin-react
+yarn playwright install chromium
+yarn add @siheom/react @testing-library/react @testing-library/jest-dom @testing-library/user-event
 ```
 
 `@siheom/react-example`은 `postinstall`에서 Chromium을 받습니다.
@@ -55,7 +55,7 @@ import "@testing-library/jest-dom/vitest";
 실행:
 
 ```bash
-bunx vitest
+yarn vitest
 ```
 
 전체 설정 예시는 레포의 `apps/react-example`을 참고하세요.

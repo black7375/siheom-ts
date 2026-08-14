@@ -3,4 +3,5 @@ region: "모바일 필터"
     "전체"
   button: "필터"
     - states: [expanded=false]
+    - interaction: [focusable=true] [tabbable=true]
     - properties: [haspopup="dialog"]

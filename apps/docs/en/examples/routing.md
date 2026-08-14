@@ -2,7 +2,7 @@
 
 How to verify **navigation intent** with siheom: list/detail pages, hash sections, query-string deep links, and async `push`. Three showcases live under `apps/react-example/test/stories/routing/` for React Router, a fake Next router, and TanStack Router.
 
-In Storybook (`bun run storybook`), open the **Routing/** group to inspect MemoryRouter, FakeNextRouter, and TanStack memory history interactively.
+In Storybook (`yarn storybook`), open the **Routing/** group to inspect MemoryRouter, FakeNextRouter, and TanStack memory history interactively.
 
 ## Which strategy when
 

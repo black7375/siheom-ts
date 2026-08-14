@@ -45,7 +45,8 @@ step() {
 
 npm_version() {
   local package="$1"
-  npm view "$package" version 2>/dev/null || echo "unpublished"
+  yarn npm info "$package" --fields version --json 2>/dev/null |
+    node -p "JSON.parse(require('fs').readFileSync(0, 'utf8')).version" || echo "unpublished"
 }
 
 show_version_plan() {
@@ -74,7 +75,7 @@ show_version_plan() {
 }
 
 ensure_changesets() {
-  bunx changeset status --output "$STATUS_JSON" >/dev/null
+  yarn changeset status --output "$STATUS_JSON" >/dev/null
 
   local pending
   pending="$(node -e "
@@ -88,11 +89,11 @@ ensure_changesets() {
 
   gum log --level warn "No pending changesets."
   if ! confirm "Create a changeset now?"; then
-    die "Add a changeset with 'bunx changeset' before releasing."
+    die "Add a changeset with 'yarn changeset' before releasing."
   fi
 
-  bunx changeset
-  bunx changeset status --output "$STATUS_JSON" >/dev/null
+  yarn changeset
+  yarn changeset status --output "$STATUS_JSON" >/dev/null
 
   pending="$(node -e "
     const data = JSON.parse(require('fs').readFileSync('$STATUS_JSON', 'utf8'));
@@ -106,7 +107,7 @@ ensure_changesets() {
 
 preflight_checks() {
   step "Running CI checks"
-  if ! gum spin --spinner dot --title "build, lint, test..." --show-output -- bun run ci; then
+  if ! gum spin --spinner dot --title "build, lint, test..." --show-output -- yarn ci; then
     die "CI checks failed. Fix issues before releasing."
   fi
   gum log --level info "CI checks passed"
@@ -121,13 +122,13 @@ version_and_commit() {
   fi
 
   step "Applying changeset version"
-  gum spin --spinner dot --title "changeset version..." --show-output -- bunx changeset version
+  gum spin --spinner dot --title "changeset version..." --show-output -- yarn changeset version
 
-  if [[ -n "$(git status --porcelain bun.lock)" ]]; then
-    step "Updating bun.lock"
-    bun install
-    if [[ -n "$(git status --porcelain bun.lock)" ]]; then
-      git add bun.lock
+  if [[ -n "$(git status --porcelain yarn.lock)" ]]; then
+    step "Updating yarn.lock"
+    yarn install
+    if [[ -n "$(git status --porcelain yarn.lock)" ]]; then
+      git add yarn.lock
       git commit -m "chore: update lockfile after release"
     fi
   fi
@@ -145,7 +146,7 @@ publish_packages() {
     version="$(node -e "console.log(JSON.parse(require('fs').readFileSync('packages/${package#@siheom/}/package.json','utf8')).version)")"
     npm_current="$(npm_version "$package")"
     published="pending"
-    if npm view "${package}@${version}" version >/dev/null 2>&1; then
+    if [[ "$(npm_version "${package}@${version}")" == "$version" ]]; then
       published="already on npm"
     fi
     publish_rows+="${package},${version},${npm_current},${published}"$'\n'
@@ -216,9 +217,8 @@ main() {
   fi
 
   require_cmd gum
-  require_cmd bun
+  require_cmd yarn
   require_cmd git
-  require_cmd npm
   require_cmd node
 
   gum style \
