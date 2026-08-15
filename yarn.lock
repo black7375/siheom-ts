@@ -5189,6 +5189,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@supercharge/promise-pool@npm:^3.2.0":
+  version: 3.3.0
+  resolution: "@supercharge/promise-pool@npm:3.3.0"
+  checksum: 10c0/5d95660ccfa2bb517b43b08fec0d6e239733b810075310e78f0752472f57c9f77e6cf55c6d2be120a478561400378bc611885941f7cc6733fae293c06d995c1d
+  languageName: node
+  linkType: hard
+
 "@sveltejs/acorn-typescript@npm:^1.0.10":
   version: 1.0.11
   resolution: "@sveltejs/acorn-typescript@npm:1.0.11"
@@ -11432,7 +11439,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"fs-extra@npm:^11.3.1":
+"fs-extra@npm:^11.3.0, fs-extra@npm:^11.3.1":
   version: 11.4.0
   resolution: "fs-extra@npm:11.4.0"
   dependencies:
@@ -16102,7 +16109,10 @@ __metadata:
     oxfmt: "npm:^0.61.0"
     oxlint: "npm:^1.76.0"
     playwright: "npm:^1.62.1"
+    tsconfig-custom: "workspace:*"
     typescript: "npm:^5.9.3"
+    vite: "npm:^8.2.0"
+    vite-plugin-dts-build: "npm:^0.2.3"
     vitest: "npm:^4.1.10"
   languageName: unknown
   linkType: soft
@@ -16919,6 +16929,12 @@ __metadata:
   languageName: node
   linkType: hard
 
+"tsconfig-custom@workspace:*, tsconfig-custom@workspace:configs/tsconfig-custom":
+  version: 0.0.0-use.local
+  resolution: "tsconfig-custom@workspace:configs/tsconfig-custom"
+  languageName: unknown
+  linkType: soft
+
 "tsconfig-paths@npm:^4.2.0":
   version: 4.2.0
   resolution: "tsconfig-paths@npm:4.2.0"
@@ -17387,6 +17403,19 @@ __metadata:
     magic-string: "npm:^0.30.11"
     vite-plugin-dynamic-import: "npm:^1.6.0"
   checksum: 10c0/074e0d7a1e8f20d605f1a02c53867706639ea5a9aac8657e8d90442f13cf86154a6ebc65de1f05eb62e1a98523422d5025f3b7ccaabe88c486bec12b45e5d136
+  languageName: node
+  linkType: hard
+
+"vite-plugin-dts-build@npm:^0.2.3":
+  version: 0.2.3
+  resolution: "vite-plugin-dts-build@npm:0.2.3"
+  dependencies:
+    "@supercharge/promise-pool": "npm:^3.2.0"
+    fs-extra: "npm:^11.3.0"
+  peerDependencies:
+    typescript: "*"
+    vite: "*"
+  checksum: 10c0/fbf5234bd91f7af3e961ab92f916f81aac377d19fe951db80781522f6673b05a4bc3e62f4ad6cd9d0ff50e51d15d12fc926a30893dfd46731fcb51265777cc59
   languageName: node
   linkType: hard
 
