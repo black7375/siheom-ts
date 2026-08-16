@@ -33,10 +33,11 @@
     "build": "tsdown && yarn node ../../scripts/validate-typescript-artifacts.mjs .",
     "check-exports": "bash ../../scripts/check-exports.sh .",
     "typecheck": "tsc --build",
-    "test": "vitest run"
+    "test": "bash -ec 'for file in src/*.test.tsx; do vitest run \"$file\"; done'"
   },
   "dependencies": {
-    "@siheom/core": "workspace:*"
+    "@siheom/core": "workspace:*",
+    "@siheom/snapshot": "workspace:*"
   },
   "peerDependencies": {
     "react": "^18.0.0 || ^19.0.0",

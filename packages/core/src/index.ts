@@ -10,7 +10,6 @@ export type { DefaultActions } from "./action.js";
 export { assertions, defaultAssertions, createDefaultAssertions } from "./assert.js";
 export type { DefaultAssertions } from "./assert.js";
 export type { A11ySnapshotOptions } from "@siheom/snapshot";
-export { getA11ySnapshot, tableToMarkdown } from "@siheom/snapshot";
 export { effect, defaultEffects } from "./effect.js";
 export { withFakeTimers } from "./withFakeTimers.js";
 export {
