@@ -48,8 +48,8 @@
   },
   "devDependencies": {
     "@arethetypeswrong/cli": "^0.18.5",
-    "@builder.io/qwik": "^1.20.0",
-    "@noma.to/qwik-testing-library": "^1.6.0",
+    "@builder.io/qwik": "patch:@builder.io/qwik@npm%3A1.20.0#~/.yarn/patches/@builder.io-qwik-npm-1.20.0-adabc1588a.patch",
+    "@noma.to/qwik-testing-library": "patch:@noma.to/qwik-testing-library@npm%3A1.6.0#~/.yarn/patches/@noma.to-qwik-testing-library-npm-1.6.0-ec793de284.patch",
     "@testing-library/dom": "^10.4.1",
     "@testing-library/jest-dom": "^7.0.0",
     "@testing-library/user-event": "^14.6.1",

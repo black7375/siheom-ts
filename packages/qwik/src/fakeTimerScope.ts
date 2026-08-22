@@ -1,5 +1,5 @@
 import { waitFor } from "@noma.to/qwik-testing-library";
-import userEvent from "@testing-library/user-event";
+import { userEvent } from "@testing-library/user-event";
 import { FAKE_TIMER_USER_DELAY_MS } from "@siheom/core";
 import { vi } from "vitest";
 
