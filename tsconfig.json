@@ -29,6 +29,9 @@
       "path": "packages/svelte"
     },
     {
+      "path": "packages/virtual-screen-reader"
+    },
+    {
       "path": "packages/vitest-browser-react"
     },
     {

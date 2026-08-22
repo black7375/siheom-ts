@@ -2,7 +2,7 @@
   "files": [],
   "references": [
     {
-      "path": "../core/tsconfig.esm.json"
+      "path": "../core"
     },
     {
       "path": "./tsconfig.cjs.json"

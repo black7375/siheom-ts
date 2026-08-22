@@ -1,22 +1,7 @@
 {
-  "extends": "tsconfig-custom/tsconfig.lib.json",
+  "extends": "tsconfig-custom/tsconfig.lib.esm.json",
   "compilerOptions": {
-    "jsx": "react-jsx",
-    "rootDir": "src",
-    "outDir": ".cache/typescript-esm",
-    "tsBuildInfoFile": ".cache/typescript-esm/.tsbuildinfo",
-    "composite": true,
-    "incremental": true,
-    "module": "ESNext",
-    "moduleResolution": "bundler",
-    "noEmit": false,
-    "declaration": true,
-    "declarationMap": true,
-    "sourceMap": true,
-    "inlineSources": true,
-    "rewriteRelativeImportExtensions": true,
-    "verbatimModuleSyntax": false
+    "jsx": "react-jsx"
   },
-  "include": ["src"],
   "exclude": ["**/*.test.ts", "**/*.test.tsx", "**/*.spec.ts", "**/*.spec.tsx", "src/testSetup.ts", "vitest.config.ts"]
 }
