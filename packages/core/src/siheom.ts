@@ -1,4 +1,5 @@
 import { vi } from "vitest";
+import { getA11ySnapshot } from "@siheom/snapshot";
 import type {
   ActionStep,
   ActionStepDefinitionDict,
@@ -12,7 +13,6 @@ import type {
   Locator,
   Step,
 } from "./types.js";
-import { getA11ySnapshot } from "./getA11ySnapshot.js";
 import { formatFailureReport, type MessageMap } from "./messages.js";
 import type { FakeTimerScopeHooks, SiheomRegistryBundle } from "./fakeTimerScope.js";
 
