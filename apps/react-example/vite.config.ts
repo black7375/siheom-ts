@@ -12,6 +12,13 @@ const tanstackLinkStub = path.resolve(
   "test/stories/routing/tanstack-router/stubs/link.tsx",
 );
 
+const siheomCoreSource = path.resolve(dirname, "../../packages/core/src/index.ts");
+const siheomReactSource = path.resolve(dirname, "../../packages/react/src/index.ts");
+const siheomVirtualScreenReaderSource = path.resolve(
+  dirname,
+  "../../packages/virtual-screen-reader/src/index.ts",
+);
+
 export default defineConfig({
   plugins: [react(), tailwindcss()],
   define: vitestBrowserDefine,
@@ -21,10 +28,24 @@ export default defineConfig({
     tsconfigPaths: true,
     alias: {
       "@showcase/tanstack-link": tanstackLinkStub,
+      // Vite 8's rolldown optimizer can't resolve PnP workspace dist builds,
+      // and built CJS deps lose named exports when served raw in browser mode.
+      // Aliasing siheom packages to source keeps aria-query imports on the
+      // working raw-CJS path (same as @siheom/core's own browser tests).
+      "@siheom/core": siheomCoreSource,
+      "@siheom/react": siheomReactSource,
+      "@siheom/virtual-screen-reader": siheomVirtualScreenReaderSource,
     },
   },
   optimizeDeps: {
     include: [
+      // Vite 8 (Rolldown) dep optimizer in Vitest browser mode breaks
+      // CJS named-export interop unless the testing-library chain is
+      // pre-bundled up front (aria-query is inlined into these bundles).
+      "@testing-library/dom",
+      "@testing-library/jest-dom/vitest",
+      "@testing-library/user-event",
+      "react-dom/client",
       "react-aria-components",
       "@ariakit/react",
       "@ark-ui/react",
@@ -43,6 +64,9 @@ export default defineConfig({
       "@siheom/ime-cdp": path.resolve(dirname, "../../packages/ime-cdp/src/index.ts"),
       "@siheom/ime/hanja": path.resolve(dirname, "../../packages/ime/src/hanja.ts"),
       "@siheom/ime": path.resolve(dirname, "../../packages/ime/src/index.ts"),
+      "@siheom/core": siheomCoreSource,
+      "@siheom/react": siheomReactSource,
+      "@siheom/virtual-screen-reader": siheomVirtualScreenReaderSource,
     },
     setupFiles: "./test/setupTests.ts",
     include: ["test/**/*.test.tsx"],

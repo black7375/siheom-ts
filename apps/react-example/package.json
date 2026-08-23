@@ -25,6 +25,7 @@
     "@siheom/ime": "workspace:*",
     "@siheom/ime-cdp": "workspace:*",
     "@siheom/react": "workspace:*",
+    "@siheom/virtual-screen-reader": "workspace:*",
     "@siheom/vitest-browser-react": "workspace:*",
     "@tanstack/react-router": "^1.170.18",
     "@tiptap/pm": "^3.29.2",
