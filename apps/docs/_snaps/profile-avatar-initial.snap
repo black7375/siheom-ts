@@ -1,3 +1,5 @@
 region: "아바타 업로드"
   "?"
   "프로필 사진"
+  generic: "프로필 사진"
+    - interaction: [focusable=true] [tabbable=true]

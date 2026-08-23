@@ -16,7 +16,7 @@ same IME behaviour through the same editor must reproduce the device's outcome.
 
 The current AF Slate emulation is **open-loop golden replay**
 (`composeHangulAndroidFirefoxSlatePlaceholderBroken` → `replayGoldenEvents`): it re-fires a
-recorded event log into a mounted Slate. Toggling the `slate-react` bun patch and replaying
+recorded event log into a mounted Slate. Toggling the `slate-react` Yarn patch and replaying
 device captures through real Slate (vitest browser mode) gives:
 
 | Capture (device final) | Unpatched emulation | Patched (v2) emulation |
@@ -162,7 +162,7 @@ proven on real Slate; exact device-bug reproduction pending).
 - Toggling the `slate-react` patch in a run requires clearing **only** the app-level vite dep
   cache (`apps/react-example/node_modules/.vite`, `.vite-temp`) — do **not** delete
   `@vitest/browser/**/.vite/manifest.json` (breaks the browser runner; restore via
-  `bun install --force`).
+  `yarn install`).
 - `@siheom/ime` is aliased to `packages/ime/src` — edit source directly, no rebuild.
 
 ## Out of scope / retired

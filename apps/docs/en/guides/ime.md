@@ -27,7 +27,7 @@ Autocomplete and search UIs that work for Latin often break mid-Hangul. IME acti
 Install alongside your framework package. Peers are Testing Library / Vitest (no React peer).
 
 ```bash
-bun add @siheom/ime
+yarn add @siheom/ime
 # or
 npm install @siheom/ime
 ```

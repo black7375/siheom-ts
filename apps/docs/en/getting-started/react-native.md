@@ -17,8 +17,8 @@ React Native cannot render in a browser, so siheom renders components with React
 Dev dependencies:
 
 ```bash
-bun add -d vitest vitest-native @testing-library/react-native test-renderer
-bun add @siheom/react-native react react-native @testing-library/jest-dom
+yarn add -D vitest vitest-native @testing-library/react-native test-renderer
+yarn add @siheom/react-native react react-native @testing-library/jest-dom
 ```
 
 `vitest.config.ts`:
@@ -41,7 +41,7 @@ export default defineConfig({
 Run:
 
 ```bash
-bunx vitest
+yarn vitest
 ```
 
 ## Your first test

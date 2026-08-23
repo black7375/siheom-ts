@@ -38,5 +38,5 @@ v1 capture (superseded) had premature `compositionend` on `ㄱ`, second session 
 Run trace test:
 
 ```bash
-cd apps/react-example && bun run test LexicalLogger.ime.debug.test.tsx
+yarn workspace @siheom/react-example test LexicalLogger.ime.debug.test.tsx
 ```

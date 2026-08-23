@@ -50,7 +50,7 @@
   },
   "peerDependencies": {
     "@testing-library/dom": "^10.0.0",
-    "@testing-library/jest-dom": "^6.0.0",
+    "@testing-library/jest-dom": "^6.0.0 || ^7.0.0",
     "@testing-library/user-event": "^14.0.0",
     "vitest": "^4.1.10"
   },
@@ -63,7 +63,7 @@
     "@vitest/coverage-v8": "4.1.10",
     "playwright": "^1.62.1",
     "tsdown": "^0.22.14",
-    "typescript": "^7.0.2",
+    "typescript": "^5.9.3",
     "vitest": "^4.1.10"
   },
   "repository": {

@@ -9,10 +9,10 @@ fi
 package_dir=$1
 shift
 
-repo_root=$(cd "$(dirname "$0")/.." && pwd)
 cd "$package_dir"
 
-tarball=$(bun pm pack --quiet | tr -d '\n\r')
+tarball=.siheom-attw.tgz
 trap 'rm -f "$tarball"' EXIT
 
-exec bunx attw "$tarball" "$@"
+yarn pack --out "$tarball" >/dev/null
+yarn run -T attw "$tarball" "$@"

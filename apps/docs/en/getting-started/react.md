@@ -17,9 +17,9 @@ siheom recommends **vitest browser mode** (Playwright provider) so UI renders in
 Dev dependencies:
 
 ```bash
-bun add -d vitest @vitest/browser playwright @vitejs/plugin-react
-bunx playwright install chromium
-bun add @siheom/react @testing-library/react @testing-library/jest-dom @testing-library/user-event
+yarn add -D vitest @vitest/browser playwright @vitejs/plugin-react
+yarn playwright install chromium
+yarn add @siheom/react @testing-library/react @testing-library/jest-dom @testing-library/user-event
 ```
 
 `@siheom/react-example` downloads Chromium on `postinstall`.
@@ -55,7 +55,7 @@ import "@testing-library/jest-dom/vitest";
 Run:
 
 ```bash
-bunx vitest
+yarn vitest
 ```
 
 See `apps/react-example` in the repo for a full setup.

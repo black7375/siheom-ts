@@ -7,6 +7,8 @@
   "bugs": {
     "url": "https://github.com/twinstae/siheom-ts/issues"
   },
+  "type": "module",
+  "packageManager": "yarn@4.18.0",
   "license": "MIT",
   "author": "Taehee Kim <rabolution@gmail.com> (https://x.com/stelo_kim)",
   "repository": {
@@ -15,59 +17,48 @@
   },
   "workspaces": [
     "packages/*",
-    "apps/*",
-    "scripts/pretty-ccts"
+    "apps/*"
   ],
-  "type": "module",
   "scripts": {
     "postinstall": "playwright install chromium",
-    "ci": "bun run check-format && bun run build && bun audit && bun run lint && bun run check-exports && bun run typecheck && bun run test",
-    "test:pretty-ccts": "bun test scripts/pretty-ccts",
-    "ccts": "pretty-ccts packages/core/src packages/ime/src",
-    "build": "bun run --filter '@siheom/core' build && bun run --filter '@siheom/react' build && bun run --filter '@siheom/vue' build && bun run --filter '@siheom/svelte' build && bun run --filter '@siheom/solid' build && bun run --filter '@siheom/angular' build && bun run --filter '@siheom/qwik' build && bun run --filter '@siheom/react-native' build && bun run --filter '@siheom/ime' build && bun run --filter '@siheom/ime-cdp' build && bun run --filter '@siheom/vitest-browser-react' build",
-    "check-exports": "bun run --filter '@siheom/core' check-exports && bun run --filter '@siheom/react' check-exports && bun run --filter '@siheom/vue' check-exports && bun run --filter '@siheom/svelte' check-exports && bun run --filter '@siheom/solid' check-exports && bun run --filter '@siheom/angular' check-exports && bun run --filter '@siheom/qwik' check-exports && bun run --filter '@siheom/react-native' check-exports && bun run --filter '@siheom/ime' check-exports && bun run --filter '@siheom/ime-cdp' check-exports && bun run --filter '@siheom/vitest-browser-react' check-exports",
-    "typecheck": "bun run --filter '@siheom/core' typecheck && bun run --filter '@siheom/react' typecheck && bun run --filter '@siheom/vue' typecheck && bun run --filter '@siheom/svelte' typecheck && bun run --filter '@siheom/solid' typecheck && bun run --filter '@siheom/angular' typecheck && bun run --filter '@siheom/qwik' typecheck && bun run --filter '@siheom/ime' typecheck && bun run --filter '@siheom/ime-cdp' typecheck && bun run --filter '@siheom/react-example' typecheck && bun run --filter '@siheom/react-native' typecheck && bun run --filter '@siheom/react-native-examples' typecheck && bun run --filter '@siheom/vitest-browser-react' typecheck",
-    "test": "bun run --filter '@siheom/core' test && bun run --filter '@siheom/react' test && bun run --filter '@siheom/vue' test && bun run --filter '@siheom/svelte' test && bun run --filter '@siheom/solid' test && bun run --filter '@siheom/angular' test && bun run --filter '@siheom/qwik' test && bun run --filter '@siheom/ime' test && bun run --filter '@siheom/ime-cdp' test && bun run --filter '@siheom/react-example' test && bun run --filter '@siheom/react-native' test && bun run --filter '@siheom/react-native-examples' test && bun run --filter '@siheom/vitest-browser-react' test",
-    "docs": "bun run --filter '@siheom/docs' dev",
-    "docs:build": "bun run --filter '@siheom/docs' build",
+    "ci": "yarn check-format && yarn build && yarn npm audit --all --recursive --no-deprecations && yarn lint && yarn check-exports && yarn typecheck && yarn test",
+    "build": "yarn workspace @siheom/core build && yarn workspace @siheom/react build && yarn workspace @siheom/vue build && yarn workspace @siheom/svelte build && yarn workspace @siheom/solid build && yarn workspace @siheom/angular build && yarn workspace @siheom/qwik build && yarn workspace @siheom/react-native build && yarn workspace @siheom/ime build && yarn workspace @siheom/ime-cdp build && yarn workspace @siheom/vitest-browser-react build",
+    "check-exports": "yarn workspace @siheom/core check-exports && yarn workspace @siheom/react check-exports && yarn workspace @siheom/vue check-exports && yarn workspace @siheom/svelte check-exports && yarn workspace @siheom/solid check-exports && yarn workspace @siheom/angular check-exports && yarn workspace @siheom/qwik check-exports && yarn workspace @siheom/react-native check-exports && yarn workspace @siheom/ime check-exports && yarn workspace @siheom/ime-cdp check-exports && yarn workspace @siheom/vitest-browser-react check-exports",
+    "typecheck": "yarn workspace @siheom/core typecheck && yarn workspace @siheom/react typecheck && yarn workspace @siheom/vue typecheck && yarn workspace @siheom/svelte typecheck && yarn workspace @siheom/solid typecheck && yarn workspace @siheom/angular typecheck && yarn workspace @siheom/qwik typecheck && yarn workspace @siheom/react-native typecheck && yarn workspace @siheom/ime typecheck && yarn workspace @siheom/ime-cdp typecheck && yarn workspace @siheom/react-example typecheck && yarn workspace @siheom/react-native-examples typecheck && yarn workspace @siheom/vitest-browser-react typecheck",
+    "test": "yarn workspace @siheom/core test && yarn workspace @siheom/react test && yarn workspace @siheom/vue test && yarn workspace @siheom/svelte test && yarn workspace @siheom/solid test && yarn workspace @siheom/angular test && yarn workspace @siheom/qwik test && yarn workspace @siheom/ime test && yarn workspace @siheom/ime-cdp test && yarn workspace @siheom/react-example test && yarn workspace @siheom/react-native test && yarn workspace @siheom/react-native-examples test && yarn workspace @siheom/vitest-browser-react test",
+    "docs": "yarn workspace @siheom/docs dev",
+    "docs:build": "yarn workspace @siheom/docs build",
     "check-format": "oxfmt --check packages/*/src apps/react-example/test apps/react-native-examples/test",
     "format": "oxfmt --write packages/*/src apps/react-example/test apps/react-native-examples/test",
     "lint": "oxlint packages/*/src apps/react-example/test apps/react-native-examples/test",
     "lint:fix": "oxlint --fix packages/*/src apps/react-example/test apps/react-native-examples/test",
-    "local-check": "bun run format && bun run lint:fix && bun run build && bun run check-exports && bun run typecheck && bun run --filter '@siheom/react-example' test && bun run --filter '@siheom/ime' test && bun run --filter '@siheom/ime-cdp' test",
+    "local-check": "yarn format && yarn lint:fix && yarn build && yarn check-exports && yarn typecheck && yarn workspace @siheom/react-example test && yarn workspace @siheom/ime test && yarn workspace @siheom/ime-cdp test",
     "release": "./scripts/release.sh",
     "local-release": "changeset version && changeset publish",
-    "storybook": "bun run --filter '@siheom/react-example' storybook",
-    "storybook:react-native": "bun run --filter '@siheom/react-native-examples' storybook",
+    "storybook": "yarn workspace @siheom/react-example storybook",
+    "storybook:react-native": "yarn workspace @siheom/react-native-examples storybook",
     "install:nose": "bash scripts/install-nose.sh",
     "dup:jscpd": "jscpd packages/core/src packages/react/src packages/ime/src packages/ime-cdp/src apps/react-example/test",
     "dup:nose": "nose query -r packages/core/src -r packages/react/src -r packages/ime/src -r packages/ime-cdp/src -r apps/react-example/test top=20 --exclude '**/stories/headless/**' --exclude '**/components/ariakit/**' --exclude '**/components/ark-ui/**' --exclude '**/components/radix/**' --exclude '**/components/react-aria/**' --exclude '**/components/ui/**'",
-    "dup": "bun run dup:jscpd && bun run dup:nose"
+    "dup": "yarn dup:jscpd && yarn dup:nose"
   },
   "devDependencies": {
     "@arethetypeswrong/cli": "^0.18.5",
     "@changesets/cli": "^2.31.1",
     "@vitest/browser": "^4.1.10",
     "@vitest/browser-playwright": "^4.1.10",
-    "cognitive-complexity-ts": "^0.8.2",
     "jscpd": "^5.0.14",
     "oxfmt": "^0.61.0",
-    "oxlint": "^1.77.0",
-    "oxlint-tsgolint": "^7.0.2001",
+    "oxlint": "^1.76.0",
     "playwright": "^1.62.1",
-    "pretty-ccts": "workspace:*",
-    "typescript": "^7.0.2",
+    "typescript": "^5.9.3",
     "vitest": "^4.1.10"
   },
-  "packageManager": "bun@1.3.12",
-  "patchedDependencies": {
-    "slate-react@0.126.0": "patches/slate-react@0.126.0.patch"
-  },
-  "overrides": {
+  "resolutions": {
+    "slate-react@npm:^0.126.0": "patch:slate-react@npm%3A0.126.0#./patches/slate-react@0.126.0.patch",
     "esbuild": "^0.28.1",
     "vite": "^8.2.0",
     "brace-expansion": "^5.0.9",
-    "hono": "^4.12.34",
-    "nanoid": "^3.3.17"
+    "hono": "^4.12.34"
   }
 }

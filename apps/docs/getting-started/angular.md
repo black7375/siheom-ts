@@ -17,10 +17,10 @@ siheom은 **vitest browser mode**(Playwright provider)에서 실제 Chromium 등
 필요한 dev dependency:
 
 ```bash
-bun add -d vitest @vitest/browser playwright
-bunx playwright install chromium
-bun add @siheom/angular @angular/core @angular/common @angular/platform-browser @angular/platform-browser-dynamic
-bun add @testing-library/angular @testing-library/jest-dom @testing-library/user-event
+yarn add -D vitest @vitest/browser playwright
+yarn playwright install chromium
+yarn add @siheom/angular @angular/core @angular/common @angular/platform-browser @angular/platform-browser-dynamic
+yarn add @testing-library/angular @testing-library/jest-dom @testing-library/user-event
 ```
 
 `vitest.config.ts`:
@@ -59,7 +59,7 @@ TestBed.initTestEnvironment(BrowserDynamicTestingModule, platformBrowserDynamicT
 실행:
 
 ```bash
-bunx vitest
+yarn vitest
 ```
 
 ## 첫 시험

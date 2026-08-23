@@ -17,10 +17,10 @@ siheom recommends **vitest browser mode** (Playwright provider) so UI renders in
 Dev dependencies:
 
 ```bash
-bun add -d vitest @vitest/browser playwright
-bunx playwright install chromium
-bun add @siheom/angular @angular/core @angular/common @angular/platform-browser @angular/platform-browser-dynamic
-bun add @testing-library/angular @testing-library/jest-dom @testing-library/user-event
+yarn add -D vitest @vitest/browser playwright
+yarn playwright install chromium
+yarn add @siheom/angular @angular/core @angular/common @angular/platform-browser @angular/platform-browser-dynamic
+yarn add @testing-library/angular @testing-library/jest-dom @testing-library/user-event
 ```
 
 `vitest.config.ts`:
@@ -59,7 +59,7 @@ TestBed.initTestEnvironment(BrowserDynamicTestingModule, platformBrowserDynamicT
 Run:
 
 ```bash
-bunx vitest
+yarn vitest
 ```
 
 ## Your first test

@@ -209,7 +209,7 @@ Source of truth: [testing-library/user-event](https://github.com/testing-library
 
 Hangul syllables are treated as single `key` characters with no composition session. Open issue: [#1097](https://github.com/testing-library/user-event/issues/1097).
 
-Capture tooling in this repo: Storybook story **IME / Event Logger** (`apps/react-example`, `bun run storybook` → port 6006).
+Capture tooling in this repo: Storybook story **IME / Event Logger** (`yarn storybook` → port 6006).
 
 ## Design recommendations for an IME emulation layer
 

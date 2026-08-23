@@ -42,7 +42,7 @@ Compare `documentFromCommittedPreedit(committed, data)` vs device `expectedNext`
 
 **Use:** Pure function regression when capture was taken with *older* fix; drift snapshot documents whether current code matches what device actually ran.
 
-Run: `bun run vitest run extractFixPairsFromCapture.test.tsx`
+Run: `yarn workspace @siheom/react-example test extractFixPairsFromCapture.test.tsx`
 
 ## What to do next
 

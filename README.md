@@ -11,7 +11,7 @@ return runSiheom(
 );
 ```
 
-문서는 `apps/docs`에 있습니다. `bun run docs`로 로컬에서 볼 수 있습니다.
+문서는 `apps/docs`에 있습니다. `yarn docs`로 로컬에서 볼 수 있습니다.
 
 ### 패키지
 
@@ -28,7 +28,7 @@ return runSiheom(
 | [`@siheom/ime`](packages/ime) | 한글 IME 조합 에뮬레이션 (실험적) |
 | [`@siheom/vitest-browser-react`](packages/vitest-browser-react) | `vitest-browser-react` 기반 React 러너 (실험적) |
 
-이 레포는 [Bun](https://bun.sh) workspace 모노레포입니다. `bun install` 후 `bun run ci`로 빌드/린트/타입체크/테스트를 한 번에 실행합니다. 자세한 개발 명령은 [AGENTS.md](AGENTS.md)를 참고하세요.
+이 레포는 [Yarn 4](https://yarnpkg.com/) Plug'n'Play workspace 모노레포입니다. `corepack enable`과 `yarn install` 후 `yarn ci`로 빌드/린트/타입체크/테스트를 한 번에 실행합니다. 자세한 개발 명령은 [AGENTS.md](AGENTS.md)를 참고하세요.
 
 ### License
 

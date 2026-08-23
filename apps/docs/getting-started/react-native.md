@@ -17,8 +17,8 @@ React Native는 브라우저에서 렌더할 수 없으므로, siheom은 [vitest
 필요한 dev dependency:
 
 ```bash
-bun add -d vitest vitest-native @testing-library/react-native test-renderer
-bun add @siheom/react-native react react-native @testing-library/jest-dom
+yarn add -D vitest vitest-native @testing-library/react-native test-renderer
+yarn add @siheom/react-native react react-native @testing-library/jest-dom
 ```
 
 `vitest.config.ts`:
@@ -41,7 +41,7 @@ export default defineConfig({
 실행:
 
 ```bash
-bunx vitest
+yarn vitest
 ```
 
 ## 첫 시험

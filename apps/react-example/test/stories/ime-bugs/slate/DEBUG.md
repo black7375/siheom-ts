@@ -29,7 +29,7 @@ Understand Slate + Android Hangul IME — **exploration, not app patches**. See
 
 `patches/slate-react@0.126.0.patch` — composition anchor + `compositionend` fallback.
 
-1. `bun run storybook` — **clears Storybook cache** then starts (required once after patch update).
+1. `yarn storybook` — **clears Storybook cache** then starts (required once after patch update).
 2. AF Firefox → SlateLogger → type `가나다`.
 3. JSON must include `slateDebug.patch.patchActive: true`. If **false**, the phone still got stale slate-react — hard refresh / clear site data.
 4. Expect **`가나다`**, not `ㄱ가나다`.

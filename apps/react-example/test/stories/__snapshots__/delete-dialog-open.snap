@@ -1,7 +1,7 @@
 alertdialog: "삭제 확인" [description="정말 삭제하시겠습니까?"]
   - interaction: [focusable=true]
   - relations:
-    labelledby: "삭제 확인" (#base-ui-_r_b_)
+    labelledby: "삭제 확인" (#base-ui-_r_a_)
   heading: "삭제 확인"
     - properties: [level=2]
   paragraph:

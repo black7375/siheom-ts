@@ -3,9 +3,11 @@ region: "보기 전환"
     - properties: [level=2]
   group: "보기 방식"
     button: "목록"
-      - states: [pressed=true]
+      - states: [disabled=false] [pressed=true]
+      - interaction: [focusable=true] [tabbable=true]
     button: "그리드"
-      - states: [pressed=false]
+      - states: [disabled=false] [pressed=false]
+      - interaction: [focusable=true]
   region: "목록 보기"
     list:
       listitem: "서버 점검 안내"

@@ -26,7 +26,7 @@
 ## 설치
 
 ```bash
-bun add @siheom/react
+yarn add @siheom/react
 # 또는
 npm install @siheom/react
 ```
@@ -36,8 +36,8 @@ React 대신 Vue, Svelte, Angular, Qwik, React Native를 쓴다면 프레임워�
 browser mode 실행에 필요한 dev dependency(React 기준):
 
 ```bash
-bun add -d vitest @vitest/browser playwright @vitejs/plugin-react
-bun add @testing-library/react @testing-library/jest-dom @testing-library/user-event
+yarn add -D vitest @vitest/browser playwright @vitejs/plugin-react
+yarn add @testing-library/react @testing-library/jest-dom @testing-library/user-event
 ```
 
 ## Peer dependencies

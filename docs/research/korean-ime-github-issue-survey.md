@@ -187,7 +187,7 @@ Reuse existing capture chrome: [`ImeCaptureShell`](../../apps/react-example/test
 Same as existing bugs ([e.g. enter-submit `fixtures/README.md`](../../apps/react-example/test/stories/ime-bugs/enter-submit/fixtures/README.md)):
 
 1. Add `plan.md` Behaviors checklist + `*Logger.tsx` / `*Logger.stories.tsx` (`title: "IME/…"`).
-2. `bun run storybook` → open Capture story → set OS / browser / IME → type scenario → download JSON.
+2. `yarn storybook` → open Capture story → set OS / browser / IME → type scenario → download JSON.
 3. Save under `fixtures/<platform-dir>/broken-*.json` (and `fixed-*` if a fixed mode exists).
 4. Wire `*.ime.test.tsx` via `runWithImeSiheom` / profile id.
 5. Document dirs in `fixtures/README.md`.

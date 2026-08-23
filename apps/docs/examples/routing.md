@@ -2,7 +2,7 @@
 
 목록·상세·해시·query string·비동기 `push`처럼 **내비게이션 의도**를 siheom으로 검증하는 전략을 정리합니다. React Router, 가짜 Next Router, TanStack Router 세 가지 쇼케이스가 `apps/react-example/test/stories/routing/`에 있습니다.
 
-Storybook(`bun run storybook`) → **Routing/** 그룹에서 MemoryRouter / FakeNextRouter / TanStack memory history 동작을 눈으로 확인할 수 있습니다.
+Storybook(`yarn storybook`) → **Routing/** 그룹에서 MemoryRouter / FakeNextRouter / TanStack memory history 동작을 눈으로 확인할 수 있습니다.
 
 ## 어떤 전략을 쓸까
 

@@ -2,8 +2,8 @@
  * Copies a11y snapshots from react-example into apps/docs/_snaps
  * and rewrites example markdown UI sections to import them via VitePress `<<<`.
  *
- * Run: bun run --filter '@siheom/docs' sync-showcase
- * Or:  bun apps/docs/scripts/sync-showcase-artifacts.mjs
+ * Run: yarn workspace @siheom/docs sync-showcase
+ * Or:  yarn node apps/docs/scripts/sync-showcase-artifacts.mjs
  */
 import {
 	copyFileSync,

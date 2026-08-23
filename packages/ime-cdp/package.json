@@ -44,7 +44,7 @@
     "@vitest/coverage-v8": "4.1.10",
     "playwright": "^1.61.1",
     "tsdown": "^0.22.8",
-    "typescript": "^7.0.2",
+    "typescript": "^5.9.3",
     "vitest": "^4.1.10"
   },
   "repository": {

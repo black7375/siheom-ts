@@ -1,6 +1,6 @@
 # Agent instructions
 
-This monorepo uses **Bun** as the only JavaScript runtime and package manager. Do not use Node.js, npm, npx, pnpm, or yarn.
+This monorepo uses **Yarn 4 Plug'n'Play** with Node.js. Do not use Bun, npm, npx, pnpm, or another Yarn version.
 
 ## Commands
 
@@ -8,24 +8,26 @@ Run everything from the repo root unless a package-specific path is noted.
 
 | Task | Command |
 |------|---------|
-| Install deps | `bun install` |
-| Run tests | `bun run test` |
-| Run one package's tests | `bun run --filter '@siheom/react-example' test` |
-| Typecheck | `bun run typecheck` |
-| Lint | `bun run lint` |
-| Full CI locally | `bun run ci` |
+| Install deps | `yarn install` |
+| Run tests | `yarn test` |
+| Run one package's tests | `yarn workspace @siheom/react-example test` |
+| Typecheck | `yarn typecheck` |
+| Lint | `yarn lint` |
+| Full CI locally | `yarn ci` |
 
 ## Do not use
 
-- `node`, `npm`, `npx`, `pnpm`, `yarn`
-- `vitest` directly — use `bun run test` or `bun run vitest` inside a package
-- `/usr/bin/node` (system Node 18) — it is not the project runtime
+- `bun`, `npm`, `npx`, `pnpm`
+- `vitest` directly — use `yarn test` or the owning workspace script
+- `node_modules` assumptions — dependencies are resolved through Plug'n'Play
 
 ## Tooling
 
-- Runtime / package manager: [Bun](https://bun.sh) **1.3.12** (pinned in root `package.json` → `packageManager`)
-- Install the pinned version: `curl -fsSL https://bun.sh/install | bash -s bun-v1.3.12`
-- Vitest runs via `bun run test` — do not invoke `vitest` or `node` directly
+- Package manager: [Yarn](https://yarnpkg.com/) **4.18.0** (pinned in root `package.json` → `packageManager`)
+- Linker: Yarn Plug'n'Play (`nodeLinker: pnp` in `.yarnrc.yml`)
+- Type checks: TypeScript **5.9.3** via `tsc --noEmit`; TypeScript 7 and Oxlint's type-aware resolver are not PnP-compatible in this repo yet
+- Linting: Oxlint without `oxlint-tsgolint`; `tsc` remains the type-aware gate under PnP
+- Enable the pinned version with `corepack enable`; Vitest runs through Yarn workspace scripts
 
 ## TDD cycle.
 

@@ -26,7 +26,7 @@ Experimental helpers:
 ## Install
 
 ```bash
-bun add @siheom/react
+yarn add @siheom/react
 # or
 npm install @siheom/react
 ```
@@ -36,8 +36,8 @@ Using Vue, Svelte, Angular, Qwik, or React Native instead? See the matching quic
 Dev dependencies for browser mode (React shown here):
 
 ```bash
-bun add -d vitest @vitest/browser playwright @vitejs/plugin-react
-bun add @testing-library/react @testing-library/jest-dom @testing-library/user-event
+yarn add -D vitest @vitest/browser playwright @vitejs/plugin-react
+yarn add @testing-library/react @testing-library/jest-dom @testing-library/user-event
 ```
 
 ## Peer dependencies
