@@ -132,7 +132,7 @@ describe("virtual screen reader registries", () => {
   });
 
   it("announces role=status live region content changes in the spoken phrase log", async () => {
-    const { runSiheom, given, effect, actions, assertions } = setupSiheom();
+    const { runSiheom, given, actions, assertions } = setupSiheom();
 
     await runSiheom(
       given.render(liveStatus()),
@@ -150,10 +150,7 @@ describe("virtual screen reader registries", () => {
       given.render(button("저장")),
       given.startScreenReader(),
       effect.screenReaderNext(),
-      assertions.screenReaderSpokenPhraseLog(query.button("저장"), [
-        "document",
-        "button, 저장",
-      ]),
+      assertions.screenReaderSpokenPhraseLog(query.button("저장"), ["document", "button, 저장"]),
       given.stopScreenReader(),
     );
   });

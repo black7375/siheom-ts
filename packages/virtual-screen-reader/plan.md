@@ -18,12 +18,12 @@ Drive `@guidepup/virtual-screen-reader` from a `runSiheom` chain — givens to s
 - [x] `screenReaderClearLog()` clears the spoken phrase log
 - [x] Assertions: `screenReaderItemText`, `screenReaderLastSpokenPhrase`, `screenReaderSpokenPhraseLog`, `screenReaderContainsSpokenPhrase`, `screenReaderCursorOn`
 - [x] Live-region announcements land in the spoken phrase log as `polite:`/`assertive:` phrases (`role="status"` / `role="alert"`)
-- [ ] `createVirtualScreenReaderExtension` registers the new keys via `extendSiheom` (no key collisions)
+- [x] `createVirtualScreenReaderExtension` registers the new keys via `extendSiheom` (no key collisions)
 
 ### Phase 2 — react-example showcase
 
-- [ ] `createVirtualScreenReaderSiheom` helper (extendSiheom over `@siheom/react` runtime)
-- [ ] Storybook: form-with-error, dialog, toast stories
-- [ ] Form-with-error test: submit empty form → screen reader announces each error message
-- [ ] Dialog test: open alert dialog → screen reader announces the dialog title/content
-- [ ] Toast test: click 저장 → screen reader announces the toast via live region
+- [x] `createVirtualScreenReaderSiheom` helper (extendSiheom over `@siheom/react` runtime)
+- [x] Storybook: form-with-error, dialog, toast stories
+- [x] Form-with-error test: submit empty form → screen reader announces each error message (`1 error message` on the field, then the message text via `jumpToErrorMessageElement`)
+- [x] Dialog test: open alert dialog → screen reader announces the dialog title
+- [x] Toast test: click 저장 → screen reader announces the toast via live region

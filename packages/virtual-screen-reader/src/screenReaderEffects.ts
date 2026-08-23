@@ -36,7 +36,7 @@ export function createScreenReaderEffects(): ScreenReaderEffects {
       await virtual.type(text);
     },
     screenReaderPerform: async (command: string, options?: Record<string, unknown>) => {
-      await virtual.perform(command as never, options);
+      await virtual.perform(command as never, options as never);
     },
     screenReaderClick: async () => {
       await virtual.click();
